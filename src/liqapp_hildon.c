@@ -16,18 +16,19 @@
 #include <X11/extensions/Xvlib.h>
 #include <X11/extensions/XShm.h>
 
-
+#ifdef USE_OSSO
 #include <libosso.h>
-
-
 osso_context_t *osso_context;
+#endif
+
+
 
 #include "liqapp.h"
 
 int liqapp_hildon_init()
 {
 	// call after initializing app.* structure
-	
+#ifdef USE_OSSO
 	char buf[255];
 	snprintf(buf,sizeof(buf),"org.maemo.%s",app.title);
 	osso_context = osso_initialize(buf, "1.0", TRUE, NULL);
@@ -39,7 +40,8 @@ int liqapp_hildon_init()
 	}
 
     osso_display_state_on(osso_context);
-    osso_display_blanking_pause(osso_context);	
+    osso_display_blanking_pause(osso_context);
+#endif
 	return 0;
 }
 
@@ -47,7 +49,9 @@ int liqapp_hildon_init()
 int liqapp_hildon_close()
 {
 	// all done now, call at the end :)
+#ifdef USE_OSSO
 	osso_deinitialize(osso_context);
+#endif
 	return 0;
 }
 

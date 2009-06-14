@@ -6,11 +6,17 @@ LD          = gcc
 OPT_FLAGS   =  -O3
 
 
+#USE_OSSO = 0
 
 
 
+LIBRARIES   =  libpng12
 
-LIBRARIES   =  libpng12 libosso
+
+ifdef USE_OSSO
+	LIBRARIES += libosso
+endif
+
 
 CFLAGS      = -DUSE_MAEMO -fPIC -Wall `freetype-config --cflags` `pkg-config --cflags  $(LIBRARIES)` -I../include
 LDFLAGS     = -lX11 -lXext -lXv -lm `freetype-config --libs` -ljpeg -lpthread `pkg-config --libs $(LIBRARIES)` 
@@ -18,6 +24,11 @@ RM          = /bin/rm -f
 
 OBJSUI      = liqx11overlay.o liqdialog_showtree.o liqx11info.o filebuf.o vgraph.o liqcell.o liqcell_arrange.o liqcell_prop.o liqcell_easyrun.o liqcell_easypaint.o liqcell_parse_filename.o liqcell_parse_liqbrain.o liqcell_easyhandler_kinetic.o liqcell_mk_star.o liqui.o liqcell_dllcache.o
 OBJS        = liqapp.o liqapp_hildon.o liqapp_prefs.o liqapp_filecache.o liqcanvas_firstrun_splash.o liq_xsurface.o liqcanvas.o liqimage.o liqfont.o liqfontview.o liqsketch.o liqsketchpagefilename.o liqcliprect.o liqapp_turbo.o $(OBJSUI) 
+
+
+ifdef USE_OSSO
+	CFLAGS += -dUSE_OSSO
+endif
 
 
 
