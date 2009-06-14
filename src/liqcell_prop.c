@@ -41,8 +41,10 @@ int liqcell_propremoves(liqcell *self,char *name)
 	liqcell *c=liqcell_local_lookup_nameclass(self,name,"prop.s");
 	if(c)
 	{
+		if(c->tag){ free((char *)c->tag); c->tag=0; }
+		
 		liqcell_child_remove(self,c);
-		liqcell_release(c);
+		//liqcell_release(c);
 		return 0;
 	}
 	return -1;
@@ -54,7 +56,7 @@ int liqcell_propremovei(liqcell *self,char *name)
 	if(c)
 	{
 		liqcell_child_remove(self,c);
-		liqcell_release(c);
+		//liqcell_release(c);
 		return 0;
 	}
 	return -1;
