@@ -1,0 +1,1 @@
+shlibs:Depends=libc6 (>= 2.5.0-1), libdbus-1-3 (>= 1.1.4), libdbus-glib-1-2 (>= 0.76), libfreetype6 (>= 2.3.5), libglib2.0-0 (>= 2.14.6-1osso1), libjpeg62, libosso1 (>= 2.19), libpng12-0 (>= 1.2.13-4), libx11-6, libxext6, libxv1, zlib1g (>= 1:1.2.1)

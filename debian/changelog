@@ -1,0 +1,24 @@
+libliqbase (0.3.1) unstable; urgency=low
+
+  * remove xsp.
+
+ -- Gary <liquid@gmail.com>  Tue, 09 June 2009 23:40:03 +0200
+
+libliqbase (0.3) unstable; urgency=low
+
+  * trying again.
+
+ -- Gary <liquid@gmail.com>  Mon, 08 June 2009 23:40:03 +0200
+
+libliqbase (0.2.1-dev-1) unstable; urgency=low
+
+  * forgot libpng in debain folder, fixed calendar location.
+
+ -- Gary <liquid@gmail.com>  Mon, 07 June 2009 23:40:03 +0200
+
+libliqbase (0.2-dev-1) unstable; urgency=low
+
+  * Initial release, Kees Jongenburger prepared baseline packaging.
+
+ -- Gary <liquid@gmail.com>  Sat, 30 May 2009 13:18:03 +0200
+

@@ -1,0 +1,20 @@
+Source: libliqbase
+Priority: extra
+Maintainer: Gary liquid <liquid@gmail.com>
+Build-Depends: debhelper (>= 5), x11proto-xext-dev, libpng12-dev, libjpeg62-dev, libosso-dev, libfreetype6-dev, libxv-dev
+Standards-Version: 3.7.2
+Section: libs
+
+Package: libliqbase-dev
+Section: libdevel
+Architecture: any
+Depends: libliqbase1 (= ${Source-Version})
+Description: liqbase rendering engine and ui core elements.
+ liqbase rendering engine and ui core elements.  super quick yuv graphics engine.
+
+Package: libliqbase1
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: liqbase rendering engine and ui core elements.
+ liqbase rendering engine and ui core elements.  super quick yuv graphics engine.

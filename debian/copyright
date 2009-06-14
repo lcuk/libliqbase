@@ -1,0 +1,21 @@
+This package was debianized by Kees Jongenburger <xxx@unknown> on
+Sat, 30 May 2009 13:18:03 +0200.
+
+It was downloaded from liqbase.net
+
+Upstream Author: Gary Birkett <liquid@gmail.com>
+
+Copyright: 2009 Gary Birkett
+
+License:
+
+GPL v2 (with option of v3, LGPL is under consideration)
+
+
+The Debian packaging is (C) 2009, unknown <xxx@unknown> and
+is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
+
+
+# Please also look if there are files or directories which have a
+# different copyright/license attached and list them here.
+
