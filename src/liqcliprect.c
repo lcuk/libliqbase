@@ -264,6 +264,8 @@ int b=y+h-1;
 		liqcliprect_drawlinecolcolor(self,r,y,  r,b,grey,u,v);
 }
 
+
+
 //##################################################################
 //##################################################################
 //##################################################################
@@ -286,6 +288,27 @@ int b=(y+h)-1;
 
 	xsurface_drawrect_yuv(self->surface,x,y,(r-x)+1,(b-y)+1,grey,u,v);
 }
+
+
+void liqcliprect_drawboxwashcolor(liqcliprect *self,int x,int y,int w,int h,unsigned char u,unsigned char v)
+{
+	//if(w<=0)return;
+	//if(h<=0)return;
+	if(w<0){ x+=w;w=-w;}
+	if(h<0){ y+=h;h=-h;}
+int r=(x+w)-1;
+int b=(y+h)-1;
+	if(x<self->sx)x=self->sx;
+	if(y<self->sy)y=self->sy;
+	if(r>self->ex)r=self->ex;
+	if(b>self->ey)b=self->ey;
+	if(r&1)r++;
+	if(b&1)b++;
+	//canvas_drawrectcolor(x,y,(r-x)+1,(b-y)+1,grey,u,v);
+
+	xsurface_drawrectwash_uv(self->surface,x,y,(r-x)+1,(b-y)+1,u,v);
+}
+
 
 void liqcliprect_drawboxfadeoutcolor(liqcliprect *self,int x,int y,int w,int h,unsigned char grey,unsigned char u,unsigned char v,unsigned char spread)
 {

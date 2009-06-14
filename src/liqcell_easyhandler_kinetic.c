@@ -35,7 +35,7 @@
 		liqcell *body = self;
 		//liqapp_log("# liqcell kinetic body xy(%i,%i) wh(%i,%i) :: %s   ",body->x,body->y,  body->w,body->h,  body->name);
 		//liqapp_log("# liqcell kinetic par  xy(%i,%i) wh(%i,%i) :: %s   ",par->x,par->y,  par->w,par->h,  par->name);
-		if(body && par)
+		if(body && par && par->h)
 		{
 			if( (args->mcnt == 1) )
 			{
@@ -54,6 +54,34 @@
 				// 20090514_010118 lcuk : problem though is ensuring its removed again after a mouse action completes
 				// 20090514_010136 lcuk : 
 			}*/
+			
+			//#####################################
+			// 20090614_181606 lcuk : adding "direct addressing mode" which is the scrollbar at right hand side mechanism
+			// entering this mode if the mouse if on the right hand side 20% of parent
+			// for testing leave as direct addressing of Y
+			if(   args->mex>=(par->w*0.8)   &&   args->mex<par->w)
+			{
+				//float my = args->mey;
+				float my = args->mey;
+				int ah = (self->h-par->h);
+				// self->y    p->0    p->h       self->h-self->y
+				// -300       0       480        1700
+				
+				float mj = my * ((float)ah) / ((float)par->h);
+				if(mj<0)mj=0;
+				if(mj>ah)mj=ah;
+				
+				liqcell_setpos(body,self->x,-mj);
+				return 1;
+			}
+			//#####################################
+			
+			
+			
+			
+			
+			
+			
 
 
 			int mdx=0;

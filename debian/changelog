@@ -1,3 +1,9 @@
+libliqbase (0.3.2) unstable; urgency=low
+
+  * bugfix to cellprop, was doubly freeing memory tsktsk
+
+ -- Gary <liquid@gmail.com>  14 June 2009 12:40:03 +0200
+
 libliqbase (0.3.1) unstable; urgency=low
 
   * remove xsp.

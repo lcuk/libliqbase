@@ -555,44 +555,6 @@ __tz_one("showndone");
 	
 __tz_one("paintdone");
 
-// 20090613_031908 lcuk : kinetic scaling hack test.  result: not too convincing in practice.  removed, leaving code for academic interest
-/*	
-	if( self->kineticy && self->linkparent->h)
-	{
-		float fy = ((float)self->kineticy) / ((float)self->linkparent->h);
-		if(fy<0)fy=-fy;
-		fy*=2;
-		int nh = ((float)h) * (1-fy);
-		//if(nh>h)nh=h;
-		
-		liqapp_log("kin h=%3i ky=%3i fy=%3.3f  nh=%3i",self->linkparent->h,self->kineticy,fy,nh);
-		
-		y += (h-nh)/2;
-		h=nh;
-		if(h<1)
-		{
-			liqcliprect_release(cr);
-			return;
-		}
-		
-		x+=(w-(w*(1-fy)))/2;
-		w=(w*(1-fy));
-		
-	}
- 
-__tz_one("kinzoomdone");
-
-*/	
-
-	liqcell_kineticboiloff(self);
-
-
-
-
-
-
-__tz_one("kindone");
-
 
 
 	char *t=NULL;
@@ -1003,6 +965,49 @@ __tz_one("overlaydone");
 
 __tz_one("borderdone");
 
+	{
+			liqcell *p = liqcell_getlinkparent(self);
+			if(p)
+			{
+				if(p->w < self->w)
+				{
+					// show a position indicator bar..
+					
+					
+				}
+				if(p->h < self->h)
+				{
+					// show a position indicator bar..
+					
+					float sx = self->x;
+					float sy = self->y;
+					float ww = w;
+					float sw = self->w;
+					float pw = p->w;
+					float hh = h;
+					float sh = self->h;
+					float ph = p->h;		
+					// ph = 480
+					// sh = 2000
+					// sy = -200
+					// get the relative size of the knob as a fraction of total height             == (0.25)
+					float f  = ph    / sh;
+					// get the relative offset of the knob as a fraction of total height           == (0.10)
+					float fy = (-sy) / sh;
+					// transform the knob size (0.25) into the context of the parent height (480/2000)  == (0.06)
+					float f2 = f * (ph / sh);						
+					// transform the knob offset (0.1) into the context of the parent height 0.1 + (480/2000) == (0.124) and starting from the parent offset
+					float fy2 = fy + (fy * (ph / sh));					
+					liqcliprect_drawboxwashcolor(cr,x+w-4,y+(fy2*hh) ,4,(f2*hh),0,255);
+					
+				}
+			}
+	}
+
+
+__tz_one("scrolldone");
+
+
 	if(liqcell_getenabled(self)==0)
 	{	
 
@@ -1083,6 +1088,54 @@ __tz_one("disablerdone");
 	liqcliprect_release(cr);
 
 __tz_one("reldone");
+
+
+// 20090614_185314 lcuk : moved kinetic till AFTER i am finished, seems reasonable enough :)
+
+
+
+// 20090613_031908 lcuk : kinetic scaling hack test.  result: not too convincing in practice.  removed, leaving code for academic interest
+/*	
+	if( self->kineticy && self->linkparent->h)
+	{
+		float fy = ((float)self->kineticy) / ((float)self->linkparent->h);
+		if(fy<0)fy=-fy;
+		fy*=2;
+		int nh = ((float)h) * (1-fy);
+		//if(nh>h)nh=h;
+		
+		liqapp_log("kin h=%3i ky=%3i fy=%3.3f  nh=%3i",self->linkparent->h,self->kineticy,fy,nh);
+		
+		y += (h-nh)/2;
+		h=nh;
+		if(h<1)
+		{
+			liqcliprect_release(cr);
+			return;
+		}
+		
+		x+=(w-(w*(1-fy)))/2;
+		w=(w*(1-fy));
+		
+	}
+ 
+__tz_one("kinzoomdone");
+
+*/	
+
+
+	// 20090614_184351 lcuk : mmm in the kinetic boiloff, i adjust the position of the cell.
+	// technically, this should also effect the current position I am attempting to render for..
+
+	liqcell_kineticboiloff(self);
+
+
+
+
+
+
+__tz_one("kindone");
+
 
 
 

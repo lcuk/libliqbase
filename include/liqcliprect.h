@@ -69,6 +69,8 @@ int    	liqcliprect_geth(liqcliprect *self);
 //inline void liqcliprect_initfromimage(		liqcliprect *self,liqimage *surface);
 
 
+
+
 inline void liqcliprect_shrink(					liqcliprect *self,int sx,int sy,int ex,int ey);
 inline void liqcliprect_copy(					liqcliprect *self,liqcliprect *other);
 
@@ -97,6 +99,7 @@ void 		liqcliprect_drawlinecolcolor(		liqcliprect *self,int x1, int y1,int x2, i
 void 		liqcliprect_drawlinecolor(			liqcliprect *self,int x1, int y1, int x2, int y2, unsigned char grey,unsigned char u,unsigned char v);
 void 		liqcliprect_drawboxlinecolor(		liqcliprect *self,int x,int y,int w,int h,unsigned char grey,unsigned char u,unsigned char v);
 void 		liqcliprect_drawboxfillcolor(		liqcliprect *self,int x,int y,int w,int h,unsigned char grey,unsigned char u,unsigned char v);
+void 		liqcliprect_drawboxwashcolor(		liqcliprect *self,int x,int y,int w,int h,unsigned char u,unsigned char v);
 
 void 		liqcliprect_drawcolorcube(liqcliprect *self,int x,int y,int w,int h,unsigned char grey);
 void 		liqcliprect_drawboxfadeoutcolor(liqcliprect *self,int x,int y,int w,int h,unsigned char grey,unsigned char u,unsigned char v,unsigned char spread);
