@@ -1517,8 +1517,11 @@ unsigned char spreaddiv2 = spread/2;
 		//{
 		//	*epdata++ = grey4;
 		//}
-
-		pdata=(unsigned char *)epdata;
+        
+		// 20090615_193133 lcuk : hmmm this should not be here, how did this run at first i wonder..
+		//pdata=(unsigned char *)epdata;
+		// 20090615_193146 lcuk : and this, it wasn't initialized..
+        xx=x;
 		while((xx) <= (x+w)) 					// 25jan2009:gb was <
 		{
 			xx++;

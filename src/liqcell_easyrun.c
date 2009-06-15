@@ -48,6 +48,9 @@
 
 
 
+extern int liqcell_showdebugboxes;
+
+
 
 static void liqcellmouseeventargs_stroke_start(liqcellmouseeventargs *self,int mx,int my,int mz)
 {
@@ -249,7 +252,7 @@ liqcell * toolclick(liqcell *vis)
 		//############################# icon:label
 		liqcell *icon = liqcell_quickcreatevis("icon", "label", 6, 8, 52, 40);
 		//liqcell_setfont(	icon, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (12), 0) );
-		liqcell_setcontent(icon, vis );
+		//liqcell_setcontent(icon, vis );
 		//liqcell_setcaption(icon, "icon" );
 		//liqcell_propsets(  icon, "textcolor", "rgb(255,255,255)" );
 		//liqcell_propsets(  icon, "backcolor", "rgb(0,0,0)" );
@@ -318,6 +321,8 @@ liqcell * toolclick(liqcell *vis)
 		liqcell_setenabled( c, 0 );		// make sure it has fadeout
 		liqcell_handleradd_withcontext( c,    "click",   toolitem_click,self);
 		liqcell_child_insert( self, c );
+
+
 
 	}
 	//liqcell_easyrun(self);
@@ -449,7 +454,8 @@ int liqcell_easyrun_depth=0;
 int liqcell_easyrun(liqcell *self)
 {
 	liqapp_log("#################################### liqcell easyrun (%i,%i) :: %s",self->w,self->h,self->name);
-	//liqcell_print2(self);
+	if(liqcell_showdebugboxes)
+		liqcell_print2(self);
 	if(self->w==0 || self->h==0)
 	{
 		liqapp_log("liqcell easyrun cannot continue, cell size must be >0");

@@ -1040,6 +1040,9 @@ __tz_one("disablerdone");
 
 	if(liqcell_showdebugboxes)
 	{
+
+		liqapp_log("#################################### liqcell easypaint (%i,%i) :: %s   xy(%i,%i)-wh(%i,%i)  ",self->w,self->h,self->name,x,y,w,h);
+
 		//t = liqcell_propgets(self,"bordercolor",NULL);
 		t = "rgb(100,100,100)";
 		if(t)
