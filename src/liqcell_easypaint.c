@@ -1011,7 +1011,7 @@ __tz_one("scrolldone");
 	if(liqcell_getenabled(self)==0)
 	{	
 
-		liqcliprect_drawboxfadeoutcolor(cr,x,y,w,h,128,128,128,  128);
+		liqcliprect_drawboxfadeoutcolor(cr,x,y,w,h, 100,128,128,  180);
 	}
 
 

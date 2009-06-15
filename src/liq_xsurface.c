@@ -1503,6 +1503,7 @@ inline void xsurface_drawfadeoutrect_yuv(liqimage *surface,int x,int y,int w,int
     
 unsigned char spreaddiv2 = spread/2;
     
+	
 
 //unsigned int grey4;
 //	grey4=grey<<24 | grey<<16 | grey<<8 | grey;
@@ -1526,8 +1527,25 @@ unsigned char spreaddiv2 = spread/2;
 		{
 			xx++;
 			//*pdata++ = (unsigned char)grey;
-            *pdata++ = y + (((((int)*pdata) * 255) / spread)-spreaddiv2);
+            //*pdata++ = y + (((((int)*pdata) * 255) / spread)-spreaddiv2);
+			{
+				int s=y;
+				int t=*pdata;
+				//if(!s)s=128;
+				//if(!t)t=128;	
+				*pdata++ = t+((s-t)*spread)/256;
+			}
 		}
+		
+		
+		
+		
+		
+
+		
+		
+		
+		
 
 	}
 
@@ -1555,26 +1573,46 @@ unsigned char spreaddiv2 = spread/2;
 	for (yy = y; yy < (y+h); yy++)
 	{
 		udata = &surface->data[ uo+(pw*yy) + x ];
-		eudata=(unsigned short*)udata;
 		vdata = &surface->data[ vo+(pw*yy) + x ];
-		evdata=(unsigned short*)vdata;
-		for (xx = x; (xx+2) < (x+w); xx+=2)
-		{
-			//liqapp_log("xy(%i,%i),   %i",xx,yy,(unsigned int)epdata);
-			*eudata++ = u2;
-			*evdata++ = v2;
-		}
-		udata=(unsigned char *)eudata;
-		vdata=(unsigned char *)evdata;
+
+		//eudata=(unsigned short*)udata;
+		//evdata=(unsigned short*)vdata;
+		//for (xx = x; (xx+2) < (x+w); xx+=2)
+		//{
+		//	//liqapp_log("xy(%i,%i),   %i",xx,yy,(unsigned int)epdata);
+		//	*eudata++ = u2;
+		//	*evdata++ = v2;
+		//}
+		//udata=(unsigned char *)eudata;
+		//vdata=(unsigned char *)evdata;
+		
+		
+		xx = x;
 		while((xx) <= (x+w))                  // 25jan2009:gb was <
 		{
 			xx++;
-            
-            *udata++ = u + (((((int)*udata) * 255) / spread)-spreaddiv2);
-            *vdata++ = v + (((((int)*vdata) * 255) / spread)-spreaddiv2);
-            
+			
 			//*udata++ = (unsigned char)u;
 			//*vdata++ = (unsigned char)v;
+            
+            //*udata++ = u + (((((int)*udata) * 255) / spread)-spreaddiv2);
+            //*vdata++ = v + (((((int)*vdata) * 255) / spread)-spreaddiv2);
+            
+			{
+				int s=u;
+				int t=*udata;
+				if(!s)s=128;
+				if(!t)t=128;	
+				*udata++ = t+((s-t)*spread)/256;
+			}
+			{
+				int s=v;
+				int t=*vdata;
+				if(!s)s=128;
+				if(!t)t=128;	
+				*vdata++ = t+((s-t)*spread)/256;
+			}
+
 		}
 	}
 }
