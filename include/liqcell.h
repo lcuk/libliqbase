@@ -125,8 +125,11 @@ liqcell*  liqcell_child_insert(liqcell *self,liqcell *child);
 liqcell*  liqcell_child_insertsorted(liqcell *self, liqcell * ch);
 liqcell*  liqcell_child_insertsortedbyname(liqcell *self, liqcell * ch,int sortpositive);
 int liqcell_child_remove(liqcell *self,liqcell *child);
+int liqcell_child_removeall(liqcell *self);
+int liqcell_child_removeallvisual(liqcell *self);
 
-liqcell*  liqcell_child_lookup(liqcell *self,char *name);
+liqcell*  liqcell_child_lookup(liqcell *self,char *name); // use dotted branches
+liqcell*  liqcell_child_lookup_simple(liqcell *self,char *name);	// ignore dotted branches
 liqcell*  liqcell_child_lookup_nameclass(liqcell *self,char *name,char *classname);
 
 

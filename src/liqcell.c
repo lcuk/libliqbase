@@ -910,6 +910,34 @@ liqcell* liqcell_child_append(liqcell *self,liqcell *c)
 
 
 
+int liqcell_child_removeall(liqcell *self)
+{
+	liqcell *c=liqcell_getlinkchild(self);
+	while(  c   )
+	{
+		liqcell *d = c->linknext;
+		liqcell_child_remove(self,c);
+		c=d;
+	}
+	return 0;
+}
+
+
+
+int liqcell_child_removeallvisual(liqcell *self)
+{
+	liqcell *c=liqcell_getlinkchild(self);
+	while(  c   )
+	{
+		liqcell *d = c->linknext;
+		if( liqcell_getflagvisual(c) ) liqcell_child_remove(self,c);
+		c=d;
+	}
+	return 0;
+}
+
+
+
 int  liqcell_child_remove(liqcell *self,liqcell *child)
 {
 	// remove specified child, heh, leave this for now
@@ -1093,7 +1121,22 @@ liqcell* liqcell_child_insertsortedbyname(liqcell *self,liqcell * ch,int sortpos
 //	return liqcell_findfirst(self->linkchild,query);
 //}
 
+liqcell* liqcell_child_lookup_simple(liqcell *self,char *name)
+{
+	// 20090615_031345 lcuk : ignore dot name in this variation
 
+	liqcell *c=self->linkchild;
+	while(c)
+	{
+		//liqapp_log("test %s==%s == %i",c->name,name,strcmp(c->name,name));
+		if(strcmp(c->name,name)==0)
+		{
+			return c;
+		}
+		c=c->linknext;
+	}
+	return NULL;
+}
 liqcell* liqcell_child_lookup(liqcell *self,char *name)
 {
 	// find a named child

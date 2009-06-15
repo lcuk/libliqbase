@@ -87,6 +87,13 @@ static int                 dllcache_size=0;
 static int                 dllcache_used=0;
 
 
+
+
+static dllcacheitem *runstack[256];
+static int           runstack_size=256;
+static int           runstack_used=0;
+
+
 /**
  * prepare the cache
  */
@@ -150,25 +157,47 @@ int dllcache_scan_dllfile(char *dll_filename)
 	   	{ return liqapp_warnandcontinue(-1,"dllcache_scan_dllfile, no more slots for this dll"); }
 	}
 	
-	//################################################# prepare the name for usage as a key
-	
-char *filetitle= liqapp_filename_walkoverpath(dll_filename);
-	if(!filetitle){ return liqapp_warnandcontinue(-1,"dllcache_scan_dllfile, no filetitle"); }
-char *fileext  = liqapp_filename_walktoextension(filetitle);
-	if(!fileext){ return liqapp_warnandcontinue(-1,"dllcache_scan_dllfile, no fileext"); }
-char filetitlenoext[256];
-	// bug will exist here if i dont watch for it
-	// 20090317_0231 lcuk : todo fix this still
-	snprintf(filetitlenoext,((int)(fileext-filetitle))>255 ? 255 : ((int)(fileext-filetitle)),"%s",filetitle);
+	dllcacheitem * dllcacheitem=NULL;
 
-
-	//################################################# alloc and initialize the cache item :)
-	dllcacheitem * dllcacheitem = &dllcache[ dllcache_used++ ];
 	
-	dllcacheitem->key        = strdup(filetitlenoext);
-	dllcacheitem->filename   = strdup(dll_filename);
-	dllcacheitem->dll        = dlopen(dll_filename, RTLD_LAZY | RTLD_GLOBAL );//RTLD_NOW);
-	dllcacheitem->constructor= NULL;
+	if(dll_filename==NULL)
+	{
+		// self, special case :)
+		
+		dll_filename = app.title;
+		
+		//################################################# alloc and initialize the cache item :)
+		dllcacheitem = &dllcache[ dllcache_used++ ];
+		dllcacheitem->key        = strdup(app.title);
+		dllcacheitem->filename   = strdup(app.title);
+		dllcacheitem->dll        = dlopen(NULL, RTLD_LAZY | RTLD_GLOBAL );//RTLD_NOW);
+		dllcacheitem->constructor= NULL;
+
+	}
+	else
+	{
+	
+		// initialize it in the normal way
+		
+		//################################################# prepare the name for usage as a key
+		
+		char *filetitle= liqapp_filename_walkoverpath(dll_filename);
+			if(!filetitle){ return liqapp_warnandcontinue(-1,"dllcache_scan_dllfile, no filetitle"); }
+		char *fileext  = liqapp_filename_walktoextension(filetitle);
+			if(!fileext){ return liqapp_warnandcontinue(-1,"dllcache_scan_dllfile, no fileext"); }
+		char filetitlenoext[256];
+		// bug will exist here if i dont watch for it
+		// 20090317_0231 lcuk : todo fix this still
+		snprintf(filetitlenoext,((int)(fileext-filetitle))>255 ? 255 : ((int)(fileext-filetitle)),"%s",filetitle);
+	
+	
+		//################################################# alloc and initialize the cache item :)
+		dllcacheitem = &dllcache[ dllcache_used++ ];
+		dllcacheitem->key        = strdup(filetitlenoext);
+		dllcacheitem->filename   = strdup(dll_filename);
+		dllcacheitem->dll        = dlopen(dll_filename, RTLD_LAZY | RTLD_GLOBAL );//RTLD_NOW);
+		dllcacheitem->constructor= NULL;
+	}
 	
 	//################################################# check for errors
 	const char  *mydll_error;
@@ -207,8 +236,10 @@ int dllcache_scan_folder(char *widgetpath)
 			continue;
 
 		ft=dir_entry_p->d_name;
-
-		snprintf(fn , FILENAME_MAX , "%s/%s", widgetpath , ft);
+		if(*widgetpath)
+			snprintf(fn , FILENAME_MAX , "%s/%s", widgetpath , ft);
+		else
+			snprintf(fn , FILENAME_MAX , "%s", ft);
 
 		struct stat     statbuf;
 		if(stat(fn, &statbuf) == -1)
@@ -274,7 +305,17 @@ int dllcache_scan()
 		   	{ return liqapp_warnandcontinue(-1,"dllcache scan, error init cache"); }			
 		}
 	}
-	if(dllcache_scan_folder(".")!=0)
+	
+	if(dllcache_used>0)
+	{
+		   	{ return liqapp_warnandcontinue(-1,"dllcache scan, already initialized"); }			
+	}
+	
+	runstack_used=0;
+	
+	dllcache_scan_dllfile(NULL);
+	
+	if(dllcache_scan_folder(app.startpath)!=0)
 	{
 		//{ return liqapp_warnandcontinue(-1,"dllcache scan, error while scan '.'"); }			
 	}	
@@ -288,16 +329,27 @@ int dllcache_scan()
 		// 20090607_193342 lcuk : cheat but might actually work
 		//{ return liqapp_warnandcontinue(-1,"dllcache scan, error while scan 'src/widgets'"); }			
 	}
+	
+
+
+
+	// 20090614_234707 lcuk : always make sure runstack used includes THIS dll
+	// 20090614_234720 lcuk : &dllcache[ idx ];
+
+	if(dllcache_used>0)
+	{
+			runstack[runstack_used++] = &dllcache[ 0 ];
+			//liqcell *res = constructor();
+			//runstack_used--;
+	}
+
+
 		
 	return 0;
 }
 
 
 
-
-static dllcacheitem *runstack[256];
-static int           runstack_size=256;
-static int           runstack_used=0;
 
 
 liqcell *dllcache_runconstructorinner(char *classname)

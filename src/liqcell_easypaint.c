@@ -33,7 +33,7 @@
 // that zoom has a related internal dimension
 // ie a reference to the current cell
 
-
+int liqcell_showdebugboxes=0;
 
 
 
@@ -602,7 +602,7 @@ __tz_one("backdone");
 			if(!easypaint_isloading_image)
 			{
 				//easypaint_isloading_image=liqimage_newfromfile("media/sun.png",0,0,0);
-				easypaint_isloading_image=liqimage_newfromfile("media/pleasewait.png",0,0,0);
+				easypaint_isloading_image=liqimage_newfromfile("/usr/share/liqbase/media/pleasewait.png",0,0,0);
 			}
 			if(easypaint_isloading_image)
 			{
@@ -998,13 +998,13 @@ __tz_one("borderdone");
 					float f2 = f * (ph / sh);						
 					// transform the knob offset (0.1) into the context of the parent height 0.1 + (480/2000) == (0.124) and starting from the parent offset
 					float fy2 = fy + (fy * (ph / sh));					
-					liqcliprect_drawboxwashcolor(cr,x+w-4,y+(fy2*hh) ,4,(f2*hh),0,255);
+					liqcliprect_drawboxwashcolor(cr,x+w-4,y+(fy2*hh) ,12,(f2*hh),0,255);
 					
 				}
 			}
 	}
 
-
+ 
 __tz_one("scrolldone");
 
 
@@ -1037,8 +1037,8 @@ __tz_one("disablerdone");
 // 20090422_010005 lcuk : ive switched these on often enough to want a proper flag
 // 20090422_010018 lcuk : it cannot be long before i need proper param saving like original liqbase
 // 20090422_010032 lcuk : however i must iron out how outside applications will handle preferences like this
-/*
-	if(1)
+
+	if(liqcell_showdebugboxes)
 	{
 		//t = liqcell_propgets(self,"bordercolor",NULL);
 		t = "rgb(100,100,100)";
@@ -1069,13 +1069,21 @@ __tz_one("disablerdone");
 
 					int ww=liqfont_textwidth (infofont,info);
 					int hh=liqfont_textheight(infofont);
+					int ys=y+(h-hh)/2;
 
-					liqcliprect_drawtextinside_color( cr, infofont,  x,y+(h-hh)/2, ww,hh, info,0, 255,128,128);
+					liqcliprect_drawtextinside_color( cr, infofont,  x,ys,    ww,hh, info,0, 255,128,128);
+					
+					
+					if(liqcell_getclassname(self))
+					{
+				
+						liqcliprect_drawtextinside_color( cr, infofont,  x,ys+hh, ww,hh, liqcell_getclassname(self)  ,0, 255,68,128);
+					}
 				}
 			}
 		}
 	}
- */
+ 
 
 
 	//liqcliprect_drawboxfillcolor(cr,x,y,2,h,((tz[tzused-1]-tz[0]) % 16) * 16,((tz[tzused-1]-tz[0]) % 32) * 8,((tz[tzused-1]-tz[0]) % 64) * 4);

@@ -1305,20 +1305,21 @@ moar:
 			static liqimage *infoback=NULL;
 			static liqimage *infoclose=NULL;
 			static liqimage *infotools=NULL;
+			// 20090614_213546 lcuk : now, i know where i am installed, i can use that path hopefully
 			if(!infoback)
 			{
 				//liqapp_log("************************************************************************************** read");
-				infoback = liqimage_cache_getfile("media/quickicons/back.png", 0,0,1);
+				infoback = liqimage_cache_getfile("/usr/share/liqbase/media/quickicons/back.png", 0,0,1);
 			}
 			if(!infoclose)
 			{
 				//liqapp_log("************************************************************************************** read");
-				infoclose = liqimage_cache_getfile("media/quickicons/gtk-close.png", 0,0,1);
+				infoclose = liqimage_cache_getfile("/usr/share/liqbase/media/quickicons/gtk-close.png", 0,0,1);
 			}
 			if(!infotools)
 			{
 				//liqapp_log("************************************************************************************** read");
-				infotools = liqimage_cache_getfile("media/quickicons/package_system.png", 0,0,1);
+				infotools = liqimage_cache_getfile("/usr/share/liqbase/media/quickicons/package_system.png", 0,0,1);
 			}
 			if(infoback && infoclose)
 			{

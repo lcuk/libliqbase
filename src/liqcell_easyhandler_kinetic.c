@@ -59,20 +59,26 @@
 			// 20090614_181606 lcuk : adding "direct addressing mode" which is the scrollbar at right hand side mechanism
 			// entering this mode if the mouse if on the right hand side 20% of parent
 			// for testing leave as direct addressing of Y
-			if(   args->mex>=(par->w*0.8)   &&   args->mex<par->w)
+			
+			
+			if( (args->stroke->pointlast->t -  args->stroke->pointfirst->t) > 250 )  //liqstroke_totallength(args->stroke) > 25 )
 			{
-				//float my = args->mey;
-				float my = args->mey;
-				int ah = (self->h-par->h);
-				// self->y    p->0    p->h       self->h-self->y
-				// -300       0       480        1700
-				
-				float mj = my * ((float)ah) / ((float)par->h);
-				if(mj<0)mj=0;
-				if(mj>ah)mj=ah;
-				
-				liqcell_setpos(body,self->x,-mj);
-				return 1;
+			
+				if(   (args->mex-args->ox) >= (par->w*0.8) )//  &&   args->mex<par->w)
+				{
+					//float my = args->mey;
+					float my = args->mey;//-args->oy;
+					int ah = (self->h-par->h);
+					// self->y    p->0    p->h       self->h-self->y
+					// -300       0       480        1700
+					
+					float mj = my * ((float)ah) / ((float)par->h);
+					if(mj<0)mj=0;
+					if(mj>ah)mj=ah;
+					
+					liqcell_setpos(body,self->x,-mj);
+					return 1;
+				}
 			}
 			//#####################################
 			
