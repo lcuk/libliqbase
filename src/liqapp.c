@@ -412,7 +412,6 @@ int 		liqapp_init(int argc, char* argv[],char *title,char *version)
 {
 	
 
-
 	app.infologgingenabled = 1;
 	app.argc = argc;
 	app.argv = argv;

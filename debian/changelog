@@ -1,3 +1,11 @@
+libliqbase (0.3.7) unstable; urgency=low
+
+  * stop crashing hildon desktop, cant use "liqbase-playground" as service name.
+  * forced osso initialize to "liqbase_playground" in lib, and changed files here.
+  * skipped a couple of revs also
+
+ -- Gary Birkett <liquid@gmail.com>  16 June 2009 21:41:03 +0200
+
 libliqbase (0.3.4) unstable; urgency=low
 
   * tweaks
