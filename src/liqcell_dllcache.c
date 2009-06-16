@@ -195,7 +195,10 @@ int dllcache_scan_dllfile(char *dll_filename)
 		dllcacheitem = &dllcache[ dllcache_used++ ];
 		dllcacheitem->key        = strdup(filetitlenoext);
 		dllcacheitem->filename   = strdup(dll_filename);
-		dllcacheitem->dll        = dlopen(dll_filename, RTLD_LAZY | RTLD_GLOBAL );//RTLD_NOW);
+		//dllcacheitem->dll        = dlopen(dll_filename, RTLD_LAZY | RTLD_GLOBAL );//RTLD_NOW);
+		
+		// 20090615_231630 lcuk : stop this being GLOBAL, adding multiple items globally overrides the specific matching capabilities
+		dllcacheitem->dll        = dlopen(dll_filename, RTLD_LAZY );//RTLD_NOW);
 		dllcacheitem->constructor= NULL;
 	}
 	
@@ -492,9 +495,12 @@ int idx=0;
 			
 			if(dllcacheitem->constructor==NULL)
 			{
-				liqapp_log("runconstructor, initializing constructor '%s'",classname);
+				//liqapp_log("runconstructor, initializing constructor '%s'",classname);
 				
 				//################################################# find the constructor
+				
+				// 20090615_231546 lcuk : in future, allow context to be used, so tagcloud_create_finger or tagcloud_create_thin etc can be used
+				
 				char symname[255];
 				snprintf(symname,255,"%s_create",dllcacheitem->key);
 				

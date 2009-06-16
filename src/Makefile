@@ -6,7 +6,7 @@ LD          = gcc
 OPT_FLAGS   =  -O3
 
 
-#USE_OSSO = 0
+USE_OSSO = 1
 
 
 
@@ -27,7 +27,7 @@ OBJS        = liqapp.o liqapp_hildon.o liqapp_prefs.o liqapp_filecache.o liqcanv
 
 
 ifdef USE_OSSO
-	CFLAGS += -dUSE_OSSO
+	CFLAGS += -DUSE_OSSO
 endif
 
 

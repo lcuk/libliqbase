@@ -31,6 +31,9 @@ int liqapp_hildon_init()
 #ifdef USE_OSSO
 	char buf[255];
 	snprintf(buf,sizeof(buf),"org.maemo.%s",app.title);
+
+	liqapp_log("hildon/osso initializing context: %s",buf);
+
 	osso_context = osso_initialize(buf, "1.0", TRUE, NULL);
 	/* Check that initialization was ok */
 	if (osso_context == NULL)

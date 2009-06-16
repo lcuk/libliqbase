@@ -180,7 +180,16 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
 			// newbit
 			// selstart+sellen..end
 			
-			int reqd = selstart  +  keylen  +  aftersellen;
+			
+			// !-- BUG FIX BY ZACH HABERSANG -- !
+			// ----------------------------------
+			// Program would segfault when 25 or so characters were entered
+			// Fix: + 1 fix to reqd! :D
+			// note: used gdb with backtrace to find this bug
+			
+			// 20090615_210659 lcuk : and me to explain why it was wrong ;) damn those +1 adjustments..
+			
+			int reqd = selstart  +  keylen  +  aftersellen + 1;
 			char *buff=malloc(reqd);
 			char *block=buff;
 			if(buff)

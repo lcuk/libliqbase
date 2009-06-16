@@ -298,12 +298,14 @@ void liqcell_setrect_autoscale(liqcell *self,int x,int y,int w,int h,float sx,fl
 
 void 	liqcell_adjustpos(liqcell *self,int dx,int dy)
 {
+	if(dx==0 && dy==0)return;
 	self->x+=dx;
 	self->y+=dy;
 	liqcell_handlerrun(self,"move",NULL);
 }
 void 	liqcell_adjustsize(liqcell *self,int dw,int dh)
 {
+	if(dw==0 && dh==0)return;
 	self->w+=dw;
 	self->h+=dh;
 	liqcell_handlerrun(self,"resize",NULL);

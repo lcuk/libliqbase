@@ -761,9 +761,11 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 	// this is jagged on 810 desktop minimal
 	//int rpt=(fmap2/tmap2)/8;
 
-
-	int rpt=(fmap2/tmap2)/16;
-
+	// 20090615_235452 lcuk :  this is too low now I changed the size of the canvas to be by default smaller
+	//int rpt=(fmap2/tmap2)/16;
+	
+	// 20090615_235500 lcuk : should find something that works in all cases
+	int rpt=(fmap2/tmap2)/32;
 
 	switch(page->backgroundstyle)
 	{

@@ -1532,7 +1532,8 @@ unsigned char spreaddiv2 = spread/2;
 				int s=y;
 				int t=*pdata;
 				//if(!s)s=128;
-				//if(!t)t=128;	
+				//if(!t)t=128;
+				
 				*pdata++ = t+((s-t)*spread)/256;
 			}
 		}

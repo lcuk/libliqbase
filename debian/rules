@@ -94,7 +94,6 @@ binary-arch: build install
 	dh_link
 	dh_strip
 	dh_compress
-	dh_fixperms
 #	dh_perl
 #	dh_python
 	dh_makeshlibs
@@ -102,6 +101,7 @@ binary-arch: build install
 	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
+	dh_fixperms
 	dh_builddeb
 
 binary: binary-indep binary-arch

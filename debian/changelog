@@ -1,3 +1,15 @@
+libliqbase (0.3.4) unstable; urgency=low
+
+  * tweaks
+
+ -- Gary <liquid@gmail.com>  15 June 2009 12:40:03 +0200
+
+libliqbase (0.3.3) unstable; urgency=low
+
+  * knob bugfixes and scrollbars
+
+ -- Gary <liquid@gmail.com>  15 June 2009 12:40:03 +0200
+
 libliqbase (0.3.2) unstable; urgency=low
 
   * bugfix to cellprop, was doubly freeing memory tsktsk
