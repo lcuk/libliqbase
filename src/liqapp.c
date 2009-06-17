@@ -510,16 +510,16 @@ int 		liqapp_init(int argc, char* argv[],char *title,char *version)
 	snprintf(buf,FILENAME_MAX,"%s",app.userdatapath);
 	trymakepath(buf);
 
-	snprintf(buf,FILENAME_MAX,"%s/.sketches",app.userdatapath);
+	snprintf(buf,FILENAME_MAX,"%s/sketches",app.userdatapath);
 	trymakepath(buf);
 
-	snprintf(buf,FILENAME_MAX,"%s/.cal",app.userdatapath);
+	snprintf(buf,FILENAME_MAX,"%s/cal",app.userdatapath);
 	trymakepath(buf);	
 
-	snprintf(buf,FILENAME_MAX,"%s/.tags",app.userdatapath);
+	snprintf(buf,FILENAME_MAX,"%s/tags",app.userdatapath);
 	trymakepath(buf);	
 
-	snprintf(buf,FILENAME_MAX,"%s/.ratings",app.userdatapath);
+	snprintf(buf,FILENAME_MAX,"%s/ratings",app.userdatapath);
 	trymakepath(buf);	
 
 	

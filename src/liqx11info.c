@@ -55,6 +55,9 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 	
 	
 	canvas.keepalivealarmtime=10000;
+	
+
+	
 
 	myx11info->myoverlay     = NULL;
 	myx11info->mydisplay     = XOpenDisplay("");
@@ -115,6 +118,32 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 			5, myforeground, mybackground);
 
 
+
+	liqapp_log("x11info setting ClassHint (thanks qwerty12!)");
+	
+	char *tit = strdup(app.title);
+	if(!tit)
+	{
+		{ liqapp_errorandfail(-1,"x11info ClassHint, could not alloc tit"); }
+		
+	}
+	// 20090617_201322 lcuk : qwerty12 says i need a class hint as well.
+	char *t=tit;
+	while(t && *t)
+	{
+		if(*t=='-') *t='_';
+		t++;
+	}
+	
+		XClassHint classhint;
+		classhint.res_name =app.title;
+		classhint.res_class=tit;
+		
+		XSetClassHint(myx11info->mydisplay, myx11info->mywindow, &classhint);
+	
+	free(tit);
+
+	
 
 
 	liqapp_log("x11info setting window properties");
