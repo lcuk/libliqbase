@@ -1,2 +1,5 @@
 *.so
 *.o
+debian/libliqbase1/*
+debian/libliqbase-dev/*
+debian/tmp/*

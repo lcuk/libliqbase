@@ -42,7 +42,6 @@ int liqapp_hildon_init()
 		t++;
 	}
 
-	free(tit);
 
 	char buf[255];
 	snprintf(buf,sizeof(buf),"org.maemo.%s",tit);
@@ -59,6 +58,9 @@ int liqapp_hildon_init()
 
     osso_display_state_on(osso_context);
     osso_display_blanking_pause(osso_context);
+
+	free(tit);
+
 #endif
 	return 0;
 }
