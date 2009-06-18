@@ -245,7 +245,27 @@ int res = strtol(param, &paramend, 0);
 
 
 
+/**
+ * check if a folder is valid and exists and can be 'stat'ed
+ * @param char *pathname including path
+ * @return int 1 if success, 0 otherwise
+ */
 
+int liqapp_folderexists(char *pathname)
+{
+	struct stat     statbuf;
+	if(stat(pathname, &statbuf) == -1)
+	{
+		return 0;
+	}
+	if ( S_ISDIR(statbuf.st_mode) )
+	{
+		// its a folder!
+		return 1;
+	}
+	// its a file..
+	return 0;
+}
 
 /**
  * check if a pathname is valid and exists and can be 'stat'ed
@@ -275,6 +295,12 @@ int liqapp_fileexists(char *filename)
 	{
 		return 0;
 	}
+	if ( S_ISDIR(statbuf.st_mode) )
+	{
+		// its a folder..
+		return 0;
+	}
+	// its a file (or at least, not a folder..)!
 	return 1;
 }
 

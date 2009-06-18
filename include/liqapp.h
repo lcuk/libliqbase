@@ -87,7 +87,7 @@ int 		liqapp_formatnow(char *buffer,int buffersize,char *format);
 char * 		liqapp_format_strftime(char *buffer,int buffersize,char *strftime_fmt);
 
 
-
+int 		liqapp_folderexists(char *pathname);
 int   		liqapp_pathexists(char *pathname);
 int   		liqapp_fileexists(char *filename);
 int         liqapp_filesize(char *filename);
