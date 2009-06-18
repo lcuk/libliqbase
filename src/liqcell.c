@@ -1527,6 +1527,13 @@ int liqcell_handlerrun(liqcell *self,char *handlername,void *args)
 {
 	int (*event_handler)(liqcell *cell,void *args,void *context);
 	liqcell *p=self;
+	
+	// 20090618_020708 lcuk : make sure we keep hold of reference for this part
+	// 20090618_020717 lcuk : i just realised i want to collapse all the tree from within an event
+	// 20090618_020733 lcuk : and without this guard, the usagecount should hit 0 and the memory released
+	// 20090618_020808 lcuk : but some of the time i carry on looping
+	liqcell_hold(self);
+	
 	//while(p)
 	{
 		liqcell *c=p->linkchild;
@@ -1544,11 +1551,17 @@ int liqcell_handlerrun(liqcell *self,char *handlername,void *args)
 					event_handler = c->data;
 					if(event_handler)
 					{
+
+						
 						// Run/Execute the handler
 						int res = event_handler(self,args,context);
+						
+						
+						
 						if(res)
 						{
 							// event was handled...
+							liqcell_release(self);
 							return res;
 						}
 						//return res;
@@ -1560,6 +1573,7 @@ int liqcell_handlerrun(liqcell *self,char *handlername,void *args)
 		}
 		//p=liqcell_getcontent(p);
 	}
+	liqcell_release(self);
 	return 0;
 }
 
