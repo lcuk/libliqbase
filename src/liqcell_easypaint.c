@@ -593,34 +593,50 @@ __tz_one("backdone");
 		if(fn && (liqapp_fileexists(fn) || ishttp(fn)))
 		{
 		
-		
-		
-			// i need to do the following:
-			// set a "please wait, loading" icon
-			// create a low priority thread with this object and nothing else
-			
-			if(!easypaint_isloading_image)
+			// 20090619_125841 lcuk : do a quick check in the image cache
+			// 20090619_125850 lcuk : if the file exists, then we just grab that :)
+			int imageallowalpha = liqcell_propgeti(self,"imageallowalpha",1);
+			liqimage *imgnew = liqimage_cache_lookuponly(fn,0,0, imageallowalpha );
+			if(imgnew)
 			{
-				//easypaint_isloading_image=liqimage_newfromfile("media/sun.png",0,0,0);
-				easypaint_isloading_image=liqimage_newfromfile("/usr/share/liqbase/media/pleasewait.png",0,0,0);
-			}
-			if(easypaint_isloading_image)
-			{
-				// only if we have a valid replacer can we do this trickery :)
-				liqcell_setimage(self, liqimage_hold(easypaint_isloading_image) );
-				// now we must start the thread off
-				pthread_t 		tid;
-				
-				//int tres=thread_createwithpriority(&tid,0,mainthread,self);
-				
-				int tres=pthread_create(&tid,NULL,mainthread,self);
-				
-				
-				if(tres)
+				liqcell_setimage( self, imgnew );
+				int isautosize = liqcell_propgeti(self,"autosize",0);
+				if(isautosize)
 				{
-					liqapp_log("thread create fail %s :: %i",fn,tres);
-					liqcliprect_release(cr);
-					return 0;
+					liqcell_setsize(self,imgnew->width,imgnew->height);
+				}
+				liqcell_setdirty(self,1);
+			}			
+			else
+			{
+		
+				// i need to do the following:
+				// set a "please wait, loading" icon
+				// create a low priority thread with this object and nothing else
+				
+				if(!easypaint_isloading_image)
+				{
+					//easypaint_isloading_image=liqimage_newfromfile("media/sun.png",0,0,0);
+					easypaint_isloading_image=liqimage_newfromfile("/usr/share/liqbase/media/pleasewait.png",0,0,0);
+				}
+				if(easypaint_isloading_image)
+				{
+					// only if we have a valid replacer can we do this trickery :)
+					liqcell_setimage(self, liqimage_hold(easypaint_isloading_image) );
+					// now we must start the thread off
+					pthread_t 		tid;
+					
+					//int tres=thread_createwithpriority(&tid,0,mainthread,self);
+					
+					int tres=pthread_create(&tid,NULL,mainthread,self);
+					
+					
+					if(tres)
+					{
+						liqapp_log("thread create fail %s :: %i",fn,tres);
+						liqcliprect_release(cr);
+						return 0;
+					}
 				}
 			}
 			

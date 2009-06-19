@@ -36,8 +36,8 @@ static struct
 	char *key;
 	liqimage *data;	
 }
-			cachestack[256];
-static int  cachemax=256-1;
+			cachestack[4096];	// 20090619_132600 lcuk : mmm todo call back here
+static int  cachemax=4096-1;
 static int  cacheused=0;
 
 
@@ -95,6 +95,47 @@ static int liqimage_cache_clean_unused(int maxremove)
 //####################################################################
 //####################################################################
 //####################################################################
+
+
+
+
+liqimage *liqimage_cache_lookuponly(char *filename,int maxw,int maxh,int allowalpha)
+{
+	//
+	liqimage *self=NULL;
+	char cachekey[256];
+	int f;
+	snprintf(cachekey,256,"image:%s,%i,%i,%i",filename,maxw,maxh,allowalpha);
+	//liqapp_log( "image cache seeking %s", cachekey );
+	if(cacheused>=cachemax)
+	{
+		//liqapp_log( "image cache cleaning %s", cachekey );
+		if(liqimage_cache_clean_unused(8)==0)
+		{
+			// all image slots actively in use
+			// error in app or just very varied
+	        liqapp_log( "Image cache full %s", cachekey );
+			return NULL;
+		}
+	}
+	//for(f=0;f<cacheused;f++)
+	for(f=cacheused-1;f>=0;f--)
+	{
+		if(strcmp(cachestack[f].key,cachekey)==0)
+		{
+			// no differences..
+			//liqapp_log( "image cache matched %s %i", cachekey ,cachestack[f].data->usagecount);
+			self = cachestack[f].data;
+			//self->usagecount++;
+			liqimage_hold(self);
+			//liqapp_log("found %s", cachekey );
+			return self;
+		}
+		// whilst I am searching, perhaps I should be moving 0 rated items to the bottom of the stack
+	}
+	return NULL;
+}
+
 
 
 liqimage *liqimage_cache_getfile(char *filename,int maxw,int maxh,int allowalpha)

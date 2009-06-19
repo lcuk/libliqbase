@@ -47,7 +47,7 @@ typedef struct liqimage 	// you might recognise this as deriving from the XVImag
 //######################################################################### additional constructors
 //#########################################################################
 //#########################################################################
-
+liqimage *  liqimage_cache_lookuponly(char *filename,int maxw,int maxh,int allowalpha);
 liqimage *  liqimage_cache_getfile(char *filename,int maxw,int maxh,int allowalpha);
 void        liqimage_cache_release(liqimage *self);
 

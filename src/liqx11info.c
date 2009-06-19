@@ -121,7 +121,7 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 
 	liqapp_log("x11info setting ClassHint (thanks qwerty12!)");
 	
-	char *tit = strdup(app.title);
+	char *tit = strdup(liqapp_gettitle());
 	if(!tit)
 	{
 		{ liqapp_errorandfail(-1,"x11info ClassHint, could not alloc tit"); }
@@ -136,12 +136,11 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 	}
 	
 		XClassHint classhint;
-		classhint.res_name =app.title;
+		classhint.res_name =tit;
 		classhint.res_class=tit;
 		
 		XSetClassHint(myx11info->mydisplay, myx11info->mywindow, &classhint);
 	
-	free(tit);
 
 	
 
@@ -150,10 +149,12 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 
 
 	
-	XSetStandardProperties(myx11info->mydisplay, myx11info->mywindow, liqapp_gettitle(),liqapp_gettitle(), None, NULL, 0, &myhint);
+	//XSetStandardProperties(myx11info->mydisplay, myx11info->mywindow, liqapp_gettitle(),liqapp_gettitle(), None, NULL, 0, &myhint);
+	XSetStandardProperties(myx11info->mydisplay, myx11info->mywindow, tit,tit, None, NULL, 0, &myhint);
 	
 	myx11info->mygc = XCreateGC(myx11info->mydisplay, myx11info->mywindow, 0, 0);
 
+	free(tit);
 
 	// ################### good x11 info
 	// http://www.openmash.org/lxr/source/xlib/X11/X.h?c=tk8.3#L99
@@ -1043,7 +1044,7 @@ foo:
 	{
 		// obtain new dimensions and adjust our renderer to suit   
 	}
-	else if (xev.type == 65 || xev.type == 69 || xev.type == 77)  // XShmCompletionEvent
+	else if (xev.type == 65 || xev.type == 69 || xev.type == 77|| xev.type == 77)  // XShmCompletionEvent
 	{
 		//http://www.x.org/docs/Xv/video		
 		//	XvShmPutImage has a parameter:
