@@ -243,11 +243,13 @@ while(mainthread_inprogress>1);
 
 
 				liqcell_setdirty(self,1);
+				liqcell_release(self);
 			}
 			else
 			{
 				// clear the utility of the "loading" image
 				liqcell_setimage( self, NULL );
+				liqcell_release(self);
 
 			}
 
@@ -609,7 +611,7 @@ __tz_one("backdone");
 			}			
 			else
 			{
-		
+				
 				// i need to do the following:
 				// set a "please wait, loading" icon
 				// create a low priority thread with this object and nothing else
@@ -621,6 +623,7 @@ __tz_one("backdone");
 				}
 				if(easypaint_isloading_image)
 				{
+					liqcell_hold(self);
 					// only if we have a valid replacer can we do this trickery :)
 					liqcell_setimage(self, liqimage_hold(easypaint_isloading_image) );
 					// now we must start the thread off
@@ -635,6 +638,7 @@ __tz_one("backdone");
 					{
 						liqapp_log("thread create fail %s :: %i",fn,tres);
 						liqcliprect_release(cr);
+						liqcell_release(self);
 						return 0;
 					}
 				}
