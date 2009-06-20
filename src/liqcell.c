@@ -1621,6 +1621,143 @@ int liqcell_isclass(liqcell *self,char *classname)
 
 
 
+
+
+
+//##############################################################
+//##############################################################
+//##############################################################
+
+
+
+
+static int lowest(int a,int b)
+{
+	if(abs(a)<abs(b))
+	{
+		liqapp_log("lowest %i :: %i = a %i",a,b,a);
+		return a;
+	}
+	liqapp_log("lowest %i :: %i = b %i",a,b,b);
+	return b;
+}
+
+
+static int dimension_ensurevisible( int rs,int re,    int ps,int pe, int ss,int se)
+{
+	// calculate the minimal adjustment within a dimension required to ensure S is visible through the portal that R provides
+	// the adjustment will be applied to P upon returning from this function
+	// to slide the rule along so s is visible :)
+	//ss += ps;	// start by adjusting 
+	//se += pe;
+	liqapp_log("dim ol: r(%i,%i)   p(%i,%i)    s(%i,%i)",   rs,re,     ps,pe,     ss,se);
+	if(re<=ss)
+	{
+		// S is way below, lets adjust
+		return lowest(ss-rs,se-re);
+	}
+	if(rs<=ss)
+	{
+		// S is actually somewhat visible
+		// but we might be chopping off the bottom of it
+		if(re<=se)
+		{
+			return lowest(ss-rs,se-re);
+		}
+		// otherwise we let it be, floating somewhere within
+		return 0;
+	}
+
+	// S is partially or entirely above us
+	return lowest(ss-rs,se-re);
+}
+
+
+
+
+int liqcell_ensurevisible(liqcell *self)
+{
+	liqapp_log("ensure: %s",self->name);
+	int xs=self->x;
+	int xe=self->x+self->w;
+	int ys=self->y;
+	int ye=self->y+self->h;
+	
+	liqcell *p=liqcell_getlinkparent(self);
+	//while(p)
+	if(p)
+	{
+		liqcell *r=liqcell_getlinkparent(p);
+		if(r)
+		{
+			liqapp_log("trying in : %s",p->name);
+			xs+=p->x;
+			xe+=p->x;
+			ys+=p->y;
+			ye+=p->y;
+
+			//
+			int ax = -dimension_ensurevisible(0,r->w,   p->x,p->x+p->w,   xs,xe);
+			int ay = -dimension_ensurevisible(0,r->h,   p->y,p->y+p->h,   ys,ye);
+
+
+			liqapp_log("gave me : a(%i,%i)",  ax,ay);
+
+			liqcell_adjustpos(p,ax,ay);
+			xs-=ax;
+			xe-=ax;
+			ys-=ay;
+			ye-=ay;
+
+		}
+		//p=r;
+	}
+	return 0;
+}
+
+
+int liqcell_ensurevisible_centred(liqcell *self)
+{
+	liqapp_log("ensure: %s",self->name);
+	int xs=self->x;
+	int xe=self->x+self->w;
+	int ys=self->y;
+	int ye=self->y+self->h;
+	
+	liqcell *p=liqcell_getlinkparent(self);
+	//while(p)
+	if(p)
+	{
+		liqcell *r=liqcell_getlinkparent(p);
+		if(r)
+		{
+			liqapp_log("trying in : %s",p->name);
+			xs+=p->x;
+			xe+=p->x;
+			ys+=p->y;
+			ye+=p->y;
+
+			//
+			int ax = -dimension_ensurevisible(r->w*0.5,r->w*0.5,   p->x,p->x+p->w,   xs,xe);
+			int ay = -dimension_ensurevisible(r->h*0.5,r->h*0.5,   p->y,p->y+p->h,   ys,ye);
+
+
+			liqapp_log("gave me : a(%i,%i)",  ax,ay);
+
+			liqcell_adjustpos(p,ax,ay);
+			xs-=ax;
+			xe-=ax;
+			ys-=ay;
+			ye-=ay;
+
+		}
+		//p=r;
+	}
+	return 0;
+}
+
+
+
 //#########################################################################
 //#########################################################################
 //######################################################################### cell test

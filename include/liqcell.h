@@ -272,7 +272,8 @@ int    	liqcell_getkineticx(liqcell *self);
 int    	liqcell_getkineticy(liqcell *self);
 
 void 	liqcell_forceinboundparent(liqcell *self);
-
+int     liqcell_ensurevisible(liqcell *self);
+int     liqcell_ensurevisible_centred(liqcell *self);
 //######################################################################### Misc Functions
 
 void 	liqcell_zorder_totop(liqcell *self);  // moves the cell to the top of the zorder, NULL function at present

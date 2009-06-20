@@ -36,12 +36,12 @@ int liqapp_prefs_load()
 
 	// ok, now we load user preferences
 	
-	liqapp_log("liqapp_prefs load :: %s",app.title);
+	liqapp_log("liqapp_prefs load :: %s","liqbase");
 	
 	if(!prefsroot)
 	{
 		liqapp_log("liqapp_prefs allocating root");
-		prefsroot = liqcell_quickcreatenameclass(app.title,"prefs");
+		prefsroot = liqcell_quickcreatenameclass("liqbase","prefs");
 	}
 	
 	
@@ -62,7 +62,7 @@ int liqapp_prefs_load()
 	FILE *fn;
 	
 	char buf[FILENAME_MAX+1];
-	snprintf(buf,FILENAME_MAX,"%s/%s.prefs",app.userdatapath,app.title);
+	snprintf(buf,FILENAME_MAX,"%s/%s.prefs",app.userdatapath,"liqbase");
 	
 	fn=fopen(buf,"r");
 	if(fn)
@@ -206,7 +206,7 @@ int liqapp_prefs_save()
 {
 	FILE *fn;
 	char buf[FILENAME_MAX+1];
-	snprintf(buf,FILENAME_MAX,"%s/%s.prefs",app.userdatapath,app.title);
+	snprintf(buf,FILENAME_MAX,"%s/%s.prefs",app.userdatapath,"liqbase");
 	
 	fn=fopen(buf,"w");
 	if(fn)
@@ -215,7 +215,7 @@ int liqapp_prefs_save()
 		char 		fmtnow[255];
 	 	liqapp_formatnow(fmtnow,255,"yyyymmdd_hhmmss");
 
-		fprintf(fn,"# liqbase :: %s preferences : %s\n",app.title,fmtnow);
+		fprintf(fn,"# liqbase :: %s preferences : %s\n","liqbase",fmtnow);
 		fprintf(fn,"begin prefs\n");
 		liqcell *c=prefsroot->linkchild;
 		while(c)
