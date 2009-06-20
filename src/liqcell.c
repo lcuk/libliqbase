@@ -603,6 +603,17 @@ liqcell *liqcell_getlinknext_visual(liqcell *self)
 	return NULL;
 }
 
+liqcell *liqcell_getlinkchild_visual(liqcell *self)
+{
+	liqcell *c = self->linkchild;
+	while(c)
+	{
+		if(liqcell_getflagvisual(c))return c;
+		c=c->linknext;
+	}
+	return NULL;
+}
+
 /**
  * Return the linked child of the parent provided.
  * @param self The parent liqcell

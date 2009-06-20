@@ -141,6 +141,7 @@ liqcell *	liqcell_getlinkchild(liqcell *self);
 
 liqcell *	liqcell_getlinkprev_visual(liqcell *self);
 liqcell *	liqcell_getlinknext_visual(liqcell *self);
+liqcell *	liqcell_getlinkchild_visual(liqcell *self);
 //######################################################################### searching
 
 //liqcell*  liqcell_findfirst(liqcell *self,char *query);
