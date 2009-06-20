@@ -23,8 +23,8 @@ clean:
 install:
 
 	mkdir -p                                    $(PREFIX)/lib
-	install -m 755 src/libliqbase.so            $(PREFIX)/lib/
-	install -m 755 src/libliqbase.so            $(PREFIX)/lib/libliqbase.so.0
+	cp src/libliqbase.so                        $(PREFIX)/lib/
+	cp src/libliqbase.so                        $(PREFIX)/lib/libliqbase.so.0
 
 	mkdir -p                                    $(PREFIX)/include
 	mkdir -p                                    $(PREFIX)/include/liqbase
