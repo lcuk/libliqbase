@@ -1002,7 +1002,7 @@ liqcell* liqcell_child_insertsorted(liqcell *self,liqcell * ch)
 		liqcell *xx=self->linkchild;
 		while(xx)
 		{
-			if(xx->name && strcmp(sa->name,xx->name)< 0)
+			if(xx->name && strcasecmp(sa->name,xx->name)< 0)
 			{
 				// insert it here...
 				//liqapp_log("insert before '%s' < '%s'",sa->name,xx->name);
@@ -1067,7 +1067,7 @@ liqcell* liqcell_child_insertsortedbyname(liqcell *self,liqcell * ch,int sortpos
 		{
 			if(xx->name)
 			{
-				int res=strcmp(sa->name,xx->name);
+				int res=strcasecmp(sa->name,xx->name);
 				if(!sortpositive)res=-res;
 				if(res < 0)
 				{
