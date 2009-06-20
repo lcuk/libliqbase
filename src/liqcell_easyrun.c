@@ -179,7 +179,13 @@ liqcell *liqcell_easyhittest(liqcell *self,  int mx,int my,int *hitx,int *hity)
 	// we are inside
 	//liqapp_log("in '%s' : checking deeper",buff);
 	// check the children now
-	liqcell *c=liqcell_getlinkchild(self);
+	
+	// 20090620_114104 lcuk : ensure hittest works from the end to the start so that latest things (which should be ontop) work
+	// 20090620_114616 lcuk : this might actually break some existing layouts, but the constructor just needs tweaking
+	// 20090620_114633 lcuk : to change the position of the buttons in use
+	
+	//liqcell *c=liqcell_getlinkchild(self);
+	liqcell *c=liqcell_lastchild(self);
 	while(c)
 	{
 		if(liqcell_getvisible(c))
@@ -191,7 +197,8 @@ liqcell *liqcell_easyhittest(liqcell *self,  int mx,int my,int *hitx,int *hity)
 				return hit;
 			}
 		}
-		c=liqcell_getlinknext(c);
+		//c=liqcell_getlinknext(c);
+		c=liqcell_getlinkprev(c);
 	}
 	*hitx=mx;
 	*hity=my;
