@@ -492,7 +492,6 @@ liqcliprect *targetcr      = NULL;//liqcanvas_getcliprect();
 
 	void easyrun_realtime_reshape()
 	{
-		
 		//vgraph_setscaleaspectlock(graph,  0);
 		vgraph_setscaleaspectlock(graph,  1);
 		vgraph_setcliprect(graph, NULL );

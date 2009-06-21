@@ -333,12 +333,14 @@ inline int		vgraph_drawline(       vgraph *self, int x, int y, int ex,int ey    
 int		vgraph_drawbox(        vgraph *self, int x, int y, int w,int h       )
 {
 	
-	//liqapp_log("draw.box.in  %i,%i,%i,%i",x,y,w,h);
+	liqapp_log("draw.box.in  %i,%i,%i,%i",x,y,w,h);
 	
 	x = self->scalex + (x * self->scalew / self->window->w);
 	y = self->scaley + (y * self->scaleh / self->window->h);
 	w = (w * self->scalew / self->window->w);
 	h = (h * self->scaleh / self->window->h);
+	
+	liqapp_log("draw.box.use %i,%i,%i,%i",x,y,w,h);
 
 	unsigned char *yuva = (unsigned char *)&self->pencolor;
 	liqcliprect_drawboxlinecolor( vgraph_getcliprect(self),   x,y,   w,h,    yuva[0],yuva[1],yuva[2] );

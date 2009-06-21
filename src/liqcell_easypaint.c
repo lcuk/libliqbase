@@ -187,6 +187,7 @@ while(mainthread_inprogress>1);
 					
 					
 					
+					
 					liqapp_log("http about to download '%s' into '%s'",fn,cachefn);
 					// doesn't exist yet
 					if(!liqapp_pathexists("liqbasecache"))
@@ -550,7 +551,29 @@ __tz_one("sizeok2");
 __tz_one("showndone");
 
 	// try it..
-	liqcell_handlerrun(self,"paint",NULL);
+	
+	
+	if(liqcell_handlerfind(self,"paint"))
+	{
+
+		// 20090621_120251 lcuk : paint NEEDS to pass a valid args with valid graph object here, shit it doesnt
+
+		vgraph *graph = vgraph_new();
+		vgraph_setscaleaspectlock(graph,  1);
+		
+		vgraph_setcliprect(graph, cr           );
+		vgraph_settarget(graph,   cr->surface  );
+		vgraph_setwindow( graph,  (self)       );
+
+		liqcellpainteventargs paintargs;
+		//paintargs.cr = liqcanvas_getcliprect();
+		paintargs.graph = graph;
+		paintargs.runfast=0;
+		
+		liqcell_handlerrun(self,"paint",&paintargs);
+		
+		vgraph_release(graph);
+	}
 	
 	// 20090526_230043 lcuk : todo: test whether bailing if painting "dealt with" harms anything
 	// 20090526_230103 lcuk : i dont think it does right now
