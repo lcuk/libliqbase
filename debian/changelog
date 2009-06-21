@@ -1,3 +1,9 @@
+libliqbase (0.3.10) unstable; urgency=low
+
+  * bugfixes towards kotcomix and vgraph and general cleanups 
+
+ -- Gary Birkett <liquid@gmail.com>  21 June 2009 22:41:03 +0200
+
 libliqbase (0.3.9) unstable; urgency=low
 
   * bug with the wmclass.. 
