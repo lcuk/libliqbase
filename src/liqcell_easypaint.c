@@ -562,8 +562,10 @@ __tz_one("showndone");
 		vgraph_setscaleaspectlock(graph,  1);
 		
 		vgraph_setcliprect(graph, cr           );
-		vgraph_settarget(graph,   cr->surface  );
+		//vgraph_settarget(graph,   cr->surface  );
+		vgraph_settarget_coord( graph,  x,y,w,h      );
 		vgraph_setwindow( graph,  (self)       );
+		//vgraph_setwindow_coord( graph,  x,y,w,h      );
 
 		liqcellpainteventargs paintargs;
 		//paintargs.cr = liqcanvas_getcliprect();
@@ -572,6 +574,9 @@ __tz_one("showndone");
 		
 		liqcell_handlerrun(self,"paint",&paintargs);
 		
+		//vgraph_setwindow( graph,  NULL       );
+		//vgraph_settarget(graph,   NULL  );
+		//vgraph_setcliprect(graph,   NULL  );
 		vgraph_release(graph);
 	}
 	

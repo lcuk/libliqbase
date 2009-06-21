@@ -20,6 +20,7 @@
 	
 	
 	
+	
 
 vgraph *vgraph_new()
 {
@@ -44,11 +45,7 @@ vgraph *vgraph_hold(vgraph *self)
 void vgraph_free(vgraph *self)
 {
 	// never call _free directly, outside sources should _release the object
-	if(self->font)
-	{
-		liqfont_release(self->font);
-		self->font=NULL;
-	}
+	vgraph_setfont(self,NULL);
 	vgraph_setwindow(self,NULL);
 	vgraph_settarget(self,NULL);
 	free(self);
@@ -90,10 +87,10 @@ liqcliprect *vgraph_getcliprect(      vgraph *self)
 
 void    vgraph_convert_target2window(vgraph *self, int tx,int ty,  int *wx, int *wy)
 {
-	if(self->target && self->window)
+	if(self->targetw && self->targeth && self->windoww && self->windowh)
 	{
-		int x = ((tx - self->scalex) * self->window->w / self->scalew);
-		int y = ((ty - self->scaley) * self->window->h / self->scaleh);
+		int x = ((tx - self->scalex) * self->windoww / self->scalew);
+		int y = ((ty - self->scaley) * self->windowh / self->scaleh);
 		*wx=x;
 		*wy=y;
 	}
@@ -106,10 +103,10 @@ void    vgraph_convert_target2window(vgraph *self, int tx,int ty,  int *wx, int 
 
 void    vgraph_convert_window2target(vgraph *self, int wx,int wy,  int *tx, int *ty)
 {
-	if(self->target && self->window)
+	if(self->targetw && self->targeth && self->windoww && self->windowh)
 	{
-		int x = self->scalex + (wx * self->scalew / self->window->w);
-		int y = self->scaley + (wy * self->scaleh / self->window->h);
+		int x = self->scalex + (wx * self->scalew / self->windoww);
+		int y = self->scaley + (wy * self->scaleh / self->windowh);
 		*tx=x;
 		*ty=y;
 	}
@@ -143,32 +140,32 @@ static float calcaspect(int captionw,int captionh,int availw,int availh)
 static void vgraph_recalc(vgraph *self)
 {
 	// recalculate required settings to sit window neatly within target
-	if(self->target && self->window)
+	if(self->targetw && self->targeth && self->windoww && self->windowh)
 	{
-		float ar = calcaspect(self->window->w,self->window->h,self->target->width,self->target->height);
+		float ar = calcaspect(self->windoww,self->windowh,self->targetw,self->targeth);
 		
 		
 		if(self->scaleaspectlock)
 		{
 		
-			self->scalew = self->window->w * ar;
-			self->scaleh = self->window->h * ar;
-			self->scalex = (self->target->width - self->scalew) / 2;
-			self->scaley = (self->target->height - self->scaleh) / 2;
+			self->scalew = self->windoww * ar;
+			self->scaleh = self->windowh * ar;
+			self->scalex = self->targetx+(self->targetw - self->scalew) / 2;
+			self->scaley = self->targety+(self->targeth - self->scaleh) / 2;
 		}
 		else
 		{
-			self->scalew = self->target->width;
-			self->scaleh = self->target->height;
-			self->scalex = 0;
-			self->scaley = 0;
+			self->scalew = self->targetw;
+			self->scaleh = self->targeth;
+			self->scalex = self->targetx;
+			self->scaley = self->targety;
 			
 		}
+	/*	
+		// 20090621_193038 lcuk : no need for all this anymore :)
 		
-		
-		
-		liqapp_log("scale.win %i,%i",self->window->w,self->window->h);
-		liqapp_log("scale.tar %i,%i",self->target->width,self->target->height);
+		liqapp_log("scale.win %i,%i",self->windoww,self->windowh);
+		liqapp_log("scale.tar %i,%i",self->targetw,self->targeth);
 		liqapp_log("scale.sxy %i,%i",self->scalex,self->scaley);
 		liqapp_log("scale.swh %i,%i",self->scalew,self->scaleh);
 
@@ -181,8 +178,8 @@ static void vgraph_recalc(vgraph *self)
 		vgraph_convert_target2window(self,mx,my,&dx,&dy);
 		liqapp_log("scale.test t2w %i,%i = %i,%i",mx,my,dx,dy);
 		
-		mx=self->target->width;
-		my=self->target->height;
+		mx=self->targetw;
+		my=self->targeth;
 		vgraph_convert_target2window(self,mx,my,&dx,&dy);
 		liqapp_log("scale.test t2w %i,%i = %i,%i",mx,my,dx,dy);
 		
@@ -193,11 +190,11 @@ static void vgraph_recalc(vgraph *self)
 		vgraph_convert_window2target(self,mx,my,&dx,&dy);
 		liqapp_log("scale.test w2t %i,%i = %i,%i",mx,my,dx,dy);
 		
-		mx=self->window->w;
-		my=self->window->h;
+		mx=self->windoww;
+		my=self->windowh;
 		vgraph_convert_window2target(self,mx,my,&dx,&dy);
 		liqapp_log("scale.test w2t %i,%i = %i,%i",mx,my,dx,dy);
-
+	*/
 
 	}
 	else
@@ -227,25 +224,73 @@ int vgraph_getscaleaspectlock(vgraph *self)
 	
 int		vgraph_settarget(vgraph *self, liqimage *target )
 {
-	if(self->target)
+	//if(self->target)
+	//{
+	//	liqimage_release(self->target);
+	//	self->target=NULL;
+	//}
+	//if(target) self->target=liqimage_hold(target);
+	
+	if(target)
 	{
-		liqimage_release(self->target);
-		self->target=NULL;
+		self->targetx=0;
+		self->targety=0;
+		self->targetw=target->width;
+		self->targeth=target->height;
 	}
-	if(target) self->target=liqimage_hold(target);
+	else
+	{
+		self->targetx=0;
+		self->targety=0;
+		self->targetw=0;
+		self->targeth=0;
+		
+	}
+	
 	vgraph_recalc(self);
 	return 0;
 }
 
+
+int		vgraph_settarget_coord(     		vgraph *self, int x,int y,    int w,int h )
+{
+	self->targetx=x;
+	self->targety=y;
+	self->targetw=w;
+	self->targeth=h;
+	vgraph_recalc(self);
+	return 0;
+}
+
+
+
 int		vgraph_setwindow(   vgraph *self, liqcell *window )// int xs,int ys,    int xe,int ye )
 {
-	if(self->window)
+	if(window)
 	{
-		liqcell_release(self->window);
-		self->window=NULL;
-	}	
-	self->window = liqcell_hold(window);
-	//if(window) self->window = (window);
+		self->windowx=window->x;
+		self->windowy=window->y;
+		self->windoww=window->w;
+		self->windowh=window->h;
+	}
+	else
+	{
+		self->windowx=0;
+		self->windowy=0;
+		self->windoww=0;
+		self->windowh=0;		
+	}
+	vgraph_recalc(self);
+	return 0;
+}
+
+
+int		vgraph_setwindow_coord(     		vgraph *self, int x,int y,    int w,int h )
+{
+	self->windowx=x;
+	self->windowy=y;
+	self->windoww=w;
+	self->windowh=h;
 	vgraph_recalc(self);
 	return 0;
 }
@@ -305,9 +350,9 @@ int		vgraph_drawpoint(      vgraph *self, int x, int y                    )
 {
 	
 	//liqapp_log("draw.point.in  %i,%i",x,y);
-	x = self->scalex + (x * self->scalew / self->window->w);
-	y = self->scaley + (y * self->scaleh / self->window->h);
-	
+	x = self->scalex + (x * self->scalew / self->windoww);
+	y = self->scaley + (y * self->scaleh / self->windowh);
+	//liqapp_log("draw.point.use %i,%i",x,y);
 	unsigned char *yuva = (unsigned char *)&self->pencolor;
 	liqcliprect_drawpsetcolor( vgraph_getcliprect(self),   x,y,       yuva[0],yuva[1],yuva[2] );
 	return 0;
@@ -317,10 +362,10 @@ int		vgraph_drawpoint(      vgraph *self, int x, int y                    )
 inline int		vgraph_drawline(       vgraph *self, int x, int y, int ex,int ey       )
 {
 	//liqapp_log("draw.line.in  %i,%i,%i,%i",x,y,ex,ey);
-	x =  self->scalex + (x  * self->scalew / self->window->w);
-	y =  self->scaley + (y  * self->scaleh / self->window->h);
-	ex = self->scalex + (ex * self->scalew / self->window->w);
-	ey = self->scaley + (ey * self->scaleh / self->window->h);
+	x =  self->scalex + (x  * self->scalew / self->windoww);
+	y =  self->scaley + (y  * self->scaleh / self->windowh);
+	ex = self->scalex + (ex * self->scalew / self->windoww);
+	ey = self->scaley + (ey * self->scaleh / self->windowh);
 
 	//liqapp_log("draw.line.use %i,%i,%i,%i",x,y,ex,ey);
 
@@ -333,14 +378,14 @@ inline int		vgraph_drawline(       vgraph *self, int x, int y, int ex,int ey    
 int		vgraph_drawbox(        vgraph *self, int x, int y, int w,int h       )
 {
 	
-	liqapp_log("draw.box.in  %i,%i,%i,%i",x,y,w,h);
+	//liqapp_log("draw.box.in  %i,%i,%i,%i",x,y,w,h);
 	
-	x = self->scalex + (x * self->scalew / self->window->w);
-	y = self->scaley + (y * self->scaleh / self->window->h);
-	w = (w * self->scalew / self->window->w);
-	h = (h * self->scaleh / self->window->h);
+	x = self->scalex + (x * self->scalew / self->windoww);
+	y = self->scaley + (y * self->scaleh / self->windowh);
+	w = (w * self->scalew / self->windoww);
+	h = (h * self->scaleh / self->windowh);
 	
-	liqapp_log("draw.box.use %i,%i,%i,%i",x,y,w,h);
+	//liqapp_log("draw.box.use %i,%i,%i,%i",x,y,w,h);
 
 	unsigned char *yuva = (unsigned char *)&self->pencolor;
 	liqcliprect_drawboxlinecolor( vgraph_getcliprect(self),   x,y,   w,h,    yuva[0],yuva[1],yuva[2] );
@@ -354,10 +399,10 @@ int		vgraph_drawrect(       vgraph *self, int x, int y, int w,int h       )
 	
 	//liqapp_log("draw.rect.in  %i,%i,%i,%i",x,y,w,h);
 	
-	x = self->scalex + (x * self->scalew / self->window->w);
-	y = self->scaley + (y * self->scaleh / self->window->h);
-	w = (w * self->scalew / self->window->w);
-	h = (h * self->scaleh / self->window->h);
+	x = self->scalex + (x * self->scalew / self->windoww);
+	y = self->scaley + (y * self->scaleh / self->windowh);
+	w = (w * self->scalew / self->windoww);
+	h = (h * self->scaleh / self->windowh);
 	
 	
 	
@@ -399,10 +444,10 @@ int		vgraph_drawellipse(    vgraph *self, int x, int y, int rx,int ry     )
 {
 	//liqapp_log("draw.ellipse.in  %i,%i,%i,%i",x,y,rx,ry);
 	
-	x = self->scalex + (x * self->scalew / self->window->w);
-	y = self->scaley + (y * self->scaleh / self->window->h);
-	rx = (rx * self->scalew / self->window->w);
-	ry = (ry * self->scaleh / self->window->h);
+	x = self->scalex + (x * self->scalew / self->windoww);
+	y = self->scaley + (y * self->scaleh / self->windowh);
+	rx = (rx * self->scalew / self->windoww);
+	ry = (ry * self->scaleh / self->windowh);
 	
 	
 	
@@ -457,10 +502,10 @@ int		vgraph_drawsketch_old(       vgraph *self, int x, int y, int w,int h  ,liqs
 /*	
 	liqapp_log("draw.sketch.in  %i,%i,%i,%i",x,y,w,h);
 	
-	x = self->scalex + (x * self->scalew / self->window->w);
-	y = self->scaley + (y * self->scaleh / self->window->h);
-	w = (w * self->scalew / self->window->w);
-	h = (h * self->scaleh / self->window->h);
+	x = self->scalex + (x * self->scalew / self->windoww);
+	y = self->scaley + (y * self->scaleh / self->windowh);
+	w = (w * self->scalew / self->windoww);
+	h = (h * self->scaleh / self->windowh);
 	
 	
 	
@@ -496,10 +541,10 @@ int		vgraph_drawsketch(       vgraph *self, int x, int y, int w,int h  ,liqsketc
 	
 	//liqapp_log("draw.sketch.in  %i,%i,%i,%i",x,y,w,h);
 	
-	x = self->scalex + (x * self->scalew / self->window->w);
-	y = self->scaley + (y * self->scaleh / self->window->h);
-	w = (w * self->scalew / self->window->w);
-	h = (h * self->scaleh / self->window->h);
+	x = self->scalex + (x * self->scalew / self->windoww);
+	y = self->scaley + (y * self->scaleh / self->windowh);
+	w = (w * self->scalew / self->windoww);
+	h = (h * self->scaleh / self->windowh);
 	
 	
 	
@@ -523,10 +568,10 @@ int		vgraph_drawcell(      vgraph *self, int x, int y, int w,int h , liqcell *ce
 {
 	//liqapp_log("draw.cell.in  %i,%i,%i,%i   %s",x,y,w,h,cell->name);
 	
-	x = self->scalex + (x * self->scalew / self->window->w);
-	y = self->scaley + (y * self->scaleh / self->window->h);
-	w = (w * self->scalew / self->window->w);
-	h = (h * self->scaleh / self->window->h);
+	x = self->scalex + (x * self->scalew / self->windoww);
+	y = self->scaley + (y * self->scaleh / self->windowh);
+	w = (w * self->scalew / self->windoww);
+	h = (h * self->scaleh / self->windowh);
 	
 		
 	//liqapp_log("draw.cell.use %i,%i,%i,%i",x,y,w,h);

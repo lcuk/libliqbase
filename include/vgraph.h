@@ -25,7 +25,7 @@ struct vgraph
 	
 	
 	liqcliprect *cliprect;
-	liqimage *target;
+	//liqimage *target;
 
 	int scalex;
 	int scaley;
@@ -34,7 +34,7 @@ struct vgraph
 	int scaleh;
 	
 	
-	liqcell *window;
+	//liqcell *window;
 
 	
 	unsigned int backcolor;
@@ -45,6 +45,17 @@ struct vgraph
 	
 	int scaleaspectlock;
 	
+	
+	int windowx;			// these are to be the window coords
+	int windowy;
+	int windoww;
+	int windowh;
+	
+	int targetx;			// these are to be the usable target space
+	int targety;
+	int targetw;
+	int targeth;
+
 }
 	vgraph;
 	
@@ -55,7 +66,9 @@ void    vgraph_release(					vgraph *self);
 //void 	vgraph_free(vgraph *self);
 	
 int		vgraph_settarget(      			vgraph *self, liqimage *target );
+int		vgraph_settarget_coord(     		vgraph *self, int x,int y,    int w,int h );
 int		vgraph_setwindow(      			vgraph *self, liqcell *window);// int x,int y,    int w,int h );
+int		vgraph_setwindow_coord(     		vgraph *self, int x,int y,    int w,int h );
 void    vgraph_convert_target2window(	vgraph *self, int tx,int ty,  int *wx, int *wy);
 void    vgraph_convert_window2target(	vgraph *self, int wx,int wy,  int *tx, int *ty);
 void    vgraph_setcliprect(      		vgraph *self, liqcliprect *cliprect );
