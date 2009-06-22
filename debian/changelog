@@ -1,3 +1,9 @@
+libliqbase (0.3.11) unstable; urgency=low
+
+  * prevent multiple event handlers being fired if at least 1 is found 
+
+ -- Gary Birkett <liquid@gmail.com>  21 June 2009 22:41:03 +0200
+
 libliqbase (0.3.10) unstable; urgency=low
 
   * bugfixes towards kotcomix and vgraph and general cleanups 

@@ -1600,7 +1600,7 @@ int liqcell_handlerrun(liqcell *self,char *handlername,void *args)
 							//liqcell_release(self);
 							return res;
 						}
-						//return res;
+						return res;		// if the event existed, we run it, no consequence, later, inc ref count and allow recursive multiple event chains
 					}
 					//return 0;
 				}
