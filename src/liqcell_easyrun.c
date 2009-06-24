@@ -207,6 +207,65 @@ liqcell *liqcell_easyhittest(liqcell *self,  int mx,int my,int *hitx,int *hity)
 
 
 
+static void savethumb(liqcell *cell)
+{
+	liqcell_hold(cell);
+	// 20090528_231040 lcuk : this locks up dunno why
+	// 20090624_005139 lcuk : trying it as a widget itself, to see if it was initializers at fault
+	liqapp_log("...creating image %s",cell->name);
+	liqimage *img = liqimage_newatsize(canvas.pixelwidth,canvas.pixelheight,0);
+	
+	liqapp_log("...creating cliprect");
+	
+	liqcliprect *cr = liqcliprect_newfromimage(img);
+	
+	liqapp_log("...painting cell %s",cell->name);
+	liqcell_easypaint(cell,cr,0,0,canvas.pixelwidth,canvas.pixelheight);
+	
+	liqapp_log("...building filename");
+
+				char 		fmtnow[255];
+	 			liqapp_formatnow(fmtnow,255,"yyyymmdd_hhmmss");
+				char buf[FILENAME_MAX+1];
+				snprintf(buf,FILENAME_MAX,"liq.%s.%s.scr.png",fmtnow,"lib"  );
+
+
+
+
+	
+	liqapp_log("...saving image as '%s'",buf);
+
+				liqimage_pagesavepng(img,buf);
+	
+
+
+//01:49:32 png writing png
+//01:49:32 png cleaning up
+//01:49:32 ...releasing cr
+//01:49:32 liqcliprect free
+//01:49:32 liqimage free
+//01:49:32 liqimage pagereset
+//01:49:32 ...releasing image
+//01:49:32 ...done
+// 20090624_015023 lcuk : a bug is occuring, the liqimage instance is being freed too early
+// 20090624_015040 lcuk : that means something is releasing it within the middle of something else
+// 20090624_015052 lcuk : but did not get hold of it first
+	
+				
+	
+	liqapp_log("...releasing cr");
+	liqcliprect_release(cr);
+	
+	liqapp_log("...releasing image");
+	liqimage_release(img);
+	
+	liqapp_log("...done");
+	
+	liqcell_release(cell);
+	
+}
+
+
 
 	static int toolitem_click(liqcell *self, liqcellclickeventargs *args, liqcell *tool)
 	{
@@ -228,12 +287,14 @@ liqcell *liqcell_easyhittest(liqcell *self,  int mx,int my,int *hitx,int *hity)
 		return 1;
 	}
 	
-	static int tool_design_click(liqcell *self, liqcellclickeventargs *args, liqcell *tool)
+	static int tool_pic_click(liqcell *self, liqcellclickeventargs *args, liqcell *tool)
 	{
-		
 		liqcell * content = liqcell_child_lookup(tool,"content");
 		
-		int res = liqdialog_showtree("quick view","view of cell contents","",liqcell_getcontent(content) );
+		savethumb( liqcell_getcontent(content) );
+		
+		liqcell_setvisible(tool,0);
+		//int res = liqdialog_showtree("quick view","view of cell contents","",liqcell_getcontent(content) );
 		
 		return 1;
 	}
@@ -304,9 +365,9 @@ liqcell * toolclick(liqcell *vis)
 		liqcell_child_insert( self, b );		
 
 
-		b = liqcell_quickcreatevis("design","button",  800-50,64+hh*0.6,   50,hh*0.2);
+		b = liqcell_quickcreatevis("pic","button",  800-50,64+hh*0.6,   50,hh*0.2);
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
-		liqcell_handleradd_withcontext(b,    "click",   tool_design_click, self);
+		liqcell_handleradd_withcontext(b,    "click",   tool_pic_click, self);
 		liqcell_propsets(  b,    "backcolor", "rgb(100,100,0)" );
 		liqcell_child_insert( self, b );
 

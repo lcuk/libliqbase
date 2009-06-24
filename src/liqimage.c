@@ -427,6 +427,7 @@ liqimage *liqimage_new()
 liqimage * liqimage_hold(liqimage *self)
 {
 	// use this to hold onto an object which someone else created
+	//liqapp_log( "liqimage hold  (%i,%i) %i", self->width,self->height,self->usagecount );
 	if(self)self->usagecount++;
 	return self;
 }
@@ -443,7 +444,7 @@ void liqimage_release(liqimage *self)
 
 void liqimage_free(liqimage *self)
 {
-	liqapp_log("liqimage free");
+	//liqapp_log("liqimage free");
 	liqimage_pagereset(self);
 	free(self);
 }
@@ -478,9 +479,10 @@ void liqimage_pagereset(liqimage *self)
 		if(self->pitches)free(self->pitches);
 		if(self->data)   free(self->data);		
 	}
-	
-	
-	memset((char *)self,0,sizeof(liqimage));	
+	// 20090624_020851 lcuk : GOTCHA!  you were being blanked to 0 every time this was called and not retaining the usagecount
+int uc=self->usagecount;
+	memset((char *)self,0,sizeof(liqimage));
+	self->usagecount=uc;
 }
 
 void liqimage_pagedefine(liqimage *self,int w,int h,int dpix,int dpiy,int hasalpha)	// result plane count: 3=YUV, 4=YUVA

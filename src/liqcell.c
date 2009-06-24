@@ -90,11 +90,11 @@ liqcell * liqcell_hold(liqcell *self)
 
 void liqcell_release(liqcell *self)
 {
+	if(!self) return;
 	// use this when you are finished with an object
 	int imgc=0;
 	if(self->image)imgc=self->image->usagecount;
 	//liqapp_log("liqcell release %s::%i::%i",self->name,self->usagecount,imgc);
-	if(!self) return;
 	
 	self->usagecount--;
 	if(!self->usagecount) liqcell_free(self);
@@ -179,7 +179,7 @@ void liqcell_free(liqcell *self)
 
 
 	
-	//liqapp_log("liqcell freeing self");
+	liqapp_log("liqcell freeing self");
 	
 	
 	free(self);

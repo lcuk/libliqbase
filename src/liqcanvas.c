@@ -73,6 +73,67 @@ liqx11info *  liqcanvas_getx11info()
 
 
 
+
+int liqcanvas_takepicture()
+{
+							char 		fmtnow[255];
+							liqapp_formatnow(fmtnow,255,"yyyymmdd_hhmmss");
+							char buf[FILENAME_MAX+1];
+							int pngerr =0;
+							
+							
+							liqimage *imgfrom=NULL;//liqcamera_getimage();
+							if(!imgfrom)
+							{
+								// camera not on, we are doing desktop
+								imgfrom = canvas.surface;
+							}
+							if(imgfrom)
+							{
+			
+							/*		if(imgfrom != canvas.surface)
+									{
+										// save camera image
+										
+										snprintf(buf,FILENAME_MAX,"%s/liq.%s.%s.cam.png",app.sketchpath,fmtnow,app.username  );
+										liqapp_log("Fullscreen Pressed, saving camera  as '%s'",buf);
+										pngerr=liqimage_pagesavepng(imgdesk,buf);
+									}
+									else
+							*/
+									{
+										// save screenshot
+										char 		fmtnow[255];
+										liqapp_formatnow(fmtnow,255,"yyyymmdd_hhmmss");
+										char buf[FILENAME_MAX+1];
+										snprintf(buf,FILENAME_MAX,"liq.%s.%s.scr.png",fmtnow,"lib"  );
+										liqapp_log("liqcanvas_takepicture, saving canvas as '%s'",buf);
+										pngerr=liqimage_pagesavepng(imgfrom,buf);
+									}
+									
+							}
+							else
+							{
+								// no canvas
+								liqapp_log("liqcanvas_takepicture, no canvas");
+							}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int liqcanvas_isopen()
 {
 	if(canvas.pixelwidth || canvas.pixelheight)

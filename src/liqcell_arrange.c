@@ -621,7 +621,16 @@ int liqcell_child_arrange_easytile(liqcell *self)
 	//################################################ Determine the number of rows/cols
 	liqapp_log("liqcell_child_arrange_easytile weighing");
 	int ccols=1;
-	while(ccols<3 && ccols<answercount)ccols++;
+	// 20090624_010635 lcuk : changed from <3 to <5 to allow for more columns by default on busy ui's
+	if(answercount<=12)
+	{
+		while(ccols<3 && ccols<answercount)ccols++;
+	}
+	else
+	{
+		while(ccols<5 && ccols<answercount)ccols++;
+		
+	}
 	int crows=answercount/ccols;
 	while(ccols*crows<answercount)crows++;
 
