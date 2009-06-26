@@ -384,13 +384,23 @@ void liqcell_setname(liqcell *self,char *name)
 
 void liqcell_setcaption(liqcell *self,char *caption)
 {
+	// 20090626_213441 lcuk : did some extra logging for zachmon's benefit
+	if(!self)
+	{
+		liqapp_log("liqcell_setcaption failed, self==NULL");
+		return;		
+	}
+	//liqapp_log("caption on '%s' changing to '%s'",self->name, (caption?caption:"[NULL]") );
 	if(self->caption)
 	{
+		//liqapp_log("caption on '%s' was '%s'",self->name,self->caption);
 		free(self->caption);
 		self->caption=NULL;
 	}
 	if(caption) {     self->caption      = strdup(caption);   }//        liqcell_setdirty(self,1);    }
+	//liqapp_log("caption on '%s' changed, raising event",self->name );
 	liqcell_handlerrun(self,"captionchange",NULL);
+	//liqapp_log("caption on '%s' change fin",self->name );
 }
 
 
