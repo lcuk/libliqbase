@@ -559,7 +559,7 @@ int 		liqapp_init(int argc, char* argv[],char *title,char *version)
 	char *un = liqapp_pref_getvalue("username");
 	if(un)
 	{
-		//app_log("got username from preferences");
+		liqapp_log("got username from preferences '%s'",un);
 		// we have the preference :)
 		{
 			if(app.username){free(app.username); app.username=NULL;}

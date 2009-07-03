@@ -148,7 +148,7 @@ int vrect_scaletofit(vrect *self,vrect *avail,vrect *required)
 
 
 
-static float calcaspect(int captionw,int captionh,int availw,int availh)
+float calcaspect(int captionw,int captionh,int availw,int availh)
 {
 	if(captionw==0)return 0;
 	if(captionh==0)return 0;
@@ -227,7 +227,7 @@ static void savethumb(liqcell *cell)
 				char 		fmtnow[255];
 	 			liqapp_formatnow(fmtnow,255,"yyyymmdd_hhmmss");
 				char buf[FILENAME_MAX+1];
-				snprintf(buf,FILENAME_MAX,"liq.%s.%s.scr.png",fmtnow,"lib"  );
+				snprintf(buf,FILENAME_MAX,"%s/sketches/liq.%s.%s.scr.png",app.userdatapath,fmtnow,cell->name  );
 
 
 
@@ -290,14 +290,12 @@ static void savethumb(liqcell *cell)
 	static int tool_pic_click(liqcell *self, liqcellclickeventargs *args, liqcell *tool)
 	{
 		liqcell * content = liqcell_child_lookup(tool,"content");
-		
 		savethumb( liqcell_getcontent(content) );
-		
 		liqcell_setvisible(tool,0);
 		//int res = liqdialog_showtree("quick view","view of cell contents","",liqcell_getcontent(content) );
-		
 		return 1;
 	}
+	
 	static int tool_pin_click(liqcell *self, liqcellclickeventargs *args, liqcell *tool)
 	{
 		return 1;
@@ -351,7 +349,8 @@ liqcell * toolclick(liqcell *vis)
 		liqcell_child_insert( self, b );
 
 
-		b = liqcell_quickcreatevis("bug","button",  800-50,64+hh*0.2,   50,hh*0.2 );
+
+		b = liqcell_quickcreatevis("draw","button",  800-50,64+hh*0.2,   50,hh*0.2 );
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
 		liqcell_handleradd_withcontext(b,    "click",   tool_bug_click, self);
 		liqcell_propsets(  b,    "backcolor", "rgb(100,0,0)" );
@@ -365,6 +364,8 @@ liqcell * toolclick(liqcell *vis)
 		liqcell_child_insert( self, b );		
 
 
+
+
 		b = liqcell_quickcreatevis("pic","button",  800-50,64+hh*0.6,   50,hh*0.2);
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
 		liqcell_handleradd_withcontext(b,    "click",   tool_pic_click, self);
@@ -372,7 +373,9 @@ liqcell * toolclick(liqcell *vis)
 		liqcell_child_insert( self, b );
 
 
-		b = liqcell_quickcreatevis("pin","button",  800-50,64+hh*0.8,   50,hh*0.2 );
+
+
+		b = liqcell_quickcreatevis("save","button",  800-50,64+hh*0.8,   50,hh*0.2 );
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
 		liqcell_handleradd_withcontext(b,    "click",   tool_pin_click, self);
 		liqcell_propsets(  b,    "backcolor", "rgb(0,0,100)" );
@@ -384,12 +387,18 @@ liqcell * toolclick(liqcell *vis)
 
 
 
-		liqcell *c = liqcell_quickcreatevis("content", NULL, 0,56,   800-50,480-56 );
-		liqcell_setcontent( c, vis );
-		liqcell_setenabled( c, 0 );		// make sure it has fadeout
+		liqcell *c;
+		
+		
+/*		c = liqcell_quickcreatevis("contentdraw", "liqtop", 0,56,   800-50,480-56 );
 		liqcell_handleradd_withcontext( c,    "click",   toolitem_click,self);
 		liqcell_child_insert( self, c );
-
+*/	
+		c = liqcell_quickcreatevis("content", NULL, 0,56,   800-50,480-56 );
+		liqcell_setcontent( c, vis );
+		liqcell_setenabled( c, 0 );		// make sure it has fadeout
+		//liqcell_handleradd_withcontext( c,    "click",   toolitem_click,self);
+		liqcell_child_insert( self, c );
 
 
 	}
@@ -498,6 +507,13 @@ liqcell *liqcell_findfirsthandler(liqcell*root,char *handlername)
 
 
 
+// 20090702_192535 lcuk : very quickly, the zoom in the middle of this needs replacing
+// 20090702_192547 lcuk : it needs to have an enter from parameter rect
+// 20090702_192602 lcuk : this should indicate in screen coordinates where the item is to start from
+// 20090702_192626 lcuk : during the course of the next Nth of a second the cell spends coming to rest from that point
+// 20090702_192721 lcuk : after completing, it should deblur in a similar manner.
+// 20090702_192752 lcuk : a disolve effect would be magical tonight..
+// 20090702_192827 lcuk : this completely solves the problem of the zoom in the core of this function
 
 
 
@@ -1181,9 +1197,6 @@ skipev:
 
 
 		float zoom_duration = 0.15;//0.4;//0.01;//0.1;//0.2;	// time to go from fullscreen to zoomed in
-		
-		//zoom_duration=2;	// 20090410_130608 lcuk : testing the layout stuff
-
 		if((zoom_in_progress) && (hot) && (refreshinprogress==0))
 		{
 			float zoomruntime = (liqapp_GetTicks()-zoom_start) / (1000.0);
@@ -1217,30 +1230,17 @@ skipev:
 			}
 			else
 			{
-
 moar:
-
 				if(zoom_direction==-1) zoomfactor = 1-zoomfactor;
-
-
 				//int hisa = calcaspect(hot->w,hot->h, self->w,self->h);
 				//int hisw = hot->w * hisa;
 				//int hish = hot->h * hisa;
 				float hfx=1;//(float)hisw / (float)self->w;
 				float hfy=1;//(float)hish / (float)self->h;
-
-
 				// we are some fraction between viewing the whole screen and being zoomed directly on hot
 				//
-
 				zw = self->w + (float)self->w * zoomfactor * (((float)self->w / (float)hot->w * hfx)-1 );
 				zh = self->h + (float)self->h * zoomfactor * (((float)self->h / (float)hot->h * hfy)-1 );
-
-
-				//zw = self->w + (float)hisw * zoomfactor * (((float)hisw / (float)hot->w)-1);
-				//zh = self->h + (float)hish * zoomfactor * (((float)hish / (float)hot->h)-1);
-
-
 				int rx=0;
 				int ry=0;
 				liqcell *r=hot;
@@ -1251,130 +1251,55 @@ moar:
 					ry+=r->y;
 					r=r->linkparent;
 				}
-				//rx+=hot->w/2;
-				//ry+=hot->h/2;
-
-
 				zx = -(float)rx * (zoomfactor) * (((float)self->w / (float)hot->w * hfx));
 				zy = -(float)ry * (zoomfactor) * (((float)self->h / (float)hot->h * hfy));
-
-
-				//zx = -(float)rx * (zoomfactor) * (((float)hisw / (float)hot->w));
-				//zy = -(float)ry * (zoomfactor) * (((float)hish / (float)hot->h));
-
-
-
 
 				//liqapp_log("self(%i,%i)   hot(%i,%i)-step(%i,%i)   z(%i,%i)-step(%i,%i)",
 				//					self->w,self->h,
 				//					hot->x,hot->y, hot->w,hot->h,
 				//					zx,zy,zw,zh);
-
-
 			}
 
 			dirty=1;
 		}
-
-
-
-		//if(self->dirty && (refreshinprogress==0))
-		//if(universe->dirty && (refreshinprogress==0) && (dirty==0))
-		//{
-		//	dirty=1;
-		//	universe->dirty=0;
-		//}
-
 		if(self->dirty && (refreshinprogress==0))// && (dirty==0))
 		{
 			dirty=1;
 			self->dirty=0;
 		}
-
-
-
-
-		//if((refreshinprogress==0) )//&& (wantwait==0))
-		//{
-		//	dirty=1;
-		//}
-
-
 		if(refreshinprogress==0) if(running==0) break;
-
-
 		if(paintargs.runfast) dirty=1;
-
-
-		//if(self->dirty && (refreshinprogress==0))
-		//if(universe->dirty && (refreshinprogress==0) && (dirty==0))
-		//{
-			// leave the system telling us its changed until we have finished trying all normal updates..
-		//	dirty=1;
-			//universe->dirty=0;
-		//}
-
-
-
-		//dirty=1;
-		//wantwait=0;
-		//refreshinprogress=0;
-
-
 		if(((dirty==1) && (refreshinprogress==0)))
 		{
-			
-
 		//	liqapp_log("render %i  ud=%i",framecount,universe->dirty);
-
 			//liqapp_log("rendering %i",framecount);
-
 			//liqcliprect_drawclear(liqcanvas_getcliprect(),255,128,128);
 			liqcliprect_drawclear(liqcanvas_getcliprect(),0,128,128);
-
 			// ensure runfast is unset before attmpting the next loop
 			paintargs.runfast=0;
-
 			//##################################################### render handler
 			// do whatever we want..
 			liqcell_handlerrun(self,"paint",&paintargs);
-
 			float fac = 1;
-
 			fac=1;
-
 			int w=(((float)self->w)*fac);
 			int h=(((float)self->h)*fac);
 			int x=0;//self->x;//-w/2;
 			int y=0;//self->y;//-h/2;
-
-
 			if(zoom_in_progress)
 			{
 				w=zw;
 				h=zh;
 				x=zx;
 				y=zy;
-
 			}
-			
-
-
 			if(mouseargs.mcnt>0)
 			{
 			//	w=ev.mouse.x;
 			}
-
-
 			//liqapp_log("render drawing wh(%i,%i)",w,h);
-
-
 			vgraph_drawcell(graph,x,y,w,h,self);
-			
-			
 			//liqapp_log("render adding nav items");
-
-
 			static liqimage *infoback=NULL;
 			static liqimage *infoclose=NULL;
 			static liqimage *infotools=NULL;
@@ -1405,17 +1330,12 @@ moar:
 			}
 			if( infotools )
 			{
-
-
 					liqcliprect_drawimagecolor(targetcr, infotools , targetsurface->width-48,0 ,48,48, 1);
-
 			}
  		
 			
-			//liqapp_log("render adding framecount");
-			
+			//liqapp_log("render adding framecount");		
 // 20090520_014021 lcuk : show frame information
-
 /*
 			static liqfont *infofont=NULL;
 			if(!infofont)
@@ -1426,35 +1346,18 @@ moar:
 			{
 				char *cap=liqcell_getcaption(self);
 				if(!cap || !*cap) cap="[nameless]";
-				
 				char buff[255];
 				snprintf(buff,sizeof(buff),"liqbase '%s' %3i, %3.3f, %3.3f",cap,framecount, liqapp_fps(tz0,tz1,1) ,liqapp_fps(tzs,tz1,framecount) );
-				
-				
 				//liqapp_log(buff);
-
-
 				int hh=liqfont_textheight(infofont);
 				liqcliprect_drawtextinside_color(targetcr, infofont,  0,0, targetsurface->width,hh, buff,0, 255,128,128);
-
-			}
-			
-			
+			}		
  */		
-			
-			
-
- 
 			//liqapp_log("render refreshing");
-
 			liqcanvas_refreshdisplay();
-			
 			//liqapp_log("render done");
-
 			framecount++;
 			dirty=0;
-
-
 
 // Sun Apr 05 16:49:47 2009 lcuk : kots x86 machine does not send back refresh events
 // needs this for now until we work out why
@@ -1491,15 +1394,9 @@ moar:
 		}
 	}
 	liqapp_log("liqcell easyrun complete %i",result);
-
 	vgraph_release(graph);
-
 	liqstroke_release(mouseargs.stroke);
-
-
 	liqcell_handlerrun(self,"dialog_close",NULL);
-
 	liqcell_easyrun_depth--;
-
 	return result;
 }

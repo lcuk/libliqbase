@@ -119,9 +119,9 @@ int liqapp_prefs_load()
 							else
 								break;
 						}
-						
+						//liqapp_log("pref: '%s'='%s'",line,data);
 	
-						liqcell_child_insertsorted( prefsroot, qpref(line,data) );
+						liqcell_child_insertsorted( prefsroot, qpref(line,strdup(data)) );
 						
 
 					}
