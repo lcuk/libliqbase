@@ -584,3 +584,23 @@ int		vgraph_drawcell(      vgraph *self, int x, int y, int w,int h , liqcell *ce
 	return 0;
 }
 
+
+
+//#########################################################################
+//#########################################################################
+//#########################################################################
+//#########################################################################
+//#########################################################################
+
+
+int		vgraph_pget(      vgraph *self, int x, int y,unsigned char *grey,unsigned char *u,unsigned char *v)
+{
+	
+	//liqapp_log("draw.pget.in  %i,%i",x,y);
+	x = self->scalex + (x * self->scalew / self->windoww);
+	y = self->scaley + (y * self->scaleh / self->windowh);
+	//liqapp_log("draw.pget.use %i,%i",x,y);
+
+	liqcliprect_drawpgetcolor( vgraph_getcliprect(self),   x,y,       grey,u,v );
+	return 0;
+}
