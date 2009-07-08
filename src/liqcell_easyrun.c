@@ -390,10 +390,10 @@ liqcell * toolclick(liqcell *vis)
 		liqcell *c;
 		
 		
-/*		c = liqcell_quickcreatevis("contentdraw", "liqtop", 0,56,   800-50,480-56 );
-		liqcell_handleradd_withcontext( c,    "click",   toolitem_click,self);
+		c = liqcell_quickcreatevis("contentdraw", "liqtop", 0,56,   800-50,480-56 );
+		//liqcell_handleradd_withcontext( c,    "click",   toolitem_click,self);
 		liqcell_child_insert( self, c );
-*/	
+	
 		c = liqcell_quickcreatevis("content", NULL, 0,56,   800-50,480-56 );
 		liqcell_setcontent( c, vis );
 		liqcell_setenabled( c, 0 );		// make sure it has fadeout

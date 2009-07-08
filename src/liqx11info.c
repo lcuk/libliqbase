@@ -225,8 +225,12 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 	liqx11overlay_refreshdisplay(myx11info->myoverlay);
 
 
-
-
+	// 20090708_200813 lcuk : thank you danielwilms for pointing me in the right direction
+	XSetInputFocus(myx11info->mydisplay, myx11info->mywindow, RevertToPointerRoot, CurrentTime);
+	if(!XRaiseWindow(myx11info->mydisplay, myx11info->mywindow))
+	{
+		{ liqapp_errorandfail(-1,"x11info XRaiseWindow, could not raise"); }
+	}
 
 
 	
