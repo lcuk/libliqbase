@@ -628,7 +628,10 @@ int liqcell_child_arrange_easytile(liqcell *self)
 	}
 	else
 	{
-		while(ccols<5 && ccols<answercount)ccols++;
+		if(answercount<=25)
+			while(ccols<5 && ccols<answercount)ccols++;
+		else
+			while(ccols<7 && ccols<answercount)ccols++;
 		
 	}
 	int crows=answercount/ccols;

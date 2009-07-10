@@ -21,7 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
+// 20090709_013938 lcuk : todo : big, replace this with lightweight prop token structure
+// 20090709_013954 lcuk : something much more lightweight
 
 #include <stdio.h>
 #include <stdlib.h>
