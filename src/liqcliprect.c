@@ -765,7 +765,17 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 	//int rpt=(fmap2/tmap2)/16;
 	
 	// 20090615_235500 lcuk : should find something that works in all cases
-	int rpt=(fmap2/tmap2)/32;
+	//int rpt=(fmap2/tmap2)/32;
+
+
+	// 20090712_021132 lcuk : again, a change, the algo needs properly dealing with
+	// 20090712_021154 lcuk : next time you call here, make the time to do it
+	//int rpt=(fmap2/tmap2)/16;
+	
+	
+	
+	// 20090712_145556 lcuk : lets try something radical
+	int rpt=(fmap2/tmap2)/8;
 
 	switch(page->backgroundstyle)
 	{

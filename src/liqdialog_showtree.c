@@ -1,5 +1,6 @@
 
 
+#include <string.h>
 
 
 
@@ -16,8 +17,8 @@
 
 
 
-static const treefontsize=16;
-static const treeindent=25;
+static const int treefontsize=16;
+static const int treeindent=25;
 
 
 
@@ -48,7 +49,7 @@ static int deepviewitem_nobble_click(liqcell *self, liqcellclickeventargs *args,
 	liqcell *head = liqcell_local_lookup(deepview,"head");
 	if(!head)return -2;
 	
-	liqcell *preview = liqcell_local_lookup(head,"preview");
+	//liqcell *preview = liqcell_local_lookup(head,"preview");
 	
 	
 	

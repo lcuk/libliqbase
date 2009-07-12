@@ -22,9 +22,11 @@
  *
  */
 
+#define _GNU_SOURCE
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+
 #include <stdarg.h>
 #include <dirent.h>
 
@@ -35,6 +37,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
+
+
 
 #include <time.h>			// req for sleep
 #include <sys/time.h>		// req for getticks
@@ -519,11 +523,11 @@ int 	liqcell_getselected(liqcell *self)
 
 void 	liqcell_settag(liqcell *self,void *tag)
 {
-	self->tag=tag;
+	self->tag=(int)tag;
 }
 void *	liqcell_gettag(liqcell *self)
 {
-	return self->tag;
+	return (void *)self->tag;
 }
 
 

@@ -220,7 +220,7 @@ int liqapp_prefs_save()
 		liqcell *c=prefsroot->linkchild;
 		while(c)
 		{
-			fprintf(fn,"\t%s=%s\n",c->name,liqcell_getdata(c));		// todo ensure multiline data pushed ok, and pulled and extracted correctly
+			fprintf(fn,"\t%s=%s\n",c->name,(char *)liqcell_getdata(c));		// todo ensure multiline data pushed ok, and pulled and extracted correctly
 			c=c->linknext;
 		}
 		fprintf(fn,"end\n");

@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
+
 #include "liqbase.h"
 
 #include "liqcell.h"
@@ -35,7 +37,7 @@ typedef unsigned int spanpoint;
 	
 static char *infirst;
 static char *indat;
-static int   inlen;
+//static int   inlen;
 static int   inlinenum;
 
 
@@ -125,7 +127,7 @@ int liqcell_parse_liqbrain_filename(liqcell *self,char *filename)
 static int see(char *pattern)
 {
 char *start=indat;
-char *pattorig=pattern;
+//char *pattorig=pattern;
 	if(!pattern || !*pattern) return 0;
 	if(!indat   || !*indat  ) return 0;
 	//app_log("see '%s'",pattern);
@@ -158,7 +160,7 @@ char *pattorig=pattern;
 				while(*indat==' ' || *indat=='\t' || *indat==10 || *indat==13)
 				{
 					if(*indat==10)inlinenum++;
-					*indat++;
+					indat++;
 				}
 				pattern++;
 				break;
@@ -167,8 +169,8 @@ char *pattorig=pattern;
 				if(toupper(*pattern)==toupper(*indat))
 				{
 					// phew!
-					*pattern++;
-					*indat++;
+					pattern++;
+					indat++;
 				}
 				else
 				{

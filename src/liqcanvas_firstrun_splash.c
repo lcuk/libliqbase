@@ -77,7 +77,7 @@ unsigned long 	refreshstarttime=0;		// if we have a refresh in progress
 
 int busyflag=1;
 
-liqcell *keyhit=NULL;
+//liqcell *keyhit=NULL;
 
 	while(running==1)
 	{

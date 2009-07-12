@@ -529,7 +529,7 @@ int 		liqapp_init(int argc, char* argv[],char *title,char *version)
 					return -1;			
 				}
 			}
-				
+			return 0;
 		}
 
 

@@ -90,7 +90,7 @@ static int                 dllcache_used=0;
 
 
 static dllcacheitem *runstack[256];
-static int           runstack_size=256;
+//static int           runstack_size=256;
 static int           runstack_used=0;
 
 
@@ -404,6 +404,8 @@ liqcell *dllcache_runconstructorinner(char *classname)
 			
 		}
 	}
+	
+	return NULL;
 	
 	
 

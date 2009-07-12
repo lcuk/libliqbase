@@ -1,7 +1,12 @@
 #include <string.h>
+#include <stdlib.h>
+
+
 #include "liqcell.h"
+#include "liqcell_prop.h"
 #include "liqcell_easyrun.h"
 #include "liqbase.h"
+
 
 //#####################################################################
 //#####################################################################
@@ -74,8 +79,8 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
 	{
 		// if i have a font on my cell, surely it will have been rendered correctly first..
 		// infact, thats right i think
-		liqcell *base = liqcell_getbasewidget(self);
-		liqcell *body = self;
+		//liqcell *base = liqcell_getbasewidget(self);
+		//liqcell *body = self;
 
 		liqfont *font = liqcell_getfont(	self);
 		if(!font)return 0;
@@ -83,7 +88,7 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
 		char *cap = liqcell_getcaption(self);
 		if(!cap)return 0;
 		
-		int caplen = strlen(cap);
+		//int caplen = strlen(cap);
 		
 		
 		int mx = args->mex - liqcell_getx(self);
@@ -133,13 +138,13 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
 
 	static int textbox_keypress(liqcell *self, liqcellkeyeventargs *args,void *context)
 	{
-		liqcell *base = liqcell_getbasewidget(self);
+		//liqcell *base = liqcell_getbasewidget(self);
 		// i can then use my base to access members as defined by the widget itself
 		//liqcell_setcaption(self,args->keystring);
 	
 		int selstart = liqcell_propgeti(  self,"selstart",-1);
 		int sellength = liqcell_propgeti(  self,"sellength",0);
-		int cursorpos = liqcell_propgeti(  self,"cursorpos",-1);
+		//int cursorpos = liqcell_propgeti(  self,"cursorpos",-1);
 		
 		char *caption = liqcell_getcaption(self);
 		int captionlen = strlen(caption);
@@ -224,14 +229,18 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
 			liqcell_propseti(  self,  "cursorpos", selstart + keylen);			
 			
 		}
+		
+		
+		return 0;
 
 	}
 	
 	static int textbox_keyrelease(liqcell *self, liqcellkeyeventargs *args)
 	{
-		liqcell *base = liqcell_getbasewidget(self);
+		//liqcell *base = liqcell_getbasewidget(self);
 		// i can then use my base to access members as defined by the widget itself
 		//liqcell_setcaption(self,args->keystring);
+		return 0;
 	}
 	
 
@@ -440,6 +449,7 @@ liqcell *uipicturebox_create(char *caption,char *datadefault)
 	static int widget_mouse(liqcell *self, liqcellmouseeventargs *args)
 	{
 		liqcell_adjustpos(self,0,args->mdy);
+		return 0;
 	}
 
 

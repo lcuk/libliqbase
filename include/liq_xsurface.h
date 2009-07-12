@@ -77,10 +77,10 @@ inline void xsurface_drawfadeoutrect_yuv(liqimage *surface,int x,int y,int w,int
 inline void xsurface_drawpset_yuv(      liqimage *surface,int x,int y,char grey,char u,char v);
 inline void xsurface_drawpset_grey(     liqimage *surface,int x,int y,char grey);
 inline void xsurface_drawpget_yuv(      liqimage *surface,int x1, int y1, unsigned char *grey,unsigned char *u,unsigned char *v);
-       void xsurface_drawline_yuv(      liqimage *surface,int x1, int y1, int x2, int y2, char grey,char u,char v);
-       void xsurface_drawline_grey(     liqimage *surface,int x1, int y1, int x2, int y2, char grey);
-       void xsurface_drawline_greyinv(  liqimage *surface,int x1, int y1, int x2, int y2);
-       void xsurface_drawcircle_grey(   liqimage *surface,int cx, int cy, int r,unsigned char grey);
+inline void xsurface_drawline_yuv(      liqimage *surface,int x1, int y1, int x2, int y2, char grey,char u,char v);
+inline void xsurface_drawline_grey(     liqimage *surface,int x1, int y1, int x2, int y2, char grey);
+inline void xsurface_drawline_greyinv(  liqimage *surface,int x1, int y1, int x2, int y2);
+inline void xsurface_drawcircle_grey(   liqimage *surface,int cx, int cy, int r,unsigned char grey);
 
 inline void xsurface_drawimage_color(   liqimage *surface,liqimage *image,int x,int y);
 

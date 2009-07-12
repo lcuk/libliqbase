@@ -1,6 +1,10 @@
-#include <stdlib.h>
-#include <stdio.h>
+
+
+#define _GNU_SOURCE
 #include <string.h>
+#include <stdlib.h>
+
+#include <stdio.h>
 #include <X11/keysym.h>
 #include <stdarg.h>
 #include <unistd.h>
@@ -46,7 +50,7 @@ liqimage *easypaint_barcode_image = NULL;
 
 
 
-int thread_createwithpriority(pthread_t *tid,int threadpriority,void (*func)(void *),void *arg)
+int thread_createwithpriority(pthread_t *tid,int threadpriority,void *(*func)(void *),void *arg)
 {
 //pthread_t 		tid;
 pthread_attr_t 	tattr;
@@ -307,7 +311,7 @@ unsigned int decodecolor(char *source,unsigned char *ry,unsigned char *ru,unsign
 	char *s1=NULL;
 	char *s2=NULL;
 	char *s3=NULL;
-	char *s4=NULL;
+	//char *s4=NULL;  // used for alpha (not in place..)
 	if(strncmp(indat,"rgb(",4) == 0 )
 	{
 		indat+=4;
@@ -435,14 +439,13 @@ void liqcell_easypaint(liqcell *self,liqcliprect *crorig,    int x,int y,    int
 	//liqapp_log("#################################### liqcell easypaint (%i,%i) :: %s   xy(%i,%i)-wh(%i,%i)  cr==can.cr ? %i",self->w,self->h,self->name,x,y,w,h,crorig==liqcanvas_getcliprect());
 	
 	
-	
+
+// 20090517_012357 lcuk : turn logging on or off
+#ifdef __tz_easypaint_debug
 #define tzmax 25
 char 	tstr[tzmax][8]={{0}};
 unsigned long 	tz[tzmax]={0};
 long tzused=0;
-
-// 20090517_012357 lcuk : turn logging on or off
-#ifdef __tz_easypaint_debug
 #define __tz_one(code) { if(tzused<tzmax){  snprintf(tstr[tzused],32,"%s",(code));      tz[tzused++] = liqapp_GetTicks(); } }
 #else
 #define __tz_one(code) {  }
@@ -455,7 +458,7 @@ __tz_one("start");
 
 
 
-char cy,cu,cv;
+//char cy,cu,cv;
 	if(w<1 || h<1)
 	{
 		//liqapp_log("size0 bail!");
@@ -664,10 +667,10 @@ __tz_one("backdone");
 					
 					if(tres)
 					{
-						liqapp_log("thread create fail %s :: %i",fn,tres);
+						liqapp_log("liqcell_easypaint: thread create fail %s :: %i",fn,tres);
 						liqcliprect_release(cr);
 						liqcell_release(self);
-						return 0;
+						return;
 					}
 				}
 			}
@@ -1027,11 +1030,11 @@ __tz_one("borderdone");
 				{
 					// show a position indicator bar..
 					
-					float sx = self->x;
+					//float sx = self->x;
 					float sy = self->y;
-					float ww = w;
-					float sw = self->w;
-					float pw = p->w;
+					//float ww = w;
+					//float sw = self->w;
+					//float pw = p->w;
 					float hh = h;
 					float sh = self->h;
 					float ph = p->h;		

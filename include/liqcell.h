@@ -132,7 +132,7 @@ liqcell*  liqcell_child_lookup(liqcell *self,char *name); // use dotted branches
 liqcell*  liqcell_child_lookup_simple(liqcell *self,char *name);	// ignore dotted branches
 liqcell*  liqcell_child_lookup_nameclass(liqcell *self,char *name,char *classname);
 
-
+liqcell *liqcell_lastchild(liqcell *self);
 
 liqcell *	liqcell_getlinkparent(liqcell *self);
 liqcell *	liqcell_getlinkprev(liqcell *self);
@@ -280,6 +280,9 @@ int     liqcell_ensurevisible_centred(liqcell *self);
 
 void 	liqcell_zorder_totop(liqcell *self);  // moves the cell to the top of the zorder, NULL function at present
 liqcell * liqcell_getbasewidget(liqcell *self); // called from within an event steps backwards until it finds the base widget this item was created by
+
+void liqcell_print(liqcell *self,char *title,int recdep);
+void liqcell_print2(liqcell *self);
 
 //######################################################################### Arrangement and Layout tools
 

@@ -46,6 +46,8 @@
 
 
 #include <memory.h>
+#include <stdlib.h> 
+
 
 // http://www.x.org/docs/Xv/video
 // todo:lcuk: damn all this time i have been calculating planes and offsets and sizes i could have used properties from the liqimage itself.
@@ -1510,7 +1512,7 @@ inline void xsurface_drawfadeoutrect_yuv(liqimage *surface,int x,int y,int w,int
 		h=(surface->height-y);
 	}
     
-unsigned char spreaddiv2 = spread/2;
+//unsigned char spreaddiv2 = spread/2;
     
 	
 
@@ -1518,7 +1520,7 @@ unsigned char spreaddiv2 = spread/2;
 //	grey4=grey<<24 | grey<<16 | grey<<8 | grey;
 	register unsigned int xx,yy;
 	register unsigned char *pdata;
-	register unsigned int *epdata;
+	//register unsigned int *epdata;
 	for (yy = y; yy < (y+h); yy++)
 	{
 		pdata = &surface->data[ surface->offsets[0] + (surface->width*yy) + x ];
@@ -1571,9 +1573,10 @@ unsigned char spreaddiv2 = spread/2;
 	u2=u<<8 | u;
 	v2=v<<8 | v;
 	register unsigned char *udata;
-	register unsigned short *eudata;
+	//register unsigned short *eudata;
 	register unsigned char *vdata;
-	register unsigned short *evdata;
+	//register unsigned short *evdata;
+	
 	unsigned int pw = surface->width;
 	unsigned int ph = surface->height;
 	unsigned int uo = surface->offsets[1];//pw*ph;
@@ -1930,7 +1933,7 @@ unsigned int pw=surface->width;
 
 #define interal_linepaintchar(x,y,c,buffer,linewidth)  buffer[ (linewidth) * (y) + (x) ] = (c)
 
-void xsurface_interalline_noaa(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char *buffer,int linewidth)
+inline void xsurface_interalline_noaa(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char *buffer,int linewidth)
 {
                 // 20090520_012704 lcuk : boundary is already confirmed as existing within the buffer
                 // 20090520_012727 lcuk : this is a greyscale line and it exhibits aliasing effects
@@ -2016,7 +2019,7 @@ void xsurface_interalline_noaa(liqimage *surface,int x1, int y1, int x2, int y2,
  */
 
 #define interal_linepaintchar_alpha(x,y,c,alpha,buffer,linewidth) \
-{ int off = (linewidth) * (y) + (x);  int b=(unsigned char*)buffer[ off ]; int cc=(unsigned char)(c); float a=(alpha); buffer[ off ] = b + (cc-b)*a; }
+{ int off = (linewidth) * (y) + (x);  int b=(unsigned char)buffer[ off ]; int cc=(unsigned char)(c); float a=(alpha); buffer[ off ] = b + (cc-b)*a; }
 
 inline float fracpart(float a)
 {
@@ -2030,7 +2033,7 @@ inline float fracpart(float a)
 
 
 
-void xsurface_interalline_aa(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char *buffer,int linewidth)
+inline void xsurface_interalline_aa(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char *buffer,int linewidth)
 {
 float deltax, deltay;
 int loopc;
@@ -2156,7 +2159,7 @@ float dx, dy, dydx;
 
 
 
-void xsurface_interalline_aa_uv(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char *buffer,int linewidth)
+inline void xsurface_interalline_aa_uv(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char *buffer,int linewidth)
 {
 float deltax, deltay;
 int loopc;
@@ -2331,7 +2334,7 @@ float dx, dy, dydx;
 
 #define interal_linepaintchar_invert(x,y,buffer,linewidth)  { unsigned char c=buffer[ (linewidth) * (y) + (x) ];buffer[ (linewidth) * (y) + (x) ] = 255-c; }
 
-void xsurface_interalline_invert(liqimage *surface,int x1, int y1, int x2, int y2, char *buffer,int linewidth)
+inline void xsurface_interalline_invert(liqimage *surface,int x1, int y1, int x2, int y2, char *buffer,int linewidth)
 {
 	int dx=x2-x1;		// distance
 	int dy=y2-y1;
@@ -2389,7 +2392,7 @@ void xsurface_interalline_invert(liqimage *surface,int x1, int y1, int x2, int y
 #define xsurface_interalline xsurface_interalline_noaa
 #endif
 
-void xsurface_drawline_yuv(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char u,char v)
+inline void xsurface_drawline_yuv(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char u,char v)
 {
 	if(x1<0)return;
 	if(y1<0)return;
@@ -2434,7 +2437,7 @@ unsigned int pw=surface->width;
 //######################################################################## linegrey
 //########################################################################
 
-void xsurface_drawline_grey(liqimage *surface,int x1, int y1, int x2, int y2, char grey)
+inline void xsurface_drawline_grey(liqimage *surface,int x1, int y1, int x2, int y2, char grey)
 {
 	if(x1<0)return;
 	if(y1<0)return;
@@ -2460,7 +2463,7 @@ unsigned int pw=surface->width;
 //######################################################################## linegreyinvert
 //########################################################################
 
-void xsurface_drawline_greyinv(liqimage *surface,int x1, int y1, int x2, int y2)
+inline void xsurface_drawline_greyinv(liqimage *surface,int x1, int y1, int x2, int y2)
 {
 	if(x1<0)return;
 	if(y1<0)return;
@@ -2503,7 +2506,7 @@ inline void interal_linepaintcharf(int x, int y,char c,char *buffer,int linewidt
 			interal_linepaintcharf(cx-y,cy-x,                         c,buffer,linewidth,numlines); \
 		}
 
-void xsurface_interalcircle(int cx, int cy, int r,char grey,char *buffer,int linewidth,int numlines)
+inline void xsurface_interalcircle(int cx, int cy, int r,char grey,char *buffer,int linewidth,int numlines)
 {
 int d=3-(2*r);
 int x=0;
@@ -2525,7 +2528,7 @@ int y=r;
 //######################################################################## circlegrey
 //########################################################################
 
-void xsurface_drawcircle_grey(liqimage *surface,int cx, int cy, int r,unsigned char grey)
+inline void xsurface_drawcircle_grey(liqimage *surface,int cx, int cy, int r,unsigned char grey)
 {
 unsigned int pw=surface->width;
 unsigned int ph=surface->height;

@@ -38,6 +38,7 @@
 #include "liqbase.h"
 
 #include "liqcell.h"
+#include "liqcell_prop.h"
 #include "liqcell_easyrun.h"
 #include "liqcell_easypaint.h"
 #include "vgraph.h"
@@ -267,13 +268,14 @@ static void savethumb(liqcell *cell)
 
 
 
+/*
 	static int toolitem_click(liqcell *self, liqcellclickeventargs *args, liqcell *tool)
 	{
 		//args->newdialogtoopen = liqcell_getcontent( self );
 		liqcell_setvisible(tool,0);
 		return 1;
 	}
-
+ */
 	static int tool_help_click(liqcell *self, liqcellclickeventargs *args, liqcell *tool)
 	{
 		return 1;
@@ -591,7 +593,7 @@ liqcliprect *targetcr      = NULL;//liqcanvas_getcliprect();
 int 			running=1;
 int 			result=0;
 
-unsigned long 	tzs=liqapp_GetTicks();
+unsigned long 	tzs=liqapp_GetTicks();		// technically only used when showing frameinfo, so ignore the warning :)
 unsigned long 	tz0=liqapp_GetTicks();
 unsigned long 	tz1=liqapp_GetTicks();
 LIQEVENT 		ev;
@@ -699,7 +701,7 @@ liqcell *keyhit=liqcell_findfirsthandler(self,"keypress");
 
 
 liqcell *jumpprev=NULL;
-liqcell *jumpnext=NULL;
+//liqcell *jumpnext=NULL;
 
 	liqcell *rr=liqcell_getlinkprev(self);
 	while(rr)
@@ -722,7 +724,7 @@ liqcell *jumpnext=NULL;
 		rr=liqcell_getlinknext(rr);
 	}
 	
-int jumpdir=0;		// -1== to prev,  1=tonext
+//int jumpdir=0;		// -1== to prev,  1=tonext
 
 	while(running==1)
 	{
@@ -1189,7 +1191,7 @@ quickfin:
 			}
 		}
 
-skipev:
+//skipev:
 
 
 		if(refreshinprogress==0 && self->visible==0)break;

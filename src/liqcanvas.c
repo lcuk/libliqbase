@@ -78,7 +78,7 @@ int liqcanvas_takepicture()
 {
 							char 		fmtnow[255];
 							liqapp_formatnow(fmtnow,255,"yyyymmdd_hhmmss");
-							char buf[FILENAME_MAX+1];
+							//char buf[FILENAME_MAX+1];
 							int pngerr =0;
 							
 							
@@ -117,6 +117,7 @@ int liqcanvas_takepicture()
 								// no canvas
 								liqapp_log("liqcanvas_takepicture, no canvas");
 							}
+							return 0;
 }
 
 
