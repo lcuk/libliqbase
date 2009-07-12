@@ -1,3 +1,10 @@
+libliqbase (0.3.14) unstable; urgency=low
+
+  * numerous cleanups
+
+ -- Gary Birkett <liquid@gmail.com>  12 July 2009 22:41:03 +0200
+
+
 libliqbase (0.3.11) unstable; urgency=low
 
   * prevent multiple event handlers being fired if at least 1 is found 
