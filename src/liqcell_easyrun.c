@@ -606,6 +606,10 @@ unsigned long 	refreshstarttime=0;		// if we have a refresh in progress
 
 
 
+			unsigned long 	ft1=tz0;
+			unsigned long 	ft2=tz0;
+
+
 
 liqcellpainteventargs paintargs;
 	//paintargs.cr = liqcanvas_getcliprect();
@@ -1335,10 +1339,20 @@ moar:
 					liqcliprect_drawimagecolor(targetcr, infotools , targetsurface->width-48,0 ,48,48, 1);
 			}
  		
+			// 20090712_224448 lcuk : i want MAX 25fps, just to see
+			//ft2=liqapp_GetTicks();
 			
+			while( ( (ft2=liqapp_GetTicks()) - ft1) < 40)
+			{
+				// lets just sleep for a short while (doesnt have to be THAT precise, just stop silly speed overruns)
+				//liqapp_log("sleeping %i",100 - (ft2-ft1));
+				liqapp_sleep(40 - (ft2-ft1));
+			}
+			ft1=ft2;
+						
 			//liqapp_log("render adding framecount");		
 // 20090520_014021 lcuk : show frame information
-/*
+
 			static liqfont *infofont=NULL;
 			if(!infofont)
 			{
@@ -1353,9 +1367,15 @@ moar:
 				//liqapp_log(buff);
 				int hh=liqfont_textheight(infofont);
 				liqcliprect_drawtextinside_color(targetcr, infofont,  0,0, targetsurface->width,hh, buff,0, 255,128,128);
-			}		
- */		
+			}
+			
+ 		
 			//liqapp_log("render refreshing");
+			
+			
+
+			
+			
 			liqcanvas_refreshdisplay();
 			//liqapp_log("render done");
 			framecount++;

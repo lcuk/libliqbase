@@ -100,11 +100,13 @@ char *liqapp_gettitle()
 //#######################################################################
 static int __nsleep(const struct timespec *req, struct timespec *rem)
 {
-    //struct timespec temp_rem;
-    if(nanosleep(req,rem)==-1)
-        //__nsleep(rem,&temp_rem);
-	{ }
-	//else
+    struct timespec temp_rem={0};
+    if(nanosleep(req,rem)==-1 && errno == EINTR)
+	{
+		//liqapp_log("early ret %ul,%ul",temp_rem.tv_sec,temp_rem.tv_sec);
+        return __nsleep(rem,&temp_rem);
+	}
+	else
         return 1;
 }
 
@@ -115,6 +117,7 @@ static int __nsleep(const struct timespec *req, struct timespec *rem)
  */
 int liqapp_sleep(unsigned long millisec)
 {
+	
     struct timespec req={0},rem={0};
     time_t sec=(int)(millisec/1000);
     millisec=millisec-(sec*1000);
