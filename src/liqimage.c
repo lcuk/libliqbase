@@ -832,52 +832,131 @@ int 							row_stride;
 //static image_info_t *decompress_png(const char *filename)
 int liqimage_pageloadpng(liqimage *self,char * filename,int maxw,int maxh,int allowalpha)
 {
+	return liqimage_pageloadpng_memstream(self,filename,NULL,0,maxw,maxh,allowalpha);
+}
 
 
+struct liqimage_png_membuffer
+{
+	int offset;
+	int size;
+	char *data;
+};
+// use the png_membuffer to supply data as expected to png library
+static void png_read_data(png_structp png_ptr, png_bytep area, png_size_t size)
+{
+	struct liqimage_png_membuffer *src;
+	src = (struct liqimage_png_membuffer *)png_get_io_ptr(png_ptr);
+	//SDL_RWread(src, area, size, 1);
+	if(src->offset+size >= src->size)
+	{
+		png_error(png_ptr, "png_read_data error, input past end");
+		return;
+	}
+	memcpy((char *)area,src->data,size);
+	src->offset+=size;	
+}
 
+
+int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata, int srcsize,int maxw,int maxh,int allowalpha)
+{
+	// 20090715_224851 lcuk : srcdata and srcsize are memory array versions
+	// 20090715_224901 lcuk : pass NULL and 0 as well as a valid filename to use standard procedure
+	// 20090715_224901 lcuk : passing valid parameters in src*, and NULL filename results in using the memory for the file instead :)
+	struct liqimage_png_membuffer src;
+	src.offset=0;
+	src.size=srcsize;
+	src.data=srcdata;
 	
-	liqapp_log("png.opening '%s'",filename);
 	
-	FILE *fp = fopen(filename, "rb");
+	FILE *fp=NULL;
+	
+	if(*filename)
+	{
+		liqapp_log("png.opening '%s'",filename);
+		fp = fopen(filename, "rb");
 		if (!fp)
 		{
 			liqapp_log("png.open failed %s", filename);
 			return -1;
 		}
-
+	}
+	else
+	{
+		liqapp_log("png.memory stream");
+	}
 
 	unsigned char  header[8];
 	
-		int ttt=fread(header, 1, 8, fp);
+		int ttt;
+	if(*filename)
+	{
+		ttt=fread(header, 1, 8, fp);
 		if(!ttt)
 		{
-			fclose(fp);
+			if(fp)fclose(fp);
 			return -2;			
 		}
-		int is_png = !png_sig_cmp(header, 0, 8);
+	}
+	else
+	{
+		if(srcsize<8)
+		{
+			return -2;			
+		}
+		// just copy the memory :)
+		memcpy(header,srcdata,8);
+	}
+	
+		int is_png;
+		is_png = !png_sig_cmp(header, 0, 8);
 		if (!is_png)
 		{
-			fclose(fp);
+			if(fp)fclose(fp);
 			return -2;
 		}
+		
+		
+		
+		
+
+
+	
 		
 	
 	png_structp png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 		if (!png_ptr)
 		{
 			liqapp_log("png.png_ptr fail");
-			fclose(fp);
+			if(fp)fclose(fp);
 			return -3;
 		}
 		
 		
+		
+    if (setjmp (png_jmpbuf (png_ptr)))
+	{
+		liqapp_log("png setjmp called, must have an error");
+		
+		{
+			png_destroy_read_struct(&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
+			if(fp)fclose(fp);
+			return -3;
+		}
+	}
+	
+	
+	
+
+	
+	
 		
 	png_infop info_ptr = png_create_info_struct(png_ptr);
 		if (!info_ptr)
 		{
 			liqapp_log("png.info_ptr fail");
 			png_destroy_read_struct(&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
-			fclose(fp);
+			if(fp)fclose(fp);
 			return -4;
 		}
 		
@@ -887,12 +966,23 @@ int liqimage_pageloadpng(liqimage *self,char * filename,int maxw,int maxh,int al
 		{
 			liqapp_log("png.end_info fail");
 			png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
-			fclose(fp);
+			if(fp)fclose(fp);
 			return -5;
 		}
 		
 		
-		png_init_io(png_ptr, fp);		
+	if(*filename)
+	{
+		png_init_io(png_ptr, fp);
+	}
+	else
+	{
+		png_set_read_fn(png_ptr, (char *)&src, png_read_data);
+		
+	}
+	
+	
+	
 		png_set_sig_bytes(png_ptr, 8);
 		
 		
@@ -1132,7 +1222,7 @@ int liqimage_pageloadpng(liqimage *self,char * filename,int maxw,int maxh,int al
 		png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
 		free(row_pointers);
 		free(image_data);
-		fclose(fp);
+		if(fp)fclose(fp);
 
 		liqapp_log("png finished");
 
