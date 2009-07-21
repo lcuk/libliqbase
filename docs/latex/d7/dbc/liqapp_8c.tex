@@ -1,0 +1,335 @@
+\section{src/liqapp.c File Reference}
+\label{d7/dbc/liqapp_8c}\index{src/liqapp.c@{src/liqapp.c}}
+App level helper functions.  
+
+
+{\tt \#include $<$stdlib.h$>$}\par
+{\tt \#include $<$stdio.h$>$}\par
+{\tt \#include $<$string.h$>$}\par
+{\tt \#include $<$stdarg.h$>$}\par
+{\tt \#include $<$dirent.h$>$}\par
+{\tt \#include $<$unistd.h$>$}\par
+{\tt \#include $<$sys/stat.h$>$}\par
+{\tt \#include $<$sys/types.h$>$}\par
+{\tt \#include $<$fcntl.h$>$}\par
+{\tt \#include $<$errno.h$>$}\par
+{\tt \#include $<$time.h$>$}\par
+{\tt \#include $<$sys/time.h$>$}\par
+{\tt \#include \char`\"{}liqapp.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqapp\_\-prefs.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqapp\_\-hildon.h\char`\"{}}\par
+{\tt \#include $<$ctype.h$>$}\par
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+void \textbf{liqapp\_\-initpwd} ()\label{d7/dbc/liqapp_8c_265c933ab7b3fb1aa335c6306b6a842b}
+
+\item 
+char $\ast$ \textbf{liqapp\_\-gettitle} ()\label{d7/dbc/liqapp_8c_d14cf97bf83243840e5adc90f93865dc}
+
+\item 
+int {\bf liqapp\_\-sleep} (unsigned long millisec)
+\item 
+unsigned long {\bf liqapp\_\-GetTicks} ()
+\item 
+float {\bf liqapp\_\-fps} (unsigned long ts, unsigned long te, unsigned long framecount)
+\item 
+int \textbf{liqapp\_\-getopt\_\-find} (char $\ast$optname)\label{d7/dbc/liqapp_8c_043aebdfc3a22c8e06c33c63014b6f2c}
+
+\item 
+int \textbf{liqapp\_\-getopt\_\-exist} (char $\ast$optname)\label{d7/dbc/liqapp_8c_bf217c0be59933373ac5da5f4a1b87eb}
+
+\item 
+int \textbf{liqapp\_\-getopt\_\-hasarg} (char $\ast$optname)\label{d7/dbc/liqapp_8c_313cb5c2158e425c83a20df677386f5d}
+
+\item 
+char $\ast$ \textbf{liqapp\_\-getopt\_\-str} (char $\ast$optname, char $\ast$def)\label{d7/dbc/liqapp_8c_4039c5c262a528d3e9b411b84687a7fc}
+
+\item 
+int \textbf{liqapp\_\-getopt\_\-int} (char $\ast$optname, int def)\label{d7/dbc/liqapp_8c_5f0c16530f52b7aafdaad0e1475652e3}
+
+\item 
+int {\bf liqapp\_\-folderexists} (char $\ast$pathname)
+\item 
+int {\bf liqapp\_\-pathexists} (char $\ast$pathname)
+\item 
+int {\bf liqapp\_\-fileexists} (char $\ast$filename)
+\item 
+int {\bf liqapp\_\-filesize} (char $\ast$filename)
+\item 
+char $\ast$ {\bf liqapp\_\-filename\_\-walkoverpath} (char $\ast$filename)
+\item 
+char $\ast$ {\bf liqapp\_\-filename\_\-walktoextension} (char $\ast$filename)
+\item 
+int \textbf{liqapp\_\-file\_\-copy} (char $\ast$from, char $\ast$to, int allowoverwrite)\label{d7/dbc/liqapp_8c_7316b06f4ce296e3e6af9ca541f0df0e}
+
+\item 
+int {\bf liqapp\_\-init} (int argc, char $\ast$argv[$\,$], char $\ast$title, char $\ast$version)
+\item 
+void \textbf{liqapp\_\-ensurecleanusername} (char $\ast$usernamewhichismodifiable)\label{d7/dbc/liqapp_8c_8cc07c2a1e2fcba18ae7defb1ef66bc0}
+
+\item 
+int {\bf liqapp\_\-vdeeplog} (char $\ast$logentry, va\_\-list arg)
+\item 
+int {\bf liqapp\_\-deeplog} (char $\ast$logentry,...)
+\item 
+int {\bf liqapp\_\-log} (char $\ast$logentry,...)
+\item 
+int {\bf liqapp\_\-errorandfail} (int returnstatus, char $\ast$logentry)
+\item 
+int {\bf liqapp\_\-warnandcontinue} (int returnstatus, char $\ast$logentry)
+\item 
+int \textbf{liqapp\_\-close} ()\label{d7/dbc/liqapp_8c_641cbf41bbbf42b36bc88d0fa52b0027}
+
+\item 
+int \textbf{liqapp\_\-formatnow} (char $\ast$buffer, int buffersize, char $\ast$format)\label{d7/dbc/liqapp_8c_fd755486f2d75e41941357fb29ea3084}
+
+\item 
+char $\ast$ \textbf{liqapp\_\-format\_\-strftime} (char $\ast$buffer, int buffersize, char $\ast$strftime\_\-fmt)\label{d7/dbc/liqapp_8c_84276bd9bbfbb0c60c34d04292ecfc41}
+
+\item 
+char $\ast$ \textbf{stristr} (const char $\ast$String, const char $\ast$Pattern)\label{d7/dbc/liqapp_8c_fad221b0daa654d64b4adb85ec63fedb}
+
+\end{CompactItemize}
+\subsection*{Variables}
+\begin{CompactItemize}
+\item 
+liqcell $\ast$ \textbf{liqapp\_\-logbase} = NULL\label{d7/dbc/liqapp_8c_ab88b98d0bb85f89a04826d4fd146980}
+
+\item 
+liqapp \textbf{app} = \{0\}\label{d7/dbc/liqapp_8c_8c5b43b0bddc2898a90f7e2d2e913e92}
+
+\item 
+char $\ast$ \textbf{liqapp\_\-pwd} = NULL\label{d7/dbc/liqapp_8c_d42d06766ccd42c6459b47e39aa57c85}
+
+\item 
+int \textbf{liqapp\_\-is\_\-basefs} = 0\label{d7/dbc/liqapp_8c_52bb00c1fc02af7da25ffad52f221609}
+
+\end{CompactItemize}
+
+
+\label{_details}
+\subsection{Detailed Description}
+App level helper functions. 
+
+\begin{Desc}
+\item[Author:]Gary Birkett Copyright (C) 2008 Gary Birkett\end{Desc}
+\subsection{LICENSE}\label{d7/db4/liqcell__prop_8c_LICENSE}
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
+
+\subsection{Function Documentation}
+\index{liqapp.c@{liqapp.c}!liqapp\_\-deeplog@{liqapp\_\-deeplog}}
+\index{liqapp\_\-deeplog@{liqapp\_\-deeplog}!liqapp.c@{liqapp.c}}
+\subsubsection[{liqapp\_\-deeplog}]{\setlength{\rightskip}{0pt plus 5cm}int liqapp\_\-deeplog (char $\ast$ {\em logentry}, \/   {\em ...})}\label{d7/dbc/liqapp_8c_8f60c7ad37bab70f29be7c4f76581e7c}
+
+
+internal console logging function, varargs version \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em log}]entry template, uses printf formatting \item[{\em list}]of parameters for completing the formatting \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int 0 for success \end{Desc}
+
+
+References liqapp\_\-vdeeplog().
+
+Referenced by liqapp\_\-errorandfail(), and liqapp\_\-warnandcontinue().\index{liqapp.c@{liqapp.c}!liqapp\_\-errorandfail@{liqapp\_\-errorandfail}}
+\index{liqapp\_\-errorandfail@{liqapp\_\-errorandfail}!liqapp.c@{liqapp.c}}
+\subsubsection[{liqapp\_\-errorandfail}]{\setlength{\rightskip}{0pt plus 5cm}int liqapp\_\-errorandfail (int {\em returnstatus}, \/  char $\ast$ {\em logentry})}\label{d7/dbc/liqapp_8c_25a23265fd44166a8b96e02dc9cb5b8b}
+
+
+Log a liqbase error, and exit the program \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em returnstatus}]Value to exit and return with \item[{\em logentry}]The error message to log \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int returnstatus \end{Desc}
+
+
+References liqapp\_\-deeplog().
+
+Referenced by liqcanvas\_\-init(), liqcanvas\_\-init\_\-inner(), and liqcell\_\-setname().\index{liqapp.c@{liqapp.c}!liqapp\_\-fileexists@{liqapp\_\-fileexists}}
+\index{liqapp\_\-fileexists@{liqapp\_\-fileexists}!liqapp.c@{liqapp.c}}
+\subsubsection[{liqapp\_\-fileexists}]{\setlength{\rightskip}{0pt plus 5cm}int liqapp\_\-fileexists (char $\ast$ {\em filename})}\label{d7/dbc/liqapp_8c_d1ca93ee33a6273d83c64cde81dcd145}
+
+
+check if a filename is valid and exists and can be 'stat'ed \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em char}]$\ast$filename including path \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int 1 if success, 0 otherwise \end{Desc}
+
+
+Referenced by liqcell\_\-sketch\_\-autoload().\index{liqapp.c@{liqapp.c}!liqapp\_\-filename\_\-walkoverpath@{liqapp\_\-filename\_\-walkoverpath}}
+\index{liqapp\_\-filename\_\-walkoverpath@{liqapp\_\-filename\_\-walkoverpath}!liqapp.c@{liqapp.c}}
+\subsubsection[{liqapp\_\-filename\_\-walkoverpath}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ liqapp\_\-filename\_\-walkoverpath (char $\ast$ {\em filename})}\label{d7/dbc/liqapp_8c_01fd5f86c560fbe38a9fad4dbab80f1e}
+
+
+walk over the filename to remove all path parts \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em char}]$\ast$filename including path \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]char $\ast$ to the first character of the filename itself, or to the start of the filename if no '/' detected \end{Desc}
+
+
+Referenced by liqapp\_\-filename\_\-walktoextension().\index{liqapp.c@{liqapp.c}!liqapp\_\-filename\_\-walktoextension@{liqapp\_\-filename\_\-walktoextension}}
+\index{liqapp\_\-filename\_\-walktoextension@{liqapp\_\-filename\_\-walktoextension}!liqapp.c@{liqapp.c}}
+\subsubsection[{liqapp\_\-filename\_\-walktoextension}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ liqapp\_\-filename\_\-walktoextension (char $\ast$ {\em filename})}\label{d7/dbc/liqapp_8c_ff90e989619ed0a811ef6aa3ba03b978}
+
+
+find and return the extension part of a filename \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em char}]$\ast$filename to get the extension from \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]char $\ast$ to the first character of the extension, or to the start of the filename if no '.' detected \end{Desc}
+
+
+References liqapp\_\-filename\_\-walkoverpath().\index{liqapp.c@{liqapp.c}!liqapp\_\-filesize@{liqapp\_\-filesize}}
+\index{liqapp\_\-filesize@{liqapp\_\-filesize}!liqapp.c@{liqapp.c}}
+\subsubsection[{liqapp\_\-filesize}]{\setlength{\rightskip}{0pt plus 5cm}int liqapp\_\-filesize (char $\ast$ {\em filename})}\label{d7/dbc/liqapp_8c_bf95d66a45418fd04496cb31be2989a2}
+
+
+return the stat filesize (-1 if not found) \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em char}]$\ast$filename including path \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int size if success, -1 otherwise \end{Desc}
+\index{liqapp.c@{liqapp.c}!liqapp\_\-folderexists@{liqapp\_\-folderexists}}
+\index{liqapp\_\-folderexists@{liqapp\_\-folderexists}!liqapp.c@{liqapp.c}}
+\subsubsection[{liqapp\_\-folderexists}]{\setlength{\rightskip}{0pt plus 5cm}int liqapp\_\-folderexists (char $\ast$ {\em pathname})}\label{d7/dbc/liqapp_8c_41add1cd481b1ef27b2a01890b2e9132}
+
+
+check if a folder is valid and exists and can be 'stat'ed \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em char}]$\ast$pathname including path \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int 1 if success, 0 otherwise \end{Desc}
+\index{liqapp.c@{liqapp.c}!liqapp\_\-fps@{liqapp\_\-fps}}
+\index{liqapp\_\-fps@{liqapp\_\-fps}!liqapp.c@{liqapp.c}}
+\subsubsection[{liqapp\_\-fps}]{\setlength{\rightskip}{0pt plus 5cm}float liqapp\_\-fps (unsigned long {\em ts}, \/  unsigned long {\em te}, \/  unsigned long {\em framecount})}\label{d7/dbc/liqapp_8c_21524f206eb1233878245354edbc7805}
+
+
+obtain an FPS value based on duration and frames completed in that period \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em starting}]time \item[{\em ending}]time \item[{\em number}]of frames completed in the period \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]float number of frames per second \end{Desc}
+
+
+Referenced by liqcell\_\-easyrun().\index{liqapp.c@{liqapp.c}!liqapp\_\-GetTicks@{liqapp\_\-GetTicks}}
+\index{liqapp\_\-GetTicks@{liqapp\_\-GetTicks}!liqapp.c@{liqapp.c}}
+\subsubsection[{liqapp\_\-GetTicks}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long liqapp\_\-GetTicks ()}\label{d7/dbc/liqapp_8c_69f47fdd3808d8aafa1636c379d4b7b7}
+
+
+return system tick count \begin{Desc}
+\item[Returns:]unsigned long for system tick count \end{Desc}
+
+
+Referenced by liqcanvas\_\-firstrun\_\-splash(), and liqcell\_\-easyrun().\index{liqapp.c@{liqapp.c}!liqapp\_\-init@{liqapp\_\-init}}
+\index{liqapp\_\-init@{liqapp\_\-init}!liqapp.c@{liqapp.c}}
+\subsubsection[{liqapp\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}int liqapp\_\-init (int {\em argc}, \/  char $\ast$ {\em argv}[$\,$], \/  char $\ast$ {\em title}, \/  char $\ast$ {\em version})}\label{d7/dbc/liqapp_8c_c7c2eece6b6cb64d009e172040d19f40}
+
+
+Initiates the Liqbase Application to be ran, including the liqbase filesystem \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em argc}]Command line arguement count \item[{\em argv}]Command line arguement strings \item[{\em title}]The title of the application \item[{\em version}]The version of the application \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int 0 for success \end{Desc}
+
+
+References liqapp\_\-log(), and liqapp\_\-pathexists().\index{liqapp.c@{liqapp.c}!liqapp\_\-log@{liqapp\_\-log}}
+\index{liqapp\_\-log@{liqapp\_\-log}!liqapp.c@{liqapp.c}}
+\subsubsection[{liqapp\_\-log}]{\setlength{\rightskip}{0pt plus 5cm}int liqapp\_\-log (char $\ast$ {\em logentry}, \/   {\em ...})}\label{d7/dbc/liqapp_8c_5949dc4f27ce46f833445707fce2c4c9}
+
+
+console logging function \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em log}]entry template, uses printf formatting \item[{\em list}]of parameters for completing the formatting \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int 0 for success \end{Desc}
+
+
+References liqapp\_\-vdeeplog().
+
+Referenced by dllcache\_\-runconstructor(), liqapp\_\-init(), liqcanvas\_\-firstrun\_\-splash(), liqcanvas\_\-init(), liqcanvas\_\-init\_\-inner(), liqcell\_\-child\_\-arrange\_\-easytile(), liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal(), liqcell\_\-easyrun(), liqcell\_\-ensurevisible(), liqcell\_\-ensurevisible\_\-centred(), liqcell\_\-free(), and liqcell\_\-setcaption().\index{liqapp.c@{liqapp.c}!liqapp\_\-pathexists@{liqapp\_\-pathexists}}
+\index{liqapp\_\-pathexists@{liqapp\_\-pathexists}!liqapp.c@{liqapp.c}}
+\subsubsection[{liqapp\_\-pathexists}]{\setlength{\rightskip}{0pt plus 5cm}int liqapp\_\-pathexists (char $\ast$ {\em pathname})}\label{d7/dbc/liqapp_8c_7992d4b53d5c1e4c870e1c7d904ca7b8}
+
+
+check if a pathname is valid and exists and can be 'stat'ed \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em char}]$\ast$pathname including path \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int 1 if success, 0 otherwise \end{Desc}
+
+
+Referenced by liqapp\_\-init().\index{liqapp.c@{liqapp.c}!liqapp\_\-sleep@{liqapp\_\-sleep}}
+\index{liqapp\_\-sleep@{liqapp\_\-sleep}!liqapp.c@{liqapp.c}}
+\subsubsection[{liqapp\_\-sleep}]{\setlength{\rightskip}{0pt plus 5cm}int liqapp\_\-sleep (unsigned long {\em millisec})}\label{d7/dbc/liqapp_8c_73f7efd1a4442fdccedd9f6931f64cef}
+
+
+put the calling thread to sleep for a duration \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em duration}]in milliseconds \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]1 always \end{Desc}
+
+
+Referenced by liqcell\_\-easyrun().\index{liqapp.c@{liqapp.c}!liqapp\_\-vdeeplog@{liqapp\_\-vdeeplog}}
+\index{liqapp\_\-vdeeplog@{liqapp\_\-vdeeplog}!liqapp.c@{liqapp.c}}
+\subsubsection[{liqapp\_\-vdeeplog}]{\setlength{\rightskip}{0pt plus 5cm}int liqapp\_\-vdeeplog (char $\ast$ {\em logentry}, \/  va\_\-list {\em arg})}\label{d7/dbc/liqapp_8c_11b8d7fc997caa1851f6a280f04a6337}
+
+
+internal console logging function, va\_\-list version \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em log}]entry template, uses printf formatting \item[{\em list}]of parameters for completing the formatting \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int 0 for success \end{Desc}
+
+
+Referenced by liqapp\_\-deeplog(), and liqapp\_\-log().\index{liqapp.c@{liqapp.c}!liqapp\_\-warnandcontinue@{liqapp\_\-warnandcontinue}}
+\index{liqapp\_\-warnandcontinue@{liqapp\_\-warnandcontinue}!liqapp.c@{liqapp.c}}
+\subsubsection[{liqapp\_\-warnandcontinue}]{\setlength{\rightskip}{0pt plus 5cm}int liqapp\_\-warnandcontinue (int {\em returnstatus}, \/  char $\ast$ {\em logentry})}\label{d7/dbc/liqapp_8c_8d6e3eca2ebe5fc70fc4536f535bad61}
+
+
+Log a liqbase warning, but continue running \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em returnstatus}]Value to exit and return with \item[{\em logentry}]The warning message to log \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int returnstatus \end{Desc}
+
+
+References liqapp\_\-deeplog().
+
+Referenced by dllcache\_\-init(), dllcache\_\-runconstructor(), and dllcache\_\-scan().

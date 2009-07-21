@@ -1,0 +1,92 @@
+\section{src/liqcell\_\-easyrun.c File Reference}
+\label{d5/d54/liqcell__easyrun_8c}\index{src/liqcell\_\-easyrun.c@{src/liqcell\_\-easyrun.c}}
+Run liqcell events.  
+
+
+{\tt \#include $<$stdio.h$>$}\par
+{\tt \#include $<$stdlib.h$>$}\par
+{\tt \#include $<$string.h$>$}\par
+{\tt \#include $<$stdarg.h$>$}\par
+{\tt \#include $<$fcntl.h$>$}\par
+{\tt \#include $<$unistd.h$>$}\par
+{\tt \#include $<$sys/types.h$>$}\par
+{\tt \#include $<$sys/stat.h$>$}\par
+{\tt \#include $<$errno.h$>$}\par
+{\tt \#include $<$dirent.h$>$}\par
+{\tt \#include \char`\"{}liqbase.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell\_\-prop.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell\_\-easyrun.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell\_\-easypaint.h\char`\"{}}\par
+{\tt \#include \char`\"{}vgraph.h\char`\"{}}\par
+\subsection*{Data Structures}
+\begin{CompactItemize}
+\item 
+struct \textbf{vrect}
+\end{CompactItemize}
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+int \textbf{vrect\_\-ensurepositive} (vrect $\ast$self)\label{d5/d54/liqcell__easyrun_8c_a79b21799806a4e4758071359e7a55a8}
+
+\item 
+int \textbf{vrect\_\-scaletofit} (vrect $\ast$self, vrect $\ast$avail, vrect $\ast$required)\label{d5/d54/liqcell__easyrun_8c_6149ae6a654651c6d84acdd1948ba510}
+
+\item 
+float \textbf{calcaspect} (int captionw, int captionh, int availw, int availh)\label{d5/d54/liqcell__easyrun_8c_67a2eee3e0ca62ad234470655911f51f}
+
+\item 
+liqcell $\ast$ \textbf{liqcell\_\-easyhittest} (liqcell $\ast$self, int mx, int my, int $\ast$hitx, int $\ast$hity)\label{d5/d54/liqcell__easyrun_8c_1d57b390b40eaf9faebdb0adf666b5c4}
+
+\item 
+liqcell $\ast$ \textbf{toolclick} (liqcell $\ast$vis)\label{d5/d54/liqcell__easyrun_8c_7e9ecdd0a2ed0adc2b0db9704f686d83}
+
+\item 
+liqcell $\ast$ \textbf{liqcell\_\-findnexthandler} (liqcell $\ast$self, liqcell $\ast$root, char $\ast$handlername)\label{d5/d54/liqcell__easyrun_8c_2567893ac242f1078f783d2bbc9caaab}
+
+\item 
+liqcell $\ast$ \textbf{liqcell\_\-findfirsthandler} (liqcell $\ast$root, char $\ast$handlername)\label{d5/d54/liqcell__easyrun_8c_a18f64e17afc6df9e933ad21c8d67457}
+
+\item 
+int {\bf liqcell\_\-easyrun} (liqcell $\ast$self)
+\end{CompactItemize}
+\subsection*{Variables}
+\begin{CompactItemize}
+\item 
+int \textbf{liqcell\_\-showdebugboxes}\label{d5/d54/liqcell__easyrun_8c_c32d12b20b2cd2824218716cf3beeb39}
+
+\item 
+int \textbf{liqcell\_\-easyrun\_\-depth} = 0\label{d5/d54/liqcell__easyrun_8c_9bdd5318be25bf6c3dec902896199442}
+
+\end{CompactItemize}
+
+
+\label{_details}
+\subsection{Detailed Description}
+Run liqcell events. 
+
+\begin{Desc}
+\item[Author:]Gary Birkett Copyright (C) 2008 Gary Birkett\end{Desc}
+\subsection{LICENSE}\label{d7/db4/liqcell__prop_8c_LICENSE}
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
+
+\subsection{Function Documentation}
+\index{liqcell\_\-easyrun.c@{liqcell\_\-easyrun.c}!liqcell\_\-easyrun@{liqcell\_\-easyrun}}
+\index{liqcell\_\-easyrun@{liqcell\_\-easyrun}!liqcell_easyrun.c@{liqcell\_\-easyrun.c}}
+\subsubsection[{liqcell\_\-easyrun}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-easyrun (liqcell $\ast$ {\em self})}\label{d5/d54/liqcell__easyrun_8c_188e60421511aac91bdf91a796c0718f}
+
+
+Main program event handler. \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to run \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]Success or Failure \end{Desc}
+
+
+References liqapp\_\-fps(), liqapp\_\-GetTicks(), liqapp\_\-log(), liqapp\_\-sleep(), liqcell\_\-getcaption(), liqcell\_\-getlinknext(), liqcell\_\-getlinkparent(), liqcell\_\-getlinkprev(), liqcell\_\-getname(), liqcell\_\-getqualifiedname(), liqcell\_\-handlerfind(), liqcell\_\-handlerrun(), and liqcell\_\-print2().

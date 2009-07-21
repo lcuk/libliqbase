@@ -1,0 +1,75 @@
+\section{src/liqcell\_\-prop.c File Reference}
+\label{d7/db4/liqcell__prop_8c}\index{src/liqcell\_\-prop.c@{src/liqcell\_\-prop.c}}
+Manage a liqcell's .tag.  
+
+
+{\tt \#include $<$stdio.h$>$}\par
+{\tt \#include $<$stdlib.h$>$}\par
+{\tt \#include $<$string.h$>$}\par
+{\tt \#include $<$stdarg.h$>$}\par
+{\tt \#include $<$fcntl.h$>$}\par
+{\tt \#include $<$unistd.h$>$}\par
+{\tt \#include $<$sys/types.h$>$}\par
+{\tt \#include $<$sys/stat.h$>$}\par
+{\tt \#include $<$errno.h$>$}\par
+{\tt \#include $<$dirent.h$>$}\par
+{\tt \#include \char`\"{}liqcell.h\char`\"{}}\par
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+int \textbf{liqcell\_\-propremoves} (liqcell $\ast$self, char $\ast$name)\label{d7/db4/liqcell__prop_8c_f2fcef990511d5410f99d33e3e490837}
+
+\item 
+int \textbf{liqcell\_\-propremovei} (liqcell $\ast$self, char $\ast$name)\label{d7/db4/liqcell__prop_8c_3e300caf2db00ee98fd4663a93073d23}
+
+\item 
+int \textbf{liqcell\_\-propgeti} (liqcell $\ast$self, char $\ast$name, int valueifnotfound)\label{d7/db4/liqcell__prop_8c_d95b04d386b49c246a1f95105092cbd1}
+
+\item 
+int {\bf liqcell\_\-propseti} (liqcell $\ast$self, char $\ast$name, int value)
+\item 
+char $\ast$ \textbf{liqcell\_\-propgets} (liqcell $\ast$self, char $\ast$name, char $\ast$valueifnotfound)\label{d7/db4/liqcell__prop_8c_ab87e63e7cf949c5cb3e5f565cd7c45a}
+
+\item 
+char $\ast$ \textbf{liqcell\_\-propsets} (liqcell $\ast$self, char $\ast$name, char $\ast$value)\label{d7/db4/liqcell__prop_8c_0bc940f551da2fc15934dbb219afd405}
+
+\item 
+char $\ast$ \textbf{liqcell\_\-propsets\_\-vprintf} (liqcell $\ast$self, char $\ast$name, char $\ast$format, va\_\-list arg)\label{d7/db4/liqcell__prop_8c_dfcb286b306ea122d2723c7826b5e4ec}
+
+\item 
+char $\ast$ \textbf{liqcell\_\-propsets\_\-printf} (liqcell $\ast$self, char $\ast$name, char $\ast$format,...)\label{d7/db4/liqcell__prop_8c_fc25d6de82a049b5387947d89ef0f937}
+
+\end{CompactItemize}
+
+
+\label{_details}
+\subsection{Detailed Description}
+Manage a liqcell's .tag. 
+
+\begin{Desc}
+\item[Author:]Gary Birkett Copyright (C) 2008 Gary Birkett\end{Desc}
+\subsection{LICENSE}\label{d7/db4/liqcell__prop_8c_LICENSE}
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
+
+\subsection{Function Documentation}
+\index{liqcell\_\-prop.c@{liqcell\_\-prop.c}!liqcell\_\-propseti@{liqcell\_\-propseti}}
+\index{liqcell\_\-propseti@{liqcell\_\-propseti}!liqcell_prop.c@{liqcell\_\-prop.c}}
+\subsubsection[{liqcell\_\-propseti}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-propseti (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em name}, \/  int {\em value})}\label{d7/db4/liqcell__prop_8c_84d505dda856299bc51da9d0871ca7b2}
+
+
+Create a child liqcell for the parent (self) with .tag defined as the integer value provided. This uses liqcell nameclass \char`\"{}prop.i\char`\"{}.
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The parent liqcell \item[{\em name}]The name of the prop \item[{\em value}]The value to set the child's .tag to \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int value \end{Desc}
+
+
+Referenced by liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal().

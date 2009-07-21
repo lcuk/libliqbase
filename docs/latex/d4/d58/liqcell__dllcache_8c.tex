@@ -1,0 +1,95 @@
+\section{src/liqcell\_\-dllcache.c File Reference}
+\label{d4/d58/liqcell__dllcache_8c}\index{src/liqcell\_\-dllcache.c@{src/liqcell\_\-dllcache.c}}
+This file is the master file which loads and manages all dynamic widgets in the subdirectory.  
+
+
+{\tt \#include $<$stdio.h$>$}\par
+{\tt \#include $<$stdlib.h$>$}\par
+{\tt \#include $<$dlfcn.h$>$}\par
+{\tt \#include $<$elf.h$>$}\par
+{\tt \#include $<$string.h$>$}\par
+{\tt \#include $<$fcntl.h$>$}\par
+{\tt \#include $<$unistd.h$>$}\par
+{\tt \#include $<$sys/types.h$>$}\par
+{\tt \#include $<$sys/stat.h$>$}\par
+{\tt \#include $<$errno.h$>$}\par
+{\tt \#include $<$dirent.h$>$}\par
+{\tt \#include $<$pthread.h$>$}\par
+{\tt \#include \char`\"{}liqcell.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell\_\-dllcache.h\char`\"{}}\par
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+int {\bf dllcache\_\-init} ()
+\item 
+int {\bf dllcache\_\-close} ()
+\item 
+int \textbf{dllcache\_\-scan\_\-dllfile} (char $\ast$dll\_\-filename)\label{d4/d58/liqcell__dllcache_8c_f4e056c0c2b19bda38b3d5157bd7ee0d}
+
+\item 
+int \textbf{dllcache\_\-scan\_\-folder} (char $\ast$widgetpath)\label{d4/d58/liqcell__dllcache_8c_7a0c58383c34247f8e4279a62fd78e14}
+
+\item 
+int {\bf dllcache\_\-scan} ()
+\item 
+liqcell $\ast$ \textbf{dllcache\_\-runconstructorinner} (char $\ast$classname)\label{d4/d58/liqcell__dllcache_8c_38bc91eaf35e744083278b67d6397cb2}
+
+\item 
+liqcell $\ast$ {\bf dllcache\_\-runconstructor} (char $\ast$classname)
+\item 
+dllcacheitem $\ast$ \textbf{dllcache\_\-getbase} ()\label{d4/d58/liqcell__dllcache_8c_8050fd87805acbcf6f7fc4caad423f28}
+
+\item 
+int \textbf{dllcache\_\-getsize} ()\label{d4/d58/liqcell__dllcache_8c_e364073ee08c733f9be5acb008bb17c2}
+
+\item 
+int \textbf{dllcache\_\-getused} ()\label{d4/d58/liqcell__dllcache_8c_b4ae9856d634388cb1c465b69716e9ec}
+
+\end{CompactItemize}
+
+
+\label{_details}
+\subsection{Detailed Description}
+This file is the master file which loads and manages all dynamic widgets in the subdirectory. 
+
+\begin{Desc}
+\item[Author:]Gary Birkett Copyright (C) 2008 Gary Birkett\end{Desc}
+\subsection{LICENSE}\label{d7/db4/liqcell__prop_8c_LICENSE}
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
+
+\subsection{Function Documentation}
+\index{liqcell\_\-dllcache.c@{liqcell\_\-dllcache.c}!dllcache\_\-close@{dllcache\_\-close}}
+\index{dllcache\_\-close@{dllcache\_\-close}!liqcell_dllcache.c@{liqcell\_\-dllcache.c}}
+\subsubsection[{dllcache\_\-close}]{\setlength{\rightskip}{0pt plus 5cm}int dllcache\_\-close ()}\label{d4/d58/liqcell__dllcache_8c_a688429991cabb39489e6b540b3ff59c}
+
+
+free the cache \index{liqcell\_\-dllcache.c@{liqcell\_\-dllcache.c}!dllcache\_\-init@{dllcache\_\-init}}
+\index{dllcache\_\-init@{dllcache\_\-init}!liqcell_dllcache.c@{liqcell\_\-dllcache.c}}
+\subsubsection[{dllcache\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}int dllcache\_\-init ()}\label{d4/d58/liqcell__dllcache_8c_eb43d75f9ed377739b016706e5f9fa40}
+
+
+prepare the cache 
+
+References liqapp\_\-warnandcontinue().
+
+Referenced by dllcache\_\-scan().\index{liqcell\_\-dllcache.c@{liqcell\_\-dllcache.c}!dllcache\_\-runconstructor@{dllcache\_\-runconstructor}}
+\index{dllcache\_\-runconstructor@{dllcache\_\-runconstructor}!liqcell_dllcache.c@{liqcell\_\-dllcache.c}}
+\subsubsection[{dllcache\_\-runconstructor}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ dllcache\_\-runconstructor (char $\ast$ {\em classname})}\label{d4/d58/liqcell__dllcache_8c_01563dab90d1a06c72a24fbfacd87640}
+
+
+run a specified constructor and return the result 
+
+References dllcache\_\-scan(), liqapp\_\-log(), and liqapp\_\-warnandcontinue().\index{liqcell\_\-dllcache.c@{liqcell\_\-dllcache.c}!dllcache\_\-scan@{dllcache\_\-scan}}
+\index{dllcache\_\-scan@{dllcache\_\-scan}!liqcell_dllcache.c@{liqcell\_\-dllcache.c}}
+\subsubsection[{dllcache\_\-scan}]{\setlength{\rightskip}{0pt plus 5cm}int dllcache\_\-scan ()}\label{d4/d58/liqcell__dllcache_8c_50392c622912cbad6183fb44eb771f99}
+
+
+scan the files to initialize the cache 
+
+References dllcache\_\-init(), and liqapp\_\-warnandcontinue().
+
+Referenced by dllcache\_\-runconstructor().
