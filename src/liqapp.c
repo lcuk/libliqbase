@@ -748,6 +748,11 @@ int liqapp_close()
 //lcuk: formatted date function
 //#########################################################
 //todo: add multiple date formats - it currently gives one fixed result it needs to account for params
+
+//example:
+// char datestamp[20];
+// liqapp_formatnow(datestamp,sizeof(datestamp),"yyyymmdd_hhmmss");
+
 int liqapp_formatnow(char *buffer,int buffersize,char *format)
 {
 

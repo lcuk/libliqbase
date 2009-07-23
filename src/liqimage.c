@@ -842,18 +842,32 @@ struct liqimage_png_membuffer
 	int size;
 	char *data;
 };
+
 // use the png_membuffer to supply data as expected to png library
 static void png_read_data(png_structp png_ptr, png_bytep area, png_size_t size)
 {
+	png_byte *n_data = (png_byte *)area;
+	
+	
 	struct liqimage_png_membuffer *src;
 	src = (struct liqimage_png_membuffer *)png_get_io_ptr(png_ptr);
+	
+	
+	
+	//char mem[5];
+	//mem[0]=src->data[src->offset+0];
+	//mem[1]=src->data[src->offset+1];
+	//mem[2]=src->data[src->offset+2];
+	//mem[3]=src->data[src->offset+3];
+	//mem[4]=0;
+	//liqapp_log("png.read %i bytes wanted cursor (%i/%i) :: '%s' %02x,%02x,%02x,%02x",size,src->offset,src->size,mem,mem[0],mem[1],mem[2],mem[3]);
 	//SDL_RWread(src, area, size, 1);
 	if(src->offset+size >= src->size)
 	{
 		png_error(png_ptr, "png_read_data error, input past end");
 		return;
 	}
-	memcpy((char *)area,src->data,size);
+	memcpy((char *)n_data,src->data+src->offset,size);
 	src->offset+=size;	
 }
 
@@ -883,7 +897,7 @@ int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata,
 	}
 	else
 	{
-		liqapp_log("png.memory stream");
+		liqapp_log("png.memory stream XYZ");
 	}
 
 	unsigned char  header[8];
@@ -906,12 +920,15 @@ int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata,
 		}
 		// just copy the memory :)
 		memcpy(header,srcdata,8);
+		
+		//src.offset+=8;	// hmmm
 	}
 	
 		int is_png;
 		is_png = !png_sig_cmp(header, 0, 8);
 		if (!is_png)
 		{
+			liqapp_log("png.not an image");
 			if(fp)fclose(fp);
 			return -2;
 		}
@@ -921,7 +938,7 @@ int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata,
 		
 
 
-	
+	//liqapp_log("png.reading struct");
 		
 	
 	png_structp png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -932,7 +949,7 @@ int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata,
 			return -3;
 		}
 		
-		
+	//liqapp_log("png.setting jmpbuf");
 		
     if (setjmp (png_jmpbuf (png_ptr)))
 	{
@@ -948,7 +965,7 @@ int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata,
 	
 	
 
-	
+	//liqapp_log("png.creating info_struct");
 	
 		
 	png_infop info_ptr = png_create_info_struct(png_ptr);
@@ -959,6 +976,8 @@ int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata,
 			if(fp)fclose(fp);
 			return -4;
 		}
+		
+	//liqapp_log("png.creating end info");
 		
 		
 	png_infop end_info = png_create_info_struct(png_ptr);
@@ -973,20 +992,31 @@ int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata,
 		
 	if(*filename)
 	{
+	//	liqapp_log("png.init file io");
 		png_init_io(png_ptr, fp);
 	}
 	else
 	{
+	//	liqapp_log("png.assign read function");
 		png_set_read_fn(png_ptr, (char *)&src, png_read_data);
 		
 	}
 	
 	
+	if(*filename)
+	{
+	
+	//	liqapp_log("png.setting sigbytes (tell lib we skipped 8 bytes already)");
+	
 	
 		png_set_sig_bytes(png_ptr, 8);
 		
+		// leave this for memory access
+	}	
 		
 		
+		
+	//liqapp_log("png.read info ");
 		
 	png_uint_32 	wd=0;
 	png_uint_32 	ht=0;
@@ -994,6 +1024,11 @@ int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata,
 	int 			color_type=0;
 
 		png_read_info(png_ptr, info_ptr);
+		
+		
+	//liqapp_log("png.get header");
+		
+		
 		png_get_IHDR(png_ptr, info_ptr, &wd, &ht, &bit_depth, &color_type, NULL, NULL, NULL);
 
 
@@ -1008,6 +1043,8 @@ int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata,
 		image.wd = wd;
 		image.ht = ht;
 	
+	
+	//liqapp_log("png.checking color");
 	
 	int hasalpha=0;
 	int isgray=0;
@@ -1032,6 +1069,10 @@ int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata,
 			liqapp_log("gray............");
 			isgray=1;
 		}
+		
+		
+	liqapp_log("png.checking rgb expansion");
+		
 	
 		/* transfer image to RGB if not already */
 		if (color_type != PNG_COLOR_TYPE_RGB)
@@ -1047,9 +1088,13 @@ int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata,
 		//// we want RGBA
 		//png_set_filler (png_ptr, 0, PNG_FILLER_AFTER);
 	
+	
+	//liqapp_log("png.updating info");
+	
 		png_read_update_info(png_ptr, info_ptr);
 		
 		
+	//liqapp_log("png.getting rowbytes");
 		
 	png_uint_32 rowbytes = png_get_rowbytes(png_ptr, info_ptr);
 	////todo work out if this is required, i guess ill find out soon enough..
@@ -1062,6 +1107,9 @@ int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata,
 		if(image.wd & 1 )image.wd--;
 		if(image.ht & 1 )image.ht--;
 	}
+	
+	
+	liqapp_log("png.liqimage pagedefine");
 
 	
 	liqimage_pagedefine(self, image.wd, image.ht,liqcanvas_getdpix(),liqcanvas_getdpiy(), hasalpha );

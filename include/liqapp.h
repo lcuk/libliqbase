@@ -83,7 +83,15 @@ char *		liqapp_getopt_str(char *optname,char *def);
 int 		liqapp_getopt_int(char *optname,int def);
 int 		liqapp_sleep(unsigned long millisec);
 
+
+
 int 		liqapp_formatnow(char *buffer,int buffersize,char *format);
+// 20090718_163211 lcuk : example of use:
+
+// char datestamp[20];
+// liqapp_formatnow(datestamp,sizeof(datestamp),"yyyymmdd_hhmmss");
+
+
 char * 		liqapp_format_strftime(char *buffer,int buffersize,char *strftime_fmt);
 
 

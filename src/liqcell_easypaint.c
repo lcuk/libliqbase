@@ -96,7 +96,8 @@ void *mainthread(void* mainthread_data)
 	
 do
 {
-	liqapp_sleep(10 + (rand() % 100));
+	//liqapp_sleep(10 + (rand() % 100));
+	liqapp_sleep(10 + (50));
 }
 while(mainthread_inprogress>1);
 
@@ -271,9 +272,36 @@ while(mainthread_inprogress>1);
 
 
 
+int liqcell_threadloadimage(liqcell *self)
+{
+				if(!easypaint_isloading_image)
+				{
+					//easypaint_isloading_image=liqimage_newfromfile("media/sun.png",0,0,0);
+					easypaint_isloading_image=liqimage_newfromfile("/usr/share/liqbase/media/pleasewait.png",0,0,0);
+				}
+				if(easypaint_isloading_image)
+				{
+					liqcell_hold(self);
+					// only if we have a valid replacer can we do this trickery :)
+					liqcell_setimage(self, liqimage_hold(easypaint_isloading_image) );
+					// now we must start the thread off
+					pthread_t 		tid;
+					
+					//int tres=thread_createwithpriority(&tid,0,mainthread,self);
+					
+					int tres=pthread_create(&tid,NULL,mainthread,self);
+					
+					
+					if(tres)
+					{
+						liqapp_log("liqcell_easypaint: thread create fail %s :: %i",liqcell_getcaption(self),tres);
+						//liqcliprect_release(cr);
+						liqcell_release(self);
+						return;
+					}
+				}
 
-
-
+}
 
 
 
@@ -687,7 +715,7 @@ __tz_one("imageprep");
 
 	if(self->image)
 	{
-		if(liqcell_propgeti(self,"lockaspect",0)==1)
+		if(liqcell_propgeti(self,"lockaspect",1)==1)
 			liqcliprect_drawimagecolor(cr,self->image,x,y,w,h,1);
 		else
 			liqcliprect_drawimagecolor(cr,self->image,x,y,w,h,0);

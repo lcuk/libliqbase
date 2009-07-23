@@ -942,11 +942,17 @@ int liqsketch_filesave(liqsketch *self,char *filename)
 
 int liqsketch_fileload(liqsketch *self,char *filename)
 {
+	return liqsketch_fileload_memstream(self,filename,NULL,0);
+}
+
+int liqsketch_fileload_memstream(liqsketch *self,char *filename,char *srcdata, int srcsize)
+{
+
+
 
 	//liqapp_log("liqsketch_fileload '%s'",filename);
 	char *indat;
 	//int err=0;
-	
 	liqsketch_clear(self);
 	
 	
@@ -955,7 +961,6 @@ int liqsketch_fileload(liqsketch *self,char *filename)
 	
 
 	if(self->filename) { free(self->filename); self->filename=NULL; }
-	self->filename = strdup(filename);
 
 	liqstroke *stroke=NULL;
 	//liqpoint *point=NULL;
@@ -968,27 +973,58 @@ int liqsketch_fileload(liqsketch *self,char *filename)
 
 
 
-	FILE *fn;
+	FILE *fn=NULL;
 	
-	
-	fn=fopen(filename,"r");
-	if(!fn)
+	if(!srcdata)
 	{
-		liqapp_log("liqsketch_fileload could not open '%s'",filename);
-		return -1;
+		self->filename = strdup(filename);
+	
+		fn=fopen(filename,"r");
+		if(!fn)
+		{
+			liqapp_log("liqsketch_fileload could not open '%s'",filename);
+			return -1;
+		}
+		
 	}
+	int srcpos=0;
+
 	
 	
 
 	char lineraw[512];
-	int linemax=512;
+	int linemax=511;
 	//char *line=NULL;
-	while(!feof(fn))
+	while(  (fn && !feof(fn)) || ( (!fn) && (srcpos<srcsize) && (srcdata[srcpos]) ) )
 	{
 		char * rc;
-		rc=fgets(lineraw,linemax, (FILE*) fn);
-		if(!rc)break;
-
+		
+		if(fn)
+		{
+		
+			rc=fgets(lineraw,linemax, (FILE*) fn);
+			if(!rc)break;
+		}
+		else
+		{
+			char *ss = &srcdata[srcpos];
+			char *pp = strchr(ss,'\n');
+			char *tt = pp;
+			if(!tt)tt=&srcdata[srcsize-1];
+			int cnt=(tt-ss);
+			if(cnt>512) cnt=512;
+			
+			if(tt)
+			{
+				srcpos += cnt;
+				strncpy(lineraw,ss,cnt);
+				lineraw[cnt]=0;
+				lineraw[sizeof(lineraw)]=0;
+				//if(pp)srcpos++;
+				while( srcdata[srcpos]==10 || srcdata[srcpos]==13 )srcpos++;
+			}
+			//liqapp_log("mem read: '%s', cnt=%i,sp=%i",lineraw,cnt,srcpos);
+		}
 
 
 		if(linenum==1)
@@ -998,7 +1034,7 @@ int liqsketch_fileload(liqsketch *self,char *filename)
 			if(strncmp(lineraw,"page:",5) != 0)
 			{
 				// invalid header
-				fclose(fn);
+				if(fn)fclose(fn);
 				{ return liqapp_warnandcontinue(-1,"liqsketch_fileload invalid file header"); }						
 		
 			}				
@@ -1035,7 +1071,7 @@ int liqsketch_fileload(liqsketch *self,char *filename)
 				if(stroke==NULL) 
 				{
 					//doc_close(&doc);
-					fclose(fn);
+					if(fn)fclose(fn);
 					{ return liqapp_warnandcontinue(-1,"liqsketch_fileload point without stroke"); }
 				}
 				if(stroke->pointcount==0)
@@ -1122,15 +1158,16 @@ int liqsketch_fileload(liqsketch *self,char *filename)
 	}
 	//doc_close(&doc);
 	
-	fclose(fn);
+	if(fn)fclose(fn);
 
 				// 20090504_180439 lcuk : again, if i have a stroke and i reach the end of file then calc it
 				// 20090504_180454 lcuk : this is entirely to see how much speedup/slowdown i have
 				
-				if(stroke)
-				{
-					liqstroke_quadchainbuild(stroke);
-				}	
+				// 20090720_191331 lcuk : test remove it to see how quick we can make this :)
+				//if(stroke)
+				//{
+				//	liqstroke_quadchainbuild(stroke);
+				//}	
 	
 
 	//pagefilename_test(filename);

@@ -328,8 +328,8 @@ liqcell * toolclick(liqcell *vis)
 		//liqcell_propseti(  icon, "textalign", 2 );
 		liqcell_child_append(  self, icon);
 		
-		//############################# title:label
-		liqcell *title = liqcell_quickcreatevis("title", "label", 66, 8, 728, 40);
+		//############################# title:titlebar
+		liqcell *title = liqcell_quickcreatevis("title", "titlebar", 66, 8, 728, 40);
 		liqcell_setfont(	title, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (34), 0) );
 		liqcell_setcaption(title, liqcell_getcaption(vis) );
 		liqcell_propsets(  title, "textcolor", "rgb(255,255,255)" );
@@ -344,11 +344,26 @@ liqcell * toolclick(liqcell *vis)
 		
 		int hh = 480-64;
 
+		b = liqcell_quickcreatevis("power","liqbattery",  800-64-56,0,   56,56 );
+		//liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
+		//liqcell_handleradd_withcontext(b,    "click",   tool_help_click, self);
+		//liqcell_propsets(  b,    "backcolor", "rgb(0,100,0)" );
+		liqcell_child_append( self, b );
+
+		b = liqcell_quickcreatevis("clock","container",  800-64-56-56-56,0,   56+56,56 );
+		//liqcell_setcontent(b, liqcell_quickcreatevis("clock","ciroclock_minutes",  0,0,0,0 ) );
+		liqcell_setcontent(b, liqcell_quickcreatevis("clock","ciroclock",  0,0,0,0 ) );
+		//liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
+		//liqcell_handleradd_withcontext(b,    "click",   tool_help_click, self);
+		//liqcell_propsets(  b,    "backcolor", "rgb(0,100,0)" );
+		liqcell_child_append( self, b );
+
+
 		b = liqcell_quickcreatevis("help","button",  800-50,64+hh*0.0,   50,+hh*0.2 );
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
 		liqcell_handleradd_withcontext(b,    "click",   tool_help_click, self);
 		liqcell_propsets(  b,    "backcolor", "rgb(0,100,0)" );
-		liqcell_child_insert( self, b );
+		liqcell_child_append( self, b );
 
 
 
@@ -356,14 +371,14 @@ liqcell * toolclick(liqcell *vis)
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
 		liqcell_handleradd_withcontext(b,    "click",   tool_bug_click, self);
 		liqcell_propsets(  b,    "backcolor", "rgb(100,0,0)" );
-		liqcell_child_insert( self, b );
+		liqcell_child_append( self, b );
 	
 		
 		b = liqcell_quickcreatevis("tag","button",  800-50,64+hh*0.4,   50,hh*0.2);
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
 		liqcell_handleradd_withcontext(b,    "click",   tool_tag_click, self);
 		liqcell_propsets(  b,    "backcolor", "rgb(0,100,100)" );
-		liqcell_child_insert( self, b );		
+		liqcell_child_append( self, b );		
 
 
 
@@ -372,7 +387,7 @@ liqcell * toolclick(liqcell *vis)
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
 		liqcell_handleradd_withcontext(b,    "click",   tool_pic_click, self);
 		liqcell_propsets(  b,    "backcolor", "rgb(100,100,0)" );
-		liqcell_child_insert( self, b );
+		liqcell_child_append( self, b );
 
 
 
@@ -381,10 +396,16 @@ liqcell * toolclick(liqcell *vis)
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
 		liqcell_handleradd_withcontext(b,    "click",   tool_pin_click, self);
 		liqcell_propsets(  b,    "backcolor", "rgb(0,0,100)" );
-		liqcell_child_insert( self, b );
+		liqcell_child_append( self, b );
 
 
 
+		liqcell *content = liqcell_getcontent(vis);
+		if(content)vis=content;
+
+		// special plan here.. lets see if it can work...
+		liqcell *preview = liqcell_child_lookup(vis,"preview");
+		if(preview)vis=preview;
 
 
 
@@ -548,6 +569,7 @@ int liqcell_easyrun(liqcell *self)
 		return -1;
 	}
 	
+	
 	liqcell_easyrun_depth++;
 	
 	// what i should do is resize the contents to match the frame
@@ -566,6 +588,28 @@ int liqcell_easyrun(liqcell *self)
 liqimage    *targetsurface = NULL;//liqcanvas_getsurface();
 liqcliprect *targetcr      = NULL;//liqcanvas_getcliprect();
 
+int idle_lazyrun_wanted = liqcell_propgeti(self,"idle_lazyrun_wanted",0);
+
+	int idle_lazyrun_shown(liqcell *start)
+	{
+		if(start->kineticx || start->kineticy) return 1;
+		if(liqcell_getshown(start)==0)
+		{
+			// not yet shown!
+			liqcell_handlerrun(start,"shown",NULL);
+			liqcell_setshown(start,1);
+			return 1;
+		}
+		liqcell *c=liqcell_getlinkchild_visual(start);
+		while(c)
+		{
+			if(idle_lazyrun_shown(c)) return 1;
+			c=liqcell_getlinknext_visual(c);
+		}
+		c=liqcell_getcontent(start);
+		if(c) return idle_lazyrun_shown(c);
+		return 0;
+	}
 
 
 
@@ -738,7 +782,41 @@ liqcell *jumpprev=NULL;
 		{
 waitevent:
 			//goto skipev;
+			
 
+			if(liqcanvas_eventcount()==0)
+			{
+				if(idle_lazyrun_wanted)
+				{
+					//liqapp_log("lazyrun ");
+					if( idle_lazyrun_shown(self) )
+					{
+						
+						if( idle_lazyrun_shown(self) )
+						{
+							// 2 for the price of 1 ;)
+							// we forced something on screen
+							//liqapp_log("lazyrun moar!");
+							self->dirty=1;
+						}
+						else
+						{
+							// couldn't do the second, but we managed the last one :)
+							self->dirty=1;
+							idle_lazyrun_wanted=0;
+						}
+						
+					}
+					else
+					{
+						//liqapp_log("lazyrun fin");
+						// nothing left to render :)
+						idle_lazyrun_wanted=0;
+					}
+				}
+			}
+
+			
 
 			//if(self->dirty) liqcell_setdirty(self,0);
 			//if(universe->dirty) liqcell_setdirty(universe,0);
@@ -1134,7 +1212,7 @@ quickfin:
 
 			else if(ev.type == LIQEVENT_TYPE_DIRTYFLAGSET && (refreshinprogress==0))
 			{
-				liqapp_log("event dirty");
+			//	liqapp_log("event dirty");
 				
 				// ok, we want to be exposed
 				//refreshinprogress=0;
@@ -1352,7 +1430,7 @@ moar:
 						
 			//liqapp_log("render adding framecount");		
 // 20090520_014021 lcuk : show frame information
-
+/*
 			static liqfont *infofont=NULL;
 			if(!infofont)
 			{
@@ -1368,7 +1446,7 @@ moar:
 				int hh=liqfont_textheight(infofont);
 				liqcliprect_drawtextinside_color(targetcr, infofont,  0,0, targetsurface->width,hh, buff,0, 255,128,128);
 			}
-			
+ */			
  		
 			//liqapp_log("render refreshing");
 			
@@ -1377,6 +1455,14 @@ moar:
 			
 			
 			liqcanvas_refreshdisplay();
+
+
+
+
+
+
+
+
 			//liqapp_log("render done");
 			framecount++;
 			dirty=0;

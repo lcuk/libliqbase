@@ -8,4 +8,7 @@
 
 void liqcell_easypaint(liqcell *self,liqcliprect *cr,    int x,int y,    int w,int h);
 
+
+int liqcell_threadloadimage(liqcell *self);		// start the thread running loading am image
+
 #endif

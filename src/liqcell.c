@@ -183,7 +183,7 @@ void liqcell_free(liqcell *self)
 
 
 	
-	liqapp_log("liqcell freeing self");
+	//liqapp_log("liqcell freeing self");
 	
 	
 	free(self);

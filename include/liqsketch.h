@@ -196,6 +196,7 @@ void          liqsketch_clear(liqsketch *self);
 
 int 		  liqsketch_filesave(liqsketch *self,char *filename);
 int 		  liqsketch_fileload(liqsketch *self,char *filename);
+int           liqsketch_fileload_memstream(liqsketch *self,char *filename,char *srcdata, int srcsize);
 
 void          liqsketch_boundwholearea();
 

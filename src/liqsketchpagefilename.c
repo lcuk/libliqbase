@@ -168,11 +168,12 @@ int pagefilename_breakapart(struct pagefilename *self,char *filename)
 		}
 		
 		
+		
 		//liqapp_log("X cols :: %i :: %s :: %s :: %s :: %s :: %s",colcount,cols[0],cols[1],cols[2],cols[3],cols[4]);
 		
 		if(colcount<1)
 		{
-			//liqapp_log("no cols :: trying :: %s",fnstart);
+			liqapp_log("no cols :: trying :: %s",fnstart);
 			// invalid..
 			return -1;
 		}
@@ -299,11 +300,13 @@ int pagefilename_test(char *filename)
 		// got it ok, lets confirm...
 
 		liqapp_log("pagefilename: ok  path:'%s', dat:'%s', cls:'%s', tit:'%s'",self.filepath,self.filedate,self.fileclass,self.filetitle);
+		return 1;
 	}
 	else
 	{
 		liqapp_log("pagefilename: bad '%s'",filename);
+		return 0;
 		// invalid
 	}
-	return 0;
+	//return 0;
 }
