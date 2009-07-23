@@ -713,7 +713,7 @@ Return the liqcell's height <dl compact><dt><b>Parameters:</b></dt><dd>
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>int The height </dd></dl>
 
-<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00389">liqcell_child_arrange_makegrid_internal()</a>.</p>
+<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00722">liqcell_child_arrange_easycol()</a>, <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00669">liqcell_child_arrange_easyrow()</a>, and <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00386">liqcell_child_arrange_makegrid_internal()</a>.</p>
 
 </div>
 </div><p>
@@ -819,7 +819,7 @@ Return the linked child of the parent provided. <dl compact><dt><b>Parameters:</
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>liqcell* The linked child </dd></dl>
 
-<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00592">liqcell_child_arrange_easytile()</a>, and <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00389">liqcell_child_arrange_makegrid_internal()</a>.</p>
+<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00722">liqcell_child_arrange_easycol()</a>, <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00669">liqcell_child_arrange_easyrow()</a>, <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00587">liqcell_child_arrange_easytile()</a>, and <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00386">liqcell_child_arrange_makegrid_internal()</a>.</p>
 
 </div>
 </div><p>
@@ -873,7 +873,7 @@ Get the linked next of the liqcell, the next link in the linked list <dl compact
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>liqcell* Liqcell pointer to the next </dd></dl>
 
-<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00592">liqcell_child_arrange_easytile()</a>, <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00389">liqcell_child_arrange_makegrid_internal()</a>, <a class="el" href="../../d5/d54/liqcell__easyrun_8c_source.html#l00540">liqcell_easyrun()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l01829">liqcell_handlerfind()</a>, and <a class="el" href="../../d5/da2/liqcell_8c_source.html#l01904">liqcell_handlerrun()</a>.</p>
+<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00722">liqcell_child_arrange_easycol()</a>, <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00669">liqcell_child_arrange_easyrow()</a>, <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00587">liqcell_child_arrange_easytile()</a>, <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00386">liqcell_child_arrange_makegrid_internal()</a>, <a class="el" href="../../d5/d54/liqcell__easyrun_8c_source.html#l00540">liqcell_easyrun()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l01829">liqcell_handlerfind()</a>, and <a class="el" href="../../d5/da2/liqcell_8c_source.html#l01904">liqcell_handlerrun()</a>.</p>
 
 </div>
 </div><p>
@@ -1190,7 +1190,7 @@ Return the liqcell's width <dl compact><dt><b>Parameters:</b></dt><dd>
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>int The width </dd></dl>
 
-<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00389">liqcell_child_arrange_makegrid_internal()</a>.</p>
+<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00722">liqcell_child_arrange_easycol()</a>, <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00669">liqcell_child_arrange_easyrow()</a>, and <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00386">liqcell_child_arrange_makegrid_internal()</a>.</p>
 
 </div>
 </div><p>
@@ -1287,6 +1287,8 @@ Add a handler by creating a child liqcell for the provided parent. The nameclass
   </table>
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>liqcell Newly created child liqcell </dd></dl>
+
+<p>Referenced by <a class="el" href="../../de/d77/liqui_8c_source.html#l00372">textbox_create()</a>, <a class="el" href="../../de/d77/liqui_8c_source.html#l00274">uiinfobar_create()</a>, and <a class="el" href="../../de/d77/liqui_8c_source.html#l00313">uitextbox_create()</a>.</p>
 
 </div>
 </div><p>
@@ -1583,7 +1585,7 @@ Move and resize a liqcell <dl compact><dt><b>Parameters:</b></dt><dd>
 
 <p>References <a class="el" href="../../d5/da2/liqcell_8c_source.html#l01904">liqcell_handlerrun()</a>.</p>
 
-<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00389">liqcell_child_arrange_makegrid_internal()</a>.</p>
+<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00386">liqcell_child_arrange_makegrid_internal()</a>.</p>
 
 </div>
 </div><p>
@@ -1700,7 +1702,7 @@ Set the caption of the liqcell <dl compact><dt><b>Parameters:</b></dt><dd>
 
 <p>References <a class="el" href="../../d7/dbc/liqapp_8c_source.html#l00677">liqapp_log()</a>, and <a class="el" href="../../d5/da2/liqcell_8c_source.html#l01904">liqcell_handlerrun()</a>.</p>
 
-<p>Referenced by <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00123">liqcell_free()</a>.</p>
+<p>Referenced by <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00123">liqcell_free()</a>, <a class="el" href="../../de/d77/liqui_8c_source.html#l00274">uiinfobar_create()</a>, <a class="el" href="../../de/d77/liqui_8c_source.html#l00403">uinumberbox_create()</a>, <a class="el" href="../../de/d77/liqui_8c_source.html#l00439">uipicturebox_create()</a>, <a class="el" href="../../de/d77/liqui_8c_source.html#l00313">uitextbox_create()</a>, and <a class="el" href="../../de/d77/liqui_8c_source.html#l00049">uititlebar_create()</a>.</p>
 
 </div>
 </div><p>
@@ -1889,7 +1891,7 @@ Set dirty in order to indicate that the liqcell has changed, and needs to be upd
 
 <p>References <a class="el" href="../../d5/da2/liqcell_8c_source.html#l01904">liqcell_handlerrun()</a>.</p>
 
-<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00389">liqcell_child_arrange_makegrid_internal()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00412">liqcell_setdirtyhold()</a>, and <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00595">liqcell_setimage()</a>.</p>
+<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00386">liqcell_child_arrange_makegrid_internal()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00412">liqcell_setdirtyhold()</a>, and <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00595">liqcell_setimage()</a>.</p>
 
 </div>
 </div><p>
@@ -1998,7 +2000,7 @@ Set the font of the liqcell <dl compact><dt><b>Parameters:</b></dt><dd>
   </table>
 </dl>
 
-<p>Referenced by <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00123">liqcell_free()</a>.</p>
+<p>Referenced by <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00123">liqcell_free()</a>, <a class="el" href="../../de/d77/liqui_8c_source.html#l00372">textbox_create()</a>, <a class="el" href="../../de/d77/liqui_8c_source.html#l00274">uiinfobar_create()</a>, <a class="el" href="../../de/d77/liqui_8c_source.html#l00403">uinumberbox_create()</a>, <a class="el" href="../../de/d77/liqui_8c_source.html#l00439">uipicturebox_create()</a>, <a class="el" href="../../de/d77/liqui_8c_source.html#l00313">uitextbox_create()</a>, and <a class="el" href="../../de/d77/liqui_8c_source.html#l00049">uititlebar_create()</a>.</p>
 
 </div>
 </div><p>
@@ -2037,7 +2039,7 @@ Set the provided liqcell's bakground image. <dl compact><dt><b>Parameters:</b></
 
 <p>References <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00438">liqcell_setdirty()</a>.</p>
 
-<p>Referenced by <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00123">liqcell_free()</a>.</p>
+<p>Referenced by <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00123">liqcell_free()</a>, <a class="el" href="../../de/d77/liqui_8c_source.html#l00439">uipicturebox_create()</a>, and <a class="el" href="../../de/d77/liqui_8c_source.html#l00049">uititlebar_create()</a>.</p>
 
 </div>
 </div><p>
@@ -2231,7 +2233,7 @@ Set the x, y coordinate position of the liqcell <dl compact><dt><b>Parameters:</
 
 <p>References <a class="el" href="../../d5/da2/liqcell_8c_source.html#l01904">liqcell_handlerrun()</a>.</p>
 
-<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00389">liqcell_child_arrange_makegrid_internal()</a>.</p>
+<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00722">liqcell_child_arrange_easycol()</a>, <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00669">liqcell_child_arrange_easyrow()</a>, and <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00386">liqcell_child_arrange_makegrid_internal()</a>.</p>
 
 </div>
 </div><p>
@@ -2477,7 +2479,7 @@ Set the width and height of the liqcell <dl compact><dt><b>Parameters:</b></dt><
 
 <p>References <a class="el" href="../../d5/da2/liqcell_8c_source.html#l01904">liqcell_handlerrun()</a>.</p>
 
-<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00389">liqcell_child_arrange_makegrid_internal()</a>, and <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00246">liqcell_setsize_from_inner()</a>.</p>
+<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00722">liqcell_child_arrange_easycol()</a>, <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00669">liqcell_child_arrange_easyrow()</a>, <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00386">liqcell_child_arrange_makegrid_internal()</a>, and <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00246">liqcell_setsize_from_inner()</a>.</p>
 
 </div>
 </div><p>
@@ -2605,7 +2607,7 @@ Load the sketch of the liqcell <dl compact><dt><b>Parameters:</b></dt><dd>
   </table>
 </dl>
 
-<p>References <a class="el" href="../../d7/dbc/liqapp_8c_source.html#l00294">liqapp_fileexists()</a>, and <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00562">liqcell_setsketch()</a>.</p>
+<p>References <a class="el" href="../../d7/dbc/liqapp_8c_source.html#l00294">liqapp_fileexists()</a>, <a class="el" href="../../d7/db4/liqcell__prop_8c_source.html#l00129">liqcell_propgets()</a>, and <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00562">liqcell_setsketch()</a>.</p>
 
 </div>
 </div><p>
@@ -2631,7 +2633,7 @@ Testing function
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sun Jul 19 19:43:31 2009 for libliqbase by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Jul 22 13:20:12 2009 for libliqbase by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="../../doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.9 </small></address>
 </body>

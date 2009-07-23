@@ -1,0 +1,126 @@
+\section{src/liqui.c File Reference}
+\label{de/d77/liqui_8c}\index{src/liqui.c@{src/liqui.c}}
+Libliqbase User Interface Functions.  
+
+
+{\tt \#include $<$string.h$>$}\par
+{\tt \#include $<$stdlib.h$>$}\par
+{\tt \#include \char`\"{}liqui.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell\_\-prop.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell\_\-easyrun.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqbase.h\char`\"{}}\par
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+liqcell $\ast$ {\bf uititlebar\_\-create} (char $\ast$key, char $\ast$title, char $\ast$description)
+\item 
+liqcell $\ast$ {\bf uiinfobar\_\-create} (char $\ast$infotext)
+\item 
+liqcell $\ast$ {\bf uitextbox\_\-create} (char $\ast$caption, char $\ast$datadefault)
+\item 
+liqcell $\ast$ {\bf textbox\_\-create} ()
+\item 
+liqcell $\ast$ {\bf uinumberbox\_\-create} (char $\ast$caption, char $\ast$datadefault)
+\item 
+liqcell $\ast$ {\bf uipicturebox\_\-create} (char $\ast$caption, char $\ast$datadefault)
+\item 
+liqcell $\ast$ \textbf{liqui\_\-create} ()\label{de/d77/liqui_8c_100082a118d9175656d4dc33d22cb180}
+
+\end{CompactItemize}
+
+
+\label{_details}
+\subsection{Detailed Description}
+Libliqbase User Interface Functions. 
+
+\begin{Desc}
+\item[Author:]Gary Birkett Copyright (C) 2008 Gary Birkett\end{Desc}
+\subsection{LICENSE}\label{de/d77/liqui_8c_LICENSE}
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
+
+\subsection{Function Documentation}
+\index{liqui.c@{liqui.c}!textbox\_\-create@{textbox\_\-create}}
+\index{textbox\_\-create@{textbox\_\-create}!liqui.c@{liqui.c}}
+\subsubsection[{textbox\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ textbox\_\-create ()}\label{de/d77/liqui_8c_b76604624d41e70f6ab2153a1095761e}
+
+
+Create a textbox ui component \begin{Desc}
+\item[Returns:]liqcell$\ast$ The new textbox \end{Desc}
+
+
+References liqcell\_\-handleradd(), liqcell\_\-propseti(), liqcell\_\-propsets(), and liqcell\_\-setfont().\index{liqui.c@{liqui.c}!uiinfobar\_\-create@{uiinfobar\_\-create}}
+\index{uiinfobar\_\-create@{uiinfobar\_\-create}!liqui.c@{liqui.c}}
+\subsubsection[{uiinfobar\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ uiinfobar\_\-create (char $\ast$ {\em infotext})}\label{de/d77/liqui_8c_026054236250e13055d9b18bdaa96ed3}
+
+
+Create a infobar ui component \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em infotext}]Caption of the bar \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell$\ast$ The new infobar \end{Desc}
+
+
+References liqcell\_\-handleradd(), liqcell\_\-propsets(), liqcell\_\-setcaption(), and liqcell\_\-setfont().\index{liqui.c@{liqui.c}!uinumberbox\_\-create@{uinumberbox\_\-create}}
+\index{uinumberbox\_\-create@{uinumberbox\_\-create}!liqui.c@{liqui.c}}
+\subsubsection[{uinumberbox\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ uinumberbox\_\-create (char $\ast$ {\em caption}, \/  char $\ast$ {\em datadefault})}\label{de/d77/liqui_8c_e2db71571319270d36f70e807d31e81c}
+
+
+Create a numberbox ui component \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em caption}]The caption \item[{\em datafefault}]Data caption \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell$\ast$ The new numberbox \end{Desc}
+
+
+References liqcell\_\-propsets(), liqcell\_\-setcaption(), and liqcell\_\-setfont().\index{liqui.c@{liqui.c}!uipicturebox\_\-create@{uipicturebox\_\-create}}
+\index{uipicturebox\_\-create@{uipicturebox\_\-create}!liqui.c@{liqui.c}}
+\subsubsection[{uipicturebox\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ uipicturebox\_\-create (char $\ast$ {\em caption}, \/  char $\ast$ {\em datadefault})}\label{de/d77/liqui_8c_ea53b9bac4fc2fac78be995c2a556ef2}
+
+
+Create a picturebox ui component \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em caption}]The caption \item[{\em datafefault}]Data caption \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell$\ast$ The new picturebox \end{Desc}
+
+
+References liqcell\_\-propsets(), liqcell\_\-setcaption(), liqcell\_\-setfont(), and liqcell\_\-setimage().\index{liqui.c@{liqui.c}!uitextbox\_\-create@{uitextbox\_\-create}}
+\index{uitextbox\_\-create@{uitextbox\_\-create}!liqui.c@{liqui.c}}
+\subsubsection[{uitextbox\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ uitextbox\_\-create (char $\ast$ {\em caption}, \/  char $\ast$ {\em datadefault})}\label{de/d77/liqui_8c_273dd56d07ae59d2edab1b55a8f082d8}
+
+
+Create a textbox ui component, this is the development function \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em caption}]Body Caption \item[{\em datadefault}]Caption of the data \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell$\ast$ The new textbox \end{Desc}
+
+
+References liqcell\_\-handleradd(), liqcell\_\-propsets(), liqcell\_\-setcaption(), and liqcell\_\-setfont().\index{liqui.c@{liqui.c}!uititlebar\_\-create@{uititlebar\_\-create}}
+\index{uititlebar\_\-create@{uititlebar\_\-create}!liqui.c@{liqui.c}}
+\subsubsection[{uititlebar\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ uititlebar\_\-create (char $\ast$ {\em key}, \/  char $\ast$ {\em title}, \/  char $\ast$ {\em description})}\label{de/d77/liqui_8c_7910151050e0bc587b2f20e6ecafbf3a}
+
+
+Create a titlebar ui component \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em key}]Name of the widget \item[{\em title}]Title to display \item[{\em description}]Describe what this titlebar is for \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell$\ast$ The new titlebar \end{Desc}
+
+
+References liqcell\_\-propseti(), liqcell\_\-propsets(), liqcell\_\-setcaption(), liqcell\_\-setfont(), and liqcell\_\-setimage().

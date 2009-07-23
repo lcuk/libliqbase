@@ -383,9 +383,6 @@ int liqcell_child_arrange_nooverlap(liqcell *self,liqcell *currentselection)
  * @return int finished 1 if at target, 0 if still in flight, -1 error
  * 
  */
-
-
-
 int liqcell_child_arrange_makegrid_internal(liqcell *self,int viscolcount,int visrowcount,int flymode)
 {
 
@@ -566,8 +563,6 @@ int liqcell_child_arrange_makegrid_fly(liqcell *self,int viscolcount,int visrowc
  * @return int Success or Failure
  * 
  */
-
-
 int liqcell_child_arrange_makegrid(liqcell *self,int viscolcount,int visrowcount)
 {
 	return liqcell_child_arrange_makegrid_internal(self,viscolcount,visrowcount,0);
@@ -666,7 +661,11 @@ int liqcell_child_arrange_easytile(liqcell *self)
 }
 
 
-
+/**
+ * Arrange parent's child cells into a simple row
+ * @param self The liqcell to arrange the children of
+ * @return int Success or Failure
+ */
 int liqcell_child_arrange_easyrow(liqcell *self)
 {
 	liqcell *c;
@@ -715,8 +714,11 @@ int liqcell_child_arrange_easyrow(liqcell *self)
 	return 0;
 }
 
-
-
+/**
+ * Arrange parent's child cells into a simple column
+ * @param self The liqcell to arrange the children of
+ * @return int Success or Failure
+ */
 int liqcell_child_arrange_easycol(liqcell *self)
 {
 	liqcell *c;

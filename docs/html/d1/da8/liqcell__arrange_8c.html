@@ -53,11 +53,9 @@ int&nbsp;</td><td class="memItemRight" valign="bottom"><b>liqcell_child_arrange_
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/da8/liqcell__arrange_8c.html#b3ba949bc6b364d3fdb9749401272b39">liqcell_child_arrange_easytile</a> (liqcell *self)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="6160ba7509f4b2cd587e29f6bc60895e"></a><!-- doxytag: member="liqcell_arrange.c::liqcell_child_arrange_easyrow" ref="6160ba7509f4b2cd587e29f6bc60895e" args="(liqcell *self)" -->
-int&nbsp;</td><td class="memItemRight" valign="bottom"><b>liqcell_child_arrange_easyrow</b> (liqcell *self)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/da8/liqcell__arrange_8c.html#6160ba7509f4b2cd587e29f6bc60895e">liqcell_child_arrange_easyrow</a> (liqcell *self)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="46647e7b90e3ae518153a1efb6a518a5"></a><!-- doxytag: member="liqcell_arrange.c::liqcell_child_arrange_easycol" ref="46647e7b90e3ae518153a1efb6a518a5" args="(liqcell *self)" -->
-int&nbsp;</td><td class="memItemRight" valign="bottom"><b>liqcell_child_arrange_easycol</b> (liqcell *self)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/da8/liqcell__arrange_8c.html#46647e7b90e3ae518153a1efb6a518a5">liqcell_child_arrange_easycol</a> (liqcell *self)</td></tr>
 
 </table>
 <hr><h2>Detailed Description</h2>
@@ -69,6 +67,62 @@ LICENSE</a></h2>
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.<p>
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.<p>
 You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA <hr><h2>Function Documentation</h2>
+<a class="anchor" name="46647e7b90e3ae518153a1efb6a518a5"></a><!-- doxytag: member="liqcell_arrange.c::liqcell_child_arrange_easycol" ref="46647e7b90e3ae518153a1efb6a518a5" args="(liqcell *self)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int liqcell_child_arrange_easycol           </td>
+          <td>(</td>
+          <td class="paramtype">liqcell *&nbsp;</td>
+          <td class="paramname"> <em>self</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Arrange parent's child cells into a simple column <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>self</em>&nbsp;</td><td>The liqcell to arrange the children of </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>int Success or Failure </dd></dl>
+
+<p>References <a class="el" href="../../d5/da2/liqcell_8c_source.html#l01042">liqcell_geth()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00831">liqcell_getlinkchild()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00773">liqcell_getlinknext()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l01032">liqcell_getw()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00219">liqcell_setpos()</a>, and <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00233">liqcell_setsize()</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="6160ba7509f4b2cd587e29f6bc60895e"></a><!-- doxytag: member="liqcell_arrange.c::liqcell_child_arrange_easyrow" ref="6160ba7509f4b2cd587e29f6bc60895e" args="(liqcell *self)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int liqcell_child_arrange_easyrow           </td>
+          <td>(</td>
+          <td class="paramtype">liqcell *&nbsp;</td>
+          <td class="paramname"> <em>self</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Arrange parent's child cells into a simple row <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>self</em>&nbsp;</td><td>The liqcell to arrange the children of </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>int Success or Failure </dd></dl>
+
+<p>References <a class="el" href="../../d5/da2/liqcell_8c_source.html#l01042">liqcell_geth()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00831">liqcell_getlinkchild()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00773">liqcell_getlinknext()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l01032">liqcell_getw()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00219">liqcell_setpos()</a>, and <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00233">liqcell_setsize()</a>.</p>
+
+</div>
+</div><p>
 <a class="anchor" name="b3ba949bc6b364d3fdb9749401272b39"></a><!-- doxytag: member="liqcell_arrange.c::liqcell_child_arrange_easytile" ref="b3ba949bc6b364d3fdb9749401272b39" args="(liqcell *self)" -->
 <div class="memitem">
 <div class="memproto">
@@ -94,7 +148,7 @@ Determine and set the number of columns and rows. Based on the number of childre
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>int Success or Failure </dd></dl>
 
-<p>References <a class="el" href="../../d7/dbc/liqapp_8c_source.html#l00677">liqapp_log()</a>, <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00571">liqcell_child_arrange_makegrid()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00831">liqcell_getlinkchild()</a>, and <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00773">liqcell_getlinknext()</a>.</p>
+<p>References <a class="el" href="../../d7/dbc/liqapp_8c_source.html#l00677">liqapp_log()</a>, <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00566">liqcell_child_arrange_makegrid()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00831">liqcell_getlinkchild()</a>, and <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00773">liqcell_getlinknext()</a>.</p>
 
 </div>
 </div><p>
@@ -140,9 +194,9 @@ Set the position of the child liqcell's in order to form a grid-like formation.<
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>int Success or Failure </dd></dl>
 
-<p>References <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00389">liqcell_child_arrange_makegrid_internal()</a>.</p>
+<p>References <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00386">liqcell_child_arrange_makegrid_internal()</a>.</p>
 
-<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00592">liqcell_child_arrange_easytile()</a>.</p>
+<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00587">liqcell_child_arrange_easytile()</a>.</p>
 
 </div>
 </div><p>
@@ -194,14 +248,14 @@ Set the position of the child liqcell's in order to form a grid-like formation.<
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>int finished 1 if at target, 0 if still in flight, -1 error </dd></dl>
 
-<p>References <a class="el" href="../../d7/dbc/liqapp_8c_source.html#l00677">liqapp_log()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l01042">liqcell_geth()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00831">liqcell_getlinkchild()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00773">liqcell_getlinknext()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l01032">liqcell_getw()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00302">liqcell_movetowardsrect()</a>, <a class="el" href="../../d7/db4/liqcell__prop_8c_source.html#l00089">liqcell_propseti()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00438">liqcell_setdirty()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00219">liqcell_setpos()</a>, and <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00233">liqcell_setsize()</a>.</p>
+<p>References <a class="el" href="../../d7/dbc/liqapp_8c_source.html#l00677">liqapp_log()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l01042">liqcell_geth()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00831">liqcell_getlinkchild()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00773">liqcell_getlinknext()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l01032">liqcell_getw()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00302">liqcell_movetowardsrect()</a>, <a class="el" href="../../d7/db4/liqcell__prop_8c_source.html#l00107">liqcell_propseti()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00438">liqcell_setdirty()</a>, <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00219">liqcell_setpos()</a>, and <a class="el" href="../../d5/da2/liqcell_8c_source.html#l00233">liqcell_setsize()</a>.</p>
 
-<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00571">liqcell_child_arrange_makegrid()</a>.</p>
+<p>Referenced by <a class="el" href="../../d1/da8/liqcell__arrange_8c_source.html#l00566">liqcell_child_arrange_makegrid()</a>.</p>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sun Jul 19 19:43:31 2009 for libliqbase by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Jul 22 13:20:12 2009 for libliqbase by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="../../doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.9 </small></address>
 </body>

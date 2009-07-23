@@ -35,11 +35,9 @@ int {\bf liqcell\_\-child\_\-arrange\_\-makegrid} (liqcell $\ast$self, int visco
 \item 
 int {\bf liqcell\_\-child\_\-arrange\_\-easytile} (liqcell $\ast$self)
 \item 
-int \textbf{liqcell\_\-child\_\-arrange\_\-easyrow} (liqcell $\ast$self)\label{d1/da8/liqcell__arrange_8c_6160ba7509f4b2cd587e29f6bc60895e}
-
+int {\bf liqcell\_\-child\_\-arrange\_\-easyrow} (liqcell $\ast$self)
 \item 
-int \textbf{liqcell\_\-child\_\-arrange\_\-easycol} (liqcell $\ast$self)\label{d1/da8/liqcell__arrange_8c_46647e7b90e3ae518153a1efb6a518a5}
-
+int {\bf liqcell\_\-child\_\-arrange\_\-easycol} (liqcell $\ast$self)
 \end{CompactItemize}
 
 
@@ -49,7 +47,7 @@ This arrange module contains functions for arranging clusters of visual cells.
 
 \begin{Desc}
 \item[Author:]Gary Birkett Copyright (C) 2008 Gary Birkett\end{Desc}
-\subsection{LICENSE}\label{d7/db4/liqcell__prop_8c_LICENSE}
+\subsection{LICENSE}\label{de/d77/liqui_8c_LICENSE}
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -57,7 +55,35 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
 
 \subsection{Function Documentation}
-\index{liqcell\_\-arrange.c@{liqcell\_\-arrange.c}!liqcell\_\-child\_\-arrange\_\-easytile@{liqcell\_\-child\_\-arrange\_\-easytile}}
+\index{liqcell\_\-arrange.c@{liqcell\_\-arrange.c}!liqcell\_\-child\_\-arrange\_\-easycol@{liqcell\_\-child\_\-arrange\_\-easycol}}
+\index{liqcell\_\-child\_\-arrange\_\-easycol@{liqcell\_\-child\_\-arrange\_\-easycol}!liqcell_arrange.c@{liqcell\_\-arrange.c}}
+\subsubsection[{liqcell\_\-child\_\-arrange\_\-easycol}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-child\_\-arrange\_\-easycol (liqcell $\ast$ {\em self})}\label{d1/da8/liqcell__arrange_8c_46647e7b90e3ae518153a1efb6a518a5}
+
+
+Arrange parent's child cells into a simple column \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to arrange the children of \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int Success or Failure \end{Desc}
+
+
+References liqcell\_\-geth(), liqcell\_\-getlinkchild(), liqcell\_\-getlinknext(), liqcell\_\-getw(), liqcell\_\-setpos(), and liqcell\_\-setsize().\index{liqcell\_\-arrange.c@{liqcell\_\-arrange.c}!liqcell\_\-child\_\-arrange\_\-easyrow@{liqcell\_\-child\_\-arrange\_\-easyrow}}
+\index{liqcell\_\-child\_\-arrange\_\-easyrow@{liqcell\_\-child\_\-arrange\_\-easyrow}!liqcell_arrange.c@{liqcell\_\-arrange.c}}
+\subsubsection[{liqcell\_\-child\_\-arrange\_\-easyrow}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-child\_\-arrange\_\-easyrow (liqcell $\ast$ {\em self})}\label{d1/da8/liqcell__arrange_8c_6160ba7509f4b2cd587e29f6bc60895e}
+
+
+Arrange parent's child cells into a simple row \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to arrange the children of \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int Success or Failure \end{Desc}
+
+
+References liqcell\_\-geth(), liqcell\_\-getlinkchild(), liqcell\_\-getlinknext(), liqcell\_\-getw(), liqcell\_\-setpos(), and liqcell\_\-setsize().\index{liqcell\_\-arrange.c@{liqcell\_\-arrange.c}!liqcell\_\-child\_\-arrange\_\-easytile@{liqcell\_\-child\_\-arrange\_\-easytile}}
 \index{liqcell\_\-child\_\-arrange\_\-easytile@{liqcell\_\-child\_\-arrange\_\-easytile}!liqcell_arrange.c@{liqcell\_\-arrange.c}}
 \subsubsection[{liqcell\_\-child\_\-arrange\_\-easytile}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-child\_\-arrange\_\-easytile (liqcell $\ast$ {\em self})}\label{d1/da8/liqcell__arrange_8c_b3ba949bc6b364d3fdb9749401272b39}
 

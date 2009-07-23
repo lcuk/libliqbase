@@ -17,28 +17,21 @@ Manage a liqcell's .tag.
 \subsection*{Functions}
 \begin{CompactItemize}
 \item 
-int \textbf{liqcell\_\-propremoves} (liqcell $\ast$self, char $\ast$name)\label{d7/db4/liqcell__prop_8c_f2fcef990511d5410f99d33e3e490837}
-
+int {\bf liqcell\_\-propremoves} (liqcell $\ast$self, char $\ast$name)
 \item 
-int \textbf{liqcell\_\-propremovei} (liqcell $\ast$self, char $\ast$name)\label{d7/db4/liqcell__prop_8c_3e300caf2db00ee98fd4663a93073d23}
-
+int {\bf liqcell\_\-propremovei} (liqcell $\ast$self, char $\ast$name)
 \item 
-int \textbf{liqcell\_\-propgeti} (liqcell $\ast$self, char $\ast$name, int valueifnotfound)\label{d7/db4/liqcell__prop_8c_d95b04d386b49c246a1f95105092cbd1}
-
+int {\bf liqcell\_\-propgeti} (liqcell $\ast$self, char $\ast$name, int valueifnotfound)
 \item 
 int {\bf liqcell\_\-propseti} (liqcell $\ast$self, char $\ast$name, int value)
 \item 
-char $\ast$ \textbf{liqcell\_\-propgets} (liqcell $\ast$self, char $\ast$name, char $\ast$valueifnotfound)\label{d7/db4/liqcell__prop_8c_ab87e63e7cf949c5cb3e5f565cd7c45a}
-
+char $\ast$ {\bf liqcell\_\-propgets} (liqcell $\ast$self, char $\ast$name, char $\ast$valueifnotfound)
 \item 
-char $\ast$ \textbf{liqcell\_\-propsets} (liqcell $\ast$self, char $\ast$name, char $\ast$value)\label{d7/db4/liqcell__prop_8c_0bc940f551da2fc15934dbb219afd405}
-
+char $\ast$ {\bf liqcell\_\-propsets} (liqcell $\ast$self, char $\ast$name, char $\ast$value)
 \item 
-char $\ast$ \textbf{liqcell\_\-propsets\_\-vprintf} (liqcell $\ast$self, char $\ast$name, char $\ast$format, va\_\-list arg)\label{d7/db4/liqcell__prop_8c_dfcb286b306ea122d2723c7826b5e4ec}
-
+char $\ast$ {\bf liqcell\_\-propsets\_\-vprintf} (liqcell $\ast$self, char $\ast$name, char $\ast$format, va\_\-list arg)
 \item 
-char $\ast$ \textbf{liqcell\_\-propsets\_\-printf} (liqcell $\ast$self, char $\ast$name, char $\ast$format,...)\label{d7/db4/liqcell__prop_8c_fc25d6de82a049b5387947d89ef0f937}
-
+char $\ast$ {\bf liqcell\_\-propsets\_\-printf} (liqcell $\ast$self, char $\ast$name, char $\ast$format,...)
 \end{CompactItemize}
 
 
@@ -48,7 +41,7 @@ Manage a liqcell's .tag.
 
 \begin{Desc}
 \item[Author:]Gary Birkett Copyright (C) 2008 Gary Birkett\end{Desc}
-\subsection{LICENSE}\label{d7/db4/liqcell__prop_8c_LICENSE}
+\subsection{LICENSE}\label{de/d77/liqui_8c_LICENSE}
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -56,6 +49,56 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
 
 \subsection{Function Documentation}
+\index{liqcell\_\-prop.c@{liqcell\_\-prop.c}!liqcell\_\-propgeti@{liqcell\_\-propgeti}}
+\index{liqcell\_\-propgeti@{liqcell\_\-propgeti}!liqcell_prop.c@{liqcell\_\-prop.c}}
+\subsubsection[{liqcell\_\-propgeti}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-propgeti (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em name}, \/  int {\em valueifnotfound})}\label{d7/db4/liqcell__prop_8c_d95b04d386b49c246a1f95105092cbd1}
+
+
+Get an integer prop \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to get the prop from \item[{\em name}]The name of the prop to get \item[{\em valueifnotfound}]Return this value if prop not found \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int The integer prop or valueifnotfound \end{Desc}
+\index{liqcell\_\-prop.c@{liqcell\_\-prop.c}!liqcell\_\-propgets@{liqcell\_\-propgets}}
+\index{liqcell\_\-propgets@{liqcell\_\-propgets}!liqcell_prop.c@{liqcell\_\-prop.c}}
+\subsubsection[{liqcell\_\-propgets}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ liqcell\_\-propgets (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em name}, \/  char $\ast$ {\em valueifnotfound})}\label{d7/db4/liqcell__prop_8c_ab87e63e7cf949c5cb3e5f565cd7c45a}
+
+
+Get a string prop \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to get the prop from \item[{\em name}]The name of the prop to get \item[{\em valueifnotfound}]Return this value if prop not found \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]char$\ast$ The string prop or valueifnotfound \end{Desc}
+
+
+Referenced by liqcell\_\-sketch\_\-autoload().\index{liqcell\_\-prop.c@{liqcell\_\-prop.c}!liqcell\_\-propremovei@{liqcell\_\-propremovei}}
+\index{liqcell\_\-propremovei@{liqcell\_\-propremovei}!liqcell_prop.c@{liqcell\_\-prop.c}}
+\subsubsection[{liqcell\_\-propremovei}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-propremovei (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em name})}\label{d7/db4/liqcell__prop_8c_3e300caf2db00ee98fd4663a93073d23}
+
+
+Remove an integer prop \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to remove the prop from \item[{\em name}]The prop to remove \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int Success or Failure \end{Desc}
+\index{liqcell\_\-prop.c@{liqcell\_\-prop.c}!liqcell\_\-propremoves@{liqcell\_\-propremoves}}
+\index{liqcell\_\-propremoves@{liqcell\_\-propremoves}!liqcell_prop.c@{liqcell\_\-prop.c}}
+\subsubsection[{liqcell\_\-propremoves}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-propremoves (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em name})}\label{d7/db4/liqcell__prop_8c_f2fcef990511d5410f99d33e3e490837}
+
+
+Remove a string prop \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to remove the prop from \item[{\em name}]The prop to remove \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int Success or Failure \end{Desc}
 \index{liqcell\_\-prop.c@{liqcell\_\-prop.c}!liqcell\_\-propseti@{liqcell\_\-propseti}}
 \index{liqcell\_\-propseti@{liqcell\_\-propseti}!liqcell_prop.c@{liqcell\_\-prop.c}}
 \subsubsection[{liqcell\_\-propseti}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-propseti (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em name}, \/  int {\em value})}\label{d7/db4/liqcell__prop_8c_84d505dda856299bc51da9d0871ca7b2}
@@ -72,4 +115,41 @@ Create a child liqcell for the parent (self) with .tag defined as the integer va
 \item[Returns:]int value \end{Desc}
 
 
-Referenced by liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal().
+Referenced by liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal(), textbox\_\-create(), and uititlebar\_\-create().\index{liqcell\_\-prop.c@{liqcell\_\-prop.c}!liqcell\_\-propsets@{liqcell\_\-propsets}}
+\index{liqcell\_\-propsets@{liqcell\_\-propsets}!liqcell_prop.c@{liqcell\_\-prop.c}}
+\subsubsection[{liqcell\_\-propsets}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ liqcell\_\-propsets (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em name}, \/  char $\ast$ {\em value})}\label{d7/db4/liqcell__prop_8c_0bc940f551da2fc15934dbb219afd405}
+
+
+Set a string prop \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to set the prop for \item[{\em name}]The name of the prop to set \item[{\em value}]The value to set to prop \char`\"{}name\char`\"{} \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]char$\ast$ The value provided \end{Desc}
+
+
+Referenced by liqcell\_\-propsets\_\-vprintf(), textbox\_\-create(), uiinfobar\_\-create(), uinumberbox\_\-create(), uipicturebox\_\-create(), uitextbox\_\-create(), and uititlebar\_\-create().\index{liqcell\_\-prop.c@{liqcell\_\-prop.c}!liqcell\_\-propsets\_\-printf@{liqcell\_\-propsets\_\-printf}}
+\index{liqcell\_\-propsets\_\-printf@{liqcell\_\-propsets\_\-printf}!liqcell_prop.c@{liqcell\_\-prop.c}}
+\subsubsection[{liqcell\_\-propsets\_\-printf}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ liqcell\_\-propsets\_\-printf (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em name}, \/  char $\ast$ {\em format}, \/   {\em ...})}\label{d7/db4/liqcell__prop_8c_fc25d6de82a049b5387947d89ef0f937}
+
+
+Set formatted string prop and \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to set the prop for \item[{\em name}]The name of the prop to set \item[{\em format}]Format of the string prop \item[{\em ...}]va\_\-list args \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]char$\ast$ The formatted string prop \end{Desc}
+
+
+References liqcell\_\-propsets\_\-vprintf().\index{liqcell\_\-prop.c@{liqcell\_\-prop.c}!liqcell\_\-propsets\_\-vprintf@{liqcell\_\-propsets\_\-vprintf}}
+\index{liqcell\_\-propsets\_\-vprintf@{liqcell\_\-propsets\_\-vprintf}!liqcell_prop.c@{liqcell\_\-prop.c}}
+\subsubsection[{liqcell\_\-propsets\_\-vprintf}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ liqcell\_\-propsets\_\-vprintf (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em name}, \/  char $\ast$ {\em format}, \/  va\_\-list {\em arg})}\label{d7/db4/liqcell__prop_8c_dfcb286b306ea122d2723c7826b5e4ec}
+
+
+Helper function for liqcell\_\-propsets\_\-printf 
+
+References liqcell\_\-propsets().
+
+Referenced by liqcell\_\-propsets\_\-printf().
