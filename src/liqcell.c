@@ -1090,7 +1090,7 @@ liqcell *liqcell_lastchild(liqcell *self)
 	}
 	return NULL;
 }
-[-
+
 //##################################################################
 
 /**
