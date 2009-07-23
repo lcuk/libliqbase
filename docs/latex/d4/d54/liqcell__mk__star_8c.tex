@@ -1,0 +1,88 @@
+\section{src/liqcell\_\-mk\_\-star.c File Reference}
+\label{d4/d54/liqcell__mk__star_8c}\index{src/liqcell\_\-mk\_\-star.c@{src/liqcell\_\-mk\_\-star.c}}
+small cell building helper functions  
+
+
+{\tt \#include \char`\"{}liqcell.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell\_\-easyrun.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell\_\-prop.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell\_\-mk\_\-star.h\char`\"{}}\par
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+liqcell $\ast$ {\bf mkmeta\_\-group} (liqcell $\ast$first,...)
+\item 
+liqcell $\ast$ {\bf mkmeta\_\-title} (char $\ast$key)
+\item 
+liqcell $\ast$ {\bf mkmeta\_\-author} (char $\ast$key)
+\item 
+liqcell $\ast$ {\bf mkmeta\_\-description} (char $\ast$key)
+\item 
+liqcell $\ast$ {\bf mkmeta\_\-version} (char $\ast$key)
+\item 
+liqcell $\ast$ {\bf mkgroupa} (char $\ast$key, char $\ast$classname, liqcell $\ast$first, va\_\-list arg)
+\item 
+liqcell $\ast$ {\bf mkgroup} (char $\ast$key, liqcell $\ast$first,...)
+\end{CompactItemize}
+
+
+\label{_details}
+\subsection{Detailed Description}
+small cell building helper functions 
+
+\begin{Desc}
+\item[Author:]Gary Birkett Copyright (C) 2008 Gary Birkett\end{Desc}
+\subsection{LICENSE}\label{de/d77/liqui_8c_LICENSE}
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
+
+\subsection{Function Documentation}
+\index{liqcell\_\-mk\_\-star.c@{liqcell\_\-mk\_\-star.c}!mkgroup@{mkgroup}}
+\index{mkgroup@{mkgroup}!liqcell_mk_star.c@{liqcell\_\-mk\_\-star.c}}
+\subsubsection[{mkgroup}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ mkgroup (char $\ast$ {\em key}, \/  liqcell $\ast$ {\em first}, \/   {\em ...})}\label{d4/d54/liqcell__mk__star_8c_8f8accc4fe47de9f5fa78df46f4d97a9}
+
+
+construct a group of cells based on ... 
+
+References mkgroup(), and mkgroupa().
+
+Referenced by mkgroup().\index{liqcell\_\-mk\_\-star.c@{liqcell\_\-mk\_\-star.c}!mkgroupa@{mkgroupa}}
+\index{mkgroupa@{mkgroupa}!liqcell_mk_star.c@{liqcell\_\-mk\_\-star.c}}
+\subsubsection[{mkgroupa}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ mkgroupa (char $\ast$ {\em key}, \/  char $\ast$ {\em classname}, \/  liqcell $\ast$ {\em first}, \/  va\_\-list {\em arg})}\label{d4/d54/liqcell__mk__star_8c_608587c6ea778a212270715cf6b81b75}
+
+
+construct a group of non visual cells based on a va\_\-list 
+
+References mkgroupa().
+
+Referenced by mkgroup(), mkgroupa(), and mkmeta\_\-group().\index{liqcell\_\-mk\_\-star.c@{liqcell\_\-mk\_\-star.c}!mkmeta\_\-author@{mkmeta\_\-author}}
+\index{mkmeta\_\-author@{mkmeta\_\-author}!liqcell_mk_star.c@{liqcell\_\-mk\_\-star.c}}
+\subsubsection[{mkmeta\_\-author}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ mkmeta\_\-author (char $\ast$ {\em key})}\label{d4/d54/liqcell__mk__star_8c_8a68e85c9acc5a45fa9751fde4f100ae}
+
+
+construct a meta\_\-description element \index{liqcell\_\-mk\_\-star.c@{liqcell\_\-mk\_\-star.c}!mkmeta\_\-description@{mkmeta\_\-description}}
+\index{mkmeta\_\-description@{mkmeta\_\-description}!liqcell_mk_star.c@{liqcell\_\-mk\_\-star.c}}
+\subsubsection[{mkmeta\_\-description}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ mkmeta\_\-description (char $\ast$ {\em key})}\label{d4/d54/liqcell__mk__star_8c_d7e5ab2e14c9c333db98885676c62a79}
+
+
+construct a meta\_\-description element \index{liqcell\_\-mk\_\-star.c@{liqcell\_\-mk\_\-star.c}!mkmeta\_\-group@{mkmeta\_\-group}}
+\index{mkmeta\_\-group@{mkmeta\_\-group}!liqcell_mk_star.c@{liqcell\_\-mk\_\-star.c}}
+\subsubsection[{mkmeta\_\-group}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ mkmeta\_\-group (liqcell $\ast$ {\em first}, \/   {\em ...})}\label{d4/d54/liqcell__mk__star_8c_d8f914b6b726606c9c952149d0bc4266}
+
+
+construct a meta\_\-info group based on ... 
+
+References mkgroupa().\index{liqcell\_\-mk\_\-star.c@{liqcell\_\-mk\_\-star.c}!mkmeta\_\-title@{mkmeta\_\-title}}
+\index{mkmeta\_\-title@{mkmeta\_\-title}!liqcell_mk_star.c@{liqcell\_\-mk\_\-star.c}}
+\subsubsection[{mkmeta\_\-title}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ mkmeta\_\-title (char $\ast$ {\em key})}\label{d4/d54/liqcell__mk__star_8c_0607d834c2a4ebc0117888c5b072d46a}
+
+
+construct a meta\_\-title element \index{liqcell\_\-mk\_\-star.c@{liqcell\_\-mk\_\-star.c}!mkmeta\_\-version@{mkmeta\_\-version}}
+\index{mkmeta\_\-version@{mkmeta\_\-version}!liqcell_mk_star.c@{liqcell\_\-mk\_\-star.c}}
+\subsubsection[{mkmeta\_\-version}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ mkmeta\_\-version (char $\ast$ {\em key})}\label{d4/d54/liqcell__mk__star_8c_c895cc20f7fe59dbc6f58ee03a5135e6}
+
+
+construct a meta\_\-version element 

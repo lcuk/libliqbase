@@ -1,0 +1,146 @@
+\section{src/liqcanvas.c File Reference}
+\label{d6/df5/liqcanvas_8c}\index{src/liqcanvas.c@{src/liqcanvas.c}}
+Basic Canvas control functions.  
+
+
+{\tt \#include $<$stdlib.h$>$}\par
+{\tt \#include $<$X11/Xlib.h$>$}\par
+{\tt \#include $<$X11/Xutil.h$>$}\par
+{\tt \#include $<$X11/Xatom.h$>$}\par
+{\tt \#include $<$X11/extensions/Xv.h$>$}\par
+{\tt \#include $<$X11/extensions/Xvlib.h$>$}\par
+{\tt \#include \char`\"{}liqapp.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqimage.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcanvas.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcliprect.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqx11info.h\char`\"{}}\par
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+int {\bf liqcanvas\_\-firstrun\_\-splash} ()
+\item 
+liqx11info $\ast$ \textbf{liqcanvas\_\-getx11info} ()\label{d6/df5/liqcanvas_8c_889c4aafc0a5c9ef1244e347433adbf9}
+
+\item 
+int \textbf{liqcanvas\_\-nextevent\_\-x11} (LIQEVENT $\ast$ev, int $\ast$dirtyflagptr)\label{d6/df5/liqcanvas_8c_183c9a153aa2f21f92177c7d67192ddc}
+
+\item 
+int \textbf{liqcanvas\_\-takepicture} ()\label{d6/df5/liqcanvas_8c_19633692d4a14ee119467ab3388cbe79}
+
+\item 
+int \textbf{liqcanvas\_\-isopen} ()\label{d6/df5/liqcanvas_8c_54a87a6193a048be8c3fcb8eb3191ee8}
+
+\item 
+int \textbf{liqcanvas\_\-init\_\-usecustomwindow} (int pixelwidth, int pixelheight, void $\ast$customx11display, void $\ast$customx11window)\label{d6/df5/liqcanvas_8c_ec198fad80e117d72dac537f34e4fdae}
+
+\item 
+int {\bf liqcanvas\_\-init\_\-inner} (int pixelwidth, int pixelheight, int fullscreen)
+\item 
+int {\bf liqcanvas\_\-init} (int pixelwidth, int pixelheight, int fullscreen)
+\item 
+int \textbf{liqcanvas\_\-close} ()\label{d6/df5/liqcanvas_8c_cddb111ced293447feca07888077a6c3}
+
+\item 
+liqcliprect $\ast$ \textbf{liqcanvas\_\-getcliprect} ()\label{d6/df5/liqcanvas_8c_a96ecadc23930fef85d1163594ba0839}
+
+\item 
+liqimage $\ast$ \textbf{liqcanvas\_\-getsurface} ()\label{d6/df5/liqcanvas_8c_40f3a7976e1050d8033ee546776c27f3}
+
+\item 
+int \textbf{liqcanvas\_\-getwidth} ()\label{d6/df5/liqcanvas_8c_d0539c1ff094599a4727665a6ec5c5d0}
+
+\item 
+int \textbf{liqcanvas\_\-getheight} ()\label{d6/df5/liqcanvas_8c_ec8faa46f11d51d44f2c93ac67cdb949}
+
+\item 
+int \textbf{liqcanvas\_\-getdpix} ()\label{d6/df5/liqcanvas_8c_7d7323a8800e98a655d67cc3ed4e9946}
+
+\item 
+int \textbf{liqcanvas\_\-getdpiy} ()\label{d6/df5/liqcanvas_8c_3c65cb417f9b07ff59f11d584760f0f4}
+
+\item 
+float \textbf{liqcanvas\_\-getscalew} ()\label{d6/df5/liqcanvas_8c_f29e0243e2f21bb79b7bc55303f146e9}
+
+\item 
+float \textbf{liqcanvas\_\-getscaleh} ()\label{d6/df5/liqcanvas_8c_7f39e5bb5f0c776611f917fe2611640b}
+
+\item 
+int \textbf{liqcanvas\_\-eventcount} ()\label{d6/df5/liqcanvas_8c_d4300d2ca82a952d316d0776fc57f176}
+
+\item 
+int \textbf{liqcanvas\_\-nextevent} (LIQEVENT $\ast$ptrevent, int $\ast$dirtyflagptr)\label{d6/df5/liqcanvas_8c_ccb34a151dea1651688c6589bf43d79b}
+
+\item 
+int \textbf{liqcanvas\_\-refreshdisplay} ()\label{d6/df5/liqcanvas_8c_3ea06cd9d4c7254f76482688dcd6d487}
+
+\item 
+int \textbf{liqcanvas\_\-minimize} ()\label{d6/df5/liqcanvas_8c_e217e0b92d56e9187d8ae315e4ced698}
+
+\end{CompactItemize}
+\subsection*{Variables}
+\begin{CompactItemize}
+\item 
+liqcanvas \textbf{canvas} = \{0,0\}\label{d6/df5/liqcanvas_8c_fa7a1f9c5e3fce57ed09debb729058db}
+
+\item 
+liqx11info \textbf{x11infobase} = \{NULL\}\label{d6/df5/liqcanvas_8c_0a707be92792a14e9830e5ebe72d6d1b}
+
+\end{CompactItemize}
+
+
+\label{_details}
+\subsection{Detailed Description}
+Basic Canvas control functions. 
+
+\begin{Desc}
+\item[Author:]Gary Birkett Copyright (C) 2008 Gary Birkett\end{Desc}
+\subsection{LICENSE}\label{de/d77/liqui_8c_LICENSE}
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
+
+\subsection{Function Documentation}
+\index{liqcanvas.c@{liqcanvas.c}!liqcanvas\_\-firstrun\_\-splash@{liqcanvas\_\-firstrun\_\-splash}}
+\index{liqcanvas\_\-firstrun\_\-splash@{liqcanvas\_\-firstrun\_\-splash}!liqcanvas.c@{liqcanvas.c}}
+\subsubsection[{liqcanvas\_\-firstrun\_\-splash}]{\setlength{\rightskip}{0pt plus 5cm}int liqcanvas\_\-firstrun\_\-splash ()}\label{d6/df5/liqcanvas_8c_28541ca509c0f3205eb7e170afabd2d8}
+
+
+first run \char`\"{}splash screen\char`\"{} designed to be used in the middle of firstrun detection logic to automagically remove glitches :) \begin{Desc}
+\item[Returns:]Success or Failure \end{Desc}
+
+
+References liqapp\_\-GetTicks(), and liqapp\_\-log().
+
+Referenced by liqcanvas\_\-init().\index{liqcanvas.c@{liqcanvas.c}!liqcanvas\_\-init@{liqcanvas\_\-init}}
+\index{liqcanvas\_\-init@{liqcanvas\_\-init}!liqcanvas.c@{liqcanvas.c}}
+\subsubsection[{liqcanvas\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}int liqcanvas\_\-init (int {\em pixelwidth}, \/  int {\em pixelheight}, \/  int {\em fullscreen})}\label{d6/df5/liqcanvas_8c_f779cfa1bb880b708379639904ae0703}
+
+
+Construct a canvas with a given height and width, also with the option of going fullscreen. \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em pixelwidth}]Width of the canvas \item[{\em pixelheight}]Height of the canvas \item[{\em fullscreen}]Set this to 1 in order to have a fullscreen canvas \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int 0 for success, -1 for error/failure \end{Desc}
+
+
+References liqapp\_\-errorandfail(), liqapp\_\-log(), liqcanvas\_\-firstrun\_\-splash(), and liqcanvas\_\-init\_\-inner().\index{liqcanvas.c@{liqcanvas.c}!liqcanvas\_\-init\_\-inner@{liqcanvas\_\-init\_\-inner}}
+\index{liqcanvas\_\-init\_\-inner@{liqcanvas\_\-init\_\-inner}!liqcanvas.c@{liqcanvas.c}}
+\subsubsection[{liqcanvas\_\-init\_\-inner}]{\setlength{\rightskip}{0pt plus 5cm}int liqcanvas\_\-init\_\-inner (int {\em pixelwidth}, \/  int {\em pixelheight}, \/  int {\em fullscreen})}\label{d6/df5/liqcanvas_8c_b6dffbe0dd307c339341678ea62c39f2}
+
+
+Construct a canvas with a given height and width, also with the option of going fullscreen. \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em pixelwidth}]Width of the canvas \item[{\em pixelheight}]Height of the canvas \item[{\em fullscreen}]Set this to 1 in order to have a fullscreen canvas \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int 0 for success, -1 for error/failure \end{Desc}
+
+
+References liqapp\_\-errorandfail(), and liqapp\_\-log().
+
+Referenced by liqcanvas\_\-init().

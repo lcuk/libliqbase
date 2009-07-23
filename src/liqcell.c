@@ -71,6 +71,11 @@ char*  liqcell_local_lookup_getcaption(liqcell *self,char *name)
 //######################################################################### cell construction and reference counting
 //#########################################################################
 //#########################################################################
+
+/**
+ * Low level liqcell creation which allocates memory and sets the liqcell into use.
+ * @return liqcell* The newly created liqcell
+ */
 liqcell *liqcell_new()
 {
 	// use this to allocate and hold onto a reference
@@ -82,7 +87,11 @@ liqcell *liqcell_new()
 	return self;
 }
 
-
+/** 
+ * Add to the usage count, hold onto an object which someone else created
+ * @param self The liqcell to modify
+ * @return liqcell* The modified liqcell
+ */
 liqcell * liqcell_hold(liqcell *self)
 {
 	// use this to hold onto an object which someone else created
@@ -90,8 +99,10 @@ liqcell * liqcell_hold(liqcell *self)
 	return self;
 }
 
-
-
+/**
+ * Decrease the usage count, once this gets to 0, the liqcell is freed
+ * @param self The liqcell to modify
+ */
 void liqcell_release(liqcell *self)
 {
 	if(!self) return;
@@ -104,8 +115,11 @@ void liqcell_release(liqcell *self)
 	if(!self->usagecount) liqcell_free(self);
 }
 
-
-
+/**
+ * Recursively free all liqcells of the parent liqcell provided and their items 
+ * (font, image, etc..)
+ * @param self The parent will have all children freed
+ */
 void liqcell_free(liqcell *self)
 {
 	//liqapp_log("liqcell freeing tree %s",self->name);
@@ -196,6 +210,12 @@ void liqcell_free(liqcell *self)
 //#########################################################################
 //#########################################################################
 
+/**
+ * Set the x, y coordinate position of the liqcell
+ * @param self Liqcell to set the position of
+ * @param x The x-coordinate
+ * @param y The y-coordinate
+ */
 void liqcell_setpos(liqcell *self,int x,int y)
 {
 	if(self->x==x && self->y==y)return;
@@ -203,6 +223,13 @@ void liqcell_setpos(liqcell *self,int x,int y)
 	self->y=y;
 	liqcell_handlerrun(self,"move",NULL);
 }
+
+/**
+ * Set the width and height of the liqcell
+ * @param self Liqcell to set dimensions of
+ * @param w The width
+ * @param h The height
+ */
 void liqcell_setsize(liqcell *self,int w,int h)
 {
 	if(self->w==w && self->h==h)return;
@@ -211,24 +238,46 @@ void liqcell_setsize(liqcell *self,int w,int h)
 	liqcell_handlerrun(self,"resize",NULL);
 }
 
+/**
+ * Set the size of a liqcell by providing just the liqcell and using the inner width
+ * and inner height
+ * @param self The liqcell to set the size of
+ */
 void liqcell_setsize_from_inner(liqcell *self)
 {
 	liqcell_setsize(self, self->innerw,self->innerh);
 }
 
+/**
+ * Set the inner sizes parameters of the liqcell
+ * @param self The liqcell to modify
+ * @param w Width
+ * @param h Height
+ */
 void liqcell_setinnersize(liqcell *self,int w,int h)
 {
 	self->innerw=w;
 	self->innerh=h;
 }
 
+/**
+ * Set the inner size parameters using the width and height parameters of the liqcell
+ * @param self The liqcell to modify
+ */
 void liqcell_setinnersize_from_outer(liqcell *self)
 {
 	self->innerw=self->w;
 	self->innerh=self->h;
 }
 
-
+/**
+ * Set the x, y-coordinates and height/width of a liqcell
+ * @param self The liqcell to modify
+ * @param x X-Coordinate
+ * @param y Y-Coordinate
+ * @param w Width
+ * @param h Height
+ */
 void liqcell_setrect(liqcell *self,int x,int y,int w,int h)
 {
 	if(self->x==x && self->y==y && self->w==w && self->h==h)return;
@@ -240,7 +289,16 @@ void liqcell_setrect(liqcell *self,int x,int y,int w,int h)
 	liqcell_handlerrun(self,"resize",NULL);
 }
 
-
+/**
+ * Move and resize a liqcell
+ * @param self The liqcell to modify
+ * @param x New x-coordinate
+ * @param y New y-coordinate
+ * @param w New width
+ * @param h New height
+ * @param fraction Ratio to increase or decreases the liqcell position and size
+ * @return int Success or Failure
+ */
 int 	liqcell_movetowardsrect(liqcell *self,int x,int y,int w,int h, float fraction)
 {
 	if(self->x==x && self->y==y && self->w==w && self->h==h)
@@ -272,10 +330,15 @@ int 	liqcell_movetowardsrect(liqcell *self,int x,int y,int w,int h, float fracti
 
 
 /**
- * set the rect, but use default original scaling to do it
+ * Set the rect, but use default original scaling to do it
+ * @param self The liqcell to modify
+ * @param x X-Coordinate
+ * @param y Y-Coordinate
+ * @param w Width
+ * @param h Height
+ * @param sx X Scaling fraction
+ * @param sy Y Scaling fraction
  */
- 
-
 void liqcell_setrect_autoscale(liqcell *self,int x,int y,int w,int h,float sx,float sy)
 {
 	if(!self)return;
@@ -300,6 +363,12 @@ void liqcell_setrect_autoscale(liqcell *self,int x,int y,int w,int h,float sx,fl
 	liqcell_handlerrun(self,"resize",NULL);
 }
 
+/**
+ * Increase or decrease the liqcell x, y-coordinates
+ * @param self The liqcell to modify
+ * @param dx Change in the x-coordinate
+ * @param dy Change in the y-coordinate 
+ */
 void 	liqcell_adjustpos(liqcell *self,int dx,int dy)
 {
 	if(dx==0 && dy==0)return;
@@ -307,6 +376,13 @@ void 	liqcell_adjustpos(liqcell *self,int dx,int dy)
 	self->y+=dy;
 	liqcell_handlerrun(self,"move",NULL);
 }
+
+/**
+ * Increase or decrease the liqcell width and height
+ * @param self The liqcell to modify
+ * @param dw Change in the width
+ * @param dh Change in the height 
+ */
 void 	liqcell_adjustsize(liqcell *self,int dw,int dh)
 {
 	if(dw==0 && dh==0)return;
@@ -315,20 +391,24 @@ void 	liqcell_adjustsize(liqcell *self,int dw,int dh)
 	liqcell_handlerrun(self,"resize",NULL);
 
 }
+
+/**
+ * Increase or decrease the liqcell inner width and inner height
+ * @param self The liqcell to modify
+ * @param dw Change in the width
+ * @param dh Change in the height 
+ */
 void 	liqcell_adjustinnersize(liqcell *self,int dw,int dh)
 {
 	self->innerw+=dw;
 	self->innerh+=dh;
 }
 
-
-
-
-
-
-
-
-
+/**
+ * Set the dirty hold to indicate whether a liqcell can be updated
+ * @param self The liqcell to modify
+ * @param dirtyhold Set this to 0 to indicate no hold, can be updated.
+ */
 void liqcell_setdirtyhold(liqcell *self,int dirtyhold)
 {
 	//liqapp_log("dirty hold : '%s'",self->name);
@@ -341,11 +421,20 @@ void liqcell_setdirtyhold(liqcell *self,int dirtyhold)
 	}
 }
 
-int    	liqcell_getdirtyhold(liqcell *self)
+/**
+ * Get the dirtyhold value of the liqcell
+ * @param self The liqcell to lookup
+ */
+int liqcell_getdirtyhold(liqcell *self)
 {
 	return self->dirtyhold;
 }
 
+/**
+ * Set dirty in order to indicate that the liqcell has changed, and needs to be updated
+ * @param self The liqcell to modify
+ * @param dirty Set this to 1 to indicate that the liqcell needs to be updated
+ */
 void liqcell_setdirty(liqcell *self,int dirty)
 {
 	// dirty flag indicates something has changed
@@ -369,13 +458,20 @@ void liqcell_setdirty(liqcell *self,int dirty)
 	}
 }
 
+/**
+ * Get the dirty value of the liqcell
+ * @param self The liqcell to lookup
+ */
 int    	liqcell_getdirty(liqcell *self)
 {
 	return self->dirty;
 }
 
-
-
+/**
+ * Set the liqcell name
+ * @param self The liqcell to modify
+ * @param name The name of the liqcell
+ */
 void liqcell_setname(liqcell *self,char *name)
 {
 	if(self->name)
@@ -386,6 +482,11 @@ void liqcell_setname(liqcell *self,char *name)
 	if(name) {     self->name      = strdup(name);   if(!self->name) liqapp_errorandfail(-1,"cannot alloc name");    }//      liqcell_setdirty(self,1);    }
 }
 
+/**
+ * Set the caption of the liqcell
+ * @param self The liqcell to modify
+ * @param caption The caption of the liqcell
+ */
 void liqcell_setcaption(liqcell *self,char *caption)
 {
 	// 20090626_213441 lcuk : did some extra logging for zachmon's benefit
@@ -407,8 +508,11 @@ void liqcell_setcaption(liqcell *self,char *caption)
 	//liqapp_log("caption on '%s' change fin",self->name );
 }
 
-
-
+/**
+ * Set the classname of the liqcell
+ * @param self The liqcell to modify
+ * @param classname The classname of the liqcell
+ */
 void liqcell_setclassname(liqcell *self,char *classname)
 {
 	if(self->classname)
@@ -419,6 +523,11 @@ void liqcell_setclassname(liqcell *self,char *classname)
 	if(classname)  {    self->classname      = strdup(classname);      }//     liqcell_setdirty(self,1);    }
 }
 
+/**
+ * Set the context of the liqcell
+ * @param self The liqcell to modify
+ * @param context The context of the liqcell
+ */
 void liqcell_setcontext(liqcell *self,char *context)
 {
 	if(self->context)
@@ -429,6 +538,11 @@ void liqcell_setcontext(liqcell *self,char *context)
 	if(context) {     self->context      = strdup(context);   }//        liqcell_setdirty(self,1);    }
 }
 
+/**
+ * Set the data of the liqcell
+ * @param self The liqcell to modify
+ * @param data The data of the liqcell
+ */
 void liqcell_setdata(liqcell *self,void *data)
 {
 	if(self->data)
@@ -440,6 +554,11 @@ void liqcell_setdata(liqcell *self,void *data)
 	if(data){      self->data      = data;       }//    liqcell_setdirty(self,1);    }
 }
 
+/**
+ * Set the sketch of the liqcell
+ * @param self The liqcell to modify
+ * @param sketch The sketch of the liqcell
+ */
 void liqcell_setsketch(liqcell *self,liqsketch *sketch)
 {
 	if(self->sketch)
@@ -451,6 +570,10 @@ void liqcell_setsketch(liqcell *self,liqsketch *sketch)
 	//if(sketch) {     self->sketch      = (sketch);   }//        liqcell_setdirty(self,1);    }
 }
 
+/**
+ * Load the sketch of the liqcell
+ * @param self The liqcell to load the sketch of
+ */
 void liqcell_sketch_autoload(liqcell *self)
 {
 	if(!self->sketch)
@@ -481,6 +604,11 @@ void liqcell_setimage(liqcell *self,liqimage *image)
 	//if(image){      self->image      = (image);          liqcell_setdirty(self,1);    }
 }
 
+/** 
+ * Set the font of the liqcell
+ * @param self The liqcell to modify
+ * @param font The liqcell's font
+ */
 void liqcell_setfont(liqcell *self,liqfont *font)
 {
 	if(self->font)
@@ -507,56 +635,87 @@ void liqcell_setcontent(liqcell *self,liqcell *content)
 	if(content){      self->content      = liqcell_hold(content);    }//       liqcell_setdirty(self,1);    }
 }
 
-
-
-
-void 	liqcell_setselected(liqcell *self,int arg)
+/**
+ * Set the selection of the liqcell
+ * @param self The liqcell to
+ * @param arg The argument set to selected parameter of the liqcell
+ */
+void liqcell_setselected(liqcell *self,int arg)
 {
 	self->selected      = arg;
 	// set dirty..
 }
 
-int 	liqcell_getselected(liqcell *self)
+/**
+ * Return the selected value
+ * @param self The liqcell to lookup
+ * @return int The selected value
+ */
+int liqcell_getselected(liqcell *self)
 {
 	return self->selected;
 }
 
-void 	liqcell_settag(liqcell *self,void *tag)
+/**
+ * Set the tag of the liqcell
+ * @param self The liqcell to modify
+ * @param tag The liqcell's tag
+ */
+void liqcell_settag(liqcell *self,void *tag)
 {
 	self->tag=(int)tag;
 }
-void *	liqcell_gettag(liqcell *self)
+
+/**
+ * Get the tag value of the liqcell 
+ * @param self The liqcell to lookup
+ * @return void* The generic pointer to the tag
+ */
+void *liqcell_gettag(liqcell *self)
 {
 	return (void *)self->tag;
 }
 
-
-
-
-void 	liqcell_setenabled(liqcell *self,int arg)
+/**
+ * Set the enabled value of the liqcell
+ * @param self The liqcell to modify
+ * @param arg The value to set enabled of the liqcell
+ */
+void liqcell_setenabled(liqcell *self,int arg)
 {
 	self->enabled      = arg;
 	// set dirty..
 }
 
-int 	liqcell_getenabled(liqcell *self)
+/**
+ * Return the enabled value
+ * @param self The liqcell to lookup
+ * @return int The enabled value
+ */
+int liqcell_getenabled(liqcell *self)
 {
 	return self->enabled;
 }
 
-
-
-void 	liqcell_setkinetic(liqcell *self,int kx,int ky)
+/**
+ * Set the liqcell's kinetic values int he x and y direction
+ * @param self The liqcell to modify
+ * @param kx The kinetic value in the x direction
+ * @param ky The kinetic value in the y direction
+ */
+void liqcell_setkinetic(liqcell *self,int kx,int ky)
 {
 	//liqapp_log("kinetic: %i,%i",kx,ky);
 	self->kineticx=kx;
 	self->kineticy=ky;
 }
 
-
-
-
-void 	liqcell_setshown(liqcell *self,int arg)
+/**
+ * Set the shown value of the liqcell
+ * @param self The liqcell to modify
+ * @param arg The value to set shown
+ */
+void liqcell_setshown(liqcell *self,int arg)
 {
 	if(arg)
 	{
@@ -568,7 +727,12 @@ void 	liqcell_setshown(liqcell *self,int arg)
 	}
 }
 
-int 	liqcell_getshown(liqcell *self)
+/**
+ * Get the shown value of the liqcell
+ * @param self The liqcell to lookup
+ * @return int The shown value
+ */
+int liqcell_getshown(liqcell *self)
 {
 	return (self->kind & cellkind_shown);
 }
@@ -580,21 +744,42 @@ int 	liqcell_getshown(liqcell *self)
 //#########################################################################
 //#########################################################################
 
+/**
+ * Get the linked parent of the liqcell
+ * @param self The liqcell to lookup
+ * @return liqcell* Liqcell pointer to the parent
+ */
 liqcell *liqcell_getlinkparent(liqcell *self)
 {
 	return self->linkparent;
 
 }
+
+/**
+ * Get the linked previous of the liqcell, the previous link in the linked list
+ * @param self The liqcell to lookup
+ * @return liqcell* Liqcell pointer to the previous
+ */
 liqcell *liqcell_getlinkprev(liqcell *self)
 {
 	return self->linkprev;
 }
 
+/**
+ * Get the linked next of the liqcell, the next link in the linked list
+ * @param self The liqcell to lookup
+ * @return liqcell* Liqcell pointer to the next
+ */
 liqcell *liqcell_getlinknext(liqcell *self)
 {
 	return self->linknext;
 }
 
+/**
+ * Get the linked previous of the liqcell, the previous link in the linked list that is VISIBLE
+ * @param self The liqcell to lookup
+ * @return liqcell* Liqcell pointer to the first previous that is visible
+ */
 liqcell *liqcell_getlinkprev_visual(liqcell *self)
 {
 	liqcell *c = self->linkprev;
@@ -606,6 +791,11 @@ liqcell *liqcell_getlinkprev_visual(liqcell *self)
 	return NULL;
 }
 
+/**
+ * Get the linked previous of the liqcell, the previous link in the linked list that is VISIBLE
+ * @param self The liqcell to lookup
+ * @return liqcell* Liqcell pointer to the first previous that is visible
+ */
 liqcell *liqcell_getlinknext_visual(liqcell *self)
 {
 	liqcell *c = self->linknext;
@@ -617,6 +807,11 @@ liqcell *liqcell_getlinknext_visual(liqcell *self)
 	return NULL;
 }
 
+/**
+ * Get the linked child of the liqcell, the child link in the linked list that is VISIBLE
+ * @param self The liqcell to lookup
+ * @return liqcell* Liqcell pointer to the first child that is visible
+ */
 liqcell *liqcell_getlinkchild_visual(liqcell *self)
 {
 	liqcell *c = self->linkchild;
@@ -638,7 +833,11 @@ liqcell *liqcell_getlinkchild(liqcell *self)
 	return self->linkchild;
 }
 
-
+/**
+ * Get the data of the liqcell
+ * @param self The liqcell to lookup
+ * @return lvoid* The data
+ */
 void *liqcell_getdata(liqcell *self)
 {
 	return self->data;
@@ -667,6 +866,8 @@ liqcell *liqcell_getlinkcontent(liqcell *self)
  	return self->linkcontent;
 }
 */
+
+
 int liqcell_getflagwidget(liqcell *self)
 {
 	return (self->kind & cellkind_widget);
@@ -701,10 +902,13 @@ char *liqcell_getname(liqcell *self)
 	return self->name;
 }
 
-
-
-
-
+/**
+ * Get the name of a liqcell that includes all of the parent names
+ * @param self The liqcell to get the qualified name of 
+ * @param buff Copy the qualified name into this buffer
+ * @param buffmax Maximum length of the buffer
+ * @return int The numbers of bytes used
+ */
 int liqcell_getqualifiedname(liqcell *self, char *buff, int buffmax)
 {
 	int buffmaxorig=buffmax;
@@ -730,17 +934,21 @@ int liqcell_getqualifiedname(liqcell *self, char *buff, int buffmax)
 
 }
 
-
-
-
-
+/**
+ * Return the classname
+ * @param self The liqcell to lookup
+ * @return char* The class name
+ */
 char *liqcell_getclassname(liqcell *self)
 {
 	return self->classname;
 }
 
-
-
+/**
+ * Return a liqcell caption
+ * @param self The liqcell to lookup
+ * @return char* The caption
+ */
 char *liqcell_getcaption(liqcell *self)
 {
 	if(!self->caption)
@@ -748,7 +956,11 @@ char *liqcell_getcaption(liqcell *self)
 	return self->caption;
 }
 
-
+/**
+ * Return the liqcell's sketch
+ * @param self The liqcell to lookup
+ * @return liqsketch* The sketch
+ */
 liqsketch *liqcell_getsketch(liqcell *self)
 {
 	//if(!self->sketch && self->content)
@@ -756,6 +968,11 @@ liqsketch *liqcell_getsketch(liqcell *self)
 	return self->sketch;
 }
 
+/**
+ * Return the liqcell's image
+ * @param self The liqcell to lookup
+ * @return liqsketch* The image
+ */
 liqimage *liqcell_getimage(liqcell *self)
 {
 	//if(!self->image && self->content)
@@ -763,12 +980,23 @@ liqimage *liqcell_getimage(liqcell *self)
 	return self->image;
 }
 
+/**
+ * Return the liqcell's font
+ * @param self The liqcell to lookup
+ * @return liqsketch* The font
+ */
 liqfont *liqcell_getfont(liqcell *self)
 {
 	if(!self->font && self->content)
 		return liqcell_getfont(self->content);
 	return self->font;
 }
+
+/**
+ * Return the liqcell's content
+ * @param self The liqcell to lookup
+ * @return liqsketch* The content
+ */
 liqcell *liqcell_getcontent(liqcell *self)
 {
 	//if(!self->content && self->linkcontent)
@@ -776,29 +1004,61 @@ liqcell *liqcell_getcontent(liqcell *self)
 	return self->content;
 }
 
-
-
-int    	liqcell_getx(liqcell *self)
+/**
+ * Return the liqcell's x-coordinate
+ * @param self The liqcell to lookup
+ * @return int The x-coordinate
+ */
+int liqcell_getx(liqcell *self)
 {
 	return self->x;
 }
-int    	liqcell_gety(liqcell *self)
+
+/**
+ * Return the liqcell's y-coordinate
+ * @param self The liqcell to lookup
+ * @return int The y-coordinate
+ */
+int liqcell_gety(liqcell *self)
 {
 	return self->y;
 }
-int    	liqcell_getw(liqcell *self)
+
+/**
+ * Return the liqcell's width
+ * @param self The liqcell to lookup
+ * @return int The width
+ */
+int liqcell_getw(liqcell *self)
 {
 	return self->w;
 }
-int    	liqcell_geth(liqcell *self)
+
+/**
+ * Return the liqcell's height
+ * @param self The liqcell to lookup
+ * @return int The height
+ */
+int liqcell_geth(liqcell *self)
 {
 	return self->h;
 }
 
-int    	liqcell_getinnerw(liqcell *self)
+/**
+ * Return the liqcell's inner width
+ * @param self The liqcell to lookup
+ * @return int The inner width
+ */
+int liqcell_getinnerw(liqcell *self)
 {
 	return self->innerw;
 }
+
+/**
+ * Return the liqcell's inner height
+ * @param self The liqcell to lookup
+ * @return int The inner height
+ */
 int    	liqcell_getinnerh(liqcell *self)
 {
 	return self->innerh;
@@ -814,6 +1074,11 @@ int    	liqcell_getinnerh(liqcell *self)
 
 //##################################################################
 
+/**
+ * Get the last child of the parent provided
+ * @param self The parent liqcell
+ * @return liqcell*
+ */
 liqcell *liqcell_lastchild(liqcell *self)
 {
 	if(self->linkchild==NULL)return NULL;
@@ -828,7 +1093,11 @@ liqcell *liqcell_lastchild(liqcell *self)
 
 //##################################################################
 
-void 	liqcell_zorder_totop(liqcell *self)
+/**
+ * Take the liqcell provided and put it at the top of the chain
+ * @param self The liqcell to put to the top
+ */
+void liqcell_zorder_totop(liqcell *self)
 {
 	// todo remove the strange blend of procedures and member lookups - i know its an internal function, but...
 	liqcell *par = liqcell_getlinkparent(self);
@@ -882,22 +1151,16 @@ liqcell*  liqcell_child_insert(liqcell *self,liqcell *child)
 	return child;
 }
 
-
-
-
-
-
-
-
-
-int  liqcell_child_countvisible(liqcell *self)
+/**
+ * Count the number of visible children
+ * @param self The liqcell to count the children of
+ * @return int The number of children
+ */
+int liqcell_child_countvisible(liqcell *self)
 {
-
-
-	//################################################
 	int answercount=0;
 
-	//################################################ Count the number of visible children
+	// count the number of visible children
 	liqcell *c=liqcell_getlinkchild(self);
 	while(c)
 	{
@@ -910,21 +1173,6 @@ int  liqcell_child_countvisible(liqcell *self)
 	}
 	return answercount;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /**
  * Create a chain in an already linked list of liqcells. If a list doesn't exist for the parent
@@ -956,13 +1204,15 @@ liqcell* liqcell_child_append(liqcell *self,liqcell *c)
 	return c;
 }
 
-
-
-
+/**
+ * Remove all the children of the parent
+ * @param self The liqcell to remove the children of
+ * @return int Success or Failure
+ */
 int liqcell_child_removeall(liqcell *self)
 {
 	liqcell *c=liqcell_getlinkchild(self);
-	while(  c   )
+	while(c)
 	{
 		liqcell *d = c->linknext;
 		liqcell_child_remove(self,c);
@@ -971,8 +1221,11 @@ int liqcell_child_removeall(liqcell *self)
 	return 0;
 }
 
-
-
+/**
+ * Remove all visible children
+ * @param self The liqcell to remove the children of
+ * @return int Success or Failure
+ */
 int liqcell_child_removeallvisual(liqcell *self)
 {
 	liqcell *c=liqcell_getlinkchild(self);
@@ -985,8 +1238,12 @@ int liqcell_child_removeallvisual(liqcell *self)
 	return 0;
 }
 
-
-
+/**
+ * Remove a child from the provided parent
+ * @param self The parent to remove the child from
+ * @param child The child to remove
+ * @return int Success or Failure
+ */
 int  liqcell_child_remove(liqcell *self,liqcell *child)
 {
 	// remove specified child, heh, leave this for now
@@ -1026,12 +1283,14 @@ int  liqcell_child_remove(liqcell *self,liqcell *child)
 		
 		liqcell_release(child);
 		return 0;
-			
-
 }
 
-
-
+/**
+ * Insert a child liqcell in a sorted fashion
+ * @param self The liqcell to insert a child into
+ * @param ch The child to insert
+ * @return liqcell* Child liqcell
+ */
 liqcell* liqcell_child_insertsorted(liqcell *self,liqcell * ch)
 {
 	if(!ch)return NULL;
@@ -1096,6 +1355,13 @@ liqcell* liqcell_child_insertsorted(liqcell *self,liqcell * ch)
 	return ch;// ch;
 }
 
+/**
+ * Insert a child into a parent, sorted by name
+ * @param self The parent
+ * @param ch The child
+ * @param sortpositive 
+ * @return liqcell* Child
+ */
 liqcell* liqcell_child_insertsortedbyname(liqcell *self,liqcell * ch,int sortpositive)
 {
 	if(!ch)return NULL;
@@ -1170,6 +1436,12 @@ liqcell* liqcell_child_insertsortedbyname(liqcell *self,liqcell * ch,int sortpos
 //	return liqcell_findfirst(self->linkchild,query);
 //}
 
+/**
+ * Look for a child with a simple name such as "zachchild"
+ * @param self The liqcell to lookup the child
+ * @param name The name of the child to find
+ * @return liqcell* The found child or NULL
+ */
 liqcell* liqcell_child_lookup_simple(liqcell *self,char *name)
 {
 	// 20090615_031345 lcuk : ignore dot name in this variation
@@ -1186,6 +1458,13 @@ liqcell* liqcell_child_lookup_simple(liqcell *self,char *name)
 	}
 	return NULL;
 }
+
+/**
+ * Look for a child with a non-simple name such as "zachparent.zachchild"
+ * @param self The liqcell to lookup the child
+ * @param name The name of the child to find
+ * @return liqcell* The found child or NULL
+ */
 liqcell* liqcell_child_lookup(liqcell *self,char *name)
 {
 	// find a named child
@@ -1227,6 +1506,14 @@ liqcell* liqcell_child_lookup(liqcell *self,char *name)
 	}
 	return NULL;
 }
+
+/**
+ * Look for a child based on the name and classname
+ * @param self The liqcell to lookup the child
+ * @param name The name
+ * @param classname The classname
+ * @return liqcell* The found liqcell or NULL
+ */
 liqcell*  liqcell_child_lookup_nameclass(liqcell *self,char *name,char *classname)
 {
 	//liqapp_log("find a child called '%s:%s'",name,classname);
@@ -1243,8 +1530,13 @@ liqcell*  liqcell_child_lookup_nameclass(liqcell *self,char *name,char *classnam
 	return NULL;
 }
 
-
-liqcell*  liqcell_local_lookup(liqcell *self,char *name)
+/**
+ * Local lookup liqcell child
+ * @param self The liqcell to lookup the child
+ * @param name The name of the child to find
+ * @return liqcell* The found child or NULL
+ */
+liqcell *liqcell_local_lookup(liqcell *self,char *name)
 {
 	liqcell *p=self;
 	//while(p)
@@ -1255,6 +1547,13 @@ liqcell*  liqcell_local_lookup(liqcell *self,char *name)
 	}
 	return NULL;
 }
+
+/**
+ * Local lookup nameclass
+ * @param self The liqcell to lookup the child
+ * @param name The name of the child to find
+ * @return liqcell* The found child or NULL
+ */
 liqcell*  liqcell_local_lookup_nameclass(liqcell *self,char *name,char *classname)
 {
 	liqcell *p=self;
@@ -1267,7 +1566,12 @@ liqcell*  liqcell_local_lookup_nameclass(liqcell *self,char *name,char *classnam
 	return NULL;
 }
 
-
+/**
+ * Global lookup liqcell child
+ * @param self The liqcell to lookup the child
+ * @param name The name of the child to find
+ * @return liqcell* The found child or NULL
+ */
 liqcell*  liqcell_global_lookup(liqcell *self,char *name)
 {
 	liqcell *p=self;
@@ -1279,6 +1583,13 @@ liqcell*  liqcell_global_lookup(liqcell *self,char *name)
 	}
 	return NULL;
 }
+
+/**
+ * Global lookup liqcell nameclass
+ * @param self The liqcell to lookup the child
+ * @param name The name of the child to find
+ * @return liqcell* The found child or NULL
+ */
 liqcell*  liqcell_global_lookup_nameclass(liqcell *self,char *name,char *classname)
 {
 	liqcell *p=self;
@@ -1310,7 +1621,14 @@ liqcell*  liqcell_global_lookup_nameclass(liqcell *self,char *name,char *classna
 //	return NULL;
 //}
 
-
+/**
+ * Create new liqcell, set visible and other attributes (widget)
+ * @param name The name of the new liqcell
+ * @param classname The classname of the new liqcell
+ * @param innerw Inner width
+ * @param innerh Inner height
+ * @return liqcell* The new liqcell
+ */
 liqcell*  liqcell_quickcreatewidget(char *name,char *classname,int innerw,int innerh)
 {
 	liqcell *self = liqcell_new();
@@ -1429,6 +1747,13 @@ int liqcell_iskind(liqcell *self,int cellkind)
 //######################################################################### cell test
 //#########################################################################
 //#########################################################################
+
+/**
+ * Helper function for liqcell_print2
+ * @param self The provided liqcell
+ * @param title Title in printinf the tree
+ * @param recdep Used in the recursive loop to generate indention
+ */
 void liqcell_print(liqcell *self,char *title,int recdep)
 {
 	char *indent = malloc(recdep+1);
@@ -1450,9 +1775,6 @@ void liqcell_print(liqcell *self,char *title,int recdep)
 		if(*cc==10 || *cc==13 || *cc=='\t')*cc=' ';
 		cc++;
 	}
-	
-	
-	
 
 	//char buf[1024]="\0";
 	//liqtile_fullyqualifiedkey(self,buf,1024);
@@ -1468,9 +1790,14 @@ void liqcell_print(liqcell *self,char *title,int recdep)
 	}
 
 }
+
+/**
+ * Print a tree of liqcells starting with the provided liqcell
+ * @param self The provided liqcell
+ */
 void liqcell_print2(liqcell *self)
 {
-static int recdep=0;
+	static int recdep=0;
 	liqcell_print(self,"self",recdep*4);
 	if(recdep>=2)return;
 	recdep++;
@@ -1493,8 +1820,12 @@ int strcmpx (const char * s1, const char * s2)
     return *(unsigned char *)s1 < *(unsigned char *)s2 ? -1 : 1;
 }
 
-
-
+/**
+ * Search for handler
+ * @param self The liqcell to search for a handler for
+ * @param handlername The name of the handler to find
+ * @return void* The handler
+ */
 void*  liqcell_handlerfind(liqcell *self,char *handlername)
 {
 	liqcell *p=self;
@@ -1627,21 +1958,16 @@ int liqcell_handlerrun(liqcell *self,char *handlername,void *args)
 	return 0;
 }
 
-
-
-
-
-
-
-
-
+/**
+ * Get the base (top parent) of the provided liqcell
+ * @param self The provided liqcell
+ * @return liqcell* The base liqcell
+ */
 liqcell *liqcell_getbasewidget(liqcell *self)
 {
 	// called from within an event
 	// steps backwards until it finds the base widget this item was created by
-
-	//
-
+	
 	liqcell *c=self;
 	while(c)
 	{
@@ -1651,15 +1977,12 @@ liqcell *liqcell_getbasewidget(liqcell *self)
 	return NULL;
 }
 
-
-
-
-
-
-
-
-
-
+/**
+ * Check if the string provided is a classname of the liqcell provided
+ * @param self The provided liqcell
+ * @param classname The string to cechk
+ * @param int True or False
+ */
 int liqcell_isclass(liqcell *self,char *classname)
 {
 	// return if this cell is a member of a class
@@ -1668,14 +1991,9 @@ int liqcell_isclass(liqcell *self,char *classname)
 
 
 
-
-
-
 //##############################################################
 //##############################################################
 //##############################################################
-
-
 
 
 static int lowest(int a,int b)
@@ -1719,9 +2037,11 @@ static int dimension_ensurevisible( int rs,int re,    int ps,int pe, int ss,int 
 	return lowest(ss-rs,se-re);
 }
 
-
-
-
+/**
+ * Adjust a position of a liqcell to ensure it is visible
+ * @param self The liqcell to adjusts
+ * @return Success or Failure
+ */
 int liqcell_ensurevisible(liqcell *self)
 {
 	liqapp_log("ensure: %s",self->name);
@@ -1762,7 +2082,11 @@ int liqcell_ensurevisible(liqcell *self)
 	return 0;
 }
 
-
+/**
+ * Adjust a position of a liqcell to ensure it is visible and centered
+ * @param self The liqcell to adjusts
+ * @return int Success or Failure
+ */
 int liqcell_ensurevisible_centred(liqcell *self)
 {
 	liqapp_log("ensure: %s",self->name);
@@ -1811,11 +2135,9 @@ int liqcell_ensurevisible_centred(liqcell *self)
 //#########################################################################
 //#########################################################################
 
-
-
-
-
-
+/**
+ * Testing function
+ */
 void liqcell_test()
 {
 

@@ -1,0 +1,53 @@
+\section{src/liqcanvas\_\-firstrun\_\-splash.c File Reference}
+\label{d3/dcb/liqcanvas__firstrun__splash_8c}\index{src/liqcanvas\_\-firstrun\_\-splash.c@{src/liqcanvas\_\-firstrun\_\-splash.c}}
+Run liqcell events.  
+
+
+{\tt \#include $<$stdio.h$>$}\par
+{\tt \#include $<$stdlib.h$>$}\par
+{\tt \#include $<$string.h$>$}\par
+{\tt \#include $<$stdarg.h$>$}\par
+{\tt \#include $<$fcntl.h$>$}\par
+{\tt \#include $<$unistd.h$>$}\par
+{\tt \#include $<$sys/types.h$>$}\par
+{\tt \#include $<$sys/stat.h$>$}\par
+{\tt \#include $<$errno.h$>$}\par
+{\tt \#include $<$dirent.h$>$}\par
+{\tt \#include \char`\"{}liqbase.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell\_\-easyrun.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell\_\-easypaint.h\char`\"{}}\par
+{\tt \#include \char`\"{}vgraph.h\char`\"{}}\par
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+int {\bf liqcanvas\_\-firstrun\_\-splash} ()
+\end{CompactItemize}
+
+
+\label{_details}
+\subsection{Detailed Description}
+Run liqcell events. 
+
+\begin{Desc}
+\item[Author:]Gary Birkett Copyright (C) 2008 Gary Birkett\end{Desc}
+\subsection{LICENSE}\label{de/d77/liqui_8c_LICENSE}
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
+
+\subsection{Function Documentation}
+\index{liqcanvas\_\-firstrun\_\-splash.c@{liqcanvas\_\-firstrun\_\-splash.c}!liqcanvas\_\-firstrun\_\-splash@{liqcanvas\_\-firstrun\_\-splash}}
+\index{liqcanvas\_\-firstrun\_\-splash@{liqcanvas\_\-firstrun\_\-splash}!liqcanvas_firstrun_splash.c@{liqcanvas\_\-firstrun\_\-splash.c}}
+\subsubsection[{liqcanvas\_\-firstrun\_\-splash}]{\setlength{\rightskip}{0pt plus 5cm}int liqcanvas\_\-firstrun\_\-splash ()}\label{d3/dcb/liqcanvas__firstrun__splash_8c_28541ca509c0f3205eb7e170afabd2d8}
+
+
+first run \char`\"{}splash screen\char`\"{} designed to be used in the middle of firstrun detection logic to automagically remove glitches :) \begin{Desc}
+\item[Returns:]Success or Failure \end{Desc}
+
+
+References liqapp\_\-GetTicks(), and liqapp\_\-log().
+
+Referenced by liqcanvas\_\-init().

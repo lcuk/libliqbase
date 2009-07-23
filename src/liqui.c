@@ -1,11 +1,31 @@
+/**
+ * @file	liqui.c
+ * @author  Gary Birkett
+ * @brief 	Libliqbase User Interface Functions
+ * 
+ * Copyright (C) 2008 Gary Birkett
+ *
+ * @section LICENSE
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+
 #include <string.h>
 #include <stdlib.h>
 
-
-#include "liqcell.h"
-#include "liqcell_prop.h"
-#include "liqcell_easyrun.h"
-#include "liqbase.h"
+#include "liqui.h"
 
 
 //#####################################################################
@@ -14,9 +34,13 @@
 //#####################################################################
 //#####################################################################
 
-
-
-
+/**
+ * Create a titlebar ui component
+ * @param key Name of the widget
+ * @param title Title to display
+ * @param description Describe what this titlebar is for
+ * @return liqcell* The new titlebar
+ */
 liqcell *uititlebar_create(char *key,char *title,char *description)
 {
 	
@@ -60,13 +84,6 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
 	}
 	return self;
 }
-
-
-
-
-
-
-
 
 
 
@@ -244,11 +261,11 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
 	}
 	
 
-
-
-
-
-
+/**
+ * Create a infobar ui component
+ * @param infotext Caption of the bar
+ * @return liqcell* The new infobar
+ */
 liqcell *uiinfobar_create(char *infotext)
 {
 	
@@ -282,20 +299,12 @@ liqcell *uiinfobar_create(char *infotext)
 	return self;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * Create a textbox ui component, this is the development function
+ * @param caption Body Caption
+ * @param datadefault Caption of the data
+ * @return liqcell* The new textbox
+ */
 liqcell *uitextbox_create(char *caption,char *datadefault)
 {
 	
@@ -351,18 +360,41 @@ liqcell *uitextbox_create(char *caption,char *datadefault)
 	return self;
 }
 
+/**
+ * Create a textbox ui component
+ * @return liqcell* The new textbox
+ */
+liqcell *textbox_create()
+{
+	
+	liqcell *self = liqcell_quickcreatewidget("textbox","textbox", 800,50);
+	
+	if(self)
+	{
 
+			liqcell_setfont(   self,  liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
+			liqcell_propsets(  self,  "backcolor", "rgb(100,255,150)" );
+			liqcell_propsets(  self,  "textcolor", "rgb(20,30,40)" );
+			liqcell_propsets(  self,  "bordercolor", "rgb(255,255,255)" );
 
+			liqcell_propseti(  self,  "selstart",  0 );
+			liqcell_propseti(  self,  "sellength", 0 );
+			liqcell_propseti(  self,  "cursorpos", 0 );
 
+			
+			liqcell_handleradd(self,    "mouse",      textbox_mouse);
+			liqcell_handleradd(self,    "keypress",   textbox_keypress);
+			liqcell_handleradd(self,    "keyrelease", textbox_keyrelease);
+	}
+	return self;
+}
 
-
-
-
-
-
-
-
-
+/**
+ * Create a numberbox ui component
+ * @param caption The caption
+ * @param datafefault Data caption
+ * @return liqcell* The new numberbox
+ */
 liqcell *uinumberbox_create(char *caption,char *datadefault)
 {
 	
@@ -393,19 +425,12 @@ liqcell *uinumberbox_create(char *caption,char *datadefault)
 	return self;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * Create a picturebox ui component
+ * @param caption The caption
+ * @param datafefault Data caption
+ * @return liqcell* The new picturebox
+ */
 liqcell *uipicturebox_create(char *caption,char *datadefault)
 {
 	
@@ -436,33 +461,11 @@ liqcell *uipicturebox_create(char *caption,char *datadefault)
 
 
 
-
-
-
-
-
-
-
-
-
-
 	static int widget_mouse(liqcell *self, liqcellmouseeventargs *args)
 	{
 		liqcell_adjustpos(self,0,args->mdy);
 		return 0;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -501,16 +504,3 @@ liqcell *liqui_create()
 
 	return self;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

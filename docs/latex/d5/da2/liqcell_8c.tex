@@ -1,0 +1,1125 @@
+\section{src/liqcell.c File Reference}
+\label{d5/da2/liqcell_8c}\index{src/liqcell.c@{src/liqcell.c}}
+liqcell App level helper functions  
+
+
+{\tt \#include $<$string.h$>$}\par
+{\tt \#include $<$stdlib.h$>$}\par
+{\tt \#include $<$stdio.h$>$}\par
+{\tt \#include $<$stdarg.h$>$}\par
+{\tt \#include $<$dirent.h$>$}\par
+{\tt \#include $<$unistd.h$>$}\par
+{\tt \#include $<$sys/stat.h$>$}\par
+{\tt \#include $<$sys/types.h$>$}\par
+{\tt \#include $<$fcntl.h$>$}\par
+{\tt \#include $<$errno.h$>$}\par
+{\tt \#include $<$time.h$>$}\par
+{\tt \#include $<$sys/time.h$>$}\par
+{\tt \#include \char`\"{}liqbase.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell\_\-prop.h\char`\"{}}\par
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+char $\ast$ \textbf{liqcell\_\-local\_\-lookup\_\-getname} (liqcell $\ast$self, char $\ast$name)\label{d5/da2/liqcell_8c_887c8f2262214c0908e9beec3307baae}
+
+\item 
+char $\ast$ \textbf{liqcell\_\-local\_\-lookup\_\-getcaption} (liqcell $\ast$self, char $\ast$name)\label{d5/da2/liqcell_8c_d57749faa1212b519e7ef7683bca31b7}
+
+\item 
+liqcell $\ast$ {\bf liqcell\_\-new} ()
+\item 
+liqcell $\ast$ {\bf liqcell\_\-hold} (liqcell $\ast$self)
+\item 
+void {\bf liqcell\_\-release} (liqcell $\ast$self)
+\item 
+void {\bf liqcell\_\-free} (liqcell $\ast$self)
+\item 
+void {\bf liqcell\_\-setpos} (liqcell $\ast$self, int x, int y)
+\item 
+void {\bf liqcell\_\-setsize} (liqcell $\ast$self, int w, int h)
+\item 
+void {\bf liqcell\_\-setsize\_\-from\_\-inner} (liqcell $\ast$self)
+\item 
+void {\bf liqcell\_\-setinnersize} (liqcell $\ast$self, int w, int h)
+\item 
+void {\bf liqcell\_\-setinnersize\_\-from\_\-outer} (liqcell $\ast$self)
+\item 
+void {\bf liqcell\_\-setrect} (liqcell $\ast$self, int x, int y, int w, int h)
+\item 
+int {\bf liqcell\_\-movetowardsrect} (liqcell $\ast$self, int x, int y, int w, int h, float fraction)
+\item 
+void {\bf liqcell\_\-setrect\_\-autoscale} (liqcell $\ast$self, int x, int y, int w, int h, float sx, float sy)
+\item 
+void {\bf liqcell\_\-adjustpos} (liqcell $\ast$self, int dx, int dy)
+\item 
+void {\bf liqcell\_\-adjustsize} (liqcell $\ast$self, int dw, int dh)
+\item 
+void {\bf liqcell\_\-adjustinnersize} (liqcell $\ast$self, int dw, int dh)
+\item 
+void {\bf liqcell\_\-setdirtyhold} (liqcell $\ast$self, int dirtyhold)
+\item 
+int {\bf liqcell\_\-getdirtyhold} (liqcell $\ast$self)
+\item 
+void {\bf liqcell\_\-setdirty} (liqcell $\ast$self, int dirty)
+\item 
+int {\bf liqcell\_\-getdirty} (liqcell $\ast$self)
+\item 
+void {\bf liqcell\_\-setname} (liqcell $\ast$self, char $\ast$name)
+\item 
+void {\bf liqcell\_\-setcaption} (liqcell $\ast$self, char $\ast$caption)
+\item 
+void {\bf liqcell\_\-setclassname} (liqcell $\ast$self, char $\ast$classname)
+\item 
+void {\bf liqcell\_\-setcontext} (liqcell $\ast$self, char $\ast$context)
+\item 
+void {\bf liqcell\_\-setdata} (liqcell $\ast$self, void $\ast$data)
+\item 
+void {\bf liqcell\_\-setsketch} (liqcell $\ast$self, liqsketch $\ast$sketch)
+\item 
+void {\bf liqcell\_\-sketch\_\-autoload} (liqcell $\ast$self)
+\item 
+void {\bf liqcell\_\-setimage} (liqcell $\ast$self, liqimage $\ast$image)
+\item 
+void {\bf liqcell\_\-setfont} (liqcell $\ast$self, liqfont $\ast$font)
+\item 
+void {\bf liqcell\_\-setcontent} (liqcell $\ast$self, liqcell $\ast$content)
+\item 
+void {\bf liqcell\_\-setselected} (liqcell $\ast$self, int arg)
+\item 
+int {\bf liqcell\_\-getselected} (liqcell $\ast$self)
+\item 
+void {\bf liqcell\_\-settag} (liqcell $\ast$self, void $\ast$tag)
+\item 
+void $\ast$ {\bf liqcell\_\-gettag} (liqcell $\ast$self)
+\item 
+void {\bf liqcell\_\-setenabled} (liqcell $\ast$self, int arg)
+\item 
+int {\bf liqcell\_\-getenabled} (liqcell $\ast$self)
+\item 
+void {\bf liqcell\_\-setkinetic} (liqcell $\ast$self, int kx, int ky)
+\item 
+void {\bf liqcell\_\-setshown} (liqcell $\ast$self, int arg)
+\item 
+int {\bf liqcell\_\-getshown} (liqcell $\ast$self)
+\item 
+liqcell $\ast$ {\bf liqcell\_\-getlinkparent} (liqcell $\ast$self)
+\item 
+liqcell $\ast$ {\bf liqcell\_\-getlinkprev} (liqcell $\ast$self)
+\item 
+liqcell $\ast$ {\bf liqcell\_\-getlinknext} (liqcell $\ast$self)
+\item 
+liqcell $\ast$ {\bf liqcell\_\-getlinkprev\_\-visual} (liqcell $\ast$self)
+\item 
+liqcell $\ast$ {\bf liqcell\_\-getlinknext\_\-visual} (liqcell $\ast$self)
+\item 
+liqcell $\ast$ {\bf liqcell\_\-getlinkchild\_\-visual} (liqcell $\ast$self)
+\item 
+liqcell $\ast$ {\bf liqcell\_\-getlinkchild} (liqcell $\ast$self)
+\item 
+void $\ast$ {\bf liqcell\_\-getdata} (liqcell $\ast$self)
+\item 
+int \textbf{liqcell\_\-getflagwidget} (liqcell $\ast$self)\label{d5/da2/liqcell_8c_adf07b86b328a8a0a4b05bdf805de72f}
+
+\item 
+int \textbf{liqcell\_\-getflagvisual} (liqcell $\ast$self)\label{d5/da2/liqcell_8c_32abc2c65477d6dce7f1ffca204530ef}
+
+\item 
+int \textbf{liqcell\_\-getvisible} (liqcell $\ast$self)\label{d5/da2/liqcell_8c_cd3be161e6f860b28b1b9490749c3a1a}
+
+\item 
+void \textbf{liqcell\_\-setvisible} (liqcell $\ast$self, int arg)\label{d5/da2/liqcell_8c_4e8ed6cdaff5070ce934b06a26caa569}
+
+\item 
+char $\ast$ {\bf liqcell\_\-getname} (liqcell $\ast$self)
+\item 
+int {\bf liqcell\_\-getqualifiedname} (liqcell $\ast$self, char $\ast$buff, int buffmax)
+\item 
+char $\ast$ {\bf liqcell\_\-getclassname} (liqcell $\ast$self)
+\item 
+char $\ast$ {\bf liqcell\_\-getcaption} (liqcell $\ast$self)
+\item 
+liqsketch $\ast$ {\bf liqcell\_\-getsketch} (liqcell $\ast$self)
+\item 
+liqimage $\ast$ {\bf liqcell\_\-getimage} (liqcell $\ast$self)
+\item 
+liqfont $\ast$ {\bf liqcell\_\-getfont} (liqcell $\ast$self)
+\item 
+liqcell $\ast$ {\bf liqcell\_\-getcontent} (liqcell $\ast$self)
+\item 
+int {\bf liqcell\_\-getx} (liqcell $\ast$self)
+\item 
+int {\bf liqcell\_\-gety} (liqcell $\ast$self)
+\item 
+int {\bf liqcell\_\-getw} (liqcell $\ast$self)
+\item 
+int {\bf liqcell\_\-geth} (liqcell $\ast$self)
+\item 
+int {\bf liqcell\_\-getinnerw} (liqcell $\ast$self)
+\item 
+int {\bf liqcell\_\-getinnerh} (liqcell $\ast$self)
+\item 
+liqcell $\ast$ {\bf liqcell\_\-lastchild} (liqcell $\ast$self)
+\item 
+\textbf{snprintf} (cap, 30,\char`\"{}\%s\char`\"{},(self $\rightarrow$ caption?self $\rightarrow$ caption:\char`\"{}\char`\"{}))\label{d5/da2/liqcell_8c_01254f74c10199dc33fbc95dfc285e6f}
+
+\item 
+\textbf{free} (indent)\label{d5/da2/liqcell_8c_5e08d0179212ea3dc3998c1792e725fa}
+
+\item 
+\textbf{while} (xx)\label{d5/da2/liqcell_8c_e8232d93fc559419a35dd2c53a2a272d}
+
+\item 
+void {\bf liqcell\_\-print2} (liqcell $\ast$self)
+\item 
+int \textbf{strcmpx} (const char $\ast$s1, const char $\ast$s2)\label{d5/da2/liqcell_8c_432c1a35442cf6f8c0bcf9af17287407}
+
+\item 
+void $\ast$ {\bf liqcell\_\-handlerfind} (liqcell $\ast$self, char $\ast$handlername)
+\item 
+liqcell $\ast$ {\bf liqcell\_\-handleradd} (liqcell $\ast$self, char $\ast$handlername, void $\ast$handler)
+\item 
+liqcell $\ast$ {\bf liqcell\_\-handleradd\_\-withcontext} (liqcell $\ast$self, char $\ast$handlername, void $\ast$handler, void $\ast$context)
+\item 
+int {\bf liqcell\_\-handlerrun} (liqcell $\ast$self, char $\ast$handlername, void $\ast$args)
+\item 
+liqcell $\ast$ {\bf liqcell\_\-getbasewidget} (liqcell $\ast$self)
+\item 
+int {\bf liqcell\_\-isclass} (liqcell $\ast$self, char $\ast$classname)
+\item 
+int {\bf liqcell\_\-ensurevisible} (liqcell $\ast$self)
+\item 
+int {\bf liqcell\_\-ensurevisible\_\-centred} (liqcell $\ast$self)
+\item 
+void {\bf liqcell\_\-test} ()
+\end{CompactItemize}
+\subsection*{Variables}
+\begin{CompactItemize}
+\item 
+\textbf{indent} [recdep] = ' '0\label{d5/da2/liqcell_8c_3606238283a1feece4fb04c2008dfc7e}
+
+\item 
+char \textbf{cap} [32] = 0\label{d5/da2/liqcell_8c_278fd3b487cba14978daf2147e7c0a3e}
+
+\item 
+char $\ast$ \textbf{cc} = cap\label{d5/da2/liqcell_8c_0926e3f1a88f7c4fb7f9b61aa73844ed}
+
+\item 
+liqcell $\ast$ \textbf{xx} = self $\rightarrow$ linkchild\label{d5/da2/liqcell_8c_acf548691ef46f259a030128efa54478}
+
+\end{CompactItemize}
+
+
+\label{_details}
+\subsection{Detailed Description}
+liqcell App level helper functions 
+
+\begin{Desc}
+\item[Author:]Gary Birkett Copyright (C) 2008 Gary Birkett\end{Desc}
+\subsection{LICENSE}\label{de/d77/liqui_8c_LICENSE}
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
+
+\subsection{Function Documentation}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-adjustinnersize@{liqcell\_\-adjustinnersize}}
+\index{liqcell\_\-adjustinnersize@{liqcell\_\-adjustinnersize}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-adjustinnersize}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-adjustinnersize (liqcell $\ast$ {\em self}, \/  int {\em dw}, \/  int {\em dh})}\label{d5/da2/liqcell_8c_43f97de0c4ed635784d01d0ab49c5c3b}
+
+
+Increase or decrease the liqcell inner width and inner height \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em dw}]Change in the width \item[{\em dh}]Change in the height \end{description}
+\end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-adjustpos@{liqcell\_\-adjustpos}}
+\index{liqcell\_\-adjustpos@{liqcell\_\-adjustpos}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-adjustpos}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-adjustpos (liqcell $\ast$ {\em self}, \/  int {\em dx}, \/  int {\em dy})}\label{d5/da2/liqcell_8c_f19ddc03ffabda4c6cd3d627beeaca50}
+
+
+Increase or decrease the liqcell x, y-coordinates \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em dx}]Change in the x-coordinate \item[{\em dy}]Change in the y-coordinate \end{description}
+\end{Desc}
+
+
+References liqcell\_\-handlerrun().
+
+Referenced by liqcell\_\-ensurevisible(), and liqcell\_\-ensurevisible\_\-centred().\index{liqcell.c@{liqcell.c}!liqcell\_\-adjustsize@{liqcell\_\-adjustsize}}
+\index{liqcell\_\-adjustsize@{liqcell\_\-adjustsize}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-adjustsize}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-adjustsize (liqcell $\ast$ {\em self}, \/  int {\em dw}, \/  int {\em dh})}\label{d5/da2/liqcell_8c_0e367312d5759c2e2f44bd7490d3a350}
+
+
+Increase or decrease the liqcell width and height \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em dw}]Change in the width \item[{\em dh}]Change in the height \end{description}
+\end{Desc}
+
+
+References liqcell\_\-handlerrun().\index{liqcell.c@{liqcell.c}!liqcell\_\-ensurevisible@{liqcell\_\-ensurevisible}}
+\index{liqcell\_\-ensurevisible@{liqcell\_\-ensurevisible}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-ensurevisible}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-ensurevisible (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_a954a0f6aca1cc1e16f37d0dd2afcce5}
+
+
+Adjust a position of a liqcell to ensure it is visible \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to adjusts \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]Success or Failure \end{Desc}
+
+
+References liqapp\_\-log(), liqcell\_\-adjustpos(), and liqcell\_\-getlinkparent().\index{liqcell.c@{liqcell.c}!liqcell\_\-ensurevisible\_\-centred@{liqcell\_\-ensurevisible\_\-centred}}
+\index{liqcell\_\-ensurevisible\_\-centred@{liqcell\_\-ensurevisible\_\-centred}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-ensurevisible\_\-centred}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-ensurevisible\_\-centred (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_d8b07805ce7c40303791f49fdb1ff8a4}
+
+
+Adjust a position of a liqcell to ensure it is visible and centered \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to adjusts \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int Success or Failure \end{Desc}
+
+
+References liqapp\_\-log(), liqcell\_\-adjustpos(), and liqcell\_\-getlinkparent().\index{liqcell.c@{liqcell.c}!liqcell\_\-free@{liqcell\_\-free}}
+\index{liqcell\_\-free@{liqcell\_\-free}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-free (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_1b82d40ff5b58d211691cfe18b936fba}
+
+
+Recursively free all liqcells of the parent liqcell provided and their items (font, image, etc..) \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The parent will have all children freed \end{description}
+\end{Desc}
+
+
+References liqapp\_\-log(), liqcell\_\-release(), liqcell\_\-setcaption(), liqcell\_\-setclassname(), liqcell\_\-setcontent(), liqcell\_\-setcontext(), liqcell\_\-setdata(), liqcell\_\-setfont(), liqcell\_\-setimage(), liqcell\_\-setname(), and liqcell\_\-setsketch().
+
+Referenced by liqcell\_\-release().\index{liqcell.c@{liqcell.c}!liqcell\_\-getbasewidget@{liqcell\_\-getbasewidget}}
+\index{liqcell\_\-getbasewidget@{liqcell\_\-getbasewidget}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getbasewidget}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ liqcell\_\-getbasewidget (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_4d674ab61e94d1a6612d7d2d7cf88e59}
+
+
+Get the base (top parent) of the provided liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The provided liqcell \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell$\ast$ The base liqcell \end{Desc}
+
+
+References liqcell\_\-getlinkparent().\index{liqcell.c@{liqcell.c}!liqcell\_\-getcaption@{liqcell\_\-getcaption}}
+\index{liqcell\_\-getcaption@{liqcell\_\-getcaption}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getcaption}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ liqcell\_\-getcaption (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_d82b7f7697ade9890f4e6e7851503384}
+
+
+Return a liqcell caption \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]char$\ast$ The caption \end{Desc}
+
+
+Referenced by liqcell\_\-easyrun().\index{liqcell.c@{liqcell.c}!liqcell\_\-getclassname@{liqcell\_\-getclassname}}
+\index{liqcell\_\-getclassname@{liqcell\_\-getclassname}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getclassname}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ liqcell\_\-getclassname (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_1f758aad20b9e81f8b09726094148ffa}
+
+
+Return the classname \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]char$\ast$ The class name \end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-getcontent@{liqcell\_\-getcontent}}
+\index{liqcell\_\-getcontent@{liqcell\_\-getcontent}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getcontent}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ liqcell\_\-getcontent (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_17aecaafaec605726bd831d48d1eabe3}
+
+
+Return the liqcell's content \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqsketch$\ast$ The content \end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-getdata@{liqcell\_\-getdata}}
+\index{liqcell\_\-getdata@{liqcell\_\-getdata}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getdata}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ liqcell\_\-getdata (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_5d2d14389a7635d1ada29b2170617047}
+
+
+Get the data of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]lvoid$\ast$ The data \end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-getdirty@{liqcell\_\-getdirty}}
+\index{liqcell\_\-getdirty@{liqcell\_\-getdirty}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getdirty}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-getdirty (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_4ad7b1f1e7825a4978c66a829b6a375f}
+
+
+Get the dirty value of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-getdirtyhold@{liqcell\_\-getdirtyhold}}
+\index{liqcell\_\-getdirtyhold@{liqcell\_\-getdirtyhold}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getdirtyhold}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-getdirtyhold (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_3c8c2fecfc41ff548544dbd3513a9f6c}
+
+
+Get the dirtyhold value of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-getenabled@{liqcell\_\-getenabled}}
+\index{liqcell\_\-getenabled@{liqcell\_\-getenabled}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getenabled}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-getenabled (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_1055023770b26ad7f54e37c5f8e201f5}
+
+
+Return the enabled value \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int The enabled value \end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-getfont@{liqcell\_\-getfont}}
+\index{liqcell\_\-getfont@{liqcell\_\-getfont}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getfont}]{\setlength{\rightskip}{0pt plus 5cm}liqfont$\ast$ liqcell\_\-getfont (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_4ba91871716343808c65b19ca8ae9ae4}
+
+
+Return the liqcell's font \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqsketch$\ast$ The font \end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-geth@{liqcell\_\-geth}}
+\index{liqcell\_\-geth@{liqcell\_\-geth}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-geth}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-geth (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_f0cc7745df16dd960ea27475728afeef}
+
+
+Return the liqcell's height \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int The height \end{Desc}
+
+
+Referenced by liqcell\_\-child\_\-arrange\_\-easycol(), liqcell\_\-child\_\-arrange\_\-easyrow(), and liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal().\index{liqcell.c@{liqcell.c}!liqcell\_\-getimage@{liqcell\_\-getimage}}
+\index{liqcell\_\-getimage@{liqcell\_\-getimage}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getimage}]{\setlength{\rightskip}{0pt plus 5cm}liqimage$\ast$ liqcell\_\-getimage (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_dd146d20bdff3af5df7f9007caedad13}
+
+
+Return the liqcell's image \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqsketch$\ast$ The image \end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-getinnerh@{liqcell\_\-getinnerh}}
+\index{liqcell\_\-getinnerh@{liqcell\_\-getinnerh}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getinnerh}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-getinnerh (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_43b42b6e72cfef3481ffcdb65ecfe4fe}
+
+
+Return the liqcell's inner height \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int The inner height \end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-getinnerw@{liqcell\_\-getinnerw}}
+\index{liqcell\_\-getinnerw@{liqcell\_\-getinnerw}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getinnerw}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-getinnerw (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_0a196fdaeddee362fb4a8c7c5a173bf2}
+
+
+Return the liqcell's inner width \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int The inner width \end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-getlinkchild@{liqcell\_\-getlinkchild}}
+\index{liqcell\_\-getlinkchild@{liqcell\_\-getlinkchild}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getlinkchild}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ liqcell\_\-getlinkchild (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_a1bfa8ed04347c6463eb2af7ba302144}
+
+
+Return the linked child of the parent provided. \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The parent liqcell \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell$\ast$ The linked child \end{Desc}
+
+
+Referenced by liqcell\_\-child\_\-arrange\_\-easycol(), liqcell\_\-child\_\-arrange\_\-easyrow(), liqcell\_\-child\_\-arrange\_\-easytile(), and liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal().\index{liqcell.c@{liqcell.c}!liqcell\_\-getlinkchild\_\-visual@{liqcell\_\-getlinkchild\_\-visual}}
+\index{liqcell\_\-getlinkchild\_\-visual@{liqcell\_\-getlinkchild\_\-visual}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getlinkchild\_\-visual}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ liqcell\_\-getlinkchild\_\-visual (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_5e6e1ee06c97ff0f18831d82ff943705}
+
+
+Get the linked child of the liqcell, the child link in the linked list that is VISIBLE \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell$\ast$ Liqcell pointer to the first child that is visible \end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-getlinknext@{liqcell\_\-getlinknext}}
+\index{liqcell\_\-getlinknext@{liqcell\_\-getlinknext}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getlinknext}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ liqcell\_\-getlinknext (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_b321c98982c744ac08622fd06c4325f2}
+
+
+Get the linked next of the liqcell, the next link in the linked list \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell$\ast$ Liqcell pointer to the next \end{Desc}
+
+
+Referenced by liqcell\_\-child\_\-arrange\_\-easycol(), liqcell\_\-child\_\-arrange\_\-easyrow(), liqcell\_\-child\_\-arrange\_\-easytile(), liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal(), liqcell\_\-easyrun(), liqcell\_\-handlerfind(), and liqcell\_\-handlerrun().\index{liqcell.c@{liqcell.c}!liqcell\_\-getlinknext\_\-visual@{liqcell\_\-getlinknext\_\-visual}}
+\index{liqcell\_\-getlinknext\_\-visual@{liqcell\_\-getlinknext\_\-visual}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getlinknext\_\-visual}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ liqcell\_\-getlinknext\_\-visual (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_1a5d99c5160dbe606054ca80a934f396}
+
+
+Get the linked previous of the liqcell, the previous link in the linked list that is VISIBLE \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell$\ast$ Liqcell pointer to the first previous that is visible \end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-getlinkparent@{liqcell\_\-getlinkparent}}
+\index{liqcell\_\-getlinkparent@{liqcell\_\-getlinkparent}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getlinkparent}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ liqcell\_\-getlinkparent (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_edd0e88e37a725443f07fa04d7aaf06b}
+
+
+Get the linked parent of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell$\ast$ Liqcell pointer to the parent \end{Desc}
+
+
+Referenced by liqcell\_\-easyrun(), liqcell\_\-ensurevisible(), liqcell\_\-ensurevisible\_\-centred(), liqcell\_\-getbasewidget(), and liqcell\_\-getqualifiedname().\index{liqcell.c@{liqcell.c}!liqcell\_\-getlinkprev@{liqcell\_\-getlinkprev}}
+\index{liqcell\_\-getlinkprev@{liqcell\_\-getlinkprev}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getlinkprev}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ liqcell\_\-getlinkprev (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_8fbd0b45680e98ce91d83a31185c5ea9}
+
+
+Get the linked previous of the liqcell, the previous link in the linked list \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell$\ast$ Liqcell pointer to the previous \end{Desc}
+
+
+Referenced by liqcell\_\-easyrun().\index{liqcell.c@{liqcell.c}!liqcell\_\-getlinkprev\_\-visual@{liqcell\_\-getlinkprev\_\-visual}}
+\index{liqcell\_\-getlinkprev\_\-visual@{liqcell\_\-getlinkprev\_\-visual}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getlinkprev\_\-visual}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ liqcell\_\-getlinkprev\_\-visual (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_0a4fb59d363ceadf8864834123c2a622}
+
+
+Get the linked previous of the liqcell, the previous link in the linked list that is VISIBLE \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell$\ast$ Liqcell pointer to the first previous that is visible \end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-getname@{liqcell\_\-getname}}
+\index{liqcell\_\-getname@{liqcell\_\-getname}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getname}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ liqcell\_\-getname (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_2a3dd9758326dbce471df3ef1bd98711}
+
+
+Return the name of the provided liqcell. \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]string The name of the liqcell \end{Desc}
+
+
+Referenced by liqcell\_\-easyrun().\index{liqcell.c@{liqcell.c}!liqcell\_\-getqualifiedname@{liqcell\_\-getqualifiedname}}
+\index{liqcell\_\-getqualifiedname@{liqcell\_\-getqualifiedname}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getqualifiedname}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-getqualifiedname (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em buff}, \/  int {\em buffmax})}\label{d5/da2/liqcell_8c_b6bf85dc93a329d865eaa8fad6374c2d}
+
+
+Get the name of a liqcell that includes all of the parent names \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to get the qualified name of \item[{\em buff}]Copy the qualified name into this buffer \item[{\em buffmax}]Maximum length of the buffer \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int The numbers of bytes used \end{Desc}
+
+
+References liqcell\_\-getlinkparent().
+
+Referenced by liqcell\_\-easyrun().\index{liqcell.c@{liqcell.c}!liqcell\_\-getselected@{liqcell\_\-getselected}}
+\index{liqcell\_\-getselected@{liqcell\_\-getselected}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getselected}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-getselected (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_61b6c0b395afa1c6fd0f48104f288a05}
+
+
+Return the selected value \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int The selected value \end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-getshown@{liqcell\_\-getshown}}
+\index{liqcell\_\-getshown@{liqcell\_\-getshown}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getshown}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-getshown (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_c9cdeee7b2d86ecae2fff7f9cafa1e89}
+
+
+Get the shown value of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int The shown value \end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-getsketch@{liqcell\_\-getsketch}}
+\index{liqcell\_\-getsketch@{liqcell\_\-getsketch}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getsketch}]{\setlength{\rightskip}{0pt plus 5cm}liqsketch$\ast$ liqcell\_\-getsketch (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_2657173c159673ce98822085c34aa78e}
+
+
+Return the liqcell's sketch \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqsketch$\ast$ The sketch \end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-gettag@{liqcell\_\-gettag}}
+\index{liqcell\_\-gettag@{liqcell\_\-gettag}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-gettag}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ liqcell\_\-gettag (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_7955aea284456771a26a189e944a73d8}
+
+
+Get the tag value of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]void$\ast$ The generic pointer to the tag \end{Desc}
+
+
+Referenced by liqcell\_\-handlerrun().\index{liqcell.c@{liqcell.c}!liqcell\_\-getw@{liqcell\_\-getw}}
+\index{liqcell\_\-getw@{liqcell\_\-getw}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getw}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-getw (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_32fe7856b3f5a305d1bf40779bd9f9b7}
+
+
+Return the liqcell's width \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int The width \end{Desc}
+
+
+Referenced by liqcell\_\-child\_\-arrange\_\-easycol(), liqcell\_\-child\_\-arrange\_\-easyrow(), and liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal().\index{liqcell.c@{liqcell.c}!liqcell\_\-getx@{liqcell\_\-getx}}
+\index{liqcell\_\-getx@{liqcell\_\-getx}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-getx}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-getx (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_cee27c164be931dac5c47741aabf2226}
+
+
+Return the liqcell's x-coordinate \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int The x-coordinate \end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-gety@{liqcell\_\-gety}}
+\index{liqcell\_\-gety@{liqcell\_\-gety}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-gety}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-gety (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_4a977d16847eeb69393d3ead6e9a6f50}
+
+
+Return the liqcell's y-coordinate \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to lookup \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int The y-coordinate \end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-handleradd@{liqcell\_\-handleradd}}
+\index{liqcell\_\-handleradd@{liqcell\_\-handleradd}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-handleradd}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ liqcell\_\-handleradd (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em handlername}, \/  void $\ast$ {\em handler})}\label{d5/da2/liqcell_8c_b2045008c4c69ad93f43b04e6b87f6ea}
+
+
+Add a handler by creating a child liqcell for the provided parent. The nameclass must be called \char`\"{}handler\char`\"{} to be identified as a handler liqcell.
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to add a handler to \item[{\em handlername}]The name of the handler \item[{\em handler}]Function pointer to actual handler \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell Newly created child liqcell \end{Desc}
+
+
+Referenced by textbox\_\-create(), uiinfobar\_\-create(), and uitextbox\_\-create().\index{liqcell.c@{liqcell.c}!liqcell\_\-handleradd\_\-withcontext@{liqcell\_\-handleradd\_\-withcontext}}
+\index{liqcell\_\-handleradd\_\-withcontext@{liqcell\_\-handleradd\_\-withcontext}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-handleradd\_\-withcontext}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ liqcell\_\-handleradd\_\-withcontext (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em handlername}, \/  void $\ast$ {\em handler}, \/  void $\ast$ {\em context})}\label{d5/da2/liqcell_8c_d0a4310293fbd69cf93b3795970ae999}
+
+
+Add a handler by creating a child liqcell for the provided parent. The nameclass must be called \char`\"{}handler\char`\"{} to be identified as a handler liqcell.
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to add a handler to \item[{\em handlername}]The name of the handler \item[{\em handler}]Function pointer to actual handler \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell Newly created child liqcell \end{Desc}
+
+
+References liqcell\_\-settag().\index{liqcell.c@{liqcell.c}!liqcell\_\-handlerfind@{liqcell\_\-handlerfind}}
+\index{liqcell\_\-handlerfind@{liqcell\_\-handlerfind}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-handlerfind}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ liqcell\_\-handlerfind (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em handlername})}\label{d5/da2/liqcell_8c_3f49c14107f46d1dce77603abc583cef}
+
+
+Search for handler \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to search for a handler for \item[{\em handlername}]The name of the handler to find \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]void$\ast$ The handler \end{Desc}
+
+
+References liqcell\_\-getlinknext().
+
+Referenced by liqcell\_\-easyrun().\index{liqcell.c@{liqcell.c}!liqcell\_\-handlerrun@{liqcell\_\-handlerrun}}
+\index{liqcell\_\-handlerrun@{liqcell\_\-handlerrun}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-handlerrun}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-handlerrun (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em handlername}, \/  void $\ast$ {\em args})}\label{d5/da2/liqcell_8c_188ff9834000eb5e0ac59505019165ab}
+
+
+Run/Execute the handler of the provided liqcell. This only executes the handler provided by \char`\"{}handlername\char`\"{}.
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell with the handler \item[{\em handlername}]The name of the handler to run \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int 1 for Successful handler run, which means each handler must return 1 for success \end{Desc}
+
+
+References liqcell\_\-getlinknext(), and liqcell\_\-gettag().
+
+Referenced by liqcell\_\-adjustpos(), liqcell\_\-adjustsize(), liqcell\_\-easyrun(), liqcell\_\-movetowardsrect(), liqcell\_\-setcaption(), liqcell\_\-setdirty(), liqcell\_\-setpos(), liqcell\_\-setrect(), liqcell\_\-setrect\_\-autoscale(), and liqcell\_\-setsize().\index{liqcell.c@{liqcell.c}!liqcell\_\-hold@{liqcell\_\-hold}}
+\index{liqcell\_\-hold@{liqcell\_\-hold}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-hold}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ liqcell\_\-hold (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_bc3790ff5b66a6dece3e4c237a16b419}
+
+
+Add to the usage count, hold onto an object which someone else created \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell$\ast$ The modified liqcell \end{Desc}
+
+
+Referenced by liqcell\_\-setcontent().\index{liqcell.c@{liqcell.c}!liqcell\_\-isclass@{liqcell\_\-isclass}}
+\index{liqcell\_\-isclass@{liqcell\_\-isclass}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-isclass}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-isclass (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em classname})}\label{d5/da2/liqcell_8c_0a0c5640d3f6c8afc9c65fd9ecc9765d}
+
+
+Check if the string provided is a classname of the liqcell provided \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The provided liqcell \item[{\em classname}]The string to cechk \item[{\em int}]True or False \end{description}
+\end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-lastchild@{liqcell\_\-lastchild}}
+\index{liqcell\_\-lastchild@{liqcell\_\-lastchild}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-lastchild}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ liqcell\_\-lastchild (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_18e2aefa01c9d9eee6d241689e9454c3}
+
+
+Get the last child of the parent provided \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The parent liqcell \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell$\ast$ \end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-movetowardsrect@{liqcell\_\-movetowardsrect}}
+\index{liqcell\_\-movetowardsrect@{liqcell\_\-movetowardsrect}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-movetowardsrect}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-movetowardsrect (liqcell $\ast$ {\em self}, \/  int {\em x}, \/  int {\em y}, \/  int {\em w}, \/  int {\em h}, \/  float {\em fraction})}\label{d5/da2/liqcell_8c_8d005bfc84ca09d136e2ef94c47fdf8b}
+
+
+Move and resize a liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em x}]New x-coordinate \item[{\em y}]New y-coordinate \item[{\em w}]New width \item[{\em h}]New height \item[{\em fraction}]Ratio to increase or decreases the liqcell position and size \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int Success or Failure \end{Desc}
+
+
+References liqcell\_\-handlerrun().
+
+Referenced by liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal().\index{liqcell.c@{liqcell.c}!liqcell\_\-new@{liqcell\_\-new}}
+\index{liqcell\_\-new@{liqcell\_\-new}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}liqcell$\ast$ liqcell\_\-new ()}\label{d5/da2/liqcell_8c_e94c5023ff9ad97c986e6d94dee1b29b}
+
+
+Low level liqcell creation which allocates memory and sets the liqcell into use. \begin{Desc}
+\item[Returns:]liqcell$\ast$ The newly created liqcell \end{Desc}
+
+
+Referenced by liqcell\_\-test().\index{liqcell.c@{liqcell.c}!liqcell\_\-print2@{liqcell\_\-print2}}
+\index{liqcell\_\-print2@{liqcell\_\-print2}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-print2}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-print2 (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_85fbf221898e7ac4bdecd2de8acbf534}
+
+
+Print a tree of liqcells starting with the provided liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The provided liqcell \end{description}
+\end{Desc}
+
+
+Referenced by liqcell\_\-easyrun().\index{liqcell.c@{liqcell.c}!liqcell\_\-release@{liqcell\_\-release}}
+\index{liqcell\_\-release@{liqcell\_\-release}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-release}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-release (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_211b41b1487a3daf16432b93459f58d6}
+
+
+Decrease the usage count, once this gets to 0, the liqcell is freed \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \end{description}
+\end{Desc}
+
+
+References liqcell\_\-free().
+
+Referenced by liqcell\_\-free(), liqcell\_\-setcontent(), and liqcell\_\-test().\index{liqcell.c@{liqcell.c}!liqcell\_\-setcaption@{liqcell\_\-setcaption}}
+\index{liqcell\_\-setcaption@{liqcell\_\-setcaption}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setcaption}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setcaption (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em caption})}\label{d5/da2/liqcell_8c_df7b143fdd148d3119bf0b5aa5f7cb16}
+
+
+Set the caption of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em caption}]The caption of the liqcell \end{description}
+\end{Desc}
+
+
+References liqapp\_\-log(), and liqcell\_\-handlerrun().
+
+Referenced by liqcell\_\-free(), uiinfobar\_\-create(), uinumberbox\_\-create(), uipicturebox\_\-create(), uitextbox\_\-create(), and uititlebar\_\-create().\index{liqcell.c@{liqcell.c}!liqcell\_\-setclassname@{liqcell\_\-setclassname}}
+\index{liqcell\_\-setclassname@{liqcell\_\-setclassname}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setclassname}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setclassname (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em classname})}\label{d5/da2/liqcell_8c_6559854ce1171311fc2b4c4bee73ba90}
+
+
+Set the classname of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em classname}]The classname of the liqcell \end{description}
+\end{Desc}
+
+
+Referenced by liqcell\_\-free().\index{liqcell.c@{liqcell.c}!liqcell\_\-setcontent@{liqcell\_\-setcontent}}
+\index{liqcell\_\-setcontent@{liqcell\_\-setcontent}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setcontent}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setcontent (liqcell $\ast$ {\em self}, \/  liqcell $\ast$ {\em content})}\label{d5/da2/liqcell_8c_87311189daa852e6b7c02d3fb507dc00}
+
+
+Set the content of one liqcell to the content of the other liqcell. \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The destination liqcell \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]liqcell$\ast$ The source liqcell \end{Desc}
+
+
+References liqcell\_\-hold(), and liqcell\_\-release().
+
+Referenced by liqcell\_\-free().\index{liqcell.c@{liqcell.c}!liqcell\_\-setcontext@{liqcell\_\-setcontext}}
+\index{liqcell\_\-setcontext@{liqcell\_\-setcontext}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setcontext}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setcontext (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em context})}\label{d5/da2/liqcell_8c_ceb981921f6ccaa806687a5bdd66f06a}
+
+
+Set the context of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em context}]The context of the liqcell \end{description}
+\end{Desc}
+
+
+Referenced by liqcell\_\-free().\index{liqcell.c@{liqcell.c}!liqcell\_\-setdata@{liqcell\_\-setdata}}
+\index{liqcell\_\-setdata@{liqcell\_\-setdata}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setdata}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setdata (liqcell $\ast$ {\em self}, \/  void $\ast$ {\em data})}\label{d5/da2/liqcell_8c_35b8154d56ab84d8073d5929ecec899e}
+
+
+Set the data of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em data}]The data of the liqcell \end{description}
+\end{Desc}
+
+
+Referenced by liqcell\_\-free().\index{liqcell.c@{liqcell.c}!liqcell\_\-setdirty@{liqcell\_\-setdirty}}
+\index{liqcell\_\-setdirty@{liqcell\_\-setdirty}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setdirty}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setdirty (liqcell $\ast$ {\em self}, \/  int {\em dirty})}\label{d5/da2/liqcell_8c_6b32b411a9291f4a98c29b9e23007ce5}
+
+
+Set dirty in order to indicate that the liqcell has changed, and needs to be updated \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em dirty}]Set this to 1 to indicate that the liqcell needs to be updated \end{description}
+\end{Desc}
+
+
+References liqcell\_\-handlerrun().
+
+Referenced by liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal(), liqcell\_\-setdirtyhold(), and liqcell\_\-setimage().\index{liqcell.c@{liqcell.c}!liqcell\_\-setdirtyhold@{liqcell\_\-setdirtyhold}}
+\index{liqcell\_\-setdirtyhold@{liqcell\_\-setdirtyhold}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setdirtyhold}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setdirtyhold (liqcell $\ast$ {\em self}, \/  int {\em dirtyhold})}\label{d5/da2/liqcell_8c_d2d331cc053cb8bce4f328ca5f0f6913}
+
+
+Set the dirty hold to indicate whether a liqcell can be updated \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em dirtyhold}]Set this to 0 to indicate no hold, can be updated. \end{description}
+\end{Desc}
+
+
+References liqcell\_\-setdirty().\index{liqcell.c@{liqcell.c}!liqcell\_\-setenabled@{liqcell\_\-setenabled}}
+\index{liqcell\_\-setenabled@{liqcell\_\-setenabled}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setenabled}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setenabled (liqcell $\ast$ {\em self}, \/  int {\em arg})}\label{d5/da2/liqcell_8c_3d63be74972f519f17406bd677adfdfc}
+
+
+Set the enabled value of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em arg}]The value to set enabled of the liqcell \end{description}
+\end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-setfont@{liqcell\_\-setfont}}
+\index{liqcell\_\-setfont@{liqcell\_\-setfont}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setfont}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setfont (liqcell $\ast$ {\em self}, \/  liqfont $\ast$ {\em font})}\label{d5/da2/liqcell_8c_bb948216eb0615940667c825814a16d3}
+
+
+Set the font of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em font}]The liqcell's font \end{description}
+\end{Desc}
+
+
+Referenced by liqcell\_\-free(), textbox\_\-create(), uiinfobar\_\-create(), uinumberbox\_\-create(), uipicturebox\_\-create(), uitextbox\_\-create(), and uititlebar\_\-create().\index{liqcell.c@{liqcell.c}!liqcell\_\-setimage@{liqcell\_\-setimage}}
+\index{liqcell\_\-setimage@{liqcell\_\-setimage}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setimage}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setimage (liqcell $\ast$ {\em self}, \/  liqimage $\ast$ {\em image})}\label{d5/da2/liqcell_8c_972de10bca2d1bd4192f4225dd04fb2c}
+
+
+Set the provided liqcell's bakground image. \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell \item[{\em image}]The liqimage to set \end{description}
+\end{Desc}
+
+
+References liqcell\_\-setdirty().
+
+Referenced by liqcell\_\-free(), uipicturebox\_\-create(), and uititlebar\_\-create().\index{liqcell.c@{liqcell.c}!liqcell\_\-setinnersize@{liqcell\_\-setinnersize}}
+\index{liqcell\_\-setinnersize@{liqcell\_\-setinnersize}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setinnersize}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setinnersize (liqcell $\ast$ {\em self}, \/  int {\em w}, \/  int {\em h})}\label{d5/da2/liqcell_8c_52eafc75b1cd53384992a37258bd22b4}
+
+
+Set the inner sizes parameters of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em w}]Width \item[{\em h}]Height \end{description}
+\end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-setinnersize\_\-from\_\-outer@{liqcell\_\-setinnersize\_\-from\_\-outer}}
+\index{liqcell\_\-setinnersize\_\-from\_\-outer@{liqcell\_\-setinnersize\_\-from\_\-outer}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setinnersize\_\-from\_\-outer}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setinnersize\_\-from\_\-outer (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_016901d78dd41a1cfb4c666acaa2a204}
+
+
+Set the inner size parameters using the width and height parameters of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \end{description}
+\end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-setkinetic@{liqcell\_\-setkinetic}}
+\index{liqcell\_\-setkinetic@{liqcell\_\-setkinetic}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setkinetic}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setkinetic (liqcell $\ast$ {\em self}, \/  int {\em kx}, \/  int {\em ky})}\label{d5/da2/liqcell_8c_6823ecc48c2a4e3515bb5a4c9ceaa7d9}
+
+
+Set the liqcell's kinetic values int he x and y direction \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em kx}]The kinetic value in the x direction \item[{\em ky}]The kinetic value in the y direction \end{description}
+\end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-setname@{liqcell\_\-setname}}
+\index{liqcell\_\-setname@{liqcell\_\-setname}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setname}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setname (liqcell $\ast$ {\em self}, \/  char $\ast$ {\em name})}\label{d5/da2/liqcell_8c_0c09156cc6c30c000b773a574d909f04}
+
+
+Set the liqcell name \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em name}]The name of the liqcell \end{description}
+\end{Desc}
+
+
+References liqapp\_\-errorandfail().
+
+Referenced by liqcell\_\-free().\index{liqcell.c@{liqcell.c}!liqcell\_\-setpos@{liqcell\_\-setpos}}
+\index{liqcell\_\-setpos@{liqcell\_\-setpos}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setpos}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setpos (liqcell $\ast$ {\em self}, \/  int {\em x}, \/  int {\em y})}\label{d5/da2/liqcell_8c_29c63f821be5a97c33041c3f977756ab}
+
+
+Set the x, y coordinate position of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]Liqcell to set the position of \item[{\em x}]The x-coordinate \item[{\em y}]The y-coordinate \end{description}
+\end{Desc}
+
+
+References liqcell\_\-handlerrun().
+
+Referenced by liqcell\_\-child\_\-arrange\_\-easycol(), liqcell\_\-child\_\-arrange\_\-easyrow(), and liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal().\index{liqcell.c@{liqcell.c}!liqcell\_\-setrect@{liqcell\_\-setrect}}
+\index{liqcell\_\-setrect@{liqcell\_\-setrect}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setrect}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setrect (liqcell $\ast$ {\em self}, \/  int {\em x}, \/  int {\em y}, \/  int {\em w}, \/  int {\em h})}\label{d5/da2/liqcell_8c_96002145228977f59beff1bcdd4b7267}
+
+
+Set the x, y-coordinates and height/width of a liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em x}]X-Coordinate \item[{\em y}]Y-Coordinate \item[{\em w}]Width \item[{\em h}]Height \end{description}
+\end{Desc}
+
+
+References liqcell\_\-handlerrun().\index{liqcell.c@{liqcell.c}!liqcell\_\-setrect\_\-autoscale@{liqcell\_\-setrect\_\-autoscale}}
+\index{liqcell\_\-setrect\_\-autoscale@{liqcell\_\-setrect\_\-autoscale}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setrect\_\-autoscale}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setrect\_\-autoscale (liqcell $\ast$ {\em self}, \/  int {\em x}, \/  int {\em y}, \/  int {\em w}, \/  int {\em h}, \/  float {\em sx}, \/  float {\em sy})}\label{d5/da2/liqcell_8c_b2a1589fe2adb86f5403b10615327357}
+
+
+Set the rect, but use default original scaling to do it \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em x}]X-Coordinate \item[{\em y}]Y-Coordinate \item[{\em w}]Width \item[{\em h}]Height \item[{\em sx}]X Scaling fraction \item[{\em sy}]Y Scaling fraction \end{description}
+\end{Desc}
+
+
+References liqcell\_\-handlerrun().\index{liqcell.c@{liqcell.c}!liqcell\_\-setselected@{liqcell\_\-setselected}}
+\index{liqcell\_\-setselected@{liqcell\_\-setselected}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setselected}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setselected (liqcell $\ast$ {\em self}, \/  int {\em arg})}\label{d5/da2/liqcell_8c_c163679ae4c17c687988439f46034551}
+
+
+Set the selection of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to \item[{\em arg}]The argument set to selected parameter of the liqcell \end{description}
+\end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-setshown@{liqcell\_\-setshown}}
+\index{liqcell\_\-setshown@{liqcell\_\-setshown}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setshown}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setshown (liqcell $\ast$ {\em self}, \/  int {\em arg})}\label{d5/da2/liqcell_8c_10dd73affd3e1d95561b954075c86a79}
+
+
+Set the shown value of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em arg}]The value to set shown \end{description}
+\end{Desc}
+\index{liqcell.c@{liqcell.c}!liqcell\_\-setsize@{liqcell\_\-setsize}}
+\index{liqcell\_\-setsize@{liqcell\_\-setsize}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setsize}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setsize (liqcell $\ast$ {\em self}, \/  int {\em w}, \/  int {\em h})}\label{d5/da2/liqcell_8c_37635b6dfd9e0332df3373a0d4be3b40}
+
+
+Set the width and height of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]Liqcell to set dimensions of \item[{\em w}]The width \item[{\em h}]The height \end{description}
+\end{Desc}
+
+
+References liqcell\_\-handlerrun().
+
+Referenced by liqcell\_\-child\_\-arrange\_\-easycol(), liqcell\_\-child\_\-arrange\_\-easyrow(), liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal(), and liqcell\_\-setsize\_\-from\_\-inner().\index{liqcell.c@{liqcell.c}!liqcell\_\-setsize\_\-from\_\-inner@{liqcell\_\-setsize\_\-from\_\-inner}}
+\index{liqcell\_\-setsize\_\-from\_\-inner@{liqcell\_\-setsize\_\-from\_\-inner}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setsize\_\-from\_\-inner}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setsize\_\-from\_\-inner (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_d8232089321484c557d1dc25950fd7e3}
+
+
+Set the size of a liqcell by providing just the liqcell and using the inner width and inner height \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to set the size of \end{description}
+\end{Desc}
+
+
+References liqcell\_\-setsize().\index{liqcell.c@{liqcell.c}!liqcell\_\-setsketch@{liqcell\_\-setsketch}}
+\index{liqcell\_\-setsketch@{liqcell\_\-setsketch}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-setsketch}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-setsketch (liqcell $\ast$ {\em self}, \/  liqsketch $\ast$ {\em sketch})}\label{d5/da2/liqcell_8c_ce2040e54a4088979505d65e05b5c266}
+
+
+Set the sketch of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em sketch}]The sketch of the liqcell \end{description}
+\end{Desc}
+
+
+Referenced by liqcell\_\-free(), and liqcell\_\-sketch\_\-autoload().\index{liqcell.c@{liqcell.c}!liqcell\_\-settag@{liqcell\_\-settag}}
+\index{liqcell\_\-settag@{liqcell\_\-settag}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-settag}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-settag (liqcell $\ast$ {\em self}, \/  void $\ast$ {\em tag})}\label{d5/da2/liqcell_8c_5fccdde8556d010dd81c15c69d070b55}
+
+
+Set the tag of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to modify \item[{\em tag}]The liqcell's tag \end{description}
+\end{Desc}
+
+
+Referenced by liqcell\_\-handleradd\_\-withcontext().\index{liqcell.c@{liqcell.c}!liqcell\_\-sketch\_\-autoload@{liqcell\_\-sketch\_\-autoload}}
+\index{liqcell\_\-sketch\_\-autoload@{liqcell\_\-sketch\_\-autoload}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-sketch\_\-autoload}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-sketch\_\-autoload (liqcell $\ast$ {\em self})}\label{d5/da2/liqcell_8c_0cc39c8747c881d9bcb6513bd1f18fea}
+
+
+Load the sketch of the liqcell \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to load the sketch of \end{description}
+\end{Desc}
+
+
+References liqapp\_\-fileexists(), liqcell\_\-propgets(), and liqcell\_\-setsketch().\index{liqcell.c@{liqcell.c}!liqcell\_\-test@{liqcell\_\-test}}
+\index{liqcell\_\-test@{liqcell\_\-test}!liqcell.c@{liqcell.c}}
+\subsubsection[{liqcell\_\-test}]{\setlength{\rightskip}{0pt plus 5cm}void liqcell\_\-test ()}\label{d5/da2/liqcell_8c_fbfdb285ecda8ef01ff24e5b3a1174f9}
+
+
+Testing function 
+
+References liqcell\_\-new(), and liqcell\_\-release().

@@ -1,0 +1,138 @@
+\section{src/liqcell\_\-arrange.c File Reference}
+\label{d1/da8/liqcell__arrange_8c}\index{src/liqcell\_\-arrange.c@{src/liqcell\_\-arrange.c}}
+This arrange module contains functions for arranging clusters of visual cells.  
+
+
+{\tt \#include \char`\"{}liqcell.h\char`\"{}}\par
+{\tt \#include \char`\"{}liqcell\_\-prop.h\char`\"{}}\par
+\subsection*{Defines}
+\begin{CompactItemize}
+\item 
+\#define \textbf{ABS}(X)~((X)$<$0 ? -(X) : (X))\label{d1/da8/liqcell__arrange_8c_defab4344518e9d35a80d87c20c0fa48}
+
+\item 
+\#define \textbf{SGN}(X)~((X)$<$0 ? -(1) : (1))\label{d1/da8/liqcell__arrange_8c_3af35b2f3ecf099e959f98d3aaa558a5}
+
+\end{CompactItemize}
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+void \textbf{liqcell\_\-forceinboundparent} (liqcell $\ast$self)\label{d1/da8/liqcell__arrange_8c_6778955253c3478133e9d116e8857ef6}
+
+\item 
+int \textbf{liqcell\_\-child\_\-arrange\_\-autoflow} (liqcell $\ast$self)\label{d1/da8/liqcell__arrange_8c_22edbaa04c10349034eb687e5af027b1}
+
+\item 
+int \textbf{liqcell\_\-child\_\-arrange\_\-nooverlap} (liqcell $\ast$self, liqcell $\ast$currentselection)\label{d1/da8/liqcell__arrange_8c_215a8ab448b805f355bc889c105daeb6}
+
+\item 
+int {\bf liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal} (liqcell $\ast$self, int viscolcount, int visrowcount, int flymode)
+\item 
+int \textbf{liqcell\_\-child\_\-arrange\_\-makegrid\_\-fly} (liqcell $\ast$self, int viscolcount, int visrowcount)\label{d1/da8/liqcell__arrange_8c_f3456d26d8b52047b3ac41ceac6d8f27}
+
+\item 
+int {\bf liqcell\_\-child\_\-arrange\_\-makegrid} (liqcell $\ast$self, int viscolcount, int visrowcount)
+\item 
+int {\bf liqcell\_\-child\_\-arrange\_\-easytile} (liqcell $\ast$self)
+\item 
+int {\bf liqcell\_\-child\_\-arrange\_\-easyrow} (liqcell $\ast$self)
+\item 
+int {\bf liqcell\_\-child\_\-arrange\_\-easycol} (liqcell $\ast$self)
+\end{CompactItemize}
+
+
+\label{_details}
+\subsection{Detailed Description}
+This arrange module contains functions for arranging clusters of visual cells. 
+
+\begin{Desc}
+\item[Author:]Gary Birkett Copyright (C) 2008 Gary Birkett\end{Desc}
+\subsection{LICENSE}\label{de/d77/liqui_8c_LICENSE}
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
+
+\subsection{Function Documentation}
+\index{liqcell\_\-arrange.c@{liqcell\_\-arrange.c}!liqcell\_\-child\_\-arrange\_\-easycol@{liqcell\_\-child\_\-arrange\_\-easycol}}
+\index{liqcell\_\-child\_\-arrange\_\-easycol@{liqcell\_\-child\_\-arrange\_\-easycol}!liqcell_arrange.c@{liqcell\_\-arrange.c}}
+\subsubsection[{liqcell\_\-child\_\-arrange\_\-easycol}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-child\_\-arrange\_\-easycol (liqcell $\ast$ {\em self})}\label{d1/da8/liqcell__arrange_8c_46647e7b90e3ae518153a1efb6a518a5}
+
+
+Arrange parent's child cells into a simple column \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to arrange the children of \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int Success or Failure \end{Desc}
+
+
+References liqcell\_\-geth(), liqcell\_\-getlinkchild(), liqcell\_\-getlinknext(), liqcell\_\-getw(), liqcell\_\-setpos(), and liqcell\_\-setsize().\index{liqcell\_\-arrange.c@{liqcell\_\-arrange.c}!liqcell\_\-child\_\-arrange\_\-easyrow@{liqcell\_\-child\_\-arrange\_\-easyrow}}
+\index{liqcell\_\-child\_\-arrange\_\-easyrow@{liqcell\_\-child\_\-arrange\_\-easyrow}!liqcell_arrange.c@{liqcell\_\-arrange.c}}
+\subsubsection[{liqcell\_\-child\_\-arrange\_\-easyrow}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-child\_\-arrange\_\-easyrow (liqcell $\ast$ {\em self})}\label{d1/da8/liqcell__arrange_8c_6160ba7509f4b2cd587e29f6bc60895e}
+
+
+Arrange parent's child cells into a simple row \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The liqcell to arrange the children of \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int Success or Failure \end{Desc}
+
+
+References liqcell\_\-geth(), liqcell\_\-getlinkchild(), liqcell\_\-getlinknext(), liqcell\_\-getw(), liqcell\_\-setpos(), and liqcell\_\-setsize().\index{liqcell\_\-arrange.c@{liqcell\_\-arrange.c}!liqcell\_\-child\_\-arrange\_\-easytile@{liqcell\_\-child\_\-arrange\_\-easytile}}
+\index{liqcell\_\-child\_\-arrange\_\-easytile@{liqcell\_\-child\_\-arrange\_\-easytile}!liqcell_arrange.c@{liqcell\_\-arrange.c}}
+\subsubsection[{liqcell\_\-child\_\-arrange\_\-easytile}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-child\_\-arrange\_\-easytile (liqcell $\ast$ {\em self})}\label{d1/da8/liqcell__arrange_8c_b3ba949bc6b364d3fdb9749401272b39}
+
+
+Determine and set the number of columns and rows. Based on the number of children liqcells the parent has. This also set's childrens size and position in grid formation. \begin{Desc}
+\item[See also:]\doxyref{liqcell\_\-child\_\-arrange\_\-makegrid()}{p.}{d1/da8/liqcell__arrange_8c_0afbcded230420b4345c35e022b0fe18}\end{Desc}
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The parent cell whose children are to be arranged \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int Success or Failure \end{Desc}
+
+
+References liqapp\_\-log(), liqcell\_\-child\_\-arrange\_\-makegrid(), liqcell\_\-getlinkchild(), and liqcell\_\-getlinknext().\index{liqcell\_\-arrange.c@{liqcell\_\-arrange.c}!liqcell\_\-child\_\-arrange\_\-makegrid@{liqcell\_\-child\_\-arrange\_\-makegrid}}
+\index{liqcell\_\-child\_\-arrange\_\-makegrid@{liqcell\_\-child\_\-arrange\_\-makegrid}!liqcell_arrange.c@{liqcell\_\-arrange.c}}
+\subsubsection[{liqcell\_\-child\_\-arrange\_\-makegrid}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-child\_\-arrange\_\-makegrid (liqcell $\ast$ {\em self}, \/  int {\em viscolcount}, \/  int {\em visrowcount})}\label{d1/da8/liqcell__arrange_8c_0afbcded230420b4345c35e022b0fe18}
+
+
+Set the position of the child liqcell's in order to form a grid-like formation.
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The parent liqcell \item[{\em viscolcount}]Column count \item[{\em visrowcount}]Row count \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int Success or Failure \end{Desc}
+
+
+References liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal().
+
+Referenced by liqcell\_\-child\_\-arrange\_\-easytile().\index{liqcell\_\-arrange.c@{liqcell\_\-arrange.c}!liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal@{liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal}}
+\index{liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal@{liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal}!liqcell_arrange.c@{liqcell\_\-arrange.c}}
+\subsubsection[{liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal}]{\setlength{\rightskip}{0pt plus 5cm}int liqcell\_\-child\_\-arrange\_\-makegrid\_\-internal (liqcell $\ast$ {\em self}, \/  int {\em viscolcount}, \/  int {\em visrowcount}, \/  int {\em flymode})}\label{d1/da8/liqcell__arrange_8c_2ac355775d48d17907569f6636a6e401}
+
+
+Set the position of the child liqcell's in order to form a grid-like formation.
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em self}]The parent liqcell \item[{\em viscolcount}]Column count \item[{\em visrowcount}]Row count \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]int finished 1 if at target, 0 if still in flight, -1 error \end{Desc}
+
+
+References liqapp\_\-log(), liqcell\_\-geth(), liqcell\_\-getlinkchild(), liqcell\_\-getlinknext(), liqcell\_\-getw(), liqcell\_\-movetowardsrect(), liqcell\_\-propseti(), liqcell\_\-setdirty(), liqcell\_\-setpos(), and liqcell\_\-setsize().
+
+Referenced by liqcell\_\-child\_\-arrange\_\-makegrid().

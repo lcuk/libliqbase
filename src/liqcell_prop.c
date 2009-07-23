@@ -37,6 +37,12 @@
 
 #include "liqcell.h"
 
+/**
+ * Remove a string prop
+ * @param self The liqcell to remove the prop from
+ * @param name The prop to remove
+ * @return int Success or Failure
+ */
 int liqcell_propremoves(liqcell *self,char *name)
 {
 	liqcell *c=liqcell_local_lookup_nameclass(self,name,"prop.s");
@@ -51,6 +57,12 @@ int liqcell_propremoves(liqcell *self,char *name)
 	return -1;
 }
 
+/**
+ * Remove an integer prop
+ * @param self The liqcell to remove the prop from
+ * @param name The prop to remove
+ * @return int Success or Failure
+ */
 int liqcell_propremovei(liqcell *self,char *name)
 {
 	liqcell *c=liqcell_local_lookup_nameclass(self,name,"prop.i");
@@ -63,8 +75,14 @@ int liqcell_propremovei(liqcell *self,char *name)
 	return -1;
 }
 
-
-int     liqcell_propgeti(liqcell *self,char *name,int valueifnotfound)
+/**
+ * Get an integer prop
+ * @param self The liqcell to get the prop from
+ * @param name The name of the prop to get
+ * @param valueifnotfound Return this value if prop not found
+ * @return int The integer prop or valueifnotfound
+ */
+int liqcell_propgeti(liqcell *self,char *name,int valueifnotfound)
 {
 	liqcell *c=liqcell_local_lookup_nameclass(self,name,"prop.i");
 	if(c)
@@ -86,7 +104,7 @@ int     liqcell_propgeti(liqcell *self,char *name,int valueifnotfound)
  * @return int value
  * 
  */
-int     liqcell_propseti(liqcell *self,char *name,int value)
+int liqcell_propseti(liqcell *self,char *name,int value)
 {
 	liqcell *c=liqcell_child_lookup_nameclass(self,name,"prop.i");
 	if(!c) c = liqcell_child_insert(self, liqcell_quickcreatenameclass(name,"prop.i") );
@@ -101,7 +119,14 @@ int     liqcell_propseti(liqcell *self,char *name,int value)
 	return value;
 }
 
-char*   liqcell_propgets(liqcell *self,char *name,char *valueifnotfound)
+/**
+ * Get a string prop
+ * @param self The liqcell to get the prop from
+ * @param name The name of the prop to get
+ * @param valueifnotfound Return this value if prop not found
+ * @return char* The string prop or valueifnotfound
+ */
+char *liqcell_propgets(liqcell *self,char *name,char *valueifnotfound)
 {
 	liqcell *c=liqcell_local_lookup_nameclass(self,name,"prop.s");
 	if(c)
@@ -111,8 +136,14 @@ char*   liqcell_propgets(liqcell *self,char *name,char *valueifnotfound)
 	return valueifnotfound;
 }
 
-
-char*   liqcell_propsets(liqcell *self,char *name,char *value)
+/**
+ * Set a string prop
+ * @param self The liqcell to set the prop for
+ * @param name The name of the prop to set
+ * @param value The value to set to prop "name"
+ * @return char* The value provided
+ */
+char *liqcell_propsets(liqcell *self,char *name,char *value)
 {
 	liqcell *c=liqcell_child_lookup_nameclass(self,name,"prop.s");
 	if(!c) c = liqcell_child_insert(self, liqcell_quickcreatenameclass(name,"prop.s") );
@@ -122,25 +153,19 @@ char*   liqcell_propsets(liqcell *self,char *name,char *value)
 		c->tag = (unsigned int)strdup(value);
 		// todo fix this memory leak.  not sure yet how to handle this.  it should release the memory on closure or change.
 		// there will be lots of these properties and efficient memory handling will be required.
-		// maybe by storing instances and references into the token tree i can save some
-		
-		
-	}
-	else
-	{
+		// maybe by storing instances and references into the token tree i can save some		
 		
 	}
-	//
+
 	return value;
 }
 
-
-
-
-
+//############################################################# 
+//############################################################# 
 //############################################################# 
 
-char * liqcell_propsets_vprintf(liqcell *self,char *name,char *format, va_list arg)
+/** Helper function for liqcell_propsets_printf */
+char *liqcell_propsets_vprintf(liqcell *self,char *name,char *format, va_list arg)
 {
     //time_t     now;
     //struct tm  *ts;
@@ -149,7 +174,15 @@ char * liqcell_propsets_vprintf(liqcell *self,char *name,char *format, va_list a
 	return liqcell_propsets(self,name,buf);
 }
 
-char * liqcell_propsets_printf(liqcell *self,char *name,char *format, ...)
+/**
+ * Set formatted string prop and 
+ * @param self The liqcell to set the prop for
+ * @param name The name of the prop to set
+ * @param format Format of the string prop
+ * @param ... va_list args
+ * @return char* The formatted string prop
+ */
+char *liqcell_propsets_printf(liqcell *self,char *name,char *format, ...)
 {
 	va_list arg;
 	va_start(arg, format);
