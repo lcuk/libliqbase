@@ -63,22 +63,39 @@
 			
 			if( (args->stroke->pointlast->t -  args->stroke->pointfirst->t) > 250 )  //liqstroke_totallength(args->stroke) > 25 )
 			{
-			
-				if(   (args->mex-args->ox) >= (par->w*0.8) )//  &&   args->mex<par->w)
+				
+				if( liqstroke_totallength(args->stroke) > 20 )
+
+				
+				if(   (args->msx-args->ox) >= (par->w*0.8) )
+				{			
+					if(   (args->mex-args->ox) >= (par->w*0.8) )
+					{
+						//float my = args->mey;
+						float my = args->mey;//-args->oy;
+						int ah = (self->h-par->h);
+						// self->y    p->0    p->h       self->h-self->y
+						// -300       0       480        1700
+						
+						float mj = my * ((float)ah) / ((float)par->h);
+						if(mj<0)mj=0;
+						if(mj>ah)mj=ah;
+						
+						liqcell_setpos(body,self->x,-mj);
+						return 1;
+					}
+					
+					
+				if((args->msy-args->oy) >= (par->h*0.8))
 				{
-					//float my = args->mey;
-					float my = args->mey;//-args->oy;
-					int ah = (self->h-par->h);
-					// self->y    p->0    p->h       self->h-self->y
-					// -300       0       480        1700
-					
-					float mj = my * ((float)ah) / ((float)par->h);
-					if(mj<0)mj=0;
-					if(mj>ah)mj=ah;
-					
-					liqcell_setpos(body,self->x,-mj);
-					return 1;
+					// 20090724_034021 lcuk :  i'd like to try something here..
+					if(   (args->mey-args->oy) >= (par->h*0.8) )
+					{
+						// 20090724_034233 lcuk : lets assume that the user has pressed for a time in the lower quadrant of a list
+						// 20090724_034253 lcuk : which is why we are here now						
+					}
 				}
+
 			}
 			//#####################################
 			

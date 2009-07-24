@@ -507,6 +507,9 @@ int 		liqapp_init(int argc, char* argv[],char *title,char *version)
 	
 	char buf[FILENAME_MAX+1];
 
+
+	// 20090724_154719 lcuk : todo jaffa says use this: http://standards.freedesktop.org/basedir-spec/basedir-spec-0.6.html
+	// 20090724_154726 lcuk : which makes sense really.
 	
 	
 	//liqapp_log("~~~ Using std folder config");
