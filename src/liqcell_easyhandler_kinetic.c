@@ -16,6 +16,10 @@
 #include "liqcell_easyhandler.h"
 #include "liqbase.h"
 
+
+
+
+
 //#####################################################################
 //#####################################################################
 //##################################################################### kinetic mouse handler :: by gary birkett
@@ -84,16 +88,49 @@
 						liqcell_setpos(body,self->x,-mj);
 						return 1;
 					}
-					
+				}
+				
 					
 				if((args->msy-args->oy) >= (par->h*0.8))
 				{
 					// 20090724_034021 lcuk :  i'd like to try something here..
-					if(   (args->mey-args->oy) >= (par->h*0.8) )
+					// 20090724_034233 lcuk : lets assume that the user has pressed for a time in the lower quadrant of a list
+					// 20090724_034253 lcuk : which is why we are here now
+					// 20090726_011904 lcuk : this test will simply use "multitouch_test_range" on the PARENT as an indicator of how many available columns the MT will fall into
+					// 20090726_011929 lcuk : depending on which column, the list will be arranged using extrapolated dimensions
+					// 20090726_012034 lcuk : this is very "testing" phase, and will eventually have an associated event to deal with MT
+					int multitouch_range = liqcell_propgeti(par,"multitouch_test_range",0);
+					if(args->multiok && multitouch_range>0)
 					{
-						// 20090724_034233 lcuk : lets assume that the user has pressed for a time in the lower quadrant of a list
-						// 20090724_034253 lcuk : which is why we are here now						
+						// we are in a multitouch block!
+						// using the HORIZONTAL position, change the scale of the items in the list..
+						
+						float sectorx = (float)args->multix / (float)par->w;
+						
+						if(sectorx<0)sectorx=0;
+						if(sectorx>1)sectorx=1;
+						
+						int gridx = 1+(sectorx * 5);
+						
+						
+						
+						
+						
+						liqcell *c=liqcell_getlinkchild_visual(self);
+						while(c)
+						{
+							// liqcell_setsize(c,args->multix,c->h);
+							liqcell_setsize(c,par->w / gridx,par->h/gridx);
+							
+							c=liqcell_getlinknext_visual(c);
+						}
+						liqcell_setsize(self,par->w,self->h);
+						liqcell_child_arrange_autoflow(self);
+						liqcell_setrect(self,0,0,par->w,self->h);
+						//liqcell_setpos(self,0,0);
+						return 1;
 					}
+
 				}
 
 			}

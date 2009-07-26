@@ -12,6 +12,6 @@
 
 	int 	liqcell_easyhandler_kinetic_mouse(liqcell *self, liqcellmouseeventargs *args);
 
-
+	
 
 #endif

@@ -268,6 +268,9 @@ int    	liqcell_getx(liqcell *self);
 int    	liqcell_gety(liqcell *self);
 int    	liqcell_getw(liqcell *self);
 int    	liqcell_geth(liqcell *self);
+int    	liqcell_getcx(liqcell *self);
+int    	liqcell_getcy(liqcell *self);
+
 int    	liqcell_getinnerw(liqcell *self);
 int    	liqcell_getinnerh(liqcell *self);
 int    	liqcell_getkineticx(liqcell *self);

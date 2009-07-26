@@ -1005,6 +1005,26 @@ liqcell *liqcell_getcontent(liqcell *self)
 }
 
 /**
+ * Return the liqcell's centre x-coordinate
+ * @param self The liqcell to lookup
+ * @return int The centre x-coordinate
+ */
+int liqcell_getcx(liqcell *self)
+{
+	return self->x+self->w/2;
+}
+
+/**
+ * Return the liqcell's centre y-coordinate
+ * @param self The liqcell to lookup
+ * @return int The centre y-coordinate
+ */
+int liqcell_getcy(liqcell *self)
+{
+	return self->y+self->h/2;
+}
+
+/**
  * Return the liqcell's x-coordinate
  * @param self The liqcell to lookup
  * @return int The x-coordinate

@@ -72,6 +72,14 @@ static void liqcellmouseeventargs_stroke_start(liqcellmouseeventargs *self,int m
 	self->mey=my;
 	self->mez=mz;
 	self->met=mt;
+	
+	self->multiok=0;	// make sure theres no multitouch enabled yet..
+	self->multisx=0;
+	self->multisy=0;
+	self->multix=0;
+	self->multiy=0;
+	self->multiw=0;
+	self->multih=0;
 
 
 	liqstroke_clear(self->stroke);
@@ -1079,53 +1087,54 @@ waitevent:
 				{
 					// still using the right area :)
 
-					//if( liqcell_handlerrun(hot,"mouse",&mouseargs) )
-					//{
-					//}
-						//liqapp_log("mouse test '%s'",hot->name);
-
+					{
+						int vx=hotx;
+						int vy=hoty;
+						liqcell *vhit=hot;
+						while(vhit && (liqcell_handlerfind(vhit,"mouse")==NULL)  )
 						{
-							int vx=hotx;
-							int vy=hoty;
-							liqcell *vhit=hot;
-							while(vhit && (liqcell_handlerfind(vhit,"mouse")==NULL)  )
-							{
-								//liqapp_log("mouse skip  '%s'",vhit->name);
+							//liqapp_log("mouse skip  '%s'",vhit->name);
 
-								vx-=vhit->x;
-								vy-=vhit->y;
-								vhit=liqcell_getlinkparent(vhit);
+							vx-=vhit->x;
+							vy-=vhit->y;
+							vhit=liqcell_getlinkparent(vhit);
+						}
+						if(vhit)
+						{
+							//liqapp_log("mouse run  '%s'",vhit->name);
+							
+							
+							
+
+							//##########################################
+							// get absolute offset (make this a cell_fn?) must stop when it gets to the dialog item itself though
+							int ox=0;
+							int oy=0;
+							liqcell *ohit=vhit;
+							while(ohit && ohit!=self)
+							{
+								ox+=ohit->x;
+								oy+=ohit->y;
+								ohit=liqcell_getlinkparent(ohit);
 							}
-							if(vhit)
+
+							mouseargs.ox=ox;
+							mouseargs.oy=oy;
+							
+							
+							liqcell_easyrun_mouseeventargs_multitouchprepare(vhit,&mouseargs,NULL);
+
+							if( liqcell_handlerrun(vhit,"mouse",&mouseargs) )
 							{
-								//liqapp_log("mouse run  '%s'",vhit->name);
-
-								//##########################################
-								// get absolute offset (make this a cell_fn?) must stop when it gets to the dialog item itself though
-								int ox=0;
-								int oy=0;
-								liqcell *ohit=vhit;
-								while(ohit && ohit!=self)
+								// handled it \o/
+								if(self->visible)
 								{
-									ox+=ohit->x;
-									oy+=ohit->y;
-									ohit=liqcell_getlinkparent(ohit);
-								}
-
-								mouseargs.ox=ox;
-								mouseargs.oy=oy;
-
-								if( liqcell_handlerrun(vhit,"mouse",&mouseargs) )
-								{
-									// handled it \o/
-									if(self->visible)
-									{
-										// refresh display
-										// sleep
-									}
+									// refresh display
+									// sleep
 								}
 							}
 						}
+					}
 
 
 					if(ev.mouse.pressure==0)

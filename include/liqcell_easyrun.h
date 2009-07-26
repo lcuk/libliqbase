@@ -103,6 +103,17 @@ typedef struct liqcellmouseeventargs
 	int         ox;				// where you should consider top left: 0,0
 	int         oy;
 
+	int 		multiok;		// if set, then multi params are operational
+	
+	int         multisx;		// starting point used for thumb
+	int         multisy;
+	
+	int         multix;			// best guess estimate for the 2nd finger
+	int         multiy;
+	int         multiw;
+	int         multih;
+
+
 }
 	liqcellmouseeventargs;
 

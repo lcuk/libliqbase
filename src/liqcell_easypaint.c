@@ -434,11 +434,11 @@ static int liqcell_kineticboiloff(liqcell *self)
 
 
 
-		if(px>0)px=0;
-		if(py>0)py=0;
+		if(px>0){px=0;  dx=self->kineticx; } // make sure kinetics are stopped
+		if(py>0){py=0;  dy=self->kineticy; } // make sure kinetics are stopped
 
-		if( (self->w > par->w) && ((px+self->w) < par->w) ) px = par->w - self->w;
-		if( (self->h > par->h) && ((py+self->h) < par->h) ) py = par->h - self->h;
+		if( (self->w > par->w) && ((px+self->w) < par->w) ){ px = par->w - self->w;  dx=self->kineticx; } // make sure kinetics are stopped
+		if( (self->h > par->h) && ((py+self->h) < par->h) ){ py = par->h - self->h;  dy=self->kineticy; } // make sure kinetics are stopped
 
 		//liqapp_log("kinetic pre motion... k=%2i,%2i  d=%i,%i    p=%i,%i s=%i,%i", self->kineticx , self->kineticy,   dx,dy,    px,py , self->x,self->y );
 

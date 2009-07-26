@@ -223,6 +223,60 @@ void liqimage_cache_release(liqimage *self)
 
 
 
+
+
+liqimage *liqimage_getthumbnail(liqimage *original,int maxw,int maxh)
+{
+	// this function returns a thumbnail of the original image
+	
+	if(!original)return NULL;
+	int tw=original->width;
+	int th=original->height;
+	if(maxw && maxh)
+	{
+		while(tw>maxw)
+		{
+			tw/=2;
+			th/=2;
+		}
+		while(th>maxh)
+		{
+			tw/=2;
+			th/=2;
+		}
+	}
+	//if(tw==original->width && th==original->th)
+	//{
+	//	return NULL;
+	//}
+	liqimage *thumb = liqimage_newatsize(tw,th,0);
+	if(!thumb)
+	{
+		liqapp_log("thumb: could not allocate img");
+		return NULL;
+	}
+	liqcliprect *cr = liqcliprect_newfromimage(thumb);
+	if(!cr)
+	{
+		liqapp_log("thumb: could not allocate cr");
+		liqimage_release(thumb);
+		return original;
+	}	
+	liqcliprect_drawimagecolor(cr,original,0,0,tw,th,0);
+	liqcliprect_release(cr);
+	//liqimage_release(original);
+	return thumb;
+}
+
+
+
+
+
+
+
+
+
+
 //####################################################################
 //####################################################################
 //####################################################################

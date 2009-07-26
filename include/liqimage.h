@@ -82,4 +82,7 @@ int 		liqimage_pageloadpng(			liqimage *self,char * filename,int maxw,int maxh,i
 int         liqimage_pageloadpng_memstream( liqimage *self,char * filename,char *srcdata, int srcsize,int maxw,int maxh,int allowalpha);
 
 int 		liqimage_pagesavepng(liqimage *self,char * filename);
+
+liqimage *  liqimage_getthumbnail(          liqimage *original,int maxw,int maxh);
+
 #endif
