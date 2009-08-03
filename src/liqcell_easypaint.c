@@ -603,6 +603,11 @@ __tz_one("showndone");
 		paintargs.graph = graph;
 		paintargs.runfast=0;
 		
+		paintargs.ox=x;
+		paintargs.oy=y;
+		paintargs.mx=w;
+		paintargs.my=h;
+		
 		liqcell_handlerrun(self,"paint",&paintargs);
 		
 		//vgraph_setwindow( graph,  NULL       );

@@ -3,6 +3,9 @@
 #ifndef liqcell_H
 #define liqcell_H
 
+#include <unistd.h>
+#include <stdarg.h>
+
 #include "liqbase.h"
 //#include "liqcell_easyrun.h"
 //#include "liqcell_prop.h"
@@ -184,6 +187,12 @@ char *	liqcell_getcaption(liqcell *self);
 
 
 
+void 	liqcell_setcaption_vprintf(liqcell *self,char *format, va_list arg);
+void 	liqcell_setcaption_printf(liqcell *self,char *format, ...);
+
+
+
+
 void 	liqcell_setclassname(liqcell *self,char *classname);	// class name used to construct
 char *	liqcell_getclassname(liqcell *self);
 
@@ -291,6 +300,7 @@ void liqcell_print2(liqcell *self);
 
 
 int     liqcell_child_countvisible(liqcell *self);
+int     liqcell_child_countselected(liqcell *self);
 
 int 	liqcell_child_arrange_easytile(liqcell *self);			// make sure all contents are bound within the area
 int 	liqcell_child_arrange_easyrow(liqcell *self);			// split into Left|Centre|Right boxes (newspaper panels)

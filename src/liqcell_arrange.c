@@ -307,8 +307,8 @@ int liqcell_child_arrange_nooverlap(liqcell *self,liqcell *currentselection)
 	}
 
 
-	//int tilew =  liqcell_propgeti(self,"easytilew",0) * 0.9;
-	//int tileh =  liqcell_propgeti(self,"easytileh",0) * 0.9;
+	int tilew =  liqcell_propgeti(self,"liqcell_child_arrange_nooverlap_minimumw",0);
+	int tileh =  liqcell_propgeti(self,"liqcell_child_arrange_nooverlap_minimumh",0);
 
 	//liqapp_log("tile %i,%i",tilew,tileh);
 
@@ -319,23 +319,30 @@ int liqcell_child_arrange_nooverlap(liqcell *self,liqcell *currentselection)
 		{
 			if( (c->selected==0) && (c!=currentselection) )
 			{
-
-				c->x+=c->overlapx/2;
-				c->y+=c->overlapy/2;
+				if(c->overlapx || c->overlapy)
+				{
+					c->x+=c->overlapx;
+					c->y+=c->overlapy;
+					liqcell_setdirty(c,1); 
+				}
 
 				liqcell_forceinboundparent(c);
 
 			}
-/*
+
 			if(tilew && tileh)
 			{
-				if(c==currentselection)
+				if(c->selected || c==currentselection)
 				{
 					if((c->overlapx==0) && (c->overlapy==0))
 					{
 						// are free to make it a bit bigger
-						if( c->w < (self->w/2) ) {c->x-=2; c->w += 4;}
-						if( c->h < (self->h/2) ) {c->y-=2; c->h += 4;}
+						if( c->w < (self->w/2) ) {c->x-=2; c->w += 4;  liqcell_setdirty(c,1); }
+						if( c->h < (self->h/2) ) {c->y-=2; c->h += 4;  liqcell_setdirty(c,1); }
+						if( (c->selected==0) && (c!=currentselection) )
+						{
+							liqcell_forceinboundparent(c);
+						}
 					}
 				}
 				else
@@ -348,8 +355,12 @@ int liqcell_child_arrange_nooverlap(liqcell *self,liqcell *currentselection)
 					{
 						// are free to make it a bit smaller
 						// need to however find the smallest size
-						if( (c->w-1) > (tilew) ) {c->x++; c->w-=2;}
-						if( (c->h-1) > (tileh) ) {c->y++; c->h-=2;}
+						if( (c->w-1) > (tilew) ) {c->x++; c->w-=2;  liqcell_setdirty(c,1); }
+						if( (c->h-1) > (tileh) ) {c->y++; c->h-=2;  liqcell_setdirty(c,1); }
+						if( (c->selected==0) && (c!=currentselection) )
+						{
+							liqcell_forceinboundparent(c);
+						}
 					}
 				}
 
@@ -357,8 +368,6 @@ int liqcell_child_arrange_nooverlap(liqcell *self,liqcell *currentselection)
 
 			}
 
-*/
-				liqcell_forceinboundparent(c);
 		}
 		c=liqcell_getlinknext(c);
 	}

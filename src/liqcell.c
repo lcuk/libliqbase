@@ -508,6 +508,40 @@ void liqcell_setcaption(liqcell *self,char *caption)
 	//liqapp_log("caption on '%s' change fin",self->name );
 }
 
+
+
+
+//############################################################# 
+//############################################################# 
+//############################################################# 
+
+/** Helper function for liqcell_setcaption */
+void liqcell_setcaption_vprintf(liqcell *self,char *format, va_list arg)
+{
+    //time_t     now;
+    //struct tm  *ts;
+    char       buf[1024];
+	vsnprintf(buf,1023,format, arg);
+	liqcell_setcaption(self,buf);
+}
+
+/**
+ * Set formatted string prop and 
+ */
+void liqcell_setcaption_printf(liqcell *self,char *format, ...)
+{
+	va_list arg;
+	va_start(arg, format);
+	liqcell_setcaption_vprintf(self,format, arg);
+	va_end(arg);
+}
+
+
+
+
+
+
+
 /**
  * Set the classname of the liqcell
  * @param self The liqcell to modify
@@ -1194,6 +1228,28 @@ int liqcell_child_countvisible(liqcell *self)
 	return answercount;
 }
 
+/**
+ * Count the number of selected children
+ * @param self The liqcell to count the children of
+ * @return int The number of children
+ */
+int liqcell_child_countselected(liqcell *self)
+{
+	int answercount=0;
+
+	// count the number of visible children
+	liqcell *c=liqcell_getlinkchild(self);
+	while(c)
+	{
+		if(liqcell_getselected(c))
+		{
+			// work it!
+			answercount++;		//
+		}
+		c=liqcell_getlinknext(c);
+	}
+	return answercount;
+}
 /**
  * Create a chain in an already linked list of liqcells. If a list doesn't exist for the parent
  * (self) then start a new list. Set the child's parent to the parent of the list, and the 

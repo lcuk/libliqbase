@@ -23,6 +23,10 @@
  */
 
 
+// 20090728_001621 lcuk : set this to have a 25fps limit to framerate, otherwise runs at fastest possible
+//#define LIMIT_FRAMERATE 1
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -221,14 +225,22 @@ static void savethumb(liqcell *cell)
 	liqcell_hold(cell);
 	// 20090528_231040 lcuk : this locks up dunno why
 	// 20090624_005139 lcuk : trying it as a widget itself, to see if it was initializers at fault
-	liqapp_log("...creating image %s",cell->name);
+	
+	
+	char cellname[1024];
+	
+	snprintf(cellname,sizeof(cellname),"%s",cell->name);
+	
+	liqapp_ensurecleanusername(cellname);
+	
+	liqapp_log("...creating image %s",cellname);
 	liqimage *img = liqimage_newatsize(canvas.pixelwidth,canvas.pixelheight,0);
 	
 	liqapp_log("...creating cliprect");
 	
 	liqcliprect *cr = liqcliprect_newfromimage(img);
 	
-	liqapp_log("...painting cell %s",cell->name);
+	liqapp_log("...painting cell %s",cellname);
 	liqcell_easypaint(cell,cr,0,0,canvas.pixelwidth,canvas.pixelheight);
 	
 	liqapp_log("...building filename");
@@ -236,7 +248,7 @@ static void savethumb(liqcell *cell)
 				char 		fmtnow[255];
 	 			liqapp_formatnow(fmtnow,255,"yyyymmdd_hhmmss");
 				char buf[FILENAME_MAX+1];
-				snprintf(buf,FILENAME_MAX,"%s/sketches/liq.%s.%s.scr.png",app.userdatapath,fmtnow,cell->name  );
+				snprintf(buf,FILENAME_MAX,"%s/sketches/liq.%s.%s.scr.png",app.userdatapath,fmtnow,cellname  );
 
 
 
@@ -1428,7 +1440,7 @@ moar:
  		
 			// 20090712_224448 lcuk : i want MAX 25fps, just to see
 			//ft2=liqapp_GetTicks();
-			
+#ifdef LIMIT_FRAMERATE		
 			while( ( (ft2=liqapp_GetTicks()) - ft1) < 40)
 			{
 				// lets just sleep for a short while (doesnt have to be THAT precise, just stop silly speed overruns)
@@ -1436,7 +1448,7 @@ moar:
 				liqapp_sleep(40 - (ft2-ft1));
 			}
 			ft1=ft2;
-						
+#endif					
 			//liqapp_log("render adding framecount");		
 // 20090520_014021 lcuk : show frame information
 /*
