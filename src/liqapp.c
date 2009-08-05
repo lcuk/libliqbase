@@ -850,3 +850,162 @@ char *stristr(const char *String, const char *Pattern)
       return NULL;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//example:
+// char datestamp[20];
+// liqapp_formatnow(datestamp,sizeof(datestamp),"yyyymmdd_hhmmss");
+
+// ...
+
+// struct tm timebuf={0};
+// liqapp_datestamp_to_date(datestamp,&timebuf);
+// time_t w00t = mktime(&timebuf);
+// if(w00t==-1)
+// {
+//		// invalid
+// }
+
+
+		int liqapp_datestamp_to_date(char *datestamp,struct tm *timebuf)		// convert a liqbase datestamp "yyyymmdd_hhmmss" into a tm struct
+		{
+			char yy[5]="0000";
+			char mm[3]="00";
+			char dd[3]="00";
+			//_
+			char HH[3]="00";
+			char MM[3]="00";
+			char SS[3]="00";
+			
+			char *indat=datestamp;
+			int strncpy_onlydigits(char *res,char *indat,int size)
+			{
+				int ch;
+				for(ch=0;ch<size;ch++)
+				{
+					if(isdigit(*indat))
+					{
+						*res++=*indat++;
+					}
+					else
+					{
+						return -1;
+					}
+				}
+				// null terminate
+				*res++=0;
+				return 0;
+			}
+			//liqapp_log("has yr? '%s'",indat);
+			if( strncpy_onlydigits(yy,indat,4) == 0 )
+			{
+				// ok, got it
+				indat+=4;
+			}
+			else
+			{
+				// failed, exit
+				return -1;
+			}
+			//liqapp_log("has mm? '%s'",indat);
+			if( strncpy_onlydigits(mm,indat,2) == 0 )
+			{
+				// ok, got it
+				indat+=2;
+			}
+			else
+			{
+				// failed, exit
+				return -1;
+			}
+			
+			//liqapp_log("has dd? '%s'",indat);	
+		
+			if( strncpy_onlydigits(dd,indat,2) == 0 )
+			{
+				// ok, got it
+				indat+=2;
+			}
+			else
+			{
+				// failed, exit
+				return -1;
+			}
+			
+			//liqapp_log("has _? '%s'",indat);
+			
+			// allow an OPTIONAL _
+			if(*indat=='_') indat++;
+			
+			// 20090722_004108 lcuk : you know, the time element may be optional...
+			
+			
+			//liqapp_log("has hh? '%s'",indat);
+						
+			if( strncpy_onlydigits(HH,indat,2) == 0 )
+			{
+				// ok, got it
+				indat+=2;
+			}
+			else
+			{
+				// failed, exit
+				return -1;
+			}
+			
+			//liqapp_log("has mm? '%s'",indat);
+						
+			if( strncpy_onlydigits(MM,indat,2) == 0 )
+			{
+				// ok, got it
+				indat+=2;
+			}
+			else
+			{
+				// failed, exit
+				return -1;
+			}
+				
+				
+			//liqapp_log("has ss? '%s'",indat);
+			if( strncpy_onlydigits(SS,indat,2) == 0 )
+			{
+				// ok, got it
+				indat+=2;
+			}
+			else
+			{
+				// failed, exit
+				return -1;
+			}
+			
+			//liqapp_log("ok %i %i %i _ %i %i %i", atoi(yy),atoi(mm),atoi(dd), atoi(HH),atoi(MM),atoi(SS) );
+			// now, fill in the details :)
+			timebuf->tm_year=atoi(yy)-1900;
+			timebuf->tm_mon=atoi(mm)-1;
+			timebuf->tm_mday=atoi(dd)-1;
+			timebuf->tm_hour=atoi(HH);
+			timebuf->tm_min=atoi(MM);
+			timebuf->tm_sec=atoi(SS);
+			return 0;
+
+		}
+			
+			
+		// similar code here
+		// http://www.velocityreviews.com/forums/t679803-time-issue-mktime-timet-tm.html
+		// found after trying to find problem

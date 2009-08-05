@@ -34,6 +34,9 @@ extern "C" {
 #include <stdio.h>
 #include <dirent.h>
 
+#include <time.h>			// req for sleep
+#include <sys/time.h>		// req for getticks
+
 
 //#######################################################
 
@@ -90,6 +93,20 @@ int 		liqapp_formatnow(char *buffer,int buffersize,char *format);
 
 // char datestamp[20];
 // liqapp_formatnow(datestamp,sizeof(datestamp),"yyyymmdd_hhmmss");
+
+// ...
+
+// struct tm timebuf={0};
+// liqapp_datestamp_to_date(datestamp,&timebuf);
+// time_t w00t = mktime(&timebuf);
+// if(w00t==-1)
+// {
+//		// invalid
+// }
+
+
+
+int liqapp_datestamp_to_date(char *datestamp,struct tm *timebuf);		// convert a liqbase datestamp "yyyymmdd_hhmmss" into a tm struct
 
 
 char * 		liqapp_format_strftime(char *buffer,int buffersize,char *strftime_fmt);

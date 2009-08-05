@@ -9,6 +9,27 @@
 #include "liqx11overlay.h"
 
 
+
+//############################################################# keyboard bits
+
+#define ShiftMask               (1<<0)
+#define ControlMask             (1<<2)
+#define Mod5Mask                (1<<7)
+
+
+#define XK_Shift_L                       0xffe1
+#define XK_Control_L                     0xffe3
+#define XK_ISO_Level3_Shift              0xfe03
+
+
+
+#define liqx11_modifier_StickyMask (1<<15)
+
+
+int liqx11_modifierprev=0;
+int liqx11_modifier=0;
+
+
 //############################################################# 
 
 static void x11_set_fullscreen_state(Display *display, Window window, int action)
@@ -184,7 +205,8 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 						ButtonReleaseMask |
 						
 						
-						KeyPressMask 
+						KeyPressMask |
+						KeyReleaseMask
 						
 						);
 	
@@ -586,16 +608,90 @@ foo:
 
 
 
-
-
 				//############################################ keyboard
 				
 				case KeyPress:
+					//liqapp_log("keypre in  mymod=%i prev=%i",liqx11_modifier,liqx11_modifierprev);
+					{
+						// first, get the unmodified key
+						int origkeysym = XLookupKeysym((XKeyEvent*)&xev,0);
+						// find out if we need to adjust the mask
+						int newmask=0;
+						switch (origkeysym)
+						{
+							case XK_Shift_L:			newmask |= ShiftMask;
+														break;
+													
+							case XK_Control_L:			newmask |= ControlMask;
+														break;
+													
+							case XK_ISO_Level3_Shift:	newmask |= Mod5Mask;
+														break;
+						}
+						if(newmask)
+						{
+							//liqapp_log("modmod mod mask  %i",newmask);
+							// actively pressing a modifier key - right now!
+							liqx11_modifier |= newmask;
+							// check if its the same as one we just pressed a moment ago..
+							if(liqx11_modifierprev & newmask)
+							{
+								
+								// we already have this bit set, lets make sure we toggle sticky
+								if(liqx11_modifier & liqx11_modifier_StickyMask)
+								{
+									liqx11_modifier &= ~liqx11_modifier_StickyMask;
+									// we were sticky
+									// we must really clear the bit
+									liqx11_modifier &= ~newmask;
+								}
+								else
+								{
+									liqx11_modifier |= liqx11_modifier_StickyMask;
+								}
+							}
+							else
+							{
+								// not seen before, lets make sure its included
+								liqx11_modifier |= newmask;
+								// also, must REMOVE the sticky bit, incase we pressed multiple modifiers
+								liqx11_modifier &= ~liqx11_modifier_StickyMask;							
+							}
+						}
+						else
+						{
+							// not pressing a modifier!
+							if(liqx11_modifierprev)
+							{
+								// actively holding a modifier
+								// we dont actually need to set anything, it should already be done
+							//}
+							//else
+							//{
+							//	if(liqx11_modifierprev)
+							//	{
+									// we JUST pressed one before tho...
+									// lets act like maemo and use it
+									((XKeyEvent*)&xev)->state = (liqx11_modifierprev & ~liqx11_modifier_StickyMask);
+							//	}
+							}
+						}
+					}
+					//liqapp_log("keypre out mymod=%i prev=%i",liqx11_modifier,liqx11_modifierprev);
+					
+	
+					
+					
+					
+
+					
+					
 
 
 			
 					//if(!myx11info->myinnotifyflag) goto foo;
 			
+					//((XKeyEvent*)&xev)->state = 128;
 			
 			
 					
@@ -604,8 +700,10 @@ foo:
 					ev->key.keycode = XLookupKeysym((XKeyEvent*)&xev,0); //xev.xkey.keycode;
 					ev->key.keystring[0]=0;
 					
+					
+					
 					keylen = XLookupString((XKeyEvent*)&xev,ev->key.keystring,16, (KeySym *) NULL, (XComposeStatus *) NULL);
-					liqapp_log("xNextEvent keypress %i",ev->key.keycode);
+					liqapp_log("xNextEvent keypress %i, %i",ev->key.keycode,((XKeyEvent*)&xev)->state);
 			
 			
 			
@@ -621,8 +719,64 @@ foo:
 				
 				
 				case KeyRelease:
+					
+					
+					//liqapp_log("keyrel in  mymod=%i prev=%i",liqx11_modifier,liqx11_modifierprev);
+					
+					liqx11_modifierprev = liqx11_modifier;
 
-
+					{
+						// first, get the unmodified key
+						int origkeysym = XLookupKeysym((XKeyEvent*)&xev,0);
+						// find out if we need to adjust the mask
+						int newmask=0;
+						switch(origkeysym)
+						{
+							case XK_Shift_L:			newmask |= ShiftMask;
+														break;
+													
+							case XK_Control_L:			newmask |= ControlMask;
+														break;
+													
+							case XK_ISO_Level3_Shift:	newmask |= Mod5Mask;
+														break;
+						}
+						if(newmask)
+						{
+							// we are releasing a modifier
+							if(liqx11_modifier & liqx11_modifier_StickyMask)
+							{
+								// we should leave it alone
+							}
+							else
+							{
+								// clear this bit from the global modifier
+								liqx11_modifier &= ~newmask;						
+							}
+						}
+						else
+						{
+							// normal key
+							if(liqx11_modifier)
+							{
+								if(liqx11_modifier & liqx11_modifier_StickyMask)
+								{
+									// hold the modifier
+								}
+								else
+								{
+									// time to drop the modifier
+									liqx11_modifier=0;
+								}
+							}
+						}
+					}
+					//liqapp_log("keyrel out mymod=%i prev=%i",liqx11_modifier,liqx11_modifierprev);
+					
+					
+					
+					
+					
 						
 						if(!myx11info->myinnotifyflag) goto foo;
 						
