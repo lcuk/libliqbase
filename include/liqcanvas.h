@@ -88,6 +88,7 @@ typedef struct
 	unsigned int keycode;				// KeySym
 	char keystring[16];					// not exactly sure if it will ever be needed
 	//unsigned int keyascii;
+	unsigned int keymodifierstate;		// holds the x11 ShiftMask ControlMask Mod5Mask etc
 }
 	LIQEVENT_KEY;
 

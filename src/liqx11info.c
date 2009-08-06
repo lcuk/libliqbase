@@ -699,6 +699,7 @@ foo:
 					ev->key.state = LIQEVENT_STATE_PRESS;
 					ev->key.keycode = XLookupKeysym((XKeyEvent*)&xev,0); //xev.xkey.keycode;
 					ev->key.keystring[0]=0;
+					ev->key.keymodifierstate = ((XKeyEvent*)&xev)->state;
 					
 					
 					
@@ -784,6 +785,7 @@ foo:
 						ev->key.state = LIQEVENT_STATE_RELEASE;
 						ev->key.keycode =XLookupKeysym((XKeyEvent*)&xev,0); //xev.xkey.keycode;
 						ev->key.keystring[0]=0;
+						ev->key.keymodifierstate = ((XKeyEvent*)&xev)->state;
 						keylen = XLookupString((XKeyEvent*)&xev,ev->key.keystring,16, (KeySym *) NULL, (XComposeStatus *) NULL);
 						liqapp_log("xNextEvent keyrelease %i",ev->key.keycode);
 						

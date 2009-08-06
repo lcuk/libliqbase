@@ -61,6 +61,7 @@ typedef struct liqcellkeyeventargs
 	int  keycode;
 	char keystring[16];
 	int  ispress;
+	unsigned int keymodifierstate; // holds the x11 ShiftMask ControlMask Mod5Mask etc
 }
 	liqcellkeyeventargs;
 

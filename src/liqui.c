@@ -25,7 +25,14 @@
 #include <string.h>
 #include <stdlib.h>
 
+
 #include "liqui.h"
+
+
+
+#define XK_MISCELLANY
+
+#include "X11/keysymdef.h"
 
 
 //#####################################################################
@@ -161,12 +168,13 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
 	
 		int selstart = liqcell_propgeti(  self,"selstart",-1);
 		int sellength = liqcell_propgeti(  self,"sellength",0);
-		//int cursorpos = liqcell_propgeti(  self,"cursorpos",-1);
+		int cursorpos = liqcell_propgeti(  self,"cursorpos",-1);
 		
 		char *caption = liqcell_getcaption(self);
 		int captionlen = strlen(caption);
 		
 		char *key = args->keystring;
+		if(!key)key="";
 		int keylen = strlen(key);
 		
 		if(selstart>captionlen){ selstart=captionlen;sellength=0; }
@@ -175,75 +183,130 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
 		{
 			sellength = captionlen-selstart;
 		}
+
 		
 		
-		if(selstart>=0 && (keylen>0))
+		if(selstart>=0)// && (keylen>0))
 		{
 			liqapp_log("keypress: %3i '%c'",(int)(*key),*key,args->keycode);
 			
-			if(*key==8)
+			if(cursorpos<0)cursorpos=0;
+			if(keylen==0)
 			{
-				// delete ;)
-				key="";
-				keylen=0;
-				if(selstart>0 && sellength==0)
+				// special keys
+
+
+				if(args->keycode==XK_Left)
 				{
 					selstart--;
-					sellength++;
+					if(selstart<0)selstart=0;
+					if(args->keymodifierstate==0)
+						sellength=0;
+					else
+						sellength++;
+						
+					cursorpos=selstart;
+					liqcell_propseti(  self,  "selstart",  selstart);
+					liqcell_propseti(  self,  "sellength", sellength);
+					liqcell_propseti(  self,  "cursorpos", cursorpos);
 				}
+				else
+				if(args->keycode==XK_Right)
+				{
+					if(args->keymodifierstate==0)
+					{
+						selstart+=sellength+1;
+						if(selstart>captionlen)selstart=captionlen;
+						sellength=0;
+						//cursorpos=selstart;
+					}
+					else
+					{
+						sellength++;
+						//cursorpos=selstart+sellength;
+						//if(cursorpos>captionlen)cursorpos=captionlen;
+					}
+					
+					if(selstart+sellength>captionlen)
+					{
+						sellength = captionlen-selstart;
+					}
+					
+
+					cursorpos=selstart+sellength;
+					liqcell_propseti(  self,  "selstart",  selstart);
+					liqcell_propseti(  self,  "sellength", sellength);
+					liqcell_propseti(  self,  "cursorpos", cursorpos);
+				}	
+
 			}
-			
-			//
-			//liqcell_setcaption(self,args->keystring);
-			char *aftersel=&caption[selstart+sellength];
-			int aftersellen = strlen(aftersel);
-			
-			// then the result is start..selstart
-			// newbit
-			// selstart+sellen..end
-			
-			
-			// !-- BUG FIX BY ZACH HABERSANG -- !
-			// ----------------------------------
-			// Program would segfault when 25 or so characters were entered
-			// Fix: + 1 fix to reqd! :D
-			// note: used gdb with backtrace to find this bug
-			
-			// 20090615_210659 lcuk : and me to explain why it was wrong ;) damn those +1 adjustments..
-			
-			int reqd = selstart  +  keylen  +  aftersellen + 1;
-			char *buff=malloc(reqd);
-			char *block=buff;
-			if(buff)
+			else
 			{
-				if(selstart>0)
+				// regular keypress 
+				if(*key==8)
 				{
-					strncpy(block,caption,selstart);
-					block+=selstart;
+					// delete ;)
+					key="";
+					keylen=0;
+					if(selstart>0 && sellength==0)
+					{
+						selstart--;
+						sellength++;
+					}
 				}
-				if(keylen>0)
-				{
-					strncpy(block,key,keylen);
-					block+=keylen;
-				}
+			
+				//
+				//liqcell_setcaption(self,args->keystring);
+				char *aftersel=&caption[selstart+sellength];
+				int aftersellen = strlen(aftersel);
 				
-				if(aftersellen>0)
-				{
-					strncpy(block,aftersel,aftersellen);
-					block+=aftersellen;
-				}
-				*block=0;
-				liqcell_setcaption(self,buff);
-
-
-
+				// then the result is start..selstart
+				// newbit
+				// selstart+sellen..end
 				
-				free(buff);
+				
+				// !-- BUG FIX BY ZACH HABERSANG -- !
+				// ----------------------------------
+				// Program would segfault when 25 or so characters were entered
+				// Fix: + 1 fix to reqd! :D
+				// note: used gdb with backtrace to find this bug
+				
+				// 20090615_210659 lcuk : and me to explain why it was wrong ;) damn those +1 adjustments..
+				
+				int reqd = selstart  +  keylen  +  aftersellen + 1;
+				char *buff=malloc(reqd);
+				char *block=buff;
+				if(buff)
+				{
+					if(selstart>0)
+					{
+						strncpy(block,caption,selstart);
+						block+=selstart;
+					}
+					if(keylen>0)
+					{
+						strncpy(block,key,keylen);
+						block+=keylen;
+					}
+					
+					if(aftersellen>0)
+					{
+						strncpy(block,aftersel,aftersellen);
+						block+=aftersellen;
+					}
+					*block=0;
+					liqcell_setcaption(self,buff);
+	
+	
+	
+					
+					free(buff);
+				}
+	
+				liqcell_propseti(  self,  "selstart",  selstart + keylen);
+				liqcell_propseti(  self,  "sellength", 0 );
+				liqcell_propseti(  self,  "cursorpos", selstart + keylen);			
 			}
-
-			liqcell_propseti(  self,  "selstart",  selstart + keylen);
-			liqcell_propseti(  self,  "sellength", 0 );
-			liqcell_propseti(  self,  "cursorpos", selstart + keylen);			
 			
 		}
 		

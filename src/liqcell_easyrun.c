@@ -894,6 +894,7 @@ waitevent:
 					strncpy(keyargs.keystring,ev.key.keystring, 16 );
 
 					keyargs.ispress=(ev.state==LIQEVENT_STATE_PRESS);
+					keyargs.keymodifierstate=ev.key.keymodifierstate;
 
 					if(ev.state==LIQEVENT_STATE_PRESS)
 					{
