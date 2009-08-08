@@ -21,14 +21,14 @@ clean:
 .PHONY:     clean
 
 install:
+	mkdir -p                                    $(PREFIX)/include
+	mkdir -p                                    $(PREFIX)/include/liqbase
+	cp -r include/*.h                           $(PREFIX)/include/liqbase/
 
 	mkdir -p                                    $(PREFIX)/lib
 	cp src/libliqbase.so                        $(PREFIX)/lib/
 	cp src/libliqbase.so                        $(PREFIX)/lib/libliqbase.so.0
 
-	mkdir -p                                    $(PREFIX)/include
-	mkdir -p                                    $(PREFIX)/include/liqbase
-	cp -r include/*.h                           $(PREFIX)/include/liqbase/
 
 
 

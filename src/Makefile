@@ -6,7 +6,7 @@ LD          = gcc
 OPT_FLAGS   =  -O3
 
 
-USE_OSSO = 1
+#USE_OSSO = 1
 #USE_GST = 1
 
 
