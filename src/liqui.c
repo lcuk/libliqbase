@@ -41,61 +41,6 @@
 //#####################################################################
 //#####################################################################
 
-/**
- * Create a titlebar ui component
- * @param key Name of the widget
- * @param title Title to display
- * @param description Describe what this titlebar is for
- * @return liqcell* The new titlebar
- */
-liqcell *uititlebar_create(char *key,char *title,char *description)
-{
-	
-	liqcell *self = liqcell_quickcreatewidget(key,"section", 800,100);
-	
-	if(self)
-	{
-		liqcell_propsets(  self,  "backcolor", "rgb(0,0,0)" );
-		
-		//texturestrip_blu.jpg
-		liqcell_setimage(  self,  liqimage_cache_getfile( "media/texturestrip_dark.jpg",0,0,0) );
-		
-		liqcell_child_append( self, liqcell_quickcreatevis("app_icon",   "icon",    5   ,10  ,    90, 80 )    );
-		liqcell_child_append( self, liqcell_quickcreatevis("app_title",  "label",   100 ,0  ,   700, 55 )    );
-		liqcell_child_append( self, liqcell_quickcreatevis("app_desc",   "label",   100 ,55 ,   700, 40 )    );
-
-		liqcell_setimage(  liqcell_child_lookup( self,"app_icon"),  liqimage_cache_getfile( "media/sun.png",0,0,1) );
-		liqcell_setfont(   liqcell_child_lookup( self,"app_title"), liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (40), 0) );
-		liqcell_setfont(   liqcell_child_lookup( self,"app_desc"),  liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (18), 0) );
-
-
-		liqcell_propsets(  liqcell_child_lookup( self,"app_title"), "textcolor", "rgb(255,255,255)" );
-		liqcell_propsets(  liqcell_child_lookup( self,"app_desc"),  "textcolor", "rgb(0,100,0)" );
-
-		liqcell_setcaption(liqcell_child_lookup( self,"app_title"), title );
-		liqcell_setcaption(liqcell_child_lookup( self,"app_desc"), description );
-
-
-			liqcell *clock = liqcell_quickcreatevis("clock",   "time",   600,0,   200,100 );
-			//char buf[80];
-			//liqapp_format_strftime(buf,80,"%H:%M:%S");
-			//liqcell_setcaption(   clock, buf);
-			liqcell_propsets(     clock,"timeformat","%H:%M:%S");
-			liqcell_propseti(     clock,"textalign",2);
-			liqcell_propsets(     clock,"fontname", "/usr/share/fonts/nokia/nosnb.ttf" );
-			liqcell_propseti(     clock,"fontsize", 32 );
-			liqcell_propsets(     clock, "textcolor", "rgb(255,255,255)" );
-		//	liqcell_handleradd(self,    "mouse",   widget_mouse);
-			liqcell_child_append( self, clock    );
-
-	}
-	return self;
-}
-
-
-
-
-
 	// damn, this should be taken care of by the OS itself
 	// this is because the hitpoint will not always match with where I think it will be
 	// this is bad and good in practice
@@ -322,6 +267,59 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
 		//liqcell_setcaption(self,args->keystring);
 		return 0;
 	}
+
+/**
+ * Create a titlebar ui component
+ * @param key Name of the widget
+ * @param title Title to display
+ * @param description Describe what this titlebar is for
+ * @return liqcell* The new titlebar
+ */
+liqcell *uititlebar_create(char *key,char *title,char *description)
+{
+	
+	liqcell *self = liqcell_quickcreatewidget(key,"section", 800,100);
+	
+	if(self)
+	{
+		liqcell_propsets(  self,  "backcolor", "rgb(0,0,0)" );
+		
+		//texturestrip_blu.jpg
+		liqcell_setimage(  self,  liqimage_cache_getfile( "media/texturestrip_dark.jpg",0,0,0) );
+		
+		liqcell_child_append( self, liqcell_quickcreatevis("app_icon",   "icon",    5   ,10  ,    90, 80 )    );
+		liqcell_child_append( self, liqcell_quickcreatevis("app_title",  "label",   100 ,0  ,   700, 55 )    );
+		liqcell_child_append( self, liqcell_quickcreatevis("app_desc",   "label",   100 ,55 ,   700, 40 )    );
+
+		liqcell_setimage(  liqcell_child_lookup( self,"app_icon"),  liqimage_cache_getfile( "media/sun.png",0,0,1) );
+		liqcell_setfont(   liqcell_child_lookup( self,"app_title"), liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (40), 0) );
+		liqcell_setfont(   liqcell_child_lookup( self,"app_desc"),  liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (18), 0) );
+
+
+		liqcell_propsets(  liqcell_child_lookup( self,"app_title"), "textcolor", "rgb(255,255,255)" );
+		liqcell_propsets(  liqcell_child_lookup( self,"app_desc"),  "textcolor", "rgb(0,100,0)" );
+
+		liqcell_setcaption(liqcell_child_lookup( self,"app_title"), title );
+		liqcell_setcaption(liqcell_child_lookup( self,"app_desc"), description );
+
+
+			liqcell *clock = liqcell_quickcreatevis("clock",   "time",   600,0,   200,100 );
+			//char buf[80];
+			//liqapp_format_strftime(buf,80,"%H:%M:%S");
+			//liqcell_setcaption(   clock, buf);
+			liqcell_propsets(     clock,"timeformat","%H:%M:%S");
+			liqcell_propseti(     clock,"textalign",2);
+			liqcell_propsets(     clock,"fontname", "/usr/share/fonts/nokia/nosnb.ttf" );
+			liqcell_propseti(     clock,"fontsize", 32 );
+			liqcell_propsets(     clock, "textcolor", "rgb(255,255,255)" );
+		//	liqcell_handleradd(self,    "mouse",   widget_mouse);
+			liqcell_child_append( self, clock    );
+
+	}
+	return self;
+}
+
+
 	
 
 /**
@@ -423,34 +421,6 @@ liqcell *uitextbox_create(char *caption,char *datadefault)
 	return self;
 }
 
-/**
- * Create a textbox ui component
- * @return liqcell* The new textbox
- */
-liqcell *textbox_create()
-{
-	
-	liqcell *self = liqcell_quickcreatewidget("textbox","textbox", 800,50);
-	
-	if(self)
-	{
-
-			liqcell_setfont(   self,  liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
-			liqcell_propsets(  self,  "backcolor", "rgb(100,255,150)" );
-			liqcell_propsets(  self,  "textcolor", "rgb(20,30,40)" );
-			liqcell_propsets(  self,  "bordercolor", "rgb(255,255,255)" );
-
-			liqcell_propseti(  self,  "selstart",  0 );
-			liqcell_propseti(  self,  "sellength", 0 );
-			liqcell_propseti(  self,  "cursorpos", 0 );
-
-			
-			liqcell_handleradd(self,    "mouse",      textbox_mouse);
-			liqcell_handleradd(self,    "keypress",   textbox_keypress);
-			liqcell_handleradd(self,    "keyrelease", textbox_keyrelease);
-	}
-	return self;
-}
 
 /**
  * Create a numberbox ui component
@@ -487,6 +457,8 @@ liqcell *uinumberbox_create(char *caption,char *datadefault)
 	}
 	return self;
 }
+
+
 
 /**
  * Create a picturebox ui component
