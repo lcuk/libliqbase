@@ -378,7 +378,7 @@ static int textbox_resize(liqcell *self, liqcelleventargs *args, void *textbox)
 	liqcell *kb_show = liqcell_child_lookup(self, "vkbd_command");
 	int ww = liqcell_getw(self);
 	int hh = liqcell_geth(self);
-	liqcell_setrect(kb_show,  ((ww-IW)-2),  ((hh - IH)/2),        IW,IH);   // right hand side, leaving 10 pixels X, and filling 80% of the height
+	liqcell_setrect(kb_show,  ((ww-IW)-8),  ((hh - IH)/2),        IW,IH);   // right hand side, leaving 10 pixels X, and filling 80% of the height
 	return 0;
 }
 
