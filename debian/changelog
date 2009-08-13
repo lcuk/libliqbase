@@ -1,3 +1,10 @@
+libliqbase (0.3.21) unstable; urgency=low
+
+  * remnents left from moving source files into lib.  includes not pointing in correct place
+
+ -- Gary Birkett <liquid@gmail.com>  13 August 2009 22:41:03 +0200
+
+
 libliqbase (0.3.20) unstable; urgency=low
 
   * git failure, changes to a number of areas.  added sqlite and curl. setting imagefloat:s property on an image does magic
