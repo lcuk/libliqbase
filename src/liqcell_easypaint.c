@@ -821,8 +821,8 @@ __tz_one("imageprep");
 		
 				#define PI 3.141592654
 				
-				float lrw=(w*0.5)/2;
-				float lrh=(h*0.5)/2;
+				float lrw=(w*0.3)/2;
+				float lrh=(h*0.3)/2;
 				
 				float lfx=2;
 				float lfy=3;
@@ -831,8 +831,8 @@ __tz_one("imageprep");
 				float lx = lrw * cos(lfx * lalpha);
 				float ly = lrh * sin(lfy * lalpha);
 				
-				int rw=w*1.5;
-				int rh=h*1.5;
+				int rw=w*1.3;
+				int rh=h*1.3;
 
 				int xx=x-(lrw-lx);
 				int yy=y-(lrh-ly);

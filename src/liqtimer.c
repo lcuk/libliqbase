@@ -14,9 +14,9 @@
 #include <pthread.h>
 #include <sched.h>
 
-#include <liqbase/liqcell.h>
-#include <liqbase/liqcell_easyrun.h>
-#include <liqbase/liqcell_easyhandler.h>
+#include "liqcell.h"
+#include "liqcell_easyrun.h"
+#include "liqcell_easyhandler.h"
 
 
 //#####################################################################

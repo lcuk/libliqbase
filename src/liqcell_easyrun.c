@@ -24,7 +24,7 @@
 
 
 // 20090728_001621 lcuk : set this to have a 25fps limit to framerate, otherwise runs at fastest possible
-//#define LIMIT_FRAMERATE 1
+#define LIMIT_FRAMERATE 1
 
 
 #include <stdio.h>

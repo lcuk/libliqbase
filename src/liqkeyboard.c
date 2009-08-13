@@ -25,9 +25,9 @@
 #include <time.h>			// req for sleep
 #include <sys/time.h>		// req for getticks
 
-#include <liqbase/liqcell.h>
-#include <liqbase/liqcell_prop.h>
-#include <liqbase/liqcell_easyrun.h>
+#include "liqcell.h"
+#include "liqcell_prop.h"
+#include "liqcell_easyrun.h"
 
 liqcell *build_vkbd();
 

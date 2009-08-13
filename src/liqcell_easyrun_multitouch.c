@@ -1,10 +1,10 @@
 // this file is part of liqbase by Gary Birkett
 		
-#include <liqbase/liqbase.h>
-#include <liqbase/liqcell.h>
-#include <liqbase/liqcell_prop.h>
-#include <liqbase/liqcell_easyrun.h>
-#include <liqbase/liqcell_easyhandler.h>
+#include "liqbase.h"
+#include "liqcell.h"
+#include "liqcell_prop.h"
+#include "liqcell_easyrun.h"
+#include "liqcell_easyhandler.h"
 		
 		
 //#####################################################################
