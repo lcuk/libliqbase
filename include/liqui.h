@@ -7,7 +7,8 @@
 #include "liqcell_easyrun.h"
 #include "liqbase.h"
 
-liqcell *textbox_create();
+
+// zach: no more textbox here... nothing needs to go in here atm
 
 
 int textbox_clear(liqcell *textbox);
