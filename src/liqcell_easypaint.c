@@ -807,10 +807,20 @@ __tz_one("imageprep");
 				//################################################## lj variaton
 				unsigned long timer1 = liqapp_GetTicks();
 				
+				float secs=0;// = ((float)timer1 / 1000.0);
 				
-				float secs = ((float)timer1 / 1000.0);
 				
 				
+				
+				int rs=sscanf(fstr,"%f",&secs);
+				
+				
+				
+				liqcell_propsets_printf(self,"imagefloat","%f,%f,%f,%f",secs+0.1,0,0,0);
+				
+				
+				
+
 				
 				unsigned int rndofname = *(unsigned int *)&self->name;
 				
