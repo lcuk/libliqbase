@@ -1212,7 +1212,8 @@ void xsurface_drawzoomblendimage(
 
 	// jump if expected dimensions match image dimensions and we are not doing any blending
 
-	if(smw==diw && smh==dih && blend==255 && srcimage->num_planes==3)
+	if(smw==diw && smh==dih && blend==255 && srcimage->num_planes==3
+	   && six==0 && siy==0 && siw==diw && sih==dih)			// 20090812_235925 lcuk : extra round of checks to prevent exactly screensized images from being scaled
 	//if(siw==diw && sih==dih && blend==255 && srcimage->num_planes==3)
 	{
 

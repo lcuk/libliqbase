@@ -10,4 +10,8 @@
 liqcell *textbox_create();
 
 
+int textbox_clear(liqcell *textbox);
+int textbox_selectall(liqcell *textbox);
+int textbox_fakebackspace(liqcell *textbox);
+
 #endif

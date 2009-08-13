@@ -29,6 +29,11 @@ install:
 	cp src/libliqbase.so                        $(PREFIX)/lib/
 	cp src/libliqbase.so                        $(PREFIX)/lib/libliqbase.so.0
 
+	install -d						  $(PREFIX)/share/liqbase
+	install -d					 	  $(PREFIX)/share/liqbase/libliqbase
+	install -d						  $(PREFIX)/share/liqbase/libliqbase/media
+	cp -r media/*                           	  $(PREFIX)/share/liqbase/libliqbase/media
+
 
 
 

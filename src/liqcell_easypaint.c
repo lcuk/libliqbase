@@ -276,8 +276,8 @@ int liqcell_threadloadimage(liqcell *self)
 {
 				if(!easypaint_isloading_image)
 				{
-					//easypaint_isloading_image=liqimage_newfromfile("media/sun.png",0,0,0);
-					easypaint_isloading_image=liqimage_newfromfile("/usr/share/liqbase/media/pleasewait.png",0,0,0);
+					//easypaint_isloading_image=liqimage_newfromfile("/usr/share/liqbase/libliqbase/media/sun.png",0,0,0);
+					easypaint_isloading_image=liqimage_newfromfile("/usr/share/liqbase/liqliqbase/media/pleasewait.png",0,0,0);
 				}
 				if(easypaint_isloading_image)
 				{
@@ -474,7 +474,7 @@ void liqcell_easypaint(liqcell *self,liqcliprect *crorig,    int x,int y,    int
 char 	tstr[tzmax][8]={{0}};
 unsigned long 	tz[tzmax]={0};
 long tzused=0;
-#define __tz_one(code) { if(tzused<tzmax){  snprintf(tstr[tzused],32,"%s",(code));      tz[tzused++] = liqapp_GetTicks(); } }
+#define __tz_one(code) { if(tzused<tzmax){  snprintf(tstr[tzused],32,"%s",(code));      tz[tzused++] = liqapp_GetTicks(); } liqapp_log("%s $$ %s",self->name,code); }
 #else
 #define __tz_one(code) {  }
 #endif
@@ -682,8 +682,8 @@ __tz_one("backdone");
 				
 				if(!easypaint_isloading_image)
 				{
-					//easypaint_isloading_image=liqimage_newfromfile("media/sun.png",0,0,0);
-					easypaint_isloading_image=liqimage_newfromfile("/usr/share/liqbase/media/pleasewait.png",0,0,0);
+					//easypaint_isloading_image=liqimage_newfromfile("/usr/share/liqbase/libliqbase/media/sun.png",0,0,0);
+					easypaint_isloading_image=liqimage_newfromfile("/usr/share/liqbase/libliqbase/media/pleasewait.png",0,0,0);
 				}
 				if(easypaint_isloading_image)
 				{
@@ -716,14 +716,161 @@ __tz_one("backdone");
 			
 		}
 	}
+	
+	
+	
+	
+	
+	
 __tz_one("imageprep");
 
 	if(self->image)
 	{
-		if(liqcell_propgeti(self,"lockaspect",1)==1)
-			liqcliprect_drawimagecolor(cr,self->image,x,y,w,h,1);
+		// 20090812_213106 lcuk : see if we should be floating this image
+		// 20090812_213118 lcuk : floating image is slightly larger than its default area and in constant slow motion
+		
+		char *fstr=liqcell_propgets(self,"imagefloat",NULL);
+		if(fstr && *fstr)
+		{
+		//	liqapp_log("imagefloat: start '%s' %i,%i",self->name,w,h);
+/*
+
+			//liqapp_log("imagefloat: start");
+			// when floating, the image is scaled 130%
+			int cx=0;					// cell dimensions
+			int cy=0;
+			int cw=liqcell_getw(self);
+			int ch=liqcell_geth(self);
+			
+			int tx=0;					// total dimensions
+			int ty=0;
+			int tw=cw*1.3;
+			int th=ch*1.3;
+			
+			int frw=tw-cw;
+			int frh=th-ch;
+			
+			float fax=0.03 * (float)(rand() % 100 - 50);	// acceleration is random
+			float fay=0.03 * (float)(rand() % 100 - 50);			
+			float fvx=0;									// velocity is some of the accel
+			float fvy=0;	
+			float fpx=0;									// position is the field
+			float fpy=0;
+			
+			//liqapp_log("imagefloat: reading");
+			int rs=sscanf(fstr,"%f,%f,%f,%f",&fvx,&fvy,&fpx,&fpy);
+			
+			//liqapp_log("imagefloat: read, got %i",rs);
+			
+			#define dt 0.2
+			#define maxv 10
+			
+			if(rs!=4){  fvx=0;  fvy=0;  fpx=0;  fpy=0; }
+			
+			//if(rs==4)
+			{
+				
+				
+				fvx += dt * fax;
+				fvy += dt * fay;
+				
+				if(fvx<-maxv){fvx=-maxv; } else{ if(fvx>maxv){fvx=maxv;}}
+				if(fvy<-maxv){fvy=-maxv; } else{ if(fvy>maxv){fvy=maxv;}}
+				
+				fpx += 0.1 * fvx;
+				fpy += 0.1 * fvy;
+				
+				if(fpx<0){ fpx=0;fvx=0;}else{ if(fpx>frw){fpx=frw;fvx=0;} }
+				if(fpy<0){ fpy=0;fvy=0;}else{ if(fpy>frh){fpy=frh;fvy=0;} }
+				
+				//liqapp_log("imagefloat: writing new");
+				
+				liqcell_propsets_printf(self,"imagefloat","%f,%f,%f,%f",fvx,fvy,fpx,fpy);
+				
+				
+				//liqapp_log("imagefloat: getting dims");
+				
+				int rw=w*1.3;
+				int rh=h*1.3;
+				
+				int xx=x- (fpx*w/cw);
+				int yy=y- (fpy*h/ch);
+				
+ 
+			}
+
+ */
+			
+			{
+
+
+				//################################################## lj variaton
+				unsigned long timer1 = liqapp_GetTicks();
+				
+				
+				float secs = ((float)timer1 / 1000.0);
+				
+				
+				
+				unsigned int rndofname = *(unsigned int *)&self->name;
+				
+				secs+=rndofname;
+
+
+
+		
+				#define PI 3.141592654
+				
+				float lrw=(w*0.5)/2;
+				float lrh=(h*0.5)/2;
+				
+				float lfx=2;
+				float lfy=3;
+				
+				float lalpha = 2 * PI * secs / 50;
+				float lx = lrw * cos(lfx * lalpha);
+				float ly = lrh * sin(lfy * lalpha);
+				
+				int rw=w*1.5;
+				int rh=h*1.5;
+
+				int xx=x-(lrw-lx);
+				int yy=y-(lrh-ly);
+				
+				
+				//http://jrgraphix.net/research/flash-lissajous-curves.php
+		
+		
+		
+
+				//liqapp_log("imagefloat: '%s' orig  %4i,%4i - %4i,%4i     into     %4i,%4i - %4i,%4i",self->name,x,y,w,h,  xx,yy,rw,rh );
+
+
+				if(liqcell_propgeti(self,"lockaspect",1)==1)
+					liqcliprect_drawimagecolor(cr,self->image,xx,yy,rw,rh,1);
+				else
+					liqcliprect_drawimagecolor(cr,self->image,xx,yy,rw,rh,0);
+					
+				//liqapp_log("imagefloat: making dirty");
+					
+				liqcell_setdirty(self,1);
+				
+				//liqapp_log("imagefloat: done");
+
+			}
+		}
 		else
-			liqcliprect_drawimagecolor(cr,self->image,x,y,w,h,0);
+		{
+
+				//liqapp_log("imagestd: '%s' draw  %4i,%4i - %4i,%4i    ",self->name,x,y,w,h );
+
+			// standard..
+			if(liqcell_propgeti(self,"lockaspect",1)==1)
+				liqcliprect_drawimagecolor(cr,self->image,x,y,w,h,1);
+			else
+				liqcliprect_drawimagecolor(cr,self->image,x,y,w,h,0);
+		}
+		
 	}
 
 __tz_one("imagedone");
@@ -834,7 +981,6 @@ __tz_one("fontprep");
 			{
 
 
-
 				char timebuf[128]="";
 				if( (self->classname) && (strcmp(self->classname,"time") ==0) )
 				{
@@ -847,6 +993,7 @@ __tz_one("fontprep");
 				}
 
 
+				int captionlen = strlen(caption);
 
 
 				int xx=x;
@@ -863,6 +1010,11 @@ __tz_one("fontprep");
 				int selstart = liqcell_propgeti(  self,"selstart",-1);
 				int sellength = liqcell_propgeti(  self,"sellength",0);
 				int cursorpos = liqcell_propgeti(  self,"cursorpos",-1);
+				
+				
+				if(selstart>captionlen)selstart=captionlen;
+				if(selstart+sellength>captionlen)sellength=captionlen-selstart;
+				if(cursorpos>captionlen)cursorpos=captionlen;
 
 
 
@@ -919,6 +1071,40 @@ __tz_one("fontprep");
 
 				if(selstart>=0)
 				{
+					if(fw>w)
+					{
+
+						// adjust offset of the text rendering to make sure cursor is on screen
+						char *sel=strndup(caption,cursorpos);
+						int tcx = liqfont_textwidth(self->font,sel);
+						if(tcx > w)
+						{
+							x-= (tcx - w);
+						
+						
+							char *more=strndup(caption+cursorpos,4);
+							int tex = liqfont_textwidth(self->font,more);
+							x-= tex;
+							x-= 16;
+							if(more)free(more);
+							
+							
+						}
+						if(sel)free(sel);
+						
+						
+
+						// pre   ss     curs     se      
+						// P1....P2......P3......P4.........
+						//char *p1=strndup(caption                   ,selstart                                );
+						//char *p2=strndup(caption+selstart          ,cursorpos-selstart                      );
+						//char *p3=strndup(caption+selstart          ,sellength                               );
+						//char *p4=strndup(caption+selstart+sellength,captionlen-(caption+selstart+sellength) );
+											
+					}
+						
+					
+					
 					// with selection
 					if(sellength==0)
 					{
@@ -930,6 +1116,9 @@ __tz_one("fontprep");
 						// draw upto selstart in normal color
 						// draw all of sellength
 						// draw the remainder
+						
+						
+						int tx=x;
 
 
 
@@ -947,7 +1136,7 @@ __tz_one("fontprep");
 						{
 							char *sel=strndup(alline,sellength);
 							int ttt = liqfont_textwidth(self->font,sel);
-							free(sel);
+							if(sel)free(sel);
 							liqcliprect_drawboxfillcolor(cr,x,y,ttt,fh,tcy,tcu,tcv);
 							x=liqcliprect_drawtextn_color(  cr, self->font,  x,y, alline, sellength, 255-tcy,tcv,tcu);
 							alline+=sellength;
@@ -957,19 +1146,21 @@ __tz_one("fontprep");
 							x=liqcliprect_drawtext_color(  cr, self->font,  x,y, alline,    tcy,tcu,tcv);
 							alline+=sellength;
 						}
+						x=tx;
 					}
 
 					if(cursorpos>=0)
 					{
-						x=xx;
+						//x=xx;
 						char *sel=strndup(caption,cursorpos);
 						int ttt = liqfont_textwidth(self->font,sel);
-						free(sel);
+						if(sel)free(sel);
 						liqcliprect_drawboxfillcolor(cr,x+ttt-1,y,1,fh,40,40,20);
 						liqcliprect_drawboxfillcolor(cr,x+ttt  ,y,1,fh,255,40,20);
 						liqcliprect_drawboxfillcolor(cr,x+ttt+1,y,1,fh,40,40,20);
 
 					}
+					
 
 				}
 				else

@@ -5,6 +5,10 @@
 #include <gst/gst.h>
 
 
+
+/*
+ 
+ 
 #ifdef __arm__
 #define VIDEO_SRC "v4l2src"
 #define VIDEO_SINK "xvimagesink"
@@ -12,6 +16,14 @@
 #define VIDEO_SRC "v4lsrc"
 #define VIDEO_SINK "ximagesink"
 #endif
+
+
+*/
+
+#define VIDEO_SRC  "v4l2camsrc"
+#define VIDEO_SINK "xvimagesink"
+
+
 
 /*
 #include <X11/Xlib.h>
@@ -109,6 +121,7 @@ int CAMWd2=CAMW/2;
 
 static gboolean buffer_probe_callback( GstElement *image_sink, GstBuffer *buffer, GstPad *pad, int *stuff)
 {
+	liqapp_log("liqcamera: callback!");
 	char *data_photo = (char *) GST_BUFFER_DATA(buffer);
 	image_push(data_photo);	
 	return TRUE;
@@ -124,6 +137,8 @@ int liqcamera_start(int argCAMW,int argCAMH,int argCAMFPS,liqimage * argCAMdesti
 		return -1;
 	}
 	
+	liqapp_log("liqcamera: starting %i,%i %ifps",argCAMW,argCAMH,argCAMFPS);
+	
 	CAMtag=argCAMtag;
 	
 	CAMpipeline=NULL;
@@ -133,24 +148,34 @@ int liqcamera_start(int argCAMW,int argCAMH,int argCAMFPS,liqimage * argCAMdesti
 	CAMdestimage= liqimage_hold(  argCAMdestimage );
 	CAMUpdateCallback=argCAMUpdateCallback;
 	
+	liqapp_log("liqcamera: gst_init");
+	
 	GstElement *camera_src;
 	GstElement *csp_filter;
 	GstElement *image_sink;
 	GstCaps *	caps;
 	//gst_init(argc, argv);
 	gst_init(NULL,NULL);
+	
+	liqapp_log("liqcamera: creating pipeline elements");
+	
 	CAMpipeline = gst_pipeline_new("liqbase-camera");
 	camera_src   = gst_element_factory_make(VIDEO_SRC,          "camera_src");
 	csp_filter   = gst_element_factory_make("ffmpegcolorspace", "csp_filter");
 	image_sink   = gst_element_factory_make("fakesink",         "image_sink");
 	if(!(CAMpipeline && camera_src && csp_filter && image_sink))
 	{
-		g_critical("liqcamera : Couldn't create pipeline elements");
+		liqapp_warnandcontinue(-1,"liqcamera : Couldn't create pipeline elements");
 		return -1;
 	}
 	// ############################################################################ add everything to the CAMpipeline
+	liqapp_log("liqcamera: pipeline joining");
+	
 	gst_bin_add_many(GST_BIN(CAMpipeline), camera_src, csp_filter,  image_sink, NULL);
 	// ############################################################################ prepare the camera filter
+	
+	liqapp_log("liqcamera: obtaining video caps");
+	
 	caps = gst_caps_new_simple("video/x-raw-yuv",
             "format",    GST_TYPE_FOURCC, GST_MAKE_FOURCC ('U', 'Y', 'V', 'Y'),
 			"width",     G_TYPE_INT, CAMW,
@@ -163,7 +188,12 @@ int liqcamera_start(int argCAMW,int argCAMH,int argCAMFPS,liqimage * argCAMdesti
 			return -1;
 		}
 	gst_caps_unref(caps);
+	
+	
+	
 	// ############################################################################ prepare the image filter
+	liqapp_log("liqcamera: preparing filter");
+	
 	caps = gst_caps_new_simple("video/x-raw-yuv",
 			"width",  G_TYPE_INT, CAMW,
 			"height", G_TYPE_INT, CAMH,
@@ -175,10 +205,15 @@ int liqcamera_start(int argCAMW,int argCAMH,int argCAMFPS,liqimage * argCAMdesti
 		}
 	gst_caps_unref(   caps);
 	// ############################################################################ finally make sure we hear about the events
+	liqapp_log("liqcamera: adding signals");
+	
 	g_object_set(     G_OBJECT(image_sink), "signal-handoffs", TRUE,                              NULL);
 	g_signal_connect( G_OBJECT(image_sink), "handoff",         G_CALLBACK(buffer_probe_callback), NULL);
 	
+	liqapp_log("liqcamera: starting stream");
 	gst_element_set_state(CAMpipeline, GST_STATE_PLAYING);
+	
+	liqapp_log("liqcamera: done");
 	return 0;
 }
 liqimage * liqcamera_getimage()

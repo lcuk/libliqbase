@@ -71,7 +71,7 @@ static int deepviewitem_nobble_click(liqcell *self, liqcellclickeventargs *args,
 			// already visible, we MUST be hiding it
 			//liqapp_log("nobble7");
 			liqcell_setvisible(childmat,0);
-						liqcell_setimage(  self, liqimage_cache_getfile( "media/quickicons/add.png" ,0,0,1) );
+						liqcell_setimage(  self, liqimage_cache_getfile( "/usr/share/liqbase/libliqbase/media/add.png" ,0,0,1) );
 
 		}
 		else
@@ -79,7 +79,7 @@ static int deepviewitem_nobble_click(liqcell *self, liqcellclickeventargs *args,
 			// not visible, we must be showing it
 			//liqapp_log("nobble8");
 			liqcell_setvisible(childmat,1);
-						liqcell_setimage(  self, liqimage_cache_getfile( "media/quickicons/gtk-remove.png" ,0,0,1) );
+						liqcell_setimage(  self, liqimage_cache_getfile( "/usr/share/liqbase/libliqbase/media/gtk-remove.png" ,0,0,1) );
 		}
 	}
 	
@@ -140,7 +140,7 @@ static int deepviewitem_click(liqcell *self, liqcellclickeventargs *args,void *c
 	else
 	{
 		self->selected=1;
-		//liqcell_setimage(  self, liqimage_cache_getfile( "media/blob.png" ,0,0,1) );
+		//liqcell_setimage(  self, liqimage_cache_getfile( "/usr/share/liqbase/libliqbase/media/blob.png" ,0,0,1) );
 		
 		liqcell_propsets(  self,"textcolor","rgb(255,255,0)" );
 		liqcell_propsets(  self,"backcolor","rgb(0,0,255)" );
@@ -194,7 +194,7 @@ static liqcell *deepviewitem(liqcell *node,int recdep)
 			if(recdep<20)
 			{
 				// already expanded..
-						liqcell_setimage(  nobble, liqimage_cache_getfile( "media/quickicons/gtk-remove.png" ,0,0,1) );
+						liqcell_setimage(  nobble, liqimage_cache_getfile( "/usr/share/liqbase/libliqbase/media/gtk-remove.png" ,0,0,1) );
 						liqcell_propseti(  nobble,"lockaspect",1);
 			}
 			else
@@ -203,7 +203,7 @@ static liqcell *deepviewitem(liqcell *node,int recdep)
 				if(liqcell_getlinkchild(node) || liqcell_getcontent(node))
 				{
 					// there are children to recurse later
-						liqcell_setimage(  nobble, liqimage_cache_getfile( "media/quickicons/add.png" ,0,0,1) );
+						liqcell_setimage(  nobble, liqimage_cache_getfile( "/usr/share/liqbase/libliqbase/media/add.png" ,0,0,1) );
 						liqcell_propseti(  nobble,"lockaspect",1);
 				}
 				else
@@ -239,13 +239,13 @@ static liqcell *deepviewitem(liqcell *node,int recdep)
 				if(liqcell_getlinkchild(node))
 				{
 					// has contents underneath
-					liqcell_setimage(  preview, liqimage_cache_getfile( "media/quickicons/folder.png" ,0,0,1) );
+					liqcell_setimage(  preview, liqimage_cache_getfile( "/usr/share/liqbase/libliqbase/media/folder.png" ,0,0,1) );
 					liqcell_propseti(  preview,"lockaspect",1);
 				}
 				else
 				{
 					// is terminal node
-					liqcell_setimage(  preview, liqimage_cache_getfile( "media/quickicons/txt.png" ,0,0,1) );
+					liqcell_setimage(  preview, liqimage_cache_getfile( "/usr/share/liqbase/libliqbase/media/txt.png" ,0,0,1) );
 					liqcell_propseti(  preview,"lockaspect",1);
 				}
 			}
@@ -429,12 +429,12 @@ int liqdialog_showtree(char *key,char *title,char *description,liqcell *data)
 	/*
 		//! create toolbar
 		liqcell *tbar = uitoolbar_create("tools","tools",
-				uitoolitem_create( "back",   "back",       "media/quickicons/back.png",              toolitem_click),
-				uitoolitem_create( "up",     "up",         "media/quickicons/up.png",    toolitem_click),
-				uitoolitem_create( "add",    "add",        "media/quickicons/add.png",              toolitem_click),
-				uitoolitem_create( "delete", "delete",     "media/quickicons/gtk-remove.png",           toolitem_click),
-				uitoolitem_create( "search", "search",     "media/quickicons/find.png",           toolitem_click),
-				uitoolitem_create( "close",  "close",      "media/quickicons/gtk-close.png",    toolitem_click),
+				uitoolitem_create( "back",   "back",       "/usr/share/liqbase/libliqbase/media/quickicons/back.png",              toolitem_click),
+				uitoolitem_create( "up",     "up",         "/usr/share/liqbase/libliqbase/media/quickicons/up.png",    toolitem_click),
+				uitoolitem_create( "add",    "add",        "/usr/share/liqbase/libliqbase/media/quickicons/add.png",              toolitem_click),
+				uitoolitem_create( "delete", "delete",     "/usr/share/liqbase/libliqbase/media/quickicons/gtk-remove.png",           toolitem_click),
+				uitoolitem_create( "search", "search",     "/usr/share/liqbase/libliqbase/media/quickicons/find.png",           toolitem_click),
+				uitoolitem_create( "close",  "close",      "/usr/share/liqbase/libliqbase/media/quickicons/gtk-close.png",    toolitem_click),
 				NULL);
 		liqcell_child_append( self, tbar     );
 	*/	

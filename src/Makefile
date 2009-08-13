@@ -6,11 +6,11 @@ LD          = gcc
 OPT_FLAGS   =  -O3
 
 
-#USE_OSSO = 1
-#USE_GST = 1
+USE_OSSO = 1
+USE_GST = 1
 
 
-LIBRARIES   =  libpng12
+LIBRARIES   =  libpng12 sqlite3
 
 
 ifdef USE_OSSO
@@ -22,7 +22,7 @@ endif
 
 
 CFLAGS      = -DUSE_MAEMO -fPIC -Wall `freetype-config --cflags` `pkg-config --cflags  $(LIBRARIES)` -I../include
-LDFLAGS     = -lX11 -lXext -lXv -lm `freetype-config --libs` -ljpeg -lpthread `pkg-config --libs $(LIBRARIES)` 
+LDFLAGS     = -lX11 -lXext -lXv -lm -lcurl `freetype-config --libs` -ljpeg -lpthread `pkg-config --libs $(LIBRARIES)` 
 RM          = /bin/rm -f
 
 OBJSUI      = liqx11overlay.o liqdialog_showtree.o liqx11info.o filebuf.o vgraph.o liqcell.o liqcell_arrange.o liqcell_prop.o liqcell_easyrun.o liqcell_easypaint.o liqcell_parse_filename.o liqcell_parse_liqbrain.o liqcell_easyhandler_kinetic.o liqcell_mk_star.o liqui.o liqcell_dllcache.o md5.o
@@ -33,6 +33,9 @@ ifdef USE_OSSO
 	CFLAGS += -DUSE_OSSO
 endif
 
+ifdef USE_GST
+	OBJS  += liqcamera.o 
+endif
 
 
 .PHONY:     clean distclean

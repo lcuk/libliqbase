@@ -165,15 +165,31 @@ char * liqapp_pref_setvalue_printf(char *prefkey,char *prefformat, ...)
 
 char * liqapp_pref_setvalue(char *prefkey,char *prefvalue)
 {
+	if(prefvalue)	prefvalue=strdup(prefvalue);
 	liqcell *p=liqcell_child_lookup(prefsroot,prefkey);
 	if(p)
 	{
+		char *x=liqcell_getdata(p); if(x)free(x);
 		liqcell_setdata(p,prefvalue);
 		return prefvalue;
 	}
 	liqcell_child_insertsorted( prefsroot, qpref(prefkey,prefvalue) );
 	return NULL;
 }
+char * liqapp_pref_getvalue_def(char *prefkey,char *defaultifmissing)
+{
+	liqcell *p=liqcell_child_lookup(prefsroot,prefkey);
+	if(p)
+	{
+		return liqcell_getdata(p);
+	}
+	else
+	{
+		return defaultifmissing;
+	}
+	return NULL;
+}
+
 char * liqapp_pref_getvalue(char *prefkey)
 {
 	liqcell *p=liqcell_child_lookup(prefsroot,prefkey);

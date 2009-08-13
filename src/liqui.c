@@ -35,6 +35,9 @@
 #include "X11/keysymdef.h"
 
 
+char *text_temp_paste = NULL;
+
+
 //#####################################################################
 //#####################################################################
 //##################################################################### liqui :: by gary birkett 
@@ -58,13 +61,13 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
 		liqcell_propsets(  self,  "backcolor", "rgb(0,0,0)" );
 		
 		//texturestrip_blu.jpg
-		liqcell_setimage(  self,  liqimage_cache_getfile( "media/texturestrip_dark.jpg",0,0,0) );
+		liqcell_setimage(  self,  liqimage_cache_getfile( "/usr/share/liqbase/libliqbase/media/texturestrip_dark.jpg",0,0,0) );
 		
 		liqcell_child_append( self, liqcell_quickcreatevis("app_icon",   "icon",    5   ,10  ,    90, 80 )    );
 		liqcell_child_append( self, liqcell_quickcreatevis("app_title",  "label",   100 ,0  ,   700, 55 )    );
 		liqcell_child_append( self, liqcell_quickcreatevis("app_desc",   "label",   100 ,55 ,   700, 40 )    );
 
-		liqcell_setimage(  liqcell_child_lookup( self,"app_icon"),  liqimage_cache_getfile( "media/sun.png",0,0,1) );
+		liqcell_setimage(  liqcell_child_lookup( self,"app_icon"),  liqimage_cache_getfile( "/usr/share/liqbase/libliqbase/media/sun.png",0,0,1) );
 		liqcell_setfont(   liqcell_child_lookup( self,"app_title"), liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (40), 0) );
 		liqcell_setfont(   liqcell_child_lookup( self,"app_desc"),  liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (18), 0) );
 
@@ -92,6 +95,63 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
 	return self;
 }
 
+
+
+
+
+
+
+
+
+
+
+int textbox_selectall(liqcell *textbox)
+{
+	// select all!
+	int selstart = liqcell_propgeti(  textbox,"selstart",-1);
+	int sellength = liqcell_propgeti(  textbox,"sellength",0);
+	int cursorpos = liqcell_propgeti(  textbox,"cursorpos",-1);
+	
+	char *caption = liqcell_getcaption(textbox);
+	int captionlen = strlen(caption);
+
+
+	liqcell_propseti(  textbox,  "selstart",  0 );
+	liqcell_propseti(  textbox,  "sellength", captionlen );
+	liqcell_propseti(  textbox,  "cursorpos", captionlen );
+       
+	
+}
+
+int textbox_fakebackspace(liqcell *textbox)
+{
+	// fake a backspace!
+	liqcellkeyeventargs keyargs={0};
+	keyargs.keycode = (int)8;
+	char delbuf[2];
+	delbuf[0]=8;
+	delbuf[1]=0;
+	snprintf(keyargs.keystring,sizeof(keyargs.keystring),delbuf);
+	keyargs.ispress = 1;
+	liqcell_handlerrun(textbox,"keypress",&keyargs);
+}
+
+
+
+
+int textbox_clear(liqcell *textbox)
+{
+	// clear
+
+	liqcell_setcaption(textbox,"");
+
+
+	liqcell_propseti(  textbox,  "selstart",  0 );
+	liqcell_propseti(  textbox,  "sellength", 0 );
+	liqcell_propseti(  textbox,  "cursorpos", 0 );
+       
+	return 0;
+}
 
 
 
@@ -175,6 +235,25 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
 		
 		char *key = args->keystring;
 		if(!key)key="";
+		if(*key && *key<32)
+		{
+			if(*key==10)
+			{
+				liqcell_handlerrun(self,"click",NULL);
+				key="";
+			}
+			if(*key==8 || *key==9)
+			{
+				// bs and tab
+			}
+			else
+			{
+				// ack! ignore these in single line textbox!
+				key="";
+			}
+		}
+
+		
 		int keylen = strlen(key);
 		
 		if(selstart>captionlen){ selstart=captionlen;sellength=0; }
@@ -188,7 +267,7 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
 		
 		if(selstart>=0)// && (keylen>0))
 		{
-			liqapp_log("keypress: %3i '%c'",(int)(*key),*key,args->keycode);
+			liqapp_log("keypress: %3i '%c' %i %i",(int)(*key),*key,args->keycode,args->keymodifierstate);
 			
 			if(cursorpos<0)cursorpos=0;
 			if(keylen==0)
@@ -512,7 +591,7 @@ liqcell *uipicturebox_create(char *caption,char *datadefault)
 		liqcell_child_insert( self, body );	
 		
 			liqcell *data = liqcell_quickcreatevis("data","frame", 210,0,   140,140);
-			liqcell_setimage(  data,  liqimage_cache_getfile( "media/lcuk_avatar.jpg",0,0,0) );
+			liqcell_setimage(  data,  liqimage_cache_getfile( "/usr/share/liqbase/libliqbase/media/lcuk_avatar.jpg",0,0,0) );
 
 
 		liqcell_child_insert( self, data );

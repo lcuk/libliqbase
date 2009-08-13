@@ -41,6 +41,7 @@ extern "C" {
 
 int 		liqapp_prefs_load();
 char * 		liqapp_pref_getvalue(char *prefkey);
+char *      liqapp_pref_getvalue_def(char *prefkey,char *defaultifmissing);
 liqcell *	liqapp_pref_getitem(char *prefkey);
 int 		liqapp_pref_checkexists(char *prefkey);
 char * 		liqapp_pref_setvalue(char *prefkey,char *prefvalue);
