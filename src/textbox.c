@@ -46,6 +46,56 @@
 
 
 
+int textbox_selectall(liqcell *textbox)
+{
+	// select all!
+	int selstart = liqcell_propgeti(  textbox,"selstart",-1);
+	int sellength = liqcell_propgeti(  textbox,"sellength",0);
+	int cursorpos = liqcell_propgeti(  textbox,"cursorpos",-1);
+	
+	char *caption = liqcell_getcaption(textbox);
+	int captionlen = strlen(caption);
+
+
+	liqcell_propseti(  textbox,  "selstart",  0 );
+	liqcell_propseti(  textbox,  "sellength", captionlen );
+	liqcell_propseti(  textbox,  "cursorpos", captionlen );
+       
+	
+}
+
+int textbox_fakebackspace(liqcell *textbox)
+{
+	// fake a backspace!
+	liqcellkeyeventargs keyargs={0};
+	keyargs.keycode = (int)8;
+	char delbuf[2];
+	delbuf[0]=8;
+	delbuf[1]=0;
+	snprintf(keyargs.keystring,sizeof(keyargs.keystring),delbuf);
+	keyargs.ispress = 1;
+	liqcell_handlerrun(textbox,"keypress",&keyargs);
+}
+
+
+
+
+int textbox_clear(liqcell *textbox)
+{
+	// clear
+
+	liqcell_setcaption(textbox,"");
+
+
+	liqcell_propseti(  textbox,  "selstart",  0 );
+	liqcell_propseti(  textbox,  "sellength", 0 );
+	liqcell_propseti(  textbox,  "cursorpos", 0 );
+       
+	return 0;
+}
+
+
+
 
 	// damn, this should be taken care of by the OS itself
 	// this is because the hitpoint will not always match with where I think it will be
@@ -126,6 +176,25 @@
 		
 		char *key = args->keystring;
 		if(!key)key="";
+		if(*key && *key<32)
+		{
+			if(*key==10)
+			{
+				liqcell_handlerrun(self,"click",NULL);
+				key="";
+			}
+			if(*key==8 || *key==9)
+			{
+				// bs and tab
+			}
+			else
+			{
+				// ack! ignore these in single line textbox!
+				key="";
+			}
+		}
+
+		
 		int keylen = strlen(key);
 		
 		if(selstart>captionlen){ selstart=captionlen;sellength=0; }
@@ -139,7 +208,7 @@
 		
 		if(selstart>=0)// && (keylen>0))
 		{
-			liqapp_log("keypress: %3i '%c'",(int)(*key),*key,args->keycode);
+			liqapp_log("keypress: %3i '%c' %i %i",(int)(*key),*key,args->keycode,args->keymodifierstate);
 			
 			if(cursorpos<0)cursorpos=0;
 			if(keylen==0)
@@ -266,13 +335,14 @@
 
 	}
 	
-	static int textbox_keyrelease(liqcell *self, liqcellkeyeventargs *args)
-	{
-		//liqcell *base = liqcell_getbasewidget(self);
-		// i can then use my base to access members as defined by the widget itself
-		//liqcell_setcaption(self,args->keystring);
-		return 0;
-	}
+	
+	
+	
+	
+static int textbox_keyrelease(liqcell *self, liqcellkeyeventargs *args)
+{
+	return 0;
+}
 
 
 

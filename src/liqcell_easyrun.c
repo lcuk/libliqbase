@@ -1507,17 +1507,17 @@ moar:
 			if(!infoback)
 			{
 				//liqapp_log("************************************************************************************** read");
-				infoback = liqimage_cache_getfile("/usr/share/liqbase/liqliqbase/media/back.png", 0,0,1);
+				infoback = liqimage_cache_getfile("/usr/share/liqbase/libliqbase/media/back.png", 0,0,1);
 			}
 			if(!infoclose)
 			{
 				//liqapp_log("************************************************************************************** read");
-				infoclose = liqimage_cache_getfile("/usr/share/liqbase/liqliqbase/media/gtk-close.png", 0,0,1);
+				infoclose = liqimage_cache_getfile("/usr/share/liqbase/libliqbase/media/gtk-close.png", 0,0,1);
 			}
 			if(!infotools)
 			{
 				//liqapp_log("************************************************************************************** read");
-				infotools = liqimage_cache_getfile("/usr/share/liqbase/liqliqbase/media/package_system.png", 0,0,1);
+				infotools = liqimage_cache_getfile("/usr/share/liqbase/libliqbase/media/package_system.png", 0,0,1);
 			}
 			if(infoback && infoclose)
 			{

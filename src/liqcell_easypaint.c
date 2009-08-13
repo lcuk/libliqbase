@@ -277,7 +277,7 @@ int liqcell_threadloadimage(liqcell *self)
 				if(!easypaint_isloading_image)
 				{
 					//easypaint_isloading_image=liqimage_newfromfile("/usr/share/liqbase/libliqbase/media/sun.png",0,0,0);
-					easypaint_isloading_image=liqimage_newfromfile("/usr/share/liqbase/liqliqbase/media/pleasewait.png",0,0,0);
+					easypaint_isloading_image=liqimage_newfromfile("/usr/share/liqbase/libliqbase/media/pleasewait.png",0,0,0);
 				}
 				if(easypaint_isloading_image)
 				{
