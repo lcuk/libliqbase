@@ -1,7 +1,7 @@
 Source: libliqbase
 Priority: extra
 Maintainer: Gary liquid <liquid@gmail.com>
-Build-Depends: debhelper (>= 5), x11proto-xext-dev, libpng12-dev, libjpeg62-dev, libosso-dev, libfreetype6-dev, libxv-dev, libc6-dev, libsqlite3-dev, libcurl3-dev
+Build-Depends: debhelper (>= 5), x11proto-xext-dev, libgstreamer0.10-dev, libpng12-dev, libjpeg62-dev, libosso-dev, libfreetype6-dev, libxv-dev, libc6-dev, libsqlite3-dev, libcurl3-dev
 Standards-Version: 3.7.2
 Section: libs
 
