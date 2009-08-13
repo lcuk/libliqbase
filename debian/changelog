@@ -1,3 +1,10 @@
+libliqbase (0.3.23) unstable; urgency=low
+
+  * was not copying media
+
+ -- Gary Birkett <liquid@gmail.com>  13 August 2009 22:41:03 +0200
+
+
 libliqbase (0.3.22) unstable; urgency=low
 
   * more doh! moments
