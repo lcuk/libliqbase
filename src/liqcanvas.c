@@ -218,6 +218,7 @@ int liqcanvas_init_inner(int pixelwidth,int pixelheight,int fullscreen)
 		{ liqapp_errorandfail(-1,"canvas liqx11info_init failed"); }
 		return -1;
 	}
+
 	
 
 
@@ -230,6 +231,7 @@ int liqcanvas_init_inner(int pixelwidth,int pixelheight,int fullscreen)
 
 	return 0;
 }
+
 
 
 /**
@@ -256,20 +258,23 @@ int liqcanvas_init(int pixelwidth,int pixelheight,int fullscreen)
 	
 		// opened
 	
-const int firstrun=0;
+const int firstrun=1;
 	if(firstrun)
 	{
+		liqapp_log("canvas liqx11info_init firstrun splash location");
 		
 		// 20090511_023718 lcuk : show a splash and then close display
 		// 20090511_023726 lcuk : this *should* remove the first run glitch cos this will catch everything
-		liqcanvas_firstrun_splash();
+		//liqcanvas_firstrun_splash();
+		liqapp_sleep(50);
 		liqcanvas_close();
+		
 		
 		
 		
 		if(liqcanvas_init_inner(pixelwidth,pixelheight,fullscreen)!=0)
 		{
-			{ liqapp_errorandfail(-1,"canvas liqx11info_init failed"); }
+			{ liqapp_errorandfail(-1,"canvas liqx11info_init failed 2"); }
 			return -1;
 		}
 		
