@@ -1028,6 +1028,7 @@ __tz_one("fontprep");
 
 				int xx=x;
 				int yy=y;
+				int ww=w;
 
 				//############################################################ size it up
 
@@ -1040,6 +1041,9 @@ __tz_one("fontprep");
 				int selstart = liqcell_propgeti(  self,"selstart",-1);
 				int sellength = liqcell_propgeti(  self,"sellength",0);
 				int cursorpos = liqcell_propgeti(  self,"cursorpos",-1);
+				
+				
+				if(cursorpos>=0){ x+=2; w-=2; }
 				
 				
 				if(selstart>captionlen)selstart=captionlen;
@@ -1181,13 +1185,16 @@ __tz_one("fontprep");
 
 					if(cursorpos>=0)
 					{
+						if(cursorpos==0 && sellength==0)x-=2;
 						//x=xx;
 						char *sel=strndup(caption,cursorpos);
 						int ttt = liqfont_textwidth(self->font,sel);
 						if(sel)free(sel);
-						liqcliprect_drawboxfillcolor(cr,x+ttt-1,y,1,fh,40,40,20);
+						liqcliprect_drawboxwashcolor(cr,x+ttt-1,y,3,fh,     40,20);
+						
+						//liqcliprect_drawboxfillcolor(cr,x+ttt-1,y,3,fh,40,40,20);
 						liqcliprect_drawboxfillcolor(cr,x+ttt  ,y,1,fh,255,40,20);
-						liqcliprect_drawboxfillcolor(cr,x+ttt+1,y,1,fh,40,40,20);
+						//liqcliprect_drawboxfillcolor(cr,x+ttt+1,y,1,fh,40,40,20);
 
 					}
 					
@@ -1203,6 +1210,7 @@ __tz_one("fontprep");
 
 				x=xx;
 				y=yy;
+				w=ww;
 
 			}
 		}

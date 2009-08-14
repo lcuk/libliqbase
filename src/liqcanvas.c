@@ -255,6 +255,7 @@ int liqcanvas_init(int pixelwidth,int pixelheight,int fullscreen)
 		return -1;
 	}
 
+	xsurface_drawclear_grey(canvas.surface,0);
 	
 		// opened
 	
@@ -263,10 +264,19 @@ const int firstrun=1;
 	{
 		liqapp_log("canvas liqx11info_init firstrun splash location");
 		
+		liqcanvas_refreshdisplay();
+		
 		// 20090511_023718 lcuk : show a splash and then close display
 		// 20090511_023726 lcuk : this *should* remove the first run glitch cos this will catch everything
 		//liqcanvas_firstrun_splash();
-		liqapp_sleep(50);
+		int i;
+		LIQEVENT event;
+		int dirty=0;
+		for(i=0;i<5;i++)
+		{
+			liqapp_sleep(50);
+			while(liqcanvas_eventcount()>0)  liqcanvas_nextevent(&event,&dirty);
+		}
 		liqcanvas_close();
 		
 		

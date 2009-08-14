@@ -128,7 +128,7 @@ int textbox_clear(liqcell *textbox)
 		//int caplen = strlen(cap);
 		
 		
-		int mx = args->mex - liqcell_getx(self);
+		int mx = args->mex - liqcell_getx(self) - 2;
 		
 		int chpos = liqfont_textfitinside(font,cap,mx);
 										  
@@ -374,12 +374,16 @@ static int keyboard_show_button_click(liqcell *self,liqcellclickeventargs *args,
 	
 	if(vkbd)
 	{
+		// 20090814_203451 lcuk : make sure the * follow into the vkb :)
+		liqcell_propseti(vkbd_textbox,"textispassword",  liqcell_propgeti(textbox,"textispassword",0)  );
+		
 		char *caption = liqcell_getcaption(textbox);
 		liqcell_setcaption(vkbd_textbox, caption);
 		liqcell_setdata(vkbd, textbox);
 		liqcell_easyrun(vkbd);
 		liqcell_release(vkbd);
 	}
+	return 1;
 }
 
 static int textbox_resize(liqcell *self, liqcelleventargs *args, void *textbox)

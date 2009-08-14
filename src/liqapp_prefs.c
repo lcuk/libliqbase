@@ -94,7 +94,7 @@ int liqapp_prefs_load()
 					if(data && data>line)
 					{
 						
-						//app_log("Test '%c'",*data);
+						//liqapp_log("Test '%c' '%s'",*data,data);
 						*data=' ';
 						// rtrimming
 						char *t=data;
@@ -112,15 +112,23 @@ int liqapp_prefs_load()
 						while(*rtrim)rtrim++;
 						if(rtrim>data && *rtrim==0)rtrim--;
 					
-						while(rtrim>data)
+						while(rtrim>=data)
 						{
 							if(*rtrim=='\n' || *rtrim=='\r' || *rtrim==10 || *rtrim==13 || *rtrim==' ' || *rtrim=='\t')
+							{
+								//liqapp_log("rtrim cut '%c':%i",*rtrim,*rtrim);
 								*rtrim-- = 0;
+							}
 							else
+							{
+								//liqapp_log("rtrim fin '%c':%i",*rtrim,*rtrim);
 								break;
+							}
 						}
-						//liqapp_log("pref: '%s'='%s'",line,data);
-	
+						//liqapp_log("pref: '%s'='%s'  %i,%i,%i",line,data,data[0],data[1],data[2]);
+						
+						//char blankstr[4]={0,0,0,0};
+						
 						liqcell_child_insertsorted( prefsroot, qpref(line,strdup(data)) );
 						
 
