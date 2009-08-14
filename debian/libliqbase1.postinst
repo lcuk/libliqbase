@@ -1,0 +1,27 @@
+#!/bin/sh
+# postinst script for libliqbase
+#
+# see: dh_installdeb(1)
+
+
+
+# thank you qwerty12 and kotczarny
+# just make sure this is only run on n8x0
+
+if [ -e /proc/component_version ];
+then
+ HW_VER=`awk '/^product/ { print $2;}' /proc/component_version | cut -d- -f2`
+else
+ HW_VER="0"
+fi
+
+ if [ "$HW_VER" -ge "34" -a "$HW_VER" -le "48" ];
+ then
+
+  update-sudoers || true
+
+ fi
+
+
+exit 0
+
