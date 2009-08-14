@@ -113,6 +113,18 @@ int textbox_clear(liqcell *textbox)
 		char *cap = liqcell_getcaption(self);
 		if(!cap)return 0;
 		
+				// 20090814_184437 lcuk : if password, replace cap with string("*",len(cap)) for selection purposes
+				char passbuff[1024];				
+				if(liqcell_propgeti(self,"textispassword",0))
+				{
+					int clen = strlen(cap);
+					if(clen>=sizeof(passbuff)-1)clen=sizeof(passbuff)-1;
+					int x;
+					for(x=0;x<clen;x++)passbuff[x]='*';
+					passbuff[x]=0;
+					cap=passbuff;
+				}
+		
 		//int caplen = strlen(cap);
 		
 		

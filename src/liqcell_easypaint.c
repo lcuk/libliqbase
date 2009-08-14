@@ -996,7 +996,20 @@ __tz_one("fontprep");
 
 			if(caption)
 			{
-
+				// 20090814_184437 lcuk : if password, replace cap with string("*",len(cap)) for selection purposes
+				
+				char passbuff[1024];				
+				if(liqcell_propgeti(self,"textispassword",0))
+				{
+					int clen = strlen(caption);
+					if(clen>=sizeof(passbuff)-1)clen=sizeof(passbuff)-1;
+					int x;
+					for(x=0;x<clen;x++)passbuff[x]='*';
+					passbuff[x]=0;
+					caption=passbuff;
+				}
+				
+				
 
 				char timebuf[128]="";
 				if( (self->classname) && (strcmp(self->classname,"time") ==0) )
@@ -1102,7 +1115,7 @@ __tz_one("fontprep");
 							char *more=strndup(caption+cursorpos,4);
 							int tex = liqfont_textwidth(self->font,more);
 							x-= tex;
-							x-= 16;
+							x-= 48;
 							if(more)free(more);
 							
 							

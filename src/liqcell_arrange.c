@@ -468,8 +468,8 @@ retry:
 	int tilew =  liqcell_getw(self) / ccols;
 	int tileh =  liqcell_geth(self) / crows;
 
-	int borderw = tilew * 0.1;
-	int borderh = tileh * 0.1;
+	int borderw = tilew * 0.05;
+	int borderh = tileh * 0.05;
 	//tilew-=borderw;
 	//tileh-=borderh;
 	//borderw/=2;
@@ -536,9 +536,15 @@ retry:
 				liqcell_setsize(c, (tilew-borderw),(tileh-borderh));
 
 			}
+			// 20090814_190720 lcuk : replace this, its missing the rhs
+			//if(c->x+c->w > maxw)maxw=c->x+c->w;
+			//if(c->y+c->h > maxh)maxh=c->y+c->h;
 			
-			if(c->x+c->w > maxw)maxw=c->x+c->w;
-			if(c->y+c->h > maxh)maxh=c->y+c->h;
+			
+			if(xx+tilew > maxw)maxw=xx+tilew;
+			if(yy+tileh > maxh)maxh=yy+tileh;
+
+			
 			
 			//liqapp_log("makegrid '%s' xy(%i,%i)   xxyy(%i,%i)",self->name,xx,yy,c->x,c->y);
 
