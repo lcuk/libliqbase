@@ -728,9 +728,14 @@ __tz_one("imageprep");
 	{
 		// 20090812_213106 lcuk : see if we should be floating this image
 		// 20090812_213118 lcuk : floating image is slightly larger than its default area and in constant slow motion
+
+#define LIQFLOAT 1
+#ifdef LIQFLOAT
+
 		
 		char *fstr=liqcell_propgets(self,"imagefloat",NULL);
 		if(fstr && *fstr)
+
 		{
 		//	liqapp_log("imagefloat: start '%s' %i,%i",self->name,w,h);
 /*
@@ -870,6 +875,8 @@ __tz_one("imageprep");
 			}
 		}
 		else
+
+#endif
 		{
 
 				//liqapp_log("imagestd: '%s' draw  %4i,%4i - %4i,%4i    ",self->name,x,y,w,h );

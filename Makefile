@@ -7,6 +7,13 @@ LD          = gcc
 OPT_FLAGS   =  -O3
 #DESTDIR	?= tmp
 
+ETCDIR	    = $(DESTDIR)/etc
+PREFIX	    = $(DESTDIR)/usr
+SUDODIR	    = $(ETCDIR)/sudoers.d
+BINDIR	    = $(PREFIX)/bin
+
+PGDIR		    = $(PREFIX)/share/liqbase
+
 
 
 PREFIX	    = $(DESTDIR)/usr
@@ -21,6 +28,11 @@ clean:
 .PHONY:     clean
 
 install:
+
+
+	install -d $(BINDIR)
+	install -d $(SUDODIR)
+
 	mkdir -p                                    $(PREFIX)/include
 	mkdir -p                                    $(PREFIX)/include/liqbase
 	cp -r include/*.h                           $(PREFIX)/include/liqbase/
@@ -37,4 +49,8 @@ install:
 
 
 
+	install -m 0755 liqbase_base_fs/usr/bin/liqbase-playground-cpu-ondemand                         $(BINDIR)
+	install -m 0755 liqbase_base_fs/usr/bin/liqbase-playground-cpu-powersave                        $(BINDIR)
+	install -m 0755 liqbase_base_fs/usr/bin/liqbase-playground-cpu-performance                      $(BINDIR)
+	install -m 0755 liqbase_base_fs/etc/sudoers.d/libliqbase.sudoers                                $(SUDODIR)
 
