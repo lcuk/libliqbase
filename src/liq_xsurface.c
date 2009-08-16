@@ -1494,6 +1494,7 @@ inline void xsurface_drawclear_yuv(liqimage *surface,unsigned char grey,unsigned
 //########################################################################
 
 
+
 inline void xsurface_drawfadeoutrect_yuv(liqimage *surface,int x,int y,int w,int h, unsigned char grey,unsigned char u,unsigned char v,unsigned char spread)
 {
 	if(x+w<0)return;
@@ -1541,7 +1542,7 @@ inline void xsurface_drawfadeoutrect_yuv(liqimage *surface,int x,int y,int w,int
 			//*pdata++ = (unsigned char)grey;
             //*pdata++ = y + (((((int)*pdata) * 255) / spread)-spreaddiv2);
 			{
-				int s=y;
+				int s=grey;
 				int t=*pdata;
 				//if(!s)s=128;
 				//if(!t)t=128;
@@ -1561,6 +1562,7 @@ inline void xsurface_drawfadeoutrect_yuv(liqimage *surface,int x,int y,int w,int
 		
 
 	}
+
 
 	y>>=1;
 	x>>=1;

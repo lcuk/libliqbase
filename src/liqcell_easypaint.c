@@ -300,7 +300,7 @@ int liqcell_threadloadimage(liqcell *self)
 						return;
 					}
 				}
-
+	return 0;
 }
 
 
@@ -331,7 +331,7 @@ static float calcaspect(int captionw,int captionh,int availw,int availh)
 }
 
 
-unsigned int decodecolor(char *source,unsigned char *ry,unsigned char *ru,unsigned char *rv)
+unsigned int decodecolor(char *source,unsigned char *ry,unsigned char *ru,unsigned char *rv,unsigned char *ra)
 {
 	char inbuf[1024];
 	snprintf(inbuf,1024,source);
@@ -339,7 +339,7 @@ unsigned int decodecolor(char *source,unsigned char *ry,unsigned char *ru,unsign
 	char *s1=NULL;
 	char *s2=NULL;
 	char *s3=NULL;
-	//char *s4=NULL;  // used for alpha (not in place..)
+	char *s4=NULL;  // used for alpha
 	if(strncmp(indat,"rgb(",4) == 0 )
 	{
 		indat+=4;
@@ -353,22 +353,20 @@ unsigned int decodecolor(char *source,unsigned char *ry,unsigned char *ru,unsign
 		while(*indat>='0' && *indat<='9')indat++;
 		if(*indat++!=')') return 0;
 		if(s1==s2 || s2==s3) return 0;
-		s2[-1]=0;
-		s3[-1]=0;
-		indat[-1]=0;
+		//s2[-1]=0;		// 20090816_101632 lcuk : leave this nondestructive. atoi will know when it reaches the non chars
+		//s3[-1]=0;
+		//indat[-1]=0;
 		//liqapp_log("%s %i,%i,%i",source,atoi(s1),atoi(s2),atoi(s3) );
 		int R=atoi(s1);
 		int G=atoi(s2);
 		int B=atoi(s3);
-		//ry=atoi(s1);
-		//ru=atoi(s2);
-		//rv=atoi(s3);
 			// convert RGB -> YUV
 			//http://msdn.microsoft.com/en-us/library/ms893078.aspx
 			// yes, microsoft are useful :)
 		*ry = ( (  66 * R + 129 * G +  25 * B + 128) >> 8) +  16;
 		*ru = ( ( 112 * R -  94 * G -  18 * B + 128) >> 8) + 128;
 		*rv = ( ( -38 * R -  74 * G + 112 * B + 128) >> 8) + 128;
+		*ra = 255;
 		return 1;
 	}
 	if(strncmp(indat,"yuv(",4) == 0 )
@@ -384,13 +382,75 @@ unsigned int decodecolor(char *source,unsigned char *ry,unsigned char *ru,unsign
 		while(*indat>='0' && *indat<='9')indat++;
 		if(*indat++!=')') return 0;
 		if(s1==s2 || s2==s3) return 0;
-		s2[-1]=0;
-		s3[-1]=0;
-		indat[-1]=0;
+		//s2[-1]=0;		// 20090816_101632 lcuk : leave this nondestructive. atoi will know when it reaches the non char
+		//s3[-1]=0;
+		//indat[-1]=0;
 		//liqapp_log("%s %i,%i,%i",source,atoi(s1),atoi(s2),atoi(s3) );
 		*ry=atoi(s1);
 		*ru=atoi(s2);
 		*rv=atoi(s3);
+		*ra=255;
+		return 1;
+	}
+	//### alpha variations
+	if(strncmp(indat,"rgba(",5) == 0 )
+	{
+		indat+=5;
+		s1=indat;
+		while(*indat>='0' && *indat<='9')indat++;
+		if(*indat++!=',') return 0;
+		s2=indat;
+		while(*indat>='0' && *indat<='9')indat++;
+		if(*indat++!=',') return 0;
+		s3=indat;
+		while(*indat>='0' && *indat<='9')indat++;
+		if(*indat++!=',') return 0;
+		s4=indat;
+		while(*indat>='0' && *indat<='9')indat++;
+		if(*indat++!=')') return 0;
+		if(s1==s2 || s2==s3 || s3==s4) return 0;
+		//s2[-1]=0;		// 20090816_101632 lcuk : leave this nondestructive. atoi will know when it reaches the non chars
+		//s3[-1]=0;
+		//s4[-1]=0;
+		//indat[-1]=0;
+		//liqapp_log("rgba '%s' %i,%i,%i,%i",source,atoi(s1),atoi(s2),atoi(s3), atoi(s4));
+		int R=atoi(s1);
+		int G=atoi(s2);
+		int B=atoi(s3);
+			// convert RGB -> YUV
+			//http://msdn.microsoft.com/en-us/library/ms893078.aspx
+			// yes, microsoft are useful :)
+		*ry = ( (  66 * R + 129 * G +  25 * B + 128) >> 8) +  16;
+		*ru = ( ( 112 * R -  94 * G -  18 * B + 128) >> 8) + 128;
+		*rv = ( ( -38 * R -  74 * G + 112 * B + 128) >> 8) + 128;
+		*ra = atoi(s4);
+		return 1;
+	}
+	if(strncmp(indat,"yuva(",5) == 0 )
+	{
+		indat+=5;
+		s1=indat;
+		while(*indat>='0' && *indat<='9')indat++;
+		if(*indat++!=',') return 0;
+		s2=indat;
+		while(*indat>='0' && *indat<='9')indat++;
+		if(*indat++!=',') return 0;
+		s3=indat;
+		while(*indat>='0' && *indat<='9')indat++;
+		if(*indat++!=',') return 0;
+		s4=indat;
+		while(*indat>='0' && *indat<='9')indat++;
+		if(*indat++!=')') return 0;
+		if(s1==s2 || s2==s3 || s3==s4) return 0;
+		//s2[-1]=0;		// 20090816_101632 lcuk : leave this nondestructive. atoi will know when it reaches the non chars
+		//s3[-1]=0;
+		//s4[-1]=0;
+		//indat[-1]=0;
+		//liqapp_log("yuva '%s' %i,%i,%i,%i",source,atoi(s1),atoi(s2),atoi(s3), atoi(s4));
+		*ry=atoi(s1);
+		*ru=atoi(s2);
+		*rv=atoi(s3);
+		*ra=atoi(s4);
 		return 1;
 	}
 	return 0;
@@ -627,6 +687,7 @@ __tz_one("paintdone");
 	unsigned char bcy=255;
 	unsigned char bcu=128;
 	unsigned char bcv=128;
+	unsigned char bca=255;	// 20090816_101834 lcuk : new..
 
 
 
@@ -636,9 +697,13 @@ __tz_one("paintdone");
 		if(t)
 		{
 			//liqapp_log("textcolor :: '%s'",t);
-			if(decodecolor(t, &bcy, &bcu, &bcv ))
+			if(decodecolor(t, &bcy, &bcu, &bcv, &bca ))
 			{
-				liqcliprect_drawboxfillcolor(cr,x,y,w,h,bcy,bcu,bcv);
+				//bca=255;
+				if(bca==255)
+					liqcliprect_drawboxfillcolor(     cr,x,y,w,h,bcy,bcu,bcv);
+				else
+					liqcliprect_drawboxfillblendcolor(cr,x,y,w,h,bcy,bcu,bcv,bca);
 			}
 		}
 	}
@@ -716,6 +781,7 @@ __tz_one("backdone");
 			
 		}
 	}
+	
 	
 	
 	
@@ -1057,12 +1123,13 @@ __tz_one("fontprep");
 				unsigned char tcy=255;
 				unsigned char tcu=128;
 				unsigned char tcv=128;
+				unsigned char tca=128;
 				{
 					t = liqcell_propgets(self,"textcolor",NULL);
 					if(t)
 					{
 						//liqapp_log("textcolor :: '%s'",t);
-						decodecolor(t, &tcy, &tcu, &tcv );
+						decodecolor(t, &tcy, &tcu, &tcv, &tca );
 					}
 				}
 
@@ -1268,7 +1335,7 @@ __tz_one("overlaydone");
 	if(t)
 	{
 		//liqapp_log("textcolor :: '%s'",t);
-		if(decodecolor(t, &bcy, &bcu, &bcv ))
+		if(decodecolor(t, &bcy, &bcu, &bcv , &bca))
 		{
 
 			liqcliprect_drawboxlinecolor(cr,x,y,w,h,bcy,bcu,bcv);
@@ -1361,7 +1428,7 @@ __tz_one("disablerdone");
 		if(t)
 		{
 			//liqapp_log("textcolor :: '%s'",t);
-			decodecolor(t, &bcy, &bcu, &bcv );
+			decodecolor(t, &bcy, &bcu, &bcv, &bca );
 
 			liqcliprect_drawboxlinecolor(cr,x,y,w,h,bcy,bcu,bcv);
 

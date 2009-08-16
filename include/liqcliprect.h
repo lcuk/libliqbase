@@ -99,6 +99,7 @@ void 		liqcliprect_drawlinecolcolor(		liqcliprect *self,int x1, int y1,int x2, i
 void 		liqcliprect_drawlinecolor(			liqcliprect *self,int x1, int y1, int x2, int y2, unsigned char grey,unsigned char u,unsigned char v);
 void 		liqcliprect_drawboxlinecolor(		liqcliprect *self,int x,int y,int w,int h,unsigned char grey,unsigned char u,unsigned char v);
 void 		liqcliprect_drawboxfillcolor(		liqcliprect *self,int x,int y,int w,int h,unsigned char grey,unsigned char u,unsigned char v);
+void 		liqcliprect_drawboxfillblendcolor(	liqcliprect *self,int x,int y,int w,int h,unsigned char grey,unsigned char u,unsigned char v,unsigned char blend);
 void 		liqcliprect_drawboxwashcolor(		liqcliprect *self,int x,int y,int w,int h,unsigned char u,unsigned char v);
 
 void 		liqcliprect_drawcolorcube(liqcliprect *self,int x,int y,int w,int h,unsigned char grey);
