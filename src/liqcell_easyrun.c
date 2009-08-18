@@ -1460,8 +1460,17 @@ moar:
 		}
 		if(self->dirty && (refreshinprogress==0))// && (dirty==0))
 		{
-			dirty=1;
-			self->dirty=0;
+			
+			if(liqcanvas_eventcount())
+			{
+				// this is a test, "dont draw, events are more important"
+				
+			}
+			else
+			{
+				dirty=1;
+				self->dirty=0;
+			}
 		}
 		if(refreshinprogress==0) if(running==0) break;
 		if(paintargs.runfast) dirty=1;
