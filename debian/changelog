@@ -1,3 +1,9 @@
+libliqbase (0.3.27) unstable; urgency=low
+
+  * lots of changes
+
+ -- Gary Birkett <liquid@gmail.com>  20  August 2009 00:41:03 +0200
+
 libliqbase (0.3.26) unstable; urgency=low
 
   * adjusted startup flicker fix time and eat a couple of events along the way

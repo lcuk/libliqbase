@@ -41,6 +41,7 @@ int liqcell_showdebugboxes=0;
 
 
 
+
 liqimage *easypaint_isloading_image = NULL;
 liqimage *easypaint_barcode_image = NULL;
 
@@ -82,6 +83,7 @@ int newprio = threadpriority;//20;
 
 
 
+
 static int mainthread_inprogress=0;
 
 
@@ -96,8 +98,8 @@ void *mainthread(void* mainthread_data)
 	
 do
 {
-	//liqapp_sleep(10 + (rand() % 100));
-	liqapp_sleep(10 + (50));
+	liqapp_sleep(10 + (rand() % 100));
+	//liqapp_sleep(10 + (50));
 }
 while(mainthread_inprogress>1);
 
@@ -114,7 +116,7 @@ while(mainthread_inprogress>1);
 
 	liqimage *img = liqcell_getimage(self);
 
-	if(img == easypaint_isloading_image)
+	//if(img == easypaint_isloading_image)
 	{
 
 
@@ -245,6 +247,9 @@ while(mainthread_inprogress>1);
 				{
 					liqcell_setsize(self,imgnew->width,imgnew->height);
 				}
+                
+                
+                liqcell_handlerrun(self,"imageloaded",NULL);    
 
 
 
@@ -283,7 +288,12 @@ int liqcell_threadloadimage(liqcell *self)
 				{
 					liqcell_hold(self);
 					// only if we have a valid replacer can we do this trickery :)
-					liqcell_setimage(self, liqimage_hold(easypaint_isloading_image) );
+                    
+                    if(liqcell_getimage(self)==NULL)
+                    
+                        liqcell_setimage(self, liqimage_hold(easypaint_isloading_image) );
+                        
+                        
 					// now we must start the thread off
 					pthread_t 		tid;
 					
@@ -1089,35 +1099,105 @@ __tz_one("fontprep");
 				}
 
 
+
 				int captionlen = strlen(caption);
+
+
+
+				//############################################################ get cursor
+
+				int tselstart = liqcell_propgeti(  self,"selstart",-1);
+				int tsellength = liqcell_propgeti(  self,"sellength",0);
+				int tcursorpos = liqcell_propgeti(  self,"cursorpos",-1);
+				
+
+
+
+				//liqapp_log("easypaint '%s' count '%s'",self->name,caption);
+
+
+
+				//##########################
+				// count all the lines	
+				#define linemax 128
+				int lineheight = liqfont_textheight(self->font);
+				char *linestarts[linemax];
+				int lineoffsets[linemax];
+				int linelengths[linemax];
+				int linecount=0;	
+				
+				
+				if( (tcursorpos<0) || (liqcell_propgeti(self,"wordwrap",0)==0) )
+				{
+					//liqapp_log("single %s:%s",self->name,caption);
+					// text field, but not marked multiline
+					// just let it go through as a single item
+					linestarts[linecount]=caption;
+					lineoffsets[linecount]=0;
+					linelengths[linecount]=captionlen;
+					linecount++;
+				}
+				else
+				{
+					//liqapp_log("multi %s:%s",self->name,caption);
+					//
+					char *c = caption;					
+					while(c && *c)
+					{
+						int tl = strlen(c);		// total length remaining
+						
+	
+						int lc = liqfont_textfitinside(self->font, c, w-4 );
+						if(lc==0)lc++;
+						//liqapp_log("easypaint '%s' countX '%s' %i,%i",self->name,c,tl,lc);
+						if(lc<tl)
+						{
+							int le = lc;
+							while(le>0)
+							{
+								switch(c[le-1])
+								{
+									case ' ':
+									case ',':
+									case ';':
+									case ':':
+									case '.':
+										le--;
+										break;
+									default:
+										goto fin;
+								}
+							}
+							fin:
+							if(le>0)lc=le;
+							while(c[lc]==' ')lc++;
+						}
+						
+						
+						
+						
+						linestarts[linecount] = c;
+						lineoffsets[linecount] = c-caption;
+						linelengths[linecount] = lc;
+						linecount++;
+						
+						c=&c[lc];
+	
+						
+					}
+				}
+				
+
+				
+				
+
+
+
 
 
 				int xx=x;
 				int yy=y;
 				int ww=w;
-
-				//############################################################ size it up
-
-				int fw = liqfont_textwidth(self->font,caption);
-				int fh = liqfont_textheight(self->font);
-
-
-				//############################################################ get cursor
-
-				int selstart = liqcell_propgeti(  self,"selstart",-1);
-				int sellength = liqcell_propgeti(  self,"sellength",0);
-				int cursorpos = liqcell_propgeti(  self,"cursorpos",-1);
-				
-				
-				if(cursorpos>=0){ x+=2; w-=2; }
-				
-				
-				if(selstart>captionlen)selstart=captionlen;
-				if(selstart+sellength>captionlen)sellength=captionlen-selstart;
-				if(cursorpos>captionlen)cursorpos=captionlen;
-
-
-
 
 				//############################################################ get textcolor
 				unsigned char tcy=255;
@@ -1132,6 +1212,67 @@ __tz_one("fontprep");
 						decodecolor(t, &tcy, &tcu, &tcv, &tca );
 					}
 				}
+
+
+
+
+//############# from here
+
+
+
+int linenum;
+for(linenum=0;linenum<linecount;linenum++)
+{
+	// replace caption
+	char caption[1024]={0};
+	strncpy(caption,linestarts[linenum],linelengths[linenum]);
+	int captionlen=strlen(caption);
+	caption[linelengths[linenum]]=0;
+	
+	// and y
+	x = xx;
+	y = yy + lineheight * linenum;
+	w = ww;
+	
+	
+
+	// take off the length of the previous line
+	int selstart =tselstart;
+	int sellength=tsellength;
+	int cursorpos=tcursorpos;
+	{
+		int p;
+		for(p=linenum-1;p>=0;p--)
+		{
+			cursorpos -= linelengths[p];
+			selstart  -= linelengths[p];			
+		}
+	}
+	if(selstart<0)sellength-=(-selstart);
+	if(sellength<0)sellength=0;
+	
+	
+//	liqapp_log("easypaint line '%s' %i: %3i,%3i '%s'",self->name,linenum,x,y,caption);
+
+	
+	
+	
+				//if(cursorpos>=0)
+				{ x+=2; w-=4; y+=2; h-=4; }
+				if(selstart>captionlen)selstart=captionlen;
+				if(selstart+sellength>captionlen)sellength=captionlen-selstart;
+				if(cursorpos>captionlen)cursorpos=(linenum==linecount-1)? captionlen : -1;
+				if(tselstart>=0)if(selstart<0)selstart=0;
+	
+	
+ 
+
+				//############################################################ size it up
+
+				int fw = liqfont_textwidth(self->font,caption);
+				int fh = liqfont_textheight(self->font);
+
+
 
 
 
@@ -1170,7 +1311,7 @@ __tz_one("fontprep");
 						}
 				//############################################################ draw it now
 
-				if(selstart>=0)
+				if(selstart>=0 && (liqcell_easyrun_getactivecontrol()==self))
 				{
 					if(fw>w)
 					{
@@ -1207,7 +1348,7 @@ __tz_one("fontprep");
 					
 					
 					// with selection
-					if(sellength==0)
+					if(sellength==0 || (liqcell_easyrun_getactivecontrol()==NULL) )
 					{
 						// draw normally, but add caret as well
 						liqcliprect_drawtext_color( cr, self->font,  x,y, caption, tcy,tcu,tcv);
@@ -1239,7 +1380,7 @@ __tz_one("fontprep");
 							int ttt = liqfont_textwidth(self->font,sel);
 							if(sel)free(sel);
 							liqcliprect_drawboxfillcolor(cr,x,y,ttt,fh,tcy,tcu,tcv);
-							x=liqcliprect_drawtextn_color(  cr, self->font,  x,y, alline, sellength, 255-tcy,tcv,tcu);
+							x=liqcliprect_drawtextn_color(  cr, self->font,  x,y, alline, sellength, 255-tcy,tcv-20,tcu+20);
 							alline+=sellength;
 						}
 						{
@@ -1250,7 +1391,7 @@ __tz_one("fontprep");
 						x=tx;
 					}
 
-					if(cursorpos>=0)
+					if(cursorpos>=0 && cursorpos<=captionlen)
 					{
 						if(cursorpos==0 && sellength==0)x-=2;
 						//x=xx;
@@ -1275,6 +1416,9 @@ __tz_one("fontprep");
 				}
 
 
+
+//############ to here
+}
 				x=xx;
 				y=yy;
 				w=ww;
@@ -1396,6 +1540,7 @@ __tz_one("scrolldone");
 
 
 __tz_one("disablerdone");
+
 
 
 

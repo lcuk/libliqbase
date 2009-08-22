@@ -73,6 +73,13 @@ int liqx11overlay_init(liqx11overlay *self, Display *dpy, int screen, Window win
 	self->yuv_width  = attrs.width;
 	self->yuv_height = attrs.height;
 
+// Sat Aug 22 00:52:46 2009 lcuk : lowres flag added, if set half the resolution of the overlay
+if( liqapp_pref_checkexists("lowres") )
+{
+	self->yuv_width  = attrs.width/2;
+	self->yuv_height = attrs.height/2;
+}
+
 	liqapp_log("x11overlay dims wh(%i,%i)",self->yuv_width,self->yuv_height);
 
 if(self->yuv_width==480 && self->yuv_height==800)

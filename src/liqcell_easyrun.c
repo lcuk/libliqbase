@@ -56,6 +56,15 @@
 extern int liqcell_showdebugboxes;
 
 
+int liqcell_easyrun_activecontrol=NULL;
+
+
+// arghh..
+liqcell * liqcell_easyrun_getactivecontrol()
+{
+	return liqcell_easyrun_activecontrol;
+}
+
 
 static void liqcellmouseeventargs_stroke_start(liqcellmouseeventargs *self,int mx,int my,int mz)
 {
@@ -326,6 +335,7 @@ static void savethumb(liqcell *cell)
 
 liqcell * toolclick(liqcell *vis)
 {
+	
 	liqcell *self = liqcell_quickcreatewidget("tools","form", 800,480);
 
 	if(self)
@@ -363,22 +373,7 @@ liqcell * toolclick(liqcell *vis)
 		liqcell *b;
 		
 		int hh = 480-64;
-
-		b = liqcell_quickcreatevis("power","liqbattery",  800-64-56,0,   56,56 );
-		//liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
-		//liqcell_handleradd_withcontext(b,    "click",   tool_help_click, self);
-		//liqcell_propsets(  b,    "backcolor", "rgb(0,100,0)" );
-		liqcell_child_append( self, b );
-
-		b = liqcell_quickcreatevis("clock","container",  800-64-56-56-56,0,   56+56,56 );
-		//liqcell_setcontent(b, liqcell_quickcreatevis("clock","ciroclock_minutes",  0,0,0,0 ) );
-		liqcell_setcontent(b, liqcell_quickcreatevis("clock","ciroclock",  0,0,0,0 ) );
-		//liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
-		//liqcell_handleradd_withcontext(b,    "click",   tool_help_click, self);
-		//liqcell_propsets(  b,    "backcolor", "rgb(0,100,0)" );
-		liqcell_child_append( self, b );
-
-
+/*
 		b = liqcell_quickcreatevis("help","button",  800-50,64+hh*0.0,   50,+hh*0.2 );
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
 		liqcell_handleradd_withcontext(b,    "click",   tool_help_click, self);
@@ -400,7 +395,7 @@ liqcell * toolclick(liqcell *vis)
 		liqcell_propsets(  b,    "backcolor", "rgb(0,100,100)" );
 		liqcell_child_append( self, b );		
 
-
+*/
 
 
 		b = liqcell_quickcreatevis("pic","button",  800-50,64+hh*0.6,   50,hh*0.2);
@@ -410,7 +405,7 @@ liqcell * toolclick(liqcell *vis)
 		liqcell_child_append( self, b );
 
 
-
+/*
 
 		b = liqcell_quickcreatevis("save","button",  800-50,64+hh*0.8,   50,hh*0.2 );
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
@@ -418,7 +413,7 @@ liqcell * toolclick(liqcell *vis)
 		liqcell_propsets(  b,    "backcolor", "rgb(0,0,100)" );
 		liqcell_child_append( self, b );
 
-
+*/
 
 		liqcell *content = liqcell_getcontent(vis);
 		if(content)vis=content;
@@ -436,7 +431,7 @@ liqcell * toolclick(liqcell *vis)
 		c = liqcell_quickcreatevis("contentdraw", "liqtop", 0,56,   800-50,480-56 );
 		//liqcell_handleradd_withcontext( c,    "click",   toolitem_click,self);
 		liqcell_child_insert( self, c );
-	
+
 		c = liqcell_quickcreatevis("content", NULL, 0,56,   800-50,480-56 );
 		liqcell_setcontent( c, vis );
 		liqcell_setenabled( c, 0 );		// make sure it has fadeout
@@ -972,6 +967,10 @@ waitevent:
 				}
 				if(keyhit)
 				{
+					hot=keyhit;	// Thu Aug 20 01:35:30 2009 lcuk : mm
+					liqcell_easyrun_activecontrol = hot;
+					
+					
 					// depending upon the key we should handle it...
 					liqapp_log("hello in keyhit:: : %s",keyhit->name);
 
@@ -1028,6 +1027,8 @@ waitevent:
 			else if(ev.type == LIQEVENT_TYPE_MOUSE && (zoom_in_progress==0)   )// && ev.mouse.pressure==0)
 			{
 				// mouse moving! w00t
+				
+				
 
 				// get hold of actual coordinates...
 				int mx=ev.mouse.x;
@@ -1083,6 +1084,8 @@ waitevent:
 						liqcellmouseeventargs_stroke_start(&mouseargs,wx,wy,ev.mouse.pressure);
 
 						mouseargs.hit = hot;
+						
+						liqcell_easyrun_activecontrol = hot;
 
 
 
@@ -1161,7 +1164,7 @@ waitevent:
 								}
 								
 							}
-
+						
 
 							if( (omsx<64) && ((targetsurface->height-omsy)<64) && (omex<64) && ((targetsurface->height-omey)<64) )
 							{
@@ -1506,6 +1509,9 @@ moar:
 			{
 			//	w=ev.mouse.x;
 			}
+			
+			liqcell_easyrun_activecontrol = hot;
+			
 			//liqapp_log("render drawing wh(%i,%i)",w,h);
 			vgraph_drawcell(graph,x,y,w,h,self);
 			//liqapp_log("render adding nav items");

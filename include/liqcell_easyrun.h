@@ -119,7 +119,7 @@ typedef struct liqcellmouseeventargs
 	liqcellmouseeventargs;
 
 
-
+liqcell * liqcell_easyrun_getactivecontrol();
 
 
 

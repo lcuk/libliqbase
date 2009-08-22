@@ -1563,6 +1563,7 @@ liqcell* liqcell_child_lookup(liqcell *self,char *name)
 				//liqapp_log("dot5 %s",dot);
 				return y;
 			}
+			liqapp_log("liqcell_child_lookup '%s' not found '%s'",self->name,name);
 			return NULL;
 		}
 		// invalid string
@@ -1580,6 +1581,7 @@ liqcell* liqcell_child_lookup(liqcell *self,char *name)
 		}
 		c=c->linknext;
 	}
+	liqapp_log("liqcell_child_lookup '%s' not found '%s'",self->name,name);
 	return NULL;
 }
 

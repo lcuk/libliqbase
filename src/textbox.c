@@ -192,7 +192,12 @@ int textbox_clear(liqcell *textbox)
 		{
 			if(*key==10)
 			{
-				liqcell_handlerrun(self,"click",NULL);
+				// Wed Aug 19 00:17:53 2009 lcuk : change this now to send a different event :)
+				// Wed Aug 19 00:18:00 2009 lcuk : easier to get a special "keypress_enter" message and know what to do
+				// Wed Aug 19 00:23:07 2009 lcuk : lots of things do stuff when you press enter
+				// Wed Aug 19 00:23:17 2009 lcuk : alternative is a default button as in visual basic
+				// Wed Aug 19 00:23:41 2009 lcuk : how do i find the related default button though within the system
+				liqcell_handlerrun(self,"keypress_enter",NULL);
 				key="";
 			}
 			if(*key==8 || *key==9)
@@ -427,6 +432,7 @@ liqcell *textbox_create()
 		liqcell_propsets(  self,  "backcolor", "rgb(100,255,150)" );
 		liqcell_propsets(  self,  "textcolor", "rgb(20,30,40)" );
 		liqcell_propsets(  self,  "bordercolor", "rgb(255,255,255)" );
+		
 
 		liqcell_propseti(  self,  "selstart",  0 );
 		liqcell_propseti(  self,  "sellength", 0 );
@@ -449,6 +455,8 @@ liqcell *textbox_create()
 		liqcell_propseti(vkbd_command, "textalign", 2);
 		liqcell_propseti(vkbd_command, "textaligny", 2);
 		liqcell_propseti(vkbd_command, "lockaspect", 1);
+		
+		liqcell_setvisible(vkbd_command,0);		// Wed Aug 19 19:08:20 2009 lcuk : proper way would be checking for no keyboard..
 		
 		liqcell_child_insert(self, vkbd_command);
 	}

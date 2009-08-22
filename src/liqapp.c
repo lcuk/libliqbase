@@ -554,6 +554,8 @@ int 		liqapp_init(int argc, char* argv[],char *title,char *version)
 	snprintf(buf,FILENAME_MAX,"%s/ratings",app.userdatapath);
 	trymakepath(buf);	
 
+	snprintf(buf,FILENAME_MAX,"%s/thumbs",app.userdatapath);
+	trymakepath(buf);	
 	
 	
 	//####################################################### sort out principle user
