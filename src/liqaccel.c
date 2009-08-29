@@ -1,7 +1,7 @@
 /**
  * @file	liqaccel.c
  * @author  Gary Birkett
- * @brief 	accel reader interface.  reads and returns smooth values :)
+ * @brief 	accel reader interface.  reads and returns smooth values  :)  best at high framerates
  * 
  * Copyright (C) 2008 Gary Birkett
  *
