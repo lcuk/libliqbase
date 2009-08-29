@@ -41,6 +41,8 @@
 #include "liqcliprect.h"
 //#include "liqcanvas_xv.h"
 
+
+
 int liqcanvas_firstrun_splash();
 
 #include "liqx11info.h"
@@ -182,8 +184,22 @@ int liqcanvas_init_inner(int pixelwidth,int pixelheight,int fullscreen)
 	
 	if(!fullscreen)
 	{
-		pixelwidth  = ((float)pixelwidth)  * ( (float)HILDON_APPVIEW_WIDTH  / 800.0  );
-		pixelheight = ((float)pixelheight) * ( (float)HILDON_APPVIEW_HEIGHT / 480.0  );
+		if( (strcasecmp("RX-34", liqapp_hardware_product_get() ) ==0) || (strcasecmp("RX-44", liqapp_hardware_product_get() ) ==0) )
+		{
+			// this is n8x0
+			pixelwidth  = ((float)pixelwidth)  * ( (float)HILDON_APPVIEW_WIDTH  / 800.0  );
+			pixelheight = ((float)pixelheight) * ( (float)HILDON_APPVIEW_HEIGHT / 480.0  );
+			
+		}
+		else
+		if(  (strcasecmp("RX-51", liqapp_hardware_product_get() ) ==0) )
+		{
+			pixelwidth  = ((float)pixelwidth)  * ( (float)HILDON_RX_51_APPVIEW_WIDTH  / 800.0  );
+			pixelheight = ((float)pixelheight) * ( (float)HILDON_RX_51_APPVIEW_HEIGHT / 480.0  );
+			
+		}
+		
+		
 	}
 	
 
@@ -259,7 +275,11 @@ int liqcanvas_init(int pixelwidth,int pixelheight,int fullscreen)
 	
 		// opened
 	
-const int firstrun=1;
+	int firstrun=1;
+
+
+	if( strcasecmp("RX-51", liqapp_hardware_product_get() ) ==0 ) firstrun=0;
+
 	if(firstrun)
 	{
 		liqapp_log("canvas liqx11info_init firstrun splash location");

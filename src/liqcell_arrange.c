@@ -417,14 +417,12 @@ int liqcell_child_arrange_makegrid_internal(liqcell *self,int viscolcount,int vi
 
 	//################################################
 	//liqapp_log("liqcell_child_arrange_nooverlap preparing");
-	c=liqcell_getlinkchild(self);
+	c=liqcell_getlinkchild_visual(self);
 	while(c)
 	{
-		if(liqcell_getvisible(c))
-		{
-			answercount++;		//
-		}
-		c=liqcell_getlinknext(c);
+
+		answercount++;		//
+		c=liqcell_getlinknext_visual(c);
 	}
 
 	if(answercount==0)
@@ -504,55 +502,68 @@ retry:
 	
 	int isfinished=1;
 
-	c=liqcell_getlinkchild(self);
+	c=liqcell_getlinkchild_visual(self);
+	int remain = answercount;
 	while(c)
 	{
-		if(liqcell_getvisible(c))
+		
+		//liqapp_log("aaaa %i,%i,%i",answercount,remain,ccols);
+	/*	
+		if(remain < ccols && answercount>1 )
 		{
-			// work it!
-			xx=col*tilew;
-			yy=row*tileh;
-			
-			// 20090521_233205 lcuk : idea: i want to achieve this effect incrementally
-			// i only want to move a fraction of the way towards target and alter size by a fraction
-			
-			if(flymode)
+			liqapp_log("aaab %i,%i,%i",answercount,remain,ccols);
+			// centralize final row
+			tilew = liqcell_getw(self) / (remain);
+			borderw = tilew * 0.05;
+			// just set this high enough to be out of the way
+			remain=999999;
+		}
+		remain--;
+	*/
+		// work it!
+		xx=col*tilew;
+		yy=row*tileh;
+		
+		// 20090521_233205 lcuk : idea: i want to achieve this effect incrementally
+		// i only want to move a fraction of the way towards target and alter size by a fraction
+		
+		if(flymode)
+		{
+			if( 0!= liqcell_movetowardsrect(c, xx+borderw/2,yy+borderh/2  ,   (tilew-borderw),(tileh-borderh) , 0.4 ) )
 			{
-				if( 0!= liqcell_movetowardsrect(c, xx+borderw/2,yy+borderh/2  ,   (tilew-borderw),(tileh-borderh) , 0.4 ) )
-				{
-					// we are not yet at target, we must
-					liqcell_setdirty(c,1);
-					
-					//liqcell_propseti(self,"easytileflyisfinished",0);
-					isfinished=0;
-					
-				}
+				// we are not yet at target, we must
+				liqcell_setdirty(c,1);
+				
+				//liqcell_propseti(self,"easytileflyisfinished",0);
+				isfinished=0;
+				
 			}
-			else
-			{
-			
-	
-				liqcell_setpos(c,  xx+borderw/2,yy+borderh/2);
-				liqcell_setsize(c, (tilew-borderw),(tileh-borderh));
+		}
+		else
+		{
+		
 
-			}
-			// 20090814_190720 lcuk : replace this, its missing the rhs
-			//if(c->x+c->w > maxw)maxw=c->x+c->w;
-			//if(c->y+c->h > maxh)maxh=c->y+c->h;
-			
-			
-			if(xx+tilew > maxw)maxw=xx+tilew;
-			if(yy+tileh > maxh)maxh=yy+tileh;
-
-			
-			
-			//liqapp_log("makegrid '%s' xy(%i,%i)   xxyy(%i,%i)",self->name,xx,yy,c->x,c->y);
-
-			col++;
-			if(col>=ccols){col=0;row++;}
+			liqcell_setpos(c,  xx+borderw/2,yy+borderh/2);
+			liqcell_setsize(c, (tilew-borderw),(tileh-borderh));
 
 		}
-		c=liqcell_getlinknext(c);
+		// 20090814_190720 lcuk : replace this, its missing the rhs
+		//if(c->x+c->w > maxw)maxw=c->x+c->w;
+		//if(c->y+c->h > maxh)maxh=c->y+c->h;
+		
+		
+		if(xx+tilew > maxw)maxw=xx+tilew;
+		if(yy+tileh > maxh)maxh=yy+tileh;
+
+		
+		
+		//liqapp_log("makegrid '%s' xy(%i,%i)   xxyy(%i,%i)",self->name,xx,yy,c->x,c->y);
+
+		col++;
+		if(col>=ccols){col=0;row++;}
+
+
+		c=liqcell_getlinknext_visual(c);
 	}
 
 	liqcell_setsize( self, maxw,maxh);//tilew * ccols , yy + tileh );

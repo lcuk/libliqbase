@@ -701,20 +701,20 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 	// From
 	if(drawmode)
 	{
+		fox = 0;
+		foy = 0;
 		fmx = page->pixelwidth;
 		fmy = page->pixelheight;
 		if(fmx==0 || fmy==0) return;
-		fox = 0;
-		foy = 0;
 
 	}
 	else
 	{
+		fox = page->boundingbox.xl;
+		foy = page->boundingbox.yt;
 		fmx = page->boundingbox.xr - page->boundingbox.xl;
 		fmy = page->boundingbox.yb - page->boundingbox.yt;
 		if(fmx==0 || fmy==0) return;
-		fox = page->boundingbox.xl;
-		foy = page->boundingbox.yt;
 
 	}
 
@@ -727,6 +727,15 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 	// To
 	int tmx = w-1; if(tmx<0)tmx=0;
 	int tmy = h-1; if(tmy<0)tmy=0;
+	
+	
+	if((drawmode & 1))
+	{
+		// for direct drawing, make sure we use the direct size of the available sketch :)
+		tmx=page->pixelwidth;
+		tmy=page->pixelheight;
+	}
+	
 	if(tmy==0 || tmy==0) return;
 	int tox = l;
 	int toy = t;
@@ -802,6 +811,13 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 	
 	// 20090712_145556 lcuk : lets try something radical
 	int rpt=(fmap2/tmap2)/8;
+	
+	
+	
+	// Sun Aug 23 12:41:07 2009 lcuk : fuckit, try full res always and see
+	if(liqapp_hardware_product_ispowerful_get())
+		rpt=0;
+	
 
 	switch(page->backgroundstyle)
 	{

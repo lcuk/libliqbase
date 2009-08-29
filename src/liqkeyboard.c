@@ -32,13 +32,23 @@
 liqcell *build_vkbd();
 
 
-//######################################################################
-//######################################################################
-//######################################################################
 
+
+//######################################################################
+//######################################################################
+//######################################################################
 static liqcell *mkframe(liqcell *self,char *title,int w,int h)
 {
 	liqcell *ch= liqcell_quickcreatevis(title,NULL,0,0,w,h);
+	//liqcell_pageautoloadbytitle_apg(ch);
+	liqcell_child_append(self,ch);
+	return ch;
+}
+
+
+static liqcell *mkkey(liqcell *self,char *title,int w,int h)
+{
+	liqcell *ch= liqcell_quickcreatevis(title,"keycap",0,0,w,h);
 	//liqcell_pageautoloadbytitle_apg(ch);
 	liqcell_child_append(self,ch);
 	return ch;
@@ -91,7 +101,7 @@ static int key_click(liqcell *self, liqcelleventargs *args,liqcell *keyboard)
 	return 0;
 }
 
-
+/*
 static int key_mouse(liqcell *self, liqcellmouseeventargs *args,liqcell *keyboard)
 {
 	// whilst the button is pressed, the button should change color		
@@ -109,7 +119,7 @@ static int key_mouse(liqcell *self, liqcellmouseeventargs *args,liqcell *keyboar
 	}
 	return 0;
 }
-
+ */
 static int enter_click(liqcell *self,liqcelleventargs *args, liqcell *keyboard)
 {
 	// get local textbox caption
@@ -188,8 +198,8 @@ liqcell *liqkeyboard_create()
 	// keyboard
 	liqcell *liqkeyboard = build_vkbd();
 	liqcell_setfont(liqkeyboard, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (12), 0));
-	liqcell_propsets(liqkeyboard, "textcolor", "rgb(0,0,0)");
-	liqcell_propsets(liqkeyboard, "backcolor", "rgb(0,128,128)");
+	//liqcell_propsets(liqkeyboard, "textcolor", "rgb(0,0,0)");
+	//liqcell_propsets(liqkeyboard, "backcolor", "rgb(0,128,128)");
 	liqcell_child_append(self, liqkeyboard);
 
 	liqcell_handleradd_withcontext(liqkeyboard, "keypress", liqkeyboard_keypress, self);
@@ -252,8 +262,10 @@ liqcell *build_vkbd()
 
 		if(keycodenumeric==0)
 		{
-			key = mkframe(keyrow,keycode,w,240/5);
+			key = mkkey(keyrow,keycode,w,240/5);
 			liqcell_setcaption(key,normal);
+			
+			liqcell_propsets(  key, "backcolor", "rgb(100,150,100)" );
 
 			//liqcell_propsets(     key,"fontname", "/usr/share/fonts/nokia/nosnb.ttf" );
 			//liqcell_propseti(     key,"fontsize", 24 );
@@ -265,7 +277,7 @@ liqcell *build_vkbd()
 		}
 		else
 		{
-			key = mkframe(keyrow,normal,w,240/5);
+			key = mkkey(keyrow,normal,w,240/5);
 			//key->style=stylekeycap;
 			//key->handlermouse=key_mouse;
 
@@ -277,7 +289,9 @@ liqcell *build_vkbd()
 			liqcell_propseti(     key,"textalign", 2 );
 			liqcell_propseti(     key,"textaligny",2 );
 			
-			liqcell_handleradd_withcontext(   key,"mouse", key_mouse, keyboard );
+			liqcell_propsets(  key, "backcolor", "rgb(100,150,100)" );
+			
+			//liqcell_handleradd_withcontext(   key,"mouse", key_mouse, keyboard );
 			liqcell_handleradd_withcontext(   key,"click", key_click, keyboard );
 			liqcell_settag(       key,(void*)keycodenumeric);
 

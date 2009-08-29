@@ -133,6 +133,10 @@ typedef union
 #define HILDON_APPVIEW_WIDTH           720
 
 
+#define HILDON_RX_51_APPVIEW_HEIGHT          420
+#define HILDON_RX_51_APPVIEW_WIDTH           800
+
+
 //todo: make this a class instance, we might end up having multiple canvases..
 extern liqcanvas canvas;
 

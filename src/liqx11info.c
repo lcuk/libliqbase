@@ -527,6 +527,8 @@ foo:
 				//############################################ focus
 				case EnterNotify:					
 					liqapp_log("event.EnterNotify");
+
+						
 						if((myx11info->myoverlay))
 						{
 							liqx11overlay_show(myx11info->myoverlay);
@@ -544,7 +546,7 @@ foo:
 						{
 							liqx11overlay_show(myx11info->myoverlay);
 							liqx11overlay_refreshdisplay(myx11info->myoverlay);
-							//isbusyrendering=1;
+                            //isbusyrendering=1;
 						}
 					break;				
 	
@@ -566,6 +568,9 @@ foo:
 	
 						if((myx11info->myoverlay))
 						{
+							//liqx11overlay_hide(myx11info->myoverlay);
+							//liqx11overlay_refreshdisplay(myx11info->myoverlay);
+
 							liqx11overlay_show(myx11info->myoverlay);
 							liqx11overlay_refreshdisplay(myx11info->myoverlay);
 							//isbusyrendering=1;
@@ -861,9 +866,11 @@ foo:
 								
 								myx11info->myispressedflag=1;
 								
+                if(canvas.fullscreen)
+                {
 								xev.xmotion.x= xev.xmotion.x * canvas.pixelwidth  / xres;
 								xev.xmotion.y= xev.xmotion.y * canvas.pixelheight / yres;
-								
+                }			
 								//liqapp_log("buttonpress  %i,%i",xev.xmotion.x,xev.xmotion.y);
 								//liqapp_log("ButtonPress");
 								ev->type = LIQEVENT_TYPE_MOUSE;
@@ -882,10 +889,15 @@ foo:
 								int xres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->width;
 								int yres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->height;
 								
+                                
+                //                int qx=xev.xmotion.x;
+                //                int qy=xev.xmotion.y;
+                if(canvas.fullscreen)
+                {
 								xev.xmotion.x= xev.xmotion.x * canvas.pixelwidth  / xres;
 								xev.xmotion.y= xev.xmotion.y * canvas.pixelheight / yres;
-						 
-								//liqapp_log("motion %i,%i",xev.xmotion.x,xev.xmotion.y);
+                }		 
+				//				liqapp_log("motion %i,%i (q %i,%i) (can %i,%i)",xev.xmotion.x,xev.xmotion.y,qx,qy,canvas.pixelwidth,canvas.pixelheight);
 								ev->type = LIQEVENT_TYPE_MOUSE;
 								ev->mouse.state = LIQEVENT_STATE_MOVE;
 								ev->mouse.x = ((xev.xmotion.x));// *800)/canvas.pixelwidth;
@@ -903,9 +915,11 @@ foo:
 								
 								myx11info->myispressedflag=0;
 								
+                if(canvas.fullscreen)
+                {
 								xev.xmotion.x= xev.xmotion.x * canvas.pixelwidth  / xres;
 								xev.xmotion.y= xev.xmotion.y * canvas.pixelheight / yres;
-						 
+                }		 
 								//liqapp_log("release %i,%i",xev.xmotion.x,xev.xmotion.y);
 						
 								//liqapp_log("ButtonRelease");

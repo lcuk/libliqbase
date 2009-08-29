@@ -44,9 +44,14 @@ int liqcell_showdebugboxes=0;
 
 liqimage *easypaint_isloading_image = NULL;
 liqimage *easypaint_barcode_image = NULL;
+liqimage *easypaint_backgrain_image = NULL;
 
 //qr_barcode.png
 
+
+extern int liqcell_easyrun_cursor_on_screen;
+extern int liqcell_easyrun_cursorflashcount;
+extern int liqcell_easyrun_fingerpressed;
 
 
 
@@ -702,6 +707,7 @@ __tz_one("paintdone");
 
 
 
+
 	{
 		t = liqcell_propgets(self,"backcolor",NULL);
 		if(t)
@@ -709,11 +715,27 @@ __tz_one("paintdone");
 			//liqapp_log("textcolor :: '%s'",t);
 			if(decodecolor(t, &bcy, &bcu, &bcv, &bca ))
 			{
-				//bca=255;
-				if(bca==255)
-					liqcliprect_drawboxfillcolor(     cr,x,y,w,h,bcy,bcu,bcv);
-				else
-					liqcliprect_drawboxfillblendcolor(cr,x,y,w,h,bcy,bcu,bcv,bca);
+                // play...
+                if( (!self->image) && (self->classname))
+                {
+                    if(!easypaint_backgrain_image)
+                    {
+                         easypaint_backgrain_image=liqimage_newfromfile("/usr/share/liqbase/libliqbase/media/backgrain.png",0,0,0);
+                    }
+                    if(easypaint_backgrain_image)
+                    {
+                        liqcliprect_drawimagecolor(cr,easypaint_backgrain_image,x,y,w,h,0);
+                        liqcliprect_drawboxwashcolor(     cr,x,y,w,h, bcu,bcv);
+                    }
+                }
+                else
+                {
+                    //bca=255;
+                    if(bca==255)
+                        liqcliprect_drawboxfillcolor(     cr,x,y,w,h,bcy,bcu,bcv);
+                    else
+                        liqcliprect_drawboxfillblendcolor(cr,x,y,w,h,bcy,bcu,bcv,bca);
+                }
 			}
 		}
 	}
@@ -814,73 +836,6 @@ __tz_one("imageprep");
 
 		{
 		//	liqapp_log("imagefloat: start '%s' %i,%i",self->name,w,h);
-/*
-
-			//liqapp_log("imagefloat: start");
-			// when floating, the image is scaled 130%
-			int cx=0;					// cell dimensions
-			int cy=0;
-			int cw=liqcell_getw(self);
-			int ch=liqcell_geth(self);
-			
-			int tx=0;					// total dimensions
-			int ty=0;
-			int tw=cw*1.3;
-			int th=ch*1.3;
-			
-			int frw=tw-cw;
-			int frh=th-ch;
-			
-			float fax=0.03 * (float)(rand() % 100 - 50);	// acceleration is random
-			float fay=0.03 * (float)(rand() % 100 - 50);			
-			float fvx=0;									// velocity is some of the accel
-			float fvy=0;	
-			float fpx=0;									// position is the field
-			float fpy=0;
-			
-			//liqapp_log("imagefloat: reading");
-			int rs=sscanf(fstr,"%f,%f,%f,%f",&fvx,&fvy,&fpx,&fpy);
-			
-			//liqapp_log("imagefloat: read, got %i",rs);
-			
-			#define dt 0.2
-			#define maxv 10
-			
-			if(rs!=4){  fvx=0;  fvy=0;  fpx=0;  fpy=0; }
-			
-			//if(rs==4)
-			{
-				
-				
-				fvx += dt * fax;
-				fvy += dt * fay;
-				
-				if(fvx<-maxv){fvx=-maxv; } else{ if(fvx>maxv){fvx=maxv;}}
-				if(fvy<-maxv){fvy=-maxv; } else{ if(fvy>maxv){fvy=maxv;}}
-				
-				fpx += 0.1 * fvx;
-				fpy += 0.1 * fvy;
-				
-				if(fpx<0){ fpx=0;fvx=0;}else{ if(fpx>frw){fpx=frw;fvx=0;} }
-				if(fpy<0){ fpy=0;fvy=0;}else{ if(fpy>frh){fpy=frh;fvy=0;} }
-				
-				//liqapp_log("imagefloat: writing new");
-				
-				liqcell_propsets_printf(self,"imagefloat","%f,%f,%f,%f",fvx,fvy,fpx,fpy);
-				
-				
-				//liqapp_log("imagefloat: getting dims");
-				
-				int rw=w*1.3;
-				int rh=h*1.3;
-				
-				int xx=x- (fpx*w/cw);
-				int yy=y- (fpy*h/ch);
-				
- 
-			}
-
- */
 			
 			{
 
@@ -1028,8 +983,9 @@ __tz_one("sketchprep");
 		//liqcliprect_drawimagecolor(cr,camimage,x,y,w,h,0);
 		if(liqcell_propgeti(self,"sketchediting",0)==1)
 		{
-			//liqapp_log("edit mode ahoy!");
-			liqcliprect_drawsketch(cr,self->sketch,x,y,w,h,4);
+
+            //liqapp_log("edit mode ahoy!");
+            liqcliprect_drawsketch(cr,self->sketch,x,y,w,h,1 + 4);      // full detailed + noaspect
 		}
 		else
 		{
@@ -1110,10 +1066,14 @@ __tz_one("fontprep");
 				int tsellength = liqcell_propgeti(  self,"sellength",0);
 				int tcursorpos = liqcell_propgeti(  self,"cursorpos",-1);
 				
+                
+                
+                if(tcursorpos>=0)liqcell_easyrun_cursor_on_screen++;
+				
 
 
 
-				//liqapp_log("easypaint '%s' count '%s'",self->name,caption);
+				//liqapp_log("easypainta '%s' ss %i, sl %i, cp %i",self->name,tselstart,tsellength,tcursorpos);
 
 
 
@@ -1147,7 +1107,7 @@ __tz_one("fontprep");
 						int tl = strlen(c);		// total length remaining
 						
 	
-						int lc = liqfont_textfitinside(self->font, c, w-4 );
+						int lc = liqfont_textfitinside(self->font, c, w-16 );
 						if(lc==0)lc++;
 						//liqapp_log("easypaint '%s' countX '%s' %i,%i",self->name,c,tl,lc);
 						if(lc<tl)
@@ -1198,6 +1158,7 @@ __tz_one("fontprep");
 				int xx=x;
 				int yy=y;
 				int ww=w;
+				int hh=h;
 
 				//############################################################ get textcolor
 				unsigned char tcy=255;
@@ -1258,7 +1219,7 @@ for(linenum=0;linenum<linecount;linenum++)
 	
 	
 				//if(cursorpos>=0)
-				{ x+=2; w-=4; y+=2; h-=4; }
+				{ x+=8; w-=16; y+=4; h-=8; }
 				if(selstart>captionlen)selstart=captionlen;
 				if(selstart+sellength>captionlen)sellength=captionlen-selstart;
 				if(cursorpos>captionlen)cursorpos=(linenum==linecount-1)? captionlen : -1;
@@ -1310,6 +1271,7 @@ for(linenum=0;linenum<linecount;linenum++)
 							y+=(h-fh)/2;
 						}
 				//############################################################ draw it now
+				//liqapp_log("easypaint2 '%s' ss %i, sl %i, cp %i",self->name,selstart,sellength,cursorpos);
 
 				if(selstart>=0 && (liqcell_easyrun_getactivecontrol()==self))
 				{
@@ -1367,6 +1329,7 @@ for(linenum=0;linenum<linecount;linenum++)
 						char *alline = caption;
 
 
+
 						if(selstart>0)
 						{
 
@@ -1380,7 +1343,8 @@ for(linenum=0;linenum<linecount;linenum++)
 							int ttt = liqfont_textwidth(self->font,sel);
 							if(sel)free(sel);
 							liqcliprect_drawboxfillcolor(cr,x,y,ttt,fh,tcy,tcu,tcv);
-							x=liqcliprect_drawtextn_color(  cr, self->font,  x,y, alline, sellength, 255-tcy,tcv-20,tcu+20);
+							//x=liqcliprect_drawtextn_color(  cr, self->font,  x,y, alline, sellength, 255-tcy,tcv-20,tcu+20);
+							x=liqcliprect_drawtextn_color(  cr, self->font,  x,y, alline, sellength, 255-tcy,tcv,tcu);
 							alline+=sellength;
 						}
 						{
@@ -1391,18 +1355,30 @@ for(linenum=0;linenum<linecount;linenum++)
 						x=tx;
 					}
 
+
+
+					//liqapp_log("easypaint3 '%s' ss %i, sl %i, cp %i",self->name,selstart,sellength,cursorpos);
+
+
 					if(cursorpos>=0 && cursorpos<=captionlen)
 					{
-						if(cursorpos==0 && sellength==0)x-=2;
+                        
+	//					if(cursorpos==0 && sellength==0)x-=2;
+                        
 						//x=xx;
 						char *sel=strndup(caption,cursorpos);
 						int ttt = liqfont_textwidth(self->font,sel);
 						if(sel)free(sel);
-						liqcliprect_drawboxwashcolor(cr,x+ttt-1,y,3,fh,     40,20);
+						//liqcliprect_drawboxwashcolor(cr,x+ttt-1,y,3,fh,     40,20);
+						//liqcliprect_drawboxwashcolor(cr,x+ttt-1,y,3,fh,     128,128);
 						
-						//liqcliprect_drawboxfillcolor(cr,x+ttt-1,y,3,fh,40,40,20);
-						liqcliprect_drawboxfillcolor(cr,x+ttt  ,y,1,fh,255,40,20);
-						//liqcliprect_drawboxfillcolor(cr,x+ttt+1,y,1,fh,40,40,20);
+						//liqcliprect_drawboxfillcolor(cr,x+ttt  ,y,1,fh,255,40,20);
+                     //   liqapp_log("cursorx %i:%i",liqcell_easyrun_cursorflashcount,(liqcell_easyrun_cursorflashcount & 1));
+                        if( (liqcell_easyrun_cursorflashcount & 1) == 0 )
+                            liqcliprect_drawboxfillcolor(cr,x+ttt  ,y,1,fh,0,128,128);
+                        else
+                            liqcliprect_drawboxfillcolor(cr,x+ttt  ,y,1,fh,255,128,128);
+                        
 
 					}
 					
@@ -1422,6 +1398,7 @@ for(linenum=0;linenum<linecount;linenum++)
 				x=xx;
 				y=yy;
 				w=ww;
+				h=hh;
 
 			}
 		}
@@ -1543,6 +1520,22 @@ __tz_one("disablerdone");
 
 
 
+	//t = liqcell_propgets(self,"bordercolor",NULL);
+	//if(t)
+    if(liqcell_easyrun_fingerpressed && (liqcell_easyrun_getactivecontrol()==self))
+	{
+		//liqapp_log("textcolor :: '%s'",t);
+		//if(decodecolor(t, &bcy, &bcu, &bcv , &bca))
+        if(w<400 && h<240)  // shock!
+		{
+
+    		liqcliprect_drawboxwashcolor(     cr,x,y,w,h, 60,80);
+			liqcliprect_drawboxlinecolor(     cr,x,y,w,h,200,20,40);
+		}
+	}
+
+
+__tz_one("presseddone");
 
 
 

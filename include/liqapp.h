@@ -77,6 +77,8 @@ int 		liqapp_close();
 
 char *		liqapp_gettitle();
 
+char *      liqapp_hardware_product_get();
+int         liqapp_hardware_product_ispowerful_get();
 
 float 		liqapp_fps(unsigned long ts,unsigned long te,unsigned long framecount);
 int 		liqapp_getopt_find(char *optname);

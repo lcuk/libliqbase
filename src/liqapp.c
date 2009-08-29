@@ -52,6 +52,12 @@ liqcell *liqapp_logbase=NULL;
 
 liqapp app={0};
 
+
+
+
+
+
+
 // using komodo edit configured to look like vb
 // using winscp towards the device and putty
 // ssh in windows, openssh from here http://sshwindows.sourceforge.net/download/
@@ -94,6 +100,113 @@ char *liqapp_gettitle()
 }
 
 
+//#######################################################################
+//#######################################################################
+//#######################################################################
+
+	static const char *hardware_product_filename = "/proc/component_version";
+	//static const char *cpufreq_filename = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq";
+    
+    static char *hardware_product[32]={0};
+	static int   hardware_product_ispowerful;
+	
+	int hardware_product_read()
+	{
+        hardware_product[0]=0;
+        
+		FILE *fd;
+		int rs;
+
+		fd = fopen(hardware_product_filename, "r");
+		if(fd==NULL){ liqapp_log("hardware_product_read, cannot open for reading"); return -1;}	
+		char tit[32]={0};
+		char dat[32]={0};
+        
+        while(!feof(fd))
+		{
+		
+            dat[0]=0;
+            tit[0]=0;
+            rs=fscanf((FILE*) fd,"%10s %10s\n",tit,dat);
+            tit[31]=0;
+            dat[31]=0;
+            //liqapp_log("hardware_product_read version data line: '%s'='%s' %i",tit,dat,rs);
+            if(rs != 2){ liqapp_log("hardware_product_read, cannot read information"); fclose(fd); return -2;}
+            
+            if(strcasecmp(tit,"product")==0)
+            {
+                strncpy(hardware_product,dat,32);
+                break;
+            }
+            
+        }        
+        fclose(fd);
+        
+        
+        
+ 
+        if(strcasecmp(tit,"product")==0)
+        {
+            snprintf(hardware_product,sizeof(hardware_product),"%s",dat);
+            return 0;
+        }
+        
+        liqapp_log("hardware_product_read, did not find product line");
+        return 0;
+	}
+
+/**
+ * hardware_product_read return the "product" field from /proc/component_version
+ * @return string containing product field "RX-44" etc
+ */
+
+
+	char * liqapp_hardware_product_get()
+    {
+        if(hardware_product[0]==0)
+        {
+			hardware_product_ispowerful = 0;
+			
+            if( hardware_product_read() != 0 )
+				return NULL;
+			
+			// quick check for devices we know require limiting
+			
+			if( strcasecmp("RX-34", hardware_product ) == 0)
+			{
+				hardware_product_ispowerful = 0;
+			}
+			else
+			if( strcasecmp("RX-44", hardware_product) == 0)
+			{
+				hardware_product_ispowerful = 0;
+			}
+			else
+			{
+				// unlimited
+				hardware_product_ispowerful = 1;
+			}
+			
+        }
+        return hardware_product;
+    }
+    
+ /*   
+    if( strcasecmp("RX-44", liqapp_hardware_product_get() ) ==0 )
+    {
+        // this is n810
+    }
+ */
+ 
+ 
+	int         liqapp_hardware_product_ispowerful_get()
+	{
+		if(hardware_product[0]==0)
+        {
+            liqapp_hardware_product_get();
+        }
+		return hardware_product_ispowerful;
+ 	}
 
 //#######################################################################
 //#######################################################################
@@ -456,6 +569,25 @@ int 		liqapp_init(int argc, char* argv[],char *title,char *version)
 	
 	
 
+
+
+
+
+
+
+	{
+		//
+		char buf2[FILENAME_MAX+1];
+		snprintf(buf2,FILENAME_MAX,"%s/.liqbase/%s.run.log",getenv("HOME"),app.title);
+		if(liqapp_fileexists(buf2))
+		{
+			// try to remove it
+			remove(buf2);
+			// could we? do we care? not for now
+		}
+		
+	}
+	
 	
 	
 	
@@ -465,7 +597,7 @@ int 		liqapp_init(int argc, char* argv[],char *title,char *version)
 	liqapp_log("");
 	
 	
-	liqapp_log("Welcome to %s ver %s",app.title,app.version);
+	liqapp_log("Welcome to %s ver %s",app.title,app.version );
 	
 	
 	
@@ -506,6 +638,18 @@ int 		liqapp_init(int argc, char* argv[],char *title,char *version)
 	}
 	
 	char buf[FILENAME_MAX+1];
+	
+	
+	//####################################################### force root redirection (so that it finds a filled .prefs file and stuff)
+	
+	snprintf(buf,FILENAME_MAX,"%s/.liqbase/liqbase.force.home.user",envhome);
+	
+	
+	if(liqapp_fileexists(buf))
+	{
+		// just to try to make sure we use here instead
+		envhome="/home/user";
+	}
 
 
 	// 20090724_154719 lcuk : todo jaffa says use this: http://standards.freedesktop.org/basedir-spec/basedir-spec-0.6.html
@@ -558,11 +702,12 @@ int 		liqapp_init(int argc, char* argv[],char *title,char *version)
 	trymakepath(buf);	
 	
 	
-	//####################################################### sort out principle user
-
+	//####################################################### load prefs
 
 	liqapp_prefs_load();
 	
+
+	//####################################################### sort out principle user
 	
 	char *un = liqapp_pref_getvalue("username");
 	if(un)
@@ -585,6 +730,8 @@ int 		liqapp_init(int argc, char* argv[],char *title,char *version)
 	liqapp_log("app.codepath     =%s",app.codepath);
 	liqapp_log("app.homepath     =%s",app.homepath);
 	liqapp_log("app.userdatapath =%s",app.userdatapath);
+	liqapp_log("#############");
+    liqapp_log("app.hardware     =%s", liqapp_hardware_product_get() );
 	liqapp_log("#############");
 	liqapp_log("app.username     =%s",app.username);
 	liqapp_log("#############");
@@ -653,6 +800,18 @@ int liqapp_vdeeplog(char *logentry, va_list arg)
 	
 	puts("");	// dang! this feels bad
 	fflush(stdout);
+
+	// VERY temporary logging
+	char buf2[FILENAME_MAX+1];
+	snprintf(buf2,FILENAME_MAX,"%s/%s.run.log",app.title,app.userdatapath);
+	FILE *fp=fopen(buf2,"a");
+	if(fp)
+	{
+		fprintf(  fp, "%s "   , buf);		// append time
+		vfprintf( fp, logentry, arg );		// now the log item
+		fputs("\n",fp);
+		fclose(fp);
+	}
 
 	return 0;
 }

@@ -1563,11 +1563,11 @@ liqcell* liqcell_child_lookup(liqcell *self,char *name)
 				//liqapp_log("dot5 %s",dot);
 				return y;
 			}
-			liqapp_log("liqcell_child_lookup '%s' not found '%s'",self->name,name);
+			//liqapp_log("liqcell_child_lookup '%s' not found '%s'",self->name,name);
 			return NULL;
 		}
 		// invalid string
-		liqapp_log("liqcell_child_lookup failed strdup");
+		//liqapp_log("liqcell_child_lookup failed strdup");
 		return NULL;
 	}
 	
@@ -1581,7 +1581,7 @@ liqcell* liqcell_child_lookup(liqcell *self,char *name)
 		}
 		c=c->linknext;
 	}
-	liqapp_log("liqcell_child_lookup '%s' not found '%s'",self->name,name);
+	//liqapp_log("liqcell_child_lookup '%s' not found '%s'",self->name,name);
 	return NULL;
 }
 

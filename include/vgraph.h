@@ -89,6 +89,7 @@ int		vgraph_drawpoint(      			vgraph *self, int x, int y                    );
 int		vgraph_drawline(       			vgraph *self, int x, int y, int ex,int ey     );
 int		vgraph_drawbox(        			vgraph *self, int x, int y, int w,int h       );
 int		vgraph_drawrect(       			vgraph *self, int x, int y, int w,int h       );
+int		vgraph_drawrectwash(   			vgraph *self, int x, int y, int w,int h       );
 int		vgraph_drawcircle(     			vgraph *self, int x, int y, int radius        );
 int		vgraph_drawellipse(    			vgraph *self, int x, int y, int rx,int ry     );
 int		vgraph_drawtext(       			vgraph *self, int x, int y, char *text        );

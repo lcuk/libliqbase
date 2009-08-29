@@ -415,6 +415,27 @@ int		vgraph_drawrect(       vgraph *self, int x, int y, int w,int h       )
 
 
 
+int		vgraph_drawrectwash(       vgraph *self, int x, int y, int w,int h       )
+{
+	
+	//liqapp_log("draw.rect.in  %i,%i,%i,%i",x,y,w,h);
+	
+	x = self->scalex + (x * self->scalew / self->windoww);
+	y = self->scaley + (y * self->scaleh / self->windowh);
+	w = (w * self->scalew / self->windoww);
+	h = (h * self->scaleh / self->windowh);
+	
+	
+	
+	//liqapp_log("draw.rect.use %i,%i,%i,%i",x,y,w,h);
+	
+	unsigned char *yuva = (unsigned char *)&self->backcolor;
+	liqcliprect_drawboxwashcolor( vgraph_getcliprect(self),   x,y,   w,h,    yuva[1],yuva[2] );
+	return 0;
+}
+
+
+
 int		vgraph_drawcircle(     vgraph *self, int x, int y, int radius        )
 {
 
@@ -524,8 +545,19 @@ int		vgraph_drawsketch_old(       vgraph *self, int x, int y, int w,int h  ,liqs
 
 int		vgraph_drawimage(      vgraph *self, int x, int y, int w,int h , liqimage *image      )
 {
+
+	if(!image) return -1;
 	
-	liqcliprect_drawboxfillcolor( vgraph_getcliprect(self),   x,y,   w,h,   128,128,128 );
+	//liqapp_log("draw.sketch.in  %i,%i,%i,%i",x,y,w,h);
+	
+	x = self->scalex + (x * self->scalew / self->windoww);
+	y = self->scaley + (y * self->scaleh / self->windowh);
+	w = (w * self->scalew / self->windoww);
+	h = (h * self->scaleh / self->windowh);
+	
+	
+	liqcliprect_drawimagecolor(vgraph_getcliprect(self),  image, x,y,   w,h, 1 );
+	//liqcliprect_drawboxfillcolor( vgraph_getcliprect(self),   x,y,   w,h,   128,128,128 );
 	return 0;
 }
 
@@ -549,8 +581,9 @@ int		vgraph_drawsketch(       vgraph *self, int x, int y, int w,int h  ,liqsketc
 	
 	
 	//liqapp_log("draw.sketch.use %i,%i,%i,%i",x,y,w,h);
+	liqcliprect_drawsketch( vgraph_getcliprect(self), sketch,  x,y,   w,h,   0 );
 	
-	liqcliprect_drawboxfillcolor( vgraph_getcliprect(self),   x,y,   w,h,   128,128,128 );
+	//liqcliprect_drawboxfillcolor( vgraph_getcliprect(self),   x,y,   w,h,   128,128,128 );
 	return 0;
 }
 

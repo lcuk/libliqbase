@@ -143,6 +143,29 @@ int dllcache_close()
 
 
 
+int dllcache_scan_libraryinternal(char *classname)
+{
+	// we are gonna expand our dllcache
+	
+	if(dllcache_used==dllcache_size)
+	{
+		//
+	   	{ return liqapp_warnandcontinue(-1,"dllcache_scan_libraryinternal, no more slots for this dll"); }
+	}
+	
+	dllcacheitem * dllcacheitem=NULL;
+
+	
+
+		// special case :)
+
+		//################################################# alloc and initialize the cache item :)
+		dllcacheitem = &dllcache[ dllcache_used++ ];
+		dllcacheitem->key        = strdup(classname);
+		dllcacheitem->filename   = strdup(classname);
+		dllcacheitem->dll        = dlopen(NULL, RTLD_LAZY | RTLD_GLOBAL );//RTLD_NOW);
+		dllcacheitem->constructor= NULL;
+}
 
 
 
@@ -332,6 +355,10 @@ int dllcache_scan()
 		//{ return liqapp_warnandcontinue(-1,"dllcache scan, error while scan 'src/widgets'"); }			
 	}
 	
+    
+    dllcache_scan_libraryinternal("liqkeyboard");
+    dllcache_scan_libraryinternal("textbox");
+    dllcache_scan_libraryinternal("liqtimer");
 
 
 

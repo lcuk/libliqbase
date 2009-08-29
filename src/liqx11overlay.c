@@ -160,11 +160,15 @@ if(self->yuv_width==480 && self->yuv_height==800)
 		{ liqapp_errorandfail(-1,"canvas liqcliprect_create failed"); }
 		return -1;
 	}
+	
+	liqcliprect_drawclear(canvas.cr,0,128,128);
 
 
+if(canvas.fullscreen)
+{
 	canvas.pixelwidth  = self->yuv_width;
 	canvas.pixelheight = self->yuv_height;
-
+}
 
 
 	return 0;

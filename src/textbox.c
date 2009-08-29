@@ -41,7 +41,7 @@
 #define  GREEN    "rgb(0,173,0)"
 #define  BLUE     "rgb(0,0,255)"
 #define  YELLOW   "rgb(225,225,0)"
-#define  CYAN     "rgb(0,175,175)"
+#define  CYAN     "rgba(0,175,175,128)"
 #define  MAGENTA  "rgb(255,0,255)"
 
 
@@ -456,7 +456,15 @@ liqcell *textbox_create()
 		liqcell_propseti(vkbd_command, "textaligny", 2);
 		liqcell_propseti(vkbd_command, "lockaspect", 1);
 		
-		liqcell_setvisible(vkbd_command,0);		// Wed Aug 19 19:08:20 2009 lcuk : proper way would be checking for no keyboard..
+		if( strcasecmp("RX-34", liqapp_hardware_product_get() ) ==0 )
+		{
+			// keep visible
+		}
+		else
+		{
+			// hide
+			liqcell_setvisible(vkbd_command,0);
+		}
 		
 		liqcell_child_insert(self, vkbd_command);
 	}

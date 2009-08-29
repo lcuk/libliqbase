@@ -53,10 +53,97 @@
 
 
 
+void liqapp_sleep_real(int millseconds)
+{
+	unsigned long 	ft1=liqapp_GetTicks();
+	unsigned long 	ft2=0;
+	
+			while( ( (ft2=liqapp_GetTicks()) - ft1) < millseconds)
+			{
+				// lets just sleep for a short while (doesnt have to be THAT precise, just stop silly speed overruns)
+				//liqapp_log("sleeping %i",millseconds - (ft2-ft1));
+				liqapp_sleep(millseconds - (ft2-ft1));
+			}
+			
+			//liqapp_log("sleep real %lu,%lu,%lu",ft1,ft2,ft2-ft1);
+			
+			//ft1=ft2;
+}
+
+
+
 extern int liqcell_showdebugboxes;
 
 
+liqcell * liqcell_easyrun_currentdialog=NULL;;
+
 int liqcell_easyrun_activecontrol=NULL;
+int liqcell_easyrun_fingerpressed=0;
+
+
+//########################################################################
+//########################################################################
+//########################################################################
+
+
+
+#define liqcell_easyrunstack_total 128
+
+static struct liqcell_easyrunstack
+{
+	liqcell *runself;		// the actual item we were asked to run
+	vgraph *rendergraph;
+	liqcellpainteventargs *paintargs;
+	liqcellmouseeventargs *mouseargs;
+	liqcellkeyeventargs   *keyargs;
+	liqcellclickeventargs *clickargs;
+	liqcell *hit;
+	int hitx;
+	int hity;
+	int hitw;
+	int hith;
+}
+	       liqcell_easyrunstack[liqcell_easyrunstack_total];
+static int liqcell_easyrunstack_used=-1;
+	
+//########################################################################
+//########################################################################
+//########################################################################
+
+
+	
+	
+
+
+	//######################################################## sillt internal thread function should exist only in the lifetime of here
+	int liqcell_easyrun_cursor_on_screen=0;		// cleared before general render, set to 1 within easypaint if a cursor is required
+	int liqcell_easyrun_cursorflashcount=0;		// incremented every 0.5seconds
+	void *liqcell_easyrun_cursorflashingthread_function(void *context)
+	{
+	
+		//liqapp_sleep(100 + (rand() % 4000));
+		//liqapp_sleep(100 + (rand() % 2000));
+		
+		while(1)
+		{
+			
+			int ison=liqcell_easyrun_cursor_on_screen;
+			liqapp_sleep_real(500);
+			if((liqcell_easyrun_cursor_on_screen > ison) && (liqcell_easyrunstack_used>=0))
+			{
+			//	liqapp_log("cursor t %i,%i: %s",liqcell_easyrun_cursorflashcount,  ison,liqcell_easyrunstack[liqcell_easyrunstack_used].runself->name );
+				liqcell_easyrun_cursorflashcount++;
+				
+				liqcell_setdirty( liqcell_easyrunstack[liqcell_easyrunstack_used].runself ,1);
+				
+				
+
+			}
+		}
+		pthread_exit(0);
+		return NULL;
+	}
+
 
 
 // arghh..
@@ -191,7 +278,7 @@ liqcell *liqcell_easyhittest(liqcell *self,  int mx,int my,int *hitx,int *hity)
 //char buff[256];
 //liqcell_getqualifiedname(self,buff,256);
 	//liqapp_log("in '%s' : starting",buff);
-
+	if(self->enabled==0)return NULL;
 	if(mx < self->x) return NULL;
 	if(my < self->y) return NULL;
 	mx-=self->x;
@@ -398,11 +485,17 @@ liqcell * toolclick(liqcell *vis)
 */
 
 
+
 		b = liqcell_quickcreatevis("pic","button",  800-50,64+hh*0.6,   50,hh*0.2);
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
 		liqcell_handleradd_withcontext(b,    "click",   tool_pic_click, self);
 		liqcell_propsets(  b,    "backcolor", "rgb(100,100,0)" );
 		liqcell_child_append( self, b );
+
+
+
+
+
 
 
 /*
@@ -613,14 +706,13 @@ liqcell *liqcell_findfirsthandler(liqcell*root,char *handlername)
 
 
 
-
 //########################################################################
 //########################################################################
 //########################################################################
 
 int liqcell_easyrun_depth=0;
 
-
+int liqcell_easyrun_hide_tools = 0;
 
 /**
  * Main program event handler.
@@ -639,11 +731,30 @@ int liqcell_easyrun(liqcell *self)
 		return -1;
 	}
 	
+	
+	if(liqcell_easyrunstack_used >= liqcell_easyrunstack_total)
+	{
+		liqapp_log("liqcell easyrun cannot continue, max easyrunstack level reached");
+		return -1;
+		
+	}
+
+	
+	if( liqcell_easyrun_depth == 0 )
+	{
+		// first cell, ask if tools should be globally available
+		liqcell_easyrun_hide_tools = liqcell_propgeti(self,"easyrun_hidetools",0);
+	}
+	
+	
 	// set the 
 	//liqcell_propseti(self,"dialog_complete",0);
 	liqcell_propseti(self,"dialog_running",1);
 	
 	liqcell_easyrun_depth++;
+	
+	
+	
 	
 	// what i should do is resize the contents to match the frame
 	// - actually, that may happen more than once per session
@@ -688,8 +799,12 @@ int idle_lazyrun_wanted = liqcell_propgeti(self,"idle_lazyrun_wanted",0);
 
 	void easyrun_realtime_reshape()
 	{
+		if(canvas.fullscreen)
+			vgraph_setscaleaspectlock(graph,  1);
+		else
+			vgraph_setscaleaspectlock(graph,  0);
 		//vgraph_setscaleaspectlock(graph,  0);
-		vgraph_setscaleaspectlock(graph,  1);
+		
 		vgraph_setcliprect(graph, NULL );
 		vgraph_settarget(graph,   NULL  );
 		
@@ -704,6 +819,45 @@ int idle_lazyrun_wanted = liqcell_propgeti(self,"idle_lazyrun_wanted",0);
 	}
 
 	easyrun_realtime_reshape();
+
+
+
+
+
+
+	liqcell_easyrunstack_used++;
+	// unmissable block of text :)
+	liqcell_easyrunstack[liqcell_easyrunstack_used].runself = self;
+	liqcell_easyrunstack[liqcell_easyrunstack_used].rendergraph = graph;
+	liqcell_easyrunstack[liqcell_easyrunstack_used].hit = NULL;
+	liqcell_easyrunstack[liqcell_easyrunstack_used].hitx = 0;
+	liqcell_easyrunstack[liqcell_easyrunstack_used].hity = 0;
+	liqcell_easyrunstack[liqcell_easyrunstack_used].hitw = 0;
+	liqcell_easyrunstack[liqcell_easyrunstack_used].hith = 0;
+	
+	liqcell_easyrunstack[liqcell_easyrunstack_used].paintargs = NULL;
+	liqcell_easyrunstack[liqcell_easyrunstack_used].mouseargs = NULL;;
+	liqcell_easyrunstack[liqcell_easyrunstack_used].keyargs = NULL;
+	liqcell_easyrunstack[liqcell_easyrunstack_used].clickargs = NULL;
+	
+	
+
+
+
+	
+
+
+	pthread_t 		cursorflashingthread=0;
+	
+	if( (liqcell_easyrunstack_used==1) && (liqapp_pref_checkexists("noflashingcursor")==0) )
+	{
+		int tres=pthread_create(&cursorflashingthread,NULL,liqcell_easyrun_cursorflashingthread_function,self);
+	}
+
+
+	
+
+
 
 
 
@@ -745,6 +899,21 @@ liqcellmouseeventargs mouseargs;
 liqcellkeyeventargs keyargs;
 liqcellclickeventargs clickargs;
 	clickargs.newdialogtoopen = NULL;
+	
+	
+	
+	
+	
+	
+	
+	
+	liqcell_easyrunstack[liqcell_easyrunstack_used].paintargs = &paintargs;
+	liqcell_easyrunstack[liqcell_easyrunstack_used].mouseargs = &mouseargs;
+	liqcell_easyrunstack[liqcell_easyrunstack_used].keyargs = &keyargs;
+	liqcell_easyrunstack[liqcell_easyrunstack_used].clickargs = &clickargs;
+	
+	
+
 
 int wx=0;
 int wy=0;
@@ -924,8 +1093,15 @@ waitevent:
 				//result=NULL;
 				break;
 			}
-
-
+			else
+			if( (ev.type == LIQEVENT_TYPE_KEY) && (ev.state==LIQEVENT_STATE_PRESS) && (ev.key.keycode==65421) && ev.key.keymodifierstate==4 )	//CTRL+ENTER
+			{
+				liqapp_log("CTRL+Enter pressed, saving screenshot");
+				
+				savethumb( self );
+				//result=NULL;
+				break;
+			}
 
 			else if( (ev.type == LIQEVENT_TYPE_KEY) )
 			{
@@ -1028,7 +1204,8 @@ waitevent:
 			{
 				// mouse moving! w00t
 				
-				
+				// lets just make sure we let this variable know
+				liqcell_easyrun_fingerpressed = (ev.mouse.pressure>0);
 
 				// get hold of actual coordinates...
 				int mx=ev.mouse.x;
@@ -1041,7 +1218,7 @@ waitevent:
 				wy=0;
 
 				vgraph_convert_target2window(graph ,mx,my,  &wx,&wy);
-				//liqapp_log("mouse scrn (%i,%i)   cell (%i,%i)",mx,my,  wx,wy);
+				liqapp_log("mouse scrn (%i,%i)   cell (%i,%i)",mx,my,  wx,wy);
 
 				hotx=0;
 				hoty=0;
@@ -1124,7 +1301,8 @@ waitevent:
 				}
 
 
-							if( ((targetsurface->width-omsx)<64) && (omsy<64) && ((targetsurface->width-omex)<64) && (omey<64) )
+							//if( ((targetsurface->width-omsx)<64) && (omsy<64) && ((targetsurface->width-omex)<64) && (omey<64) && (liqcell_easyrun_hide_tools==0) )
+							if( ((canvas.pixelwidth-omsx)<64) && (omsy<64) && ((canvas.pixelwidth-omex)<64) && (omey<64) && (liqcell_easyrun_hide_tools==0) )
 							{
 								if(ev.mouse.pressure!=0)
 								{
@@ -1166,7 +1344,8 @@ waitevent:
 							}
 						
 
-							if( (omsx<64) && ((targetsurface->height-omsy)<64) && (omex<64) && ((targetsurface->height-omey)<64) )
+							//if( (omsx<64) && ((targetsurface->height-omsy)<64) && (omex<64) && ((targetsurface->height-omey)<64) )
+							if( (omsx<64) && ((canvas.pixelheight-omsy)<64) && (omex<64) && ((canvas.pixelheight-omey)<64) )
 							{
 								if(ev.mouse.pressure!=0)
 								{
@@ -1511,6 +1690,7 @@ moar:
 			}
 			
 			liqcell_easyrun_activecontrol = hot;
+			//liqcell_easyrun_cursor_on_screen = 0;
 			
 			//liqapp_log("render drawing wh(%i,%i)",w,h);
 			vgraph_drawcell(graph,x,y,w,h,self);
@@ -1543,7 +1723,7 @@ moar:
 				
 					liqcliprect_drawimagecolor(targetcr, infoback , 0,targetsurface->height-48,48,48, 1);
 			}
-			if( infotools )
+			if( (infotools) && (liqcell_easyrun_hide_tools==0) )
 			{
 					liqcliprect_drawimagecolor(targetcr, infotools , targetsurface->width-48,0 ,48,48, 1);
 			}
@@ -1558,10 +1738,32 @@ moar:
 				liqapp_sleep(40 - (ft2-ft1));
 			}
 			ft1=ft2;
-#endif					
+#endif
+
+
+
+
+	static const char *cpufreq_filename = "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq";
+	//static const char *cpufreq_filename = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq";
+	int cpufreq_read(int *freq)
+	{
+		FILE *fd;
+		int rs;
+		*freq=0;
+		fd = fopen(cpufreq_filename, "r");
+		if(fd==NULL){ liqapp_log("cpufreq, cannot open for reading"); return -1;}	
+		rs=fscanf((FILE*) fd,"%i",freq);	
+		fclose(fd);	
+		if(rs != 1){ liqapp_log("cpufreq, cannot read information"); return -2;}
+	}
+
+
+
 			//liqapp_log("render adding framecount");		
 // 20090520_014021 lcuk : show frame information
+
 /*
+
 			static liqfont *infofont=NULL;
 			if(!infofont)
 			{
@@ -1572,12 +1774,14 @@ moar:
 				char *cap=liqcell_getcaption(self);
 				if(!cap || !*cap) cap="[nameless]";
 				char buff[255];
+				int cpufreq=0;
+				//cpufreq_read(&cpufreq);
 				snprintf(buff,sizeof(buff),"liqbase '%s' %3i, %3.3f, %3.3f",cap,framecount, liqapp_fps(tz0,tz1,1) ,liqapp_fps(tzs,tz1,framecount) );
 				//liqapp_log(buff);
 				int hh=liqfont_textheight(infofont);
 				liqcliprect_drawtextinside_color(targetcr, infofont,  0,0, targetsurface->width,hh, buff,0, 255,128,128);
 			}
- */		
+ */	
  		
 			//liqapp_log("render refreshing");
 			
@@ -1633,10 +1837,23 @@ moar:
 		}
 	}
 	liqapp_log("liqcell easyrun complete %i",result);
+	
+	
+	if( (liqcell_easyrunstack_used==1) )//&& (liqapp_pref_checkexists("noflashingcursor")==0) )
+	{
+		if(cursorflashingthread)
+		{
+			pthread_cancel(cursorflashingthread);
+		}
+	}
+	
+	
+	
 	vgraph_release(graph);
 	liqstroke_release(mouseargs.stroke);
 	liqcell_handlerrun(self,"dialog_close",NULL);
 	liqcell_propremovei(self,"dialog_running");
+	liqcell_easyrunstack_used--;
 	liqcell_easyrun_depth--;
 	return result;
 }
