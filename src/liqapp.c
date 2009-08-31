@@ -703,6 +703,9 @@ int 		liqapp_init(int argc, char* argv[],char *title,char *version)
 	
 	snprintf(buf,FILENAME_MAX,"%s/historythumb",app.userdatapath);
 	trymakepath(buf);	
+
+	snprintf(buf,FILENAME_MAX,"%s/liqbasecache",app.userdatapath);
+	trymakepath(buf);	
 		
 	//####################################################### load prefs
 

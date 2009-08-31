@@ -154,8 +154,10 @@ while(mainthread_inprogress>1);
 
 
 				char longbuf[2048];
+                
+                snprintf(longbuf,sizeof(longbuf), "%s/liqbasecache/%s",app.userdatapath, cachefn );
 
-				snprintf(longbuf,sizeof(longbuf), "liqbasecache/%s", cachefn );
+				//snprintf(longbuf,sizeof(longbuf), "liqbasecache/%s", cachefn );
 
 				strncpy(cachefn,longbuf,1024);
 
@@ -202,10 +204,13 @@ while(mainthread_inprogress>1);
 					
 					liqapp_log("http about to download '%s' into '%s'",fn,cachefn);
 					// doesn't exist yet
-					if(!liqapp_pathexists("liqbasecache"))
+                    char xbuf[FILENAME_MAX]={0};
+                    snprintf(xbuf,FILENAME_MAX,"%s/liqbasecache",app.userdatapath);
+					if( !liqapp_pathexists(xbuf) )
 					{
 						// hack to try to make sure theres a liqbasecache folder
-						system("mkdir liqbasecache");
+                        snprintf(xbuf,FILENAME_MAX,"mkdir %s/liqbasecache",app.userdatapath);
+						system(xbuf);
 					}
 
 
