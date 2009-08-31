@@ -45,6 +45,9 @@
 #include "liqcell_prop.h"
 #include "liqcell_easyrun.h"
 #include "liqcell_easypaint.h"
+
+#include "liqcell_historystore.h"
+
 #include "vgraph.h"
 
 
@@ -752,6 +755,9 @@ int liqcell_easyrun(liqcell *self)
 	liqcell_propseti(self,"dialog_running",1);
 	
 	liqcell_easyrun_depth++;
+    
+    
+    liqcanvas_settitle( liqcell_getcaption(self) );
 	
 	
 	
@@ -1353,6 +1359,7 @@ waitevent:
 								}
 								else
 								{
+                                    hot=NULL;
 									running=0;
 									goto quickfin;
 								}
@@ -1446,6 +1453,9 @@ waitevent:
 									liqapp_log("click run '%s'",vhit->name);
 									if( liqcell_handlerrun(vhit,"click",&clickargs) )
 									{
+                                        
+                                        liqcanvas_settitle( liqcell_getcaption(self) );
+                                        
 										// handled it \o/
 										if(clickargs.newdialogtoopen)
 										{
@@ -1591,6 +1601,8 @@ quickfin:
 					// run the zoom_app :)
 
 					liqcell_easyrun( zoom_app );
+                    
+                    liqcanvas_settitle( liqcell_getcaption(self) );
 
 					zoom_app = NULL;
 
@@ -1855,5 +1867,8 @@ moar:
 	liqcell_propremovei(self,"dialog_running");
 	liqcell_easyrunstack_used--;
 	liqcell_easyrun_depth--;
+	
+	liqcell_historystore_historythumb(self);			// lol!
+	
 	return result;
 }

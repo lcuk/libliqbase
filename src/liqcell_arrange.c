@@ -417,12 +417,12 @@ int liqcell_child_arrange_makegrid_internal(liqcell *self,int viscolcount,int vi
 
 	//################################################
 	//liqapp_log("liqcell_child_arrange_nooverlap preparing");
-	c=liqcell_getlinkchild_visual(self);
+	c=liqcell_getlinkchild_visible(self);
 	while(c)
 	{
 
 		answercount++;		//
-		c=liqcell_getlinknext_visual(c);
+		c=liqcell_getlinknext_visible(c);
 	}
 
 	if(answercount==0)
@@ -502,7 +502,7 @@ retry:
 	
 	int isfinished=1;
 
-	c=liqcell_getlinkchild_visual(self);
+	c=liqcell_getlinkchild_visible(self);
 	int remain = answercount;
 	while(c)
 	{
@@ -563,7 +563,7 @@ retry:
 		if(col>=ccols){col=0;row++;}
 
 
-		c=liqcell_getlinknext_visual(c);
+		c=liqcell_getlinknext_visible(c);
 	}
 
 	liqcell_setsize( self, maxw,maxh);//tilew * ccols , yy + tileh );
@@ -640,7 +640,7 @@ int liqcell_child_arrange_easytile(liqcell *self)
 	}
 
 	//################################################ Determine the number of rows/cols
-	liqapp_log("liqcell_child_arrange_easytile weighing");
+	liqapp_log("liqcell_child_arrange_easytile weighing %i items",answercount);
 	int ccols=1;
 	// 20090624_010635 lcuk : changed from <3 to <5 to allow for more columns by default on busy ui's
 	if(answercount<=12)
@@ -682,7 +682,7 @@ int liqcell_child_arrange_easytile(liqcell *self)
 
 	liqcell_child_arrange_makegrid(self,ccols,crows);
 
-	liqapp_log("liqcell_child_arrange_easytile done");
+	liqapp_log("liqcell_child_arrange_easytile done %i x %i grid created",ccols,crows);
 	return 0;
 }
 

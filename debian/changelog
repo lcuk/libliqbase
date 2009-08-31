@@ -1,3 +1,11 @@
+libliqbase (0.3.30) unstable; urgency=low
+
+  * added history saving
+  * numerous stability fixes
+  * added gradients, just set the backcolor of a cell to "xrgb(r,g,b)" and the gradient will be used in place of a fixed color
+
+ -- Gary Birkett <liquid@gmail.com>  30  August 2009 00:41:03 +0200
+
 libliqbase (0.3.29) unstable; urgency=low
 
   * disabled overlay removal

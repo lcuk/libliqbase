@@ -346,15 +346,24 @@ static float calcaspect(int captionw,int captionh,int availw,int availh)
 }
 
 
-unsigned int decodecolor(char *source,unsigned char *ry,unsigned char *ru,unsigned char *rv,unsigned char *ra)
+unsigned int decodecolor(char *source,unsigned char *ry,unsigned char *ru,unsigned char *rv,unsigned char *ra,unsigned char *rc)
 {
 	char inbuf[1024];
 	snprintf(inbuf,1024,source);
 	char *indat=inbuf;
+    char *s0=NULL;  // used for class
 	char *s1=NULL;
 	char *s2=NULL;
 	char *s3=NULL;
 	char *s4=NULL;  // used for alpha
+    
+    if(*indat=='x')
+    {
+        // capture xrgb()  xrgba()  xyuv()  xyuva()
+        s0 = indat;
+        indat++;
+    }
+    
 	if(strncmp(indat,"rgb(",4) == 0 )
 	{
 		indat+=4;
@@ -382,6 +391,7 @@ unsigned int decodecolor(char *source,unsigned char *ry,unsigned char *ru,unsign
 		*ru = ( ( 112 * R -  94 * G -  18 * B + 128) >> 8) + 128;
 		*rv = ( ( -38 * R -  74 * G + 112 * B + 128) >> 8) + 128;
 		*ra = 255;
+        *rc = (s0==NULL);
 		return 1;
 	}
 	if(strncmp(indat,"yuv(",4) == 0 )
@@ -405,6 +415,7 @@ unsigned int decodecolor(char *source,unsigned char *ry,unsigned char *ru,unsign
 		*ru=atoi(s2);
 		*rv=atoi(s3);
 		*ra=255;
+        *rc = (s0==NULL);
 		return 1;
 	}
 	//### alpha variations
@@ -439,6 +450,7 @@ unsigned int decodecolor(char *source,unsigned char *ry,unsigned char *ru,unsign
 		*ru = ( ( 112 * R -  94 * G -  18 * B + 128) >> 8) + 128;
 		*rv = ( ( -38 * R -  74 * G + 112 * B + 128) >> 8) + 128;
 		*ra = atoi(s4);
+        *rc = (s0==NULL);
 		return 1;
 	}
 	if(strncmp(indat,"yuva(",5) == 0 )
@@ -466,6 +478,7 @@ unsigned int decodecolor(char *source,unsigned char *ry,unsigned char *ru,unsign
 		*ru=atoi(s2);
 		*rv=atoi(s3);
 		*ra=atoi(s4);
+        *rc = (s0==NULL);
 		return 1;
 	}
 	return 0;
@@ -703,6 +716,8 @@ __tz_one("paintdone");
 	unsigned char bcu=128;
 	unsigned char bcv=128;
 	unsigned char bca=255;	// 20090816_101834 lcuk : new..
+    unsigned char bcc=0;    // Sun Aug 30 23:21:52 2009 lcuk : new class 0==std 1=xrgb(). mmm date format has been lost
+    
 
 
 
@@ -713,10 +728,10 @@ __tz_one("paintdone");
 		if(t)
 		{
 			//liqapp_log("textcolor :: '%s'",t);
-			if(decodecolor(t, &bcy, &bcu, &bcv, &bca ))
+			if(decodecolor(t, &bcy, &bcu, &bcv, &bca, &bcc ))
 			{
                 // play...
-                if( (!self->image) && (self->classname))
+                if( (!self->image) && (self->classname) && (bca==255) && (bcc==0) )
                 {
                     if(!easypaint_backgrain_image)
                     {
@@ -724,14 +739,20 @@ __tz_one("paintdone");
                     }
                     if(easypaint_backgrain_image)
                     {
-                        liqcliprect_drawimagecolor(cr,easypaint_backgrain_image,x,y,w,h,0);
+                        //if(bca==255)
+                            liqcliprect_drawimagecolor(cr,easypaint_backgrain_image,x,y,w,h,0);
+                        //else
+                        //    liqcliprect_drawimageblendcolor(cr,easypaint_backgrain_image,x,y,w,h,bca,0);
                         liqcliprect_drawboxwashcolor(     cr,x,y,w,h, bcu,bcv);
                     }
                 }
+                
                 else
+                
                 {
                     //bca=255;
-                    if(bca==255)
+                    //if(bca==255)      // such a minute difference wont hurt too much
+                    if(bca>=254)
                         liqcliprect_drawboxfillcolor(     cr,x,y,w,h,bcy,bcu,bcv);
                     else
                         liqcliprect_drawboxfillblendcolor(cr,x,y,w,h,bcy,bcu,bcv,bca);
@@ -1165,12 +1186,13 @@ __tz_one("fontprep");
 				unsigned char tcu=128;
 				unsigned char tcv=128;
 				unsigned char tca=128;
+                unsigned char tcc=128;
 				{
 					t = liqcell_propgets(self,"textcolor",NULL);
 					if(t)
 					{
 						//liqapp_log("textcolor :: '%s'",t);
-						decodecolor(t, &tcy, &tcu, &tcv, &tca );
+						decodecolor(t, &tcy, &tcu, &tcv, &tca,&tcc );
 					}
 				}
 
@@ -1456,7 +1478,7 @@ __tz_one("overlaydone");
 	if(t)
 	{
 		//liqapp_log("textcolor :: '%s'",t);
-		if(decodecolor(t, &bcy, &bcu, &bcv , &bca))
+		if(decodecolor(t, &bcy, &bcu, &bcv , &bca,&bcc))
 		{
 
 			liqcliprect_drawboxlinecolor(cr,x,y,w,h,bcy,bcu,bcv);
@@ -1519,6 +1541,22 @@ __tz_one("scrolldone");
 __tz_one("disablerdone");
 
 
+	//t = liqcell_propgets(self,"bordercolor",NULL);
+	//if(t)
+    if(liqcell_getselected(self))
+	{
+		//liqapp_log("textcolor :: '%s'",t);
+		//if(decodecolor(t, &bcy, &bcu, &bcv , &bca))
+        if(w<400 && h<240)  // shock!
+		{
+
+    		liqcliprect_drawboxwashcolor(     cr,x,y,w,h, 60,240);
+			liqcliprect_drawboxlinecolor(     cr,x,y,w,h,200,20,240);
+		}
+	}
+
+
+__tz_one("selecteddone");
 
 	//t = liqcell_propgets(self,"bordercolor",NULL);
 	//if(t)
@@ -1566,7 +1604,7 @@ __tz_one("presseddone");
 		if(t)
 		{
 			//liqapp_log("textcolor :: '%s'",t);
-			decodecolor(t, &bcy, &bcu, &bcv, &bca );
+			decodecolor(t, &bcy, &bcu, &bcv, &bca,&bcc );
 
 			liqcliprect_drawboxlinecolor(cr,x,y,w,h,bcy,bcu,bcv);
 

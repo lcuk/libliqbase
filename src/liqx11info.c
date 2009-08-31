@@ -440,6 +440,8 @@ foo:
 						liqapp_log("event.WM_DELETE_WINDOW");
 						// deleting window
 						// done=1;
+						// Sat Aug 29 20:54:44 2009 lcuk : find much cleaner way to handle this
+						exit(0);
 						break;
 					}
 					liqapp_log("event.ClientMessage");
@@ -528,6 +530,14 @@ foo:
 				case EnterNotify:					
 					liqapp_log("event.EnterNotify");
 
+                        if(!myx11info->myoverlay)
+                        {
+                        //	liqapp_sleep(100);
+                            myx11info->myoverlay = &myx11info->myoverlaycore;
+                            liqx11overlay_init(myx11info->myoverlay, myx11info->mydisplay,myx11info->myscreen,myx11info->mywindow,myx11info->mygc);
+                            //liqx11overlay_show(myx11info->myoverlay);
+                            //isbusyrendering=0;
+                        }
 						
 						if((myx11info->myoverlay))
 						{
@@ -544,8 +554,11 @@ foo:
 	
 						if((myx11info->myoverlay))
 						{
-							liqx11overlay_show(myx11info->myoverlay);
+							liqx11overlay_hide(myx11info->myoverlay);
 							liqx11overlay_refreshdisplay(myx11info->myoverlay);
+
+							//liqx11overlay_show(myx11info->myoverlay);
+							//liqx11overlay_refreshdisplay(myx11info->myoverlay);
                             //isbusyrendering=1;
 						}
 					break;				

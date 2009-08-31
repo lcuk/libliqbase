@@ -91,6 +91,7 @@ liqcell * liqcell_parse_filename(char *filename)
 			if(!ext || !*ext)
 			{
 				// nothing to see here..
+                self=liqcell_quickcreatenameclass(filename,"file.unknown");
 			}
 			else
 			if(
@@ -165,8 +166,14 @@ liqcell * liqcell_parse_filename(char *filename)
 				// as specified within the current liqbrain
 				//liqcell *fh = liqbrain_lookup("filehandlers");
 			}
-			liqcell_propseti(self,"filesize", statbuf.st_size);
-			liqcell_propseti(self,"filecount",1);
+            
+            
+            
+            if(self)
+            {
+                liqcell_propseti(self,"filesize", statbuf.st_size);
+                liqcell_propseti(self,"filecount",1);
+            }
 			
 			
 		}

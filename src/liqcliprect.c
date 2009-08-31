@@ -816,7 +816,7 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 	
 	// Sun Aug 23 12:41:07 2009 lcuk : fuckit, try full res always and see
 	if(liqapp_hardware_product_ispowerful_get())
-		rpt=0;
+		rpt=1;
 	
 
 	switch(page->backgroundstyle)

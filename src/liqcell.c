@@ -95,7 +95,16 @@ liqcell *liqcell_new()
 liqcell * liqcell_hold(liqcell *self)
 {
 	// use this to hold onto an object which someone else created
+
+
+
 	if(self)self->usagecount++;
+    
+	int imgc=0;
+	if(self->image)imgc=self->image->usagecount;
+	//liqapp_log("liqcell hold %s::%i::%i",self->name,self->usagecount,imgc);
+
+
 	return self;
 }
 
@@ -810,9 +819,9 @@ liqcell *liqcell_getlinknext(liqcell *self)
 }
 
 /**
- * Get the linked previous of the liqcell, the previous link in the linked list that is VISIBLE
+ * Get the linked previous of the liqcell, the previous link in the linked list that is VISUAL - though may be hidden
  * @param self The liqcell to lookup
- * @return liqcell* Liqcell pointer to the first previous that is visible
+ * @return liqcell* Liqcell pointer to the first previous that is visual
  */
 liqcell *liqcell_getlinkprev_visual(liqcell *self)
 {
@@ -826,9 +835,9 @@ liqcell *liqcell_getlinkprev_visual(liqcell *self)
 }
 
 /**
- * Get the linked previous of the liqcell, the previous link in the linked list that is VISIBLE
+ * Get the linked previous of the liqcell, the previous link in the linked list that is VISUAL - though may be hidden
  * @param self The liqcell to lookup
- * @return liqcell* Liqcell pointer to the first previous that is visible
+ * @return liqcell* Liqcell pointer to the first previous that is visual
  */
 liqcell *liqcell_getlinknext_visual(liqcell *self)
 {
@@ -842,9 +851,9 @@ liqcell *liqcell_getlinknext_visual(liqcell *self)
 }
 
 /**
- * Get the linked child of the liqcell, the child link in the linked list that is VISIBLE
+ * Get the linked child of the liqcell, the child link in the linked list that is VISUAL - though may be hidden
  * @param self The liqcell to lookup
- * @return liqcell* Liqcell pointer to the first child that is visible
+ * @return liqcell* Liqcell pointer to the first child that is visual
  */
 liqcell *liqcell_getlinkchild_visual(liqcell *self)
 {
@@ -856,6 +865,59 @@ liqcell *liqcell_getlinkchild_visual(liqcell *self)
 	}
 	return NULL;
 }
+
+
+
+
+
+/**
+ * Get the linked previous of the liqcell, the previous link in the linked list that is VISIBLE - that is, set to show now
+ * @param self The liqcell to lookup
+ * @return liqcell* Liqcell pointer to the first previous that is visible
+ */
+liqcell *liqcell_getlinkprev_visible(liqcell *self)
+{
+	liqcell *c = self->linkprev;
+	while(c)
+	{
+		if(liqcell_getvisible(c))return c;
+		c=c->linkprev;
+	}
+	return NULL;
+}
+
+/**
+ * Get the linked previous of the liqcell, the previous link in the linked list that is VISIBLE - that is, set to show now
+ * @param self The liqcell to lookup
+ * @return liqcell* Liqcell pointer to the first previous that is visible
+ */
+liqcell *liqcell_getlinknext_visible(liqcell *self)
+{
+	liqcell *c = self->linknext;
+	while(c)
+	{
+		if(liqcell_getvisible(c))return c;
+		c=c->linknext;
+	}
+	return NULL;
+}
+
+/**
+ * Get the linked child of the liqcell, the child link in the linked list that is VISIBLE - that is, set to show now
+ * @param self The liqcell to lookup
+ * @return liqcell* Liqcell pointer to the first child that is visible
+ */
+liqcell *liqcell_getlinkchild_visible(liqcell *self)
+{
+	liqcell *c = self->linkchild;
+	while(c)
+	{
+		if(liqcell_getvisible(c))return c;
+		c=c->linknext;
+	}
+	return NULL;
+}
+
 
 /**
  * Return the linked child of the parent provided.
@@ -1710,7 +1772,14 @@ liqcell*  liqcell_global_lookup_nameclass(liqcell *self,char *name,char *classna
 liqcell*  liqcell_quickcreatewidget(char *name,char *classname,int innerw,int innerh)
 {
 	liqcell *self = liqcell_new();
-
+	if(classname && *classname)
+	{
+		if( (strcmp(classname,"form")==0) )
+		{
+			// Sat Aug 29 23:54:16 2009 lcuk : stupid thing, i gave everything as a form initially
+			classname=name;
+		}
+	}
 	liqcell_setname(self,name);
 	liqcell_setclassname(self,classname);
 	liqcell_setrect(self,0,0,innerw,innerh);

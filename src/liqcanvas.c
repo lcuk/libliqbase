@@ -130,7 +130,15 @@ int liqcanvas_takepicture()
 
 
 
-
+int liqcanvas_settitle(char *newtitle)
+{
+    
+    if(!liqcanvas_isopen())return -1;
+    
+    
+    XSetStandardProperties(liqcanvas_getx11info()->mydisplay, liqcanvas_getx11info()->mywindow, newtitle,
+            newtitle, None, NULL, 0, NULL);
+}
 
 
 

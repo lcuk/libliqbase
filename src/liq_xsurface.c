@@ -1586,7 +1586,7 @@ inline void xsurface_drawfadeoutrect_yuv(liqimage *surface,int x,int y,int w,int
 	unsigned int vo = surface->offsets[2];//uo + (uo >> 2);
 	pw>>=1;
 	ph>>=1;
-	for (yy = y; yy < (y+h+4); yy++)
+	for (yy = y; yy < (y+h); yy++)
 	{
 		udata = &surface->data[ uo+(pw*yy) + x ];
 		vdata = &surface->data[ vo+(pw*yy) + x ];

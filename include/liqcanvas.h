@@ -142,6 +142,8 @@ extern liqcanvas canvas;
 
 int           liqcanvas_isopen();
 
+int liqcanvas_settitle(char *newtitle);
+
 //#######################################################
 // allocate using your own custom window
 // i expect this to fail with multiple instances
