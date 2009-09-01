@@ -489,16 +489,6 @@ liqcell * toolclick(liqcell *vis)
 
 
 
-		b = liqcell_quickcreatevis("pic","button",  800-50,64+hh*0.6,   50,hh*0.2);
-		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
-		liqcell_handleradd_withcontext(b,    "click",   tool_pic_click, self);
-		liqcell_propsets(  b,    "backcolor", "rgb(100,100,0)" );
-		liqcell_child_append( self, b );
-
-
-
-
-
 
 
 /*
@@ -510,6 +500,16 @@ liqcell * toolclick(liqcell *vis)
 		liqcell_child_append( self, b );
 
 */
+
+
+		b = liqcell_quickcreatevis("pic","button",  800-50,64+hh*0.8,   50,hh*0.2);
+		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
+		liqcell_handleradd_withcontext(b,    "click",   tool_pic_click, self);
+		liqcell_propsets(  b,    "backcolor", "rgb(100,100,0)" );
+		liqcell_child_append( self, b );
+
+
+
 
 		liqcell *content = liqcell_getcontent(vis);
 		if(content)vis=content;
@@ -524,7 +524,7 @@ liqcell * toolclick(liqcell *vis)
 		liqcell *c;
 		
 		
-		c = liqcell_quickcreatevis("contentdraw", "liqtop", 0,56,   800-50,480-56 );
+		c = liqcell_quickcreatevis("contentdraw", "liqsketchedit", 0,56,   800-50,480-56 );
 		//liqcell_handleradd_withcontext( c,    "click",   toolitem_click,self);
 		liqcell_child_insert( self, c );
 

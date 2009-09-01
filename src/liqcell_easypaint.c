@@ -99,14 +99,15 @@ void *mainthread(void* mainthread_data)
 
 	//liqapp_sleep(100 + (rand() % 4000));
 	//liqapp_sleep(100 + (rand() % 2000));
-	
-	
+	liqcell *self = (liqcell *)mainthread_data;
+	liqcell *par=liqcell_getlinkparent(self);
 do
 {
-	liqapp_sleep(10 + (rand() % 100));
+//	liqapp_sleep(10 + (rand() % 100));
 	//liqapp_sleep(10 + (50));
+    liqapp_sleep(100);
 }
-while(mainthread_inprogress>1);
+while( (mainthread_inprogress>1) || (par && (par->kineticx || par->kineticy)) );
 
 	mainthread_inprogress++;
 	
@@ -114,7 +115,6 @@ while(mainthread_inprogress>1);
 	
 
 	//
-	liqcell *self = (liqcell *)mainthread_data;
 
 	// we are here to load the image named on self and then finish
 

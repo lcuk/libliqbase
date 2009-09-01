@@ -131,18 +131,37 @@ void liqcell_release(liqcell *self)
  */
 void liqcell_free(liqcell *self)
 {
-	//liqapp_log("liqcell freeing tree %s",self->name);
+	//liqapp_log("liqcell freeing tree %s:%s",self->name,self->classname?self->classname:"");
 	// never call _free directly, outside sources should _release the object
 
 	// these char* objects should really be results from the strings tree
 	// and hence need dereferencing before use, decide later not important for now
 	
+
+    
+    // time to notify everyone about our impending death.
+    liqcell_handlerrun(self,"destroy",NULL);
+    
 	if(self->linkparent)
 	{
 		//
 		//liqcell_release(self->linkparent);
 		self->linkparent=NULL;
-	}
+	}    
+    
+    if( self->classname && (strcmp(self->classname,"liqtimer")==0) )
+    {
+        // cheat to close down the thread!
+        pthread_t 		*tid = liqcell_getdata(self);
+        if(tid)
+        {
+            // only live once...
+            liqapp_log("liqcell_free thread cancelling for '%s'",self->name);
+            pthread_cancel(*tid);
+            tid=NULL;
+            liqapp_log("liqcell_free thread cancelled for '%s'",self->name);
+       }
+    }
 	
 	
 	liqcell *c=self->linkchild;
@@ -179,13 +198,7 @@ void liqcell_free(liqcell *self)
 		
 		c=d;
 	}
-	
-	if(self->linkparent)
-	{
-		//
-		//liqcell_release(self->linkparent);
-		self->linkparent=NULL;
-	}
+
 	
 	//liqapp_log("liqcell freeing contents %s",self->name);
 	liqcell_setname(self,NULL);
@@ -675,7 +688,9 @@ void liqcell_setcontent(liqcell *self,liqcell *content)
 		liqcell_release(self->content);
 		self->content=NULL;
 	}
-	if(content){      self->content      = liqcell_hold(content);    }//       liqcell_setdirty(self,1);    }
+	//if(content){      self->content      = liqcell_hold(content);    }//       liqcell_setdirty(self,1);    }
+	if(content){      self->content      = (content);    }//       liqcell_setdirty(self,1);    }
+
 }
 
 /**

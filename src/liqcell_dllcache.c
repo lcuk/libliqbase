@@ -359,7 +359,7 @@ int dllcache_scan()
     dllcache_scan_libraryinternal("liqkeyboard");
     dllcache_scan_libraryinternal("textbox");
     dllcache_scan_libraryinternal("liqtimer");
-
+    dllcache_scan_libraryinternal("liqsketchedit");
 
 
 	// 20090614_234707 lcuk : always make sure runstack used includes THIS dll

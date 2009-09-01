@@ -72,17 +72,25 @@ static void *liqtimer_workthread(void* workthread_data)
 	
 	while(1)
 	{
+        liqcell_hold(self);
 		//liqapp_log("looping..");
 		if(liqcell_getenabled(self))
 		{
 			int dt =  liqcell_propgeti(self,"timerinterval",0);
 			if(dt<=0)dt=1;
+            liqcell_release(self);
+            
 			liqapp_sleep(dt);
+            
 			//liqapp_log("ticking..");
+            liqcell_hold(self);
 			liqcell_handlerrun(self,"timertick",NULL);
+            liqcell_release(self);
 		}
 		else
 		{
+            liqcell_release(self);
+            
 			liqapp_sleep(50);
 			//liqcell_handlerrun(keyhit,"timertick",NULL);			
 		}
@@ -96,7 +104,7 @@ static void *liqtimer_workthread(void* workthread_data)
 
 liqcell *liqtimer_create()
 {
-	liqcell *self = liqcell_quickcreatewidget("liqtimer","tool", 0,0);
+	liqcell *self = liqcell_quickcreatewidget("liqtimer","liqtimer", 0,0);
 
 	if(self)
 	{
