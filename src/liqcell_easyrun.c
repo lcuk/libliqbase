@@ -356,7 +356,11 @@ static void savethumb(liqcell *cell)
 	liqapp_log("...saving image as '%s'",buf);
 
 				liqimage_pagesavepng(img,buf);
-	
+                
+                
+                void post_to_liqbase_net(char *filename,char *datakey);
+                
+                post_to_liqbase_net(buf,"screenshot");
 
 
 //01:49:32 png writing png
@@ -1724,8 +1728,16 @@ moar:
 			if(!infotools)
 			{
 				//liqapp_log("************************************************************************************** read");
-				infotools = liqimage_cache_getfile("/usr/share/liqbase/libliqbase/media/package_system.png", 0,0,1);
+				//infotools = liqimage_cache_getfile("/usr/share/liqbase/libliqbase/media/package_system.png", 0,0,1);
+                
+                //infotools = liqimage_cache_getfile("/home/user/svn/liqbase-playground/liqbase_base_fs/usr/share/icons/hicolor/scalable/apps/liqbase_playground.png", 0,0,1);
+                infotools = liqimage_cache_getfile("/home/user/svn/liqbase-playground/media/liqbase_playground_use.png", 0,0,1);
+                
+                
+                
 			}
+
+            
 			if(infoback && infoclose)
 			{
 				//liqapp_log("************************************************************************************** use");

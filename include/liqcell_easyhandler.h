@@ -10,8 +10,9 @@
 // this module defines simple default event handlers for cells
 
 
-	int 	liqcell_easyhandler_kinetic_mouse(liqcell *self, liqcellmouseeventargs *args);
+	int 	liqcell_easyhandler_kinetic_mouse(liqcell *self, liqcellmouseeventargs *args,liqcell *context);
 
+	int 	liqcell_easyhandler_content_zoom_click(liqcell *self, liqcellclickeventargs *args,liqcell *context);
 	
 
 #endif

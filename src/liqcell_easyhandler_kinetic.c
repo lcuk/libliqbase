@@ -17,7 +17,14 @@
 #include "liqbase.h"
 
 
+	int 	liqcell_easyhandler_content_zoom_click(liqcell *self, liqcellclickeventargs *args,liqcell *context)
+    {
+        liqapp_log("liqcell_easyhandler_content_zoom_click '%s'",self->name);
 
+		args->newdialogtoopen = liqcell_getcontent( self );
+        return 1;
+       
+    }
 
 
 //#####################################################################
@@ -32,7 +39,7 @@
 
 
 
-	int 	liqcell_easyhandler_kinetic_mouse(liqcell *self, liqcellmouseeventargs *args)
+	int 	liqcell_easyhandler_kinetic_mouse(liqcell *self, liqcellmouseeventargs *args,liqcell *context)
 	{
 
 		liqcell *par = liqcell_getlinkparent(self);

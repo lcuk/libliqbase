@@ -23,21 +23,78 @@
 
 
 
-void post_to_liqbase_net(char *filename,char *datakey)
+
+
+
+struct curl_memorybuffer
 {
-	//if(!datakey)datakey="upload test";
+	char *memory;
+	size_t size;
+};
+
+
+
+static size_t curl_memorybuffer(void *ptr, size_t size, size_t nmemb, void *data)
+{
+	struct curl_memorybuffer *mem = (struct curl_memorybuffer *) data;
+	int realsize = size * nmemb;
+
+	mem->memory = (char *)realloc(mem->memory, mem->size + realsize + 1);
+	if (mem->memory)
+	{
+		memcpy(&(mem->memory[mem->size]), ptr, realsize);
+		mem->size += realsize;
+		mem->memory[mem->size] = 0;
+	}
+	return realsize;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int post_to_liqbase_net(char *filename,char *datakey,int replyid)
+{
+	if(!datakey)datakey="liqbase";
+ 
+ 
+    int newid=0;
+
+   
+    struct curl_memorybuffer resultchunk = {NULL,0};
 
 	CURL* easyhandle = curl_easy_init();
+    
+    
+    char replyidstr[32];
+    snprintf(replyidstr,sizeof(replyidstr),"%i",replyid);
 	
 	curl_easy_setopt(easyhandle, CURLOPT_URL, "http://liqbase.net/liqbase_mediapush.php");
-	
+	curl_easy_setopt(easyhandle, CURLOPT_WRITEFUNCTION, curl_memorybuffer);
+	curl_easy_setopt(easyhandle, CURLOPT_WRITEDATA, (void *)&resultchunk);
+    
 	char *username = app.username;
-	char *userpassmd5 = liqapp_pref_getvalue("userpass");
+	char *userpassmd5 = liqapp_pref_getvalue("userpassmd5");
 	if(!userpassmd5 || !*userpassmd5)
 	{
 		liqapp_log("post_to_liqbase_net not performed, no userpass configured");
-		return;
+		return -1;
 	}
+    
+    liqapp_log("post_to_liqbase_net username: '%s'",username);
+    liqapp_log("post_to_liqbase_net upload '%s' starting",filename);
 	
 	struct curl_httppost *post=NULL;  
 	struct curl_httppost *last=NULL;  
@@ -47,13 +104,46 @@ void post_to_liqbase_net(char *filename,char *datakey)
 	curl_formadd(&post, &last,   CURLFORM_COPYNAME, "datakey",          CURLFORM_COPYCONTENTS, datakey,    CURLFORM_END);
 	curl_formadd(&post, &last,   CURLFORM_COPYNAME, "datafile",         CURLFORM_FILE,         filename,            CURLFORM_END);
 	curl_formadd(&post, &last,   CURLFORM_COPYNAME, "userto",           CURLFORM_COPYCONTENTS, username,              CURLFORM_END);
+    
+    
+	curl_formadd(&post, &last,   CURLFORM_COPYNAME, "replyid",           CURLFORM_COPYCONTENTS, replyidstr,              CURLFORM_END);
  
  	curl_easy_setopt(easyhandle, CURLOPT_HTTPPOST, post);
 
-	curl_easy_perform(easyhandle);
+	int uperr=curl_easy_perform(easyhandle);
 
 
-	curl_formfree(post); 
+	curl_formfree(post);
+    
+    liqapp_log("post_to_liqbase_net upload finished, got response '%i'",uperr);
+
+    if(resultchunk.memory)
+    {
+        liqapp_log("post_to_liqbase_net upload got result! [[[[%s]]]]",resultchunk.memory);
+        
+        if( sscanf(resultchunk.memory,"newid=%i",&newid)==1)
+        {
+            // got id!
+            liqapp_log("post_to_liqbase_net upload got id %i!",newid);
+        }
+        else
+        {
+            // failed
+            liqapp_log("post_to_liqbase_net upload no id :(");
+        }
+        
+        // parse the result.  numeric code and returnid expected
+        // the numeric code should indicate ok!
+        // the returnid is contained within the 2nd line
+        free(resultchunk.memory);
+    }
+    else
+    {
+        liqapp_log("post_to_liqbase_net upload no result");
+    }
+    
+    liqapp_log("post_to_liqbase_net upload finished");
+    return newid;
 	
 }
 
@@ -131,7 +221,7 @@ void post_to_liqbase_net(char *filename,char *datakey)
 
 		liqcell_propsets(self,"sketchfilenamelast",filenamebuffer);
 		
-		post_to_liqbase_net(filenamebuffer,key);
+		post_to_liqbase_net(filenamebuffer,key,0);
 		
 		liqcell_settag(self,0);
 		

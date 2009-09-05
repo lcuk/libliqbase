@@ -75,6 +75,8 @@ int 		liqapp_warnandcontinue(int returnstatus,char *logentry);
 int 		liqapp_close();
 
 
+void        liqapp_log_setforwarding( void *logfunction_voidpcontext_strtime_strmsg, void *contextdata );
+
 char *		liqapp_gettitle();
 
 char *      liqapp_hardware_product_get();

@@ -45,6 +45,7 @@ int liqcell_showdebugboxes=0;
 liqimage *easypaint_isloading_image = NULL;
 liqimage *easypaint_barcode_image = NULL;
 liqimage *easypaint_backgrain_image = NULL;
+liqimage *easypaint_invalid_image = NULL;
 
 //qr_barcode.png
 
@@ -62,7 +63,10 @@ int thread_createwithpriority(pthread_t *tid,int threadpriority,void *(*func)(vo
 pthread_attr_t 	tattr;
 struct sched_param 	param;
 int ret;
-int newprio = threadpriority;//20;
+
+// just to see
+
+int newprio = 20;//PRIORITY_MIN ;// threadpriority;//20;
 
 
 	// initialized with default attributes
@@ -72,6 +76,9 @@ int newprio = threadpriority;//20;
 	// set the priority; others are unchanged
 
 	//liqapp_log("thread schedparam=%i (current)",param.sched_priority);
+
+    // Tue Sep 01 21:45:11 2009 lcuk : setting from FIFO to RR - this might have been problem!
+    ret = pthread_attr_setschedpolicy(&tattr, SCHED_RR);
 
 	param.sched_priority = newprio;
 	// setting the new scheduling param
@@ -104,10 +111,10 @@ void *mainthread(void* mainthread_data)
 do
 {
 //	liqapp_sleep(10 + (rand() % 100));
-	//liqapp_sleep(10 + (50));
-    liqapp_sleep(100);
+	liqapp_sleep(10);// + (20));
+    //liqapp_sleep(100);
 }
-while( (mainthread_inprogress>1) || (par && (par->kineticx || par->kineticy)) );
+while( (mainthread_inprogress>1) ); //   || (par && (par->kineticx || par->kineticy)) );
 
 	mainthread_inprogress++;
 	
@@ -122,6 +129,7 @@ while( (mainthread_inprogress>1) || (par && (par->kineticx || par->kineticy)) );
 	liqimage *img = liqcell_getimage(self);
 
 	//if(img == easypaint_isloading_image)
+    
 	{
 
 
@@ -269,13 +277,27 @@ while( (mainthread_inprogress>1) || (par && (par->kineticx || par->kineticy)) );
 			else
 			{
 				// clear the utility of the "loading" image
-				liqcell_setimage( self, NULL );
+                
+                // error whilst loading, invalid file or whatnot
+
+
+				if(!easypaint_invalid_image)
+				{
+					//easypaint_isloading_image=liqimage_newfromfile("/usr/share/liqbase/libliqbase/media/sun.png",0,0,0);
+					easypaint_invalid_image=liqimage_newfromfile("/usr/share/liqbase/libliqbase/media/invalid.png",0,0,0);
+				}
+                
+				liqcell_setimage( self, easypaint_invalid_image );
 				liqcell_release(self);
 
 			}
 
 
 		}
+        else
+        {
+            // no filename
+        }
 
 	}
 	
@@ -307,9 +329,9 @@ int liqcell_threadloadimage(liqcell *self)
 					// now we must start the thread off
 					pthread_t 		tid;
 					
-					//int tres=thread_createwithpriority(&tid,0,mainthread,self);
+					int tres=thread_createwithpriority(&tid,0,mainthread,self);
 					
-					int tres=pthread_create(&tid,NULL,mainthread,self);
+					//int tres=pthread_create(&tid,NULL,mainthread,self);
 					
 					
 					if(tres)
@@ -816,9 +838,9 @@ __tz_one("backdone");
 					// now we must start the thread off
 					pthread_t 		tid;
 					
-					//int tres=thread_createwithpriority(&tid,0,mainthread,self);
+					int tres=thread_createwithpriority(&tid,0,mainthread,self);
 					
-					int tres=pthread_create(&tid,NULL,mainthread,self);
+					//int tres=pthread_create(&tid,NULL,mainthread,self);
 					
 					
 					if(tres)
@@ -1552,7 +1574,7 @@ __tz_one("disablerdone");
 	{
 		//liqapp_log("textcolor :: '%s'",t);
 		//if(decodecolor(t, &bcy, &bcu, &bcv , &bca))
-        if(w<400 && h<240)  // shock!
+        if(h<240)  // shock!   was w<400 && h<240
 		{
 
     		liqcliprect_drawboxwashcolor(     cr,x,y,w,h, 60,240);

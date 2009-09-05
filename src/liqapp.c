@@ -54,9 +54,15 @@ liqapp app={0};
 
 
 
+int (*liqapp_log_forwarding)(void *contextdata, char *logtime, char *logdata) = NULL;
 
+void * liqapp_log_context=NULL;
 
-
+void liqapp_log_setforwarding( void *logfunction_voidpcontext_strtime_strmsg, void *contextdata )
+{
+    liqapp_log_forwarding = logfunction_voidpcontext_strtime_strmsg;
+    liqapp_log_context=contextdata;
+}
 
 // using komodo edit configured to look like vb
 // using winscp towards the device and putty
@@ -763,6 +769,9 @@ void liqapp_ensurecleanusername(char *usernamewhichismodifiable)
 
 
 
+static int liqapp_log_forwarding_count=0;
+
+
 //############################################################# deeplog runs whenever called
 /**
  * internal console logging function, va_list version
@@ -778,6 +787,19 @@ int liqapp_vdeeplog(char *logentry, va_list arg)
     time(&now);
     ts = localtime(&now);
     strftime(buf, sizeof(buf), "%H:%M:%S", ts);
+    
+    
+    if( (liqapp_log_forwarding) && (liqapp_log_forwarding_count==0))
+    {
+        liqapp_log_forwarding_count++;
+        
+        char bufx[FILENAME_MAX+1];
+        vsnprintf(bufx,sizeof(bufx),logentry,arg);
+        liqapp_log_forwarding(liqapp_log_context, buf,bufx);
+        
+        liqapp_log_forwarding_count--;
+        
+    }
 	
 	/*
 	

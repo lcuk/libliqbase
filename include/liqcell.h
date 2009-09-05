@@ -227,6 +227,7 @@ void *	liqcell_gettag(liqcell *self);
 
 
 
+
 //######################################################################### ui/interaction
 void 	liqcell_setvisible(liqcell *self,int arg);				// set the visible indicator
 int    	liqcell_getvisible(liqcell *self);
@@ -236,6 +237,11 @@ int 	liqcell_getenabled(liqcell *self);
 
 void 	liqcell_setselected(liqcell *self,int arg);				// set the selected indicator
 int 	liqcell_getselected(liqcell *self);
+
+
+void    liqcell_child_selectall(liqcell *self);                 // allow bulk selection
+void    liqcell_child_selectnone(liqcell *self);
+void    liqcell_child_selectinv(liqcell *self);
 
 void 	liqcell_setdirty(liqcell *self,int dirty);				// set the dirty flag :)  this cascades through parents as well
 int    	liqcell_getdirty(liqcell *self);
@@ -315,6 +321,10 @@ int 	liqcell_child_arrange_easycol(liqcell *self);			// split into Top|Middle|Bo
 int 	liqcell_child_arrange_autoflow(liqcell *self);			// flowing document: like text does;
 int 	liqcell_child_arrange_nooverlap(liqcell *self,liqcell *currentselection);
 int 	liqcell_child_arrange_makegrid(liqcell *self,int viscolcount,int visrowcount);
+
+
+
+
 
 
 
