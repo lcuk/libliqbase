@@ -12,6 +12,13 @@ Depends: libliqbase1 (= ${Source-Version})
 Description: liqbase rendering engine and ui core elements
  liqbase rendering engine and ui core elements.  super quick yuv graphics engine
 
+Package: libliqbase1-dbg
+Section: libdevel
+Architecture: any
+Depends: libliqbase1 (= ${Source-Version})
+Description: liqbase rendering engine and ui core elements (debug symbols)
+ Debug symbols for liqbase rendering engine and ui core elements.
+
 Package: libliqbase1
 Section: libs
 Architecture: any

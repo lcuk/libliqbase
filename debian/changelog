@@ -1,8 +1,16 @@
-libliqbase (0.3.30odz) unstable; urgency=low
+libliqbase (0.3.32) unstable; urgency=low
 
   * intermediate
+  * merged with javis, thanks!
 
- -- Gary Birkett <liquid@gmail.com>  05 September 2009 00:41:03 +0200
+ -- Gary Birkett <liquid@gmail.com>  06 September 2009 00:41:03 +0200
+
+libliqbase (0.3.31) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Change soname to libliqbase.so.1.
+
+ -- Javier S. Pedro <maemo@javispedro.com>  Sat,  5 Sep 2009 02:45:30 +0200
 
 libliqbase (0.3.30) unstable; urgency=low
 

@@ -92,11 +92,11 @@ binary-arch: build install
 #	dh_installinfo
 	dh_installman
 	dh_link
-	dh_strip
+	dh_makeshlibs -V
+	dh_strip --dbg-package=libliqbase1-dbg
 	dh_compress
 #	dh_perl
 #	dh_python
-	dh_makeshlibs
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol
