@@ -1,3 +1,17 @@
+libliqbase (0.3.34) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Adding x11 dependencies to libliqbase-dev.
+
+ -- Javier S. Pedro <maemo@javispedro.com>  Sun,  6 Sep 2009 23:04:15 +0200
+
+libliqbase (0.3.33) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fixing a few things related to missing .so in -dev package.
+
+ -- Javier S. Pedro <maemo@javispedro.com>  Sun,  6 Sep 2009 18:57:26 +0200
+
 libliqbase (0.3.32) unstable; urgency=low
 
   * intermediate

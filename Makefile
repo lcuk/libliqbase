@@ -38,8 +38,7 @@ install:
 	cp -r include/*.h                           $(PREFIX)/include/liqbase/
 
 	mkdir -p                                    $(PREFIX)/lib
-	cp src/libliqbase.so                        $(PREFIX)/lib/
-	cp src/libliqbase.so                        $(PREFIX)/lib/libliqbase.so.0
+	install src/libliqbase.so.1                 $(PREFIX)/lib/
 
 	mkdir -p						  $(PREFIX)/share/liqbase
 	mkdir -p					 	  $(PREFIX)/share/liqbase/libliqbase

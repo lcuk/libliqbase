@@ -43,7 +43,7 @@ endif
 all:        $(LIBRARY)
 
 $(LIBRARY): $(OBJS) 
-		gcc -shared -Wl,-soname,libliqbase.so -o libliqbase.so $(LDFLAGS)  $(OBJS)
+		gcc -shared -Wl,-soname,libliqbase.so.1 -o libliqbase.so.1 $(LDFLAGS)  $(OBJS)
 
 
 .c.o:
