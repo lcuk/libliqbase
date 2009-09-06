@@ -1,3 +1,9 @@
+libliqbase (0.3.30odz) unstable; urgency=low
+
+  * intermediate
+
+ -- Gary Birkett <liquid@gmail.com>  05 September 2009 00:41:03 +0200
+
 libliqbase (0.3.30) unstable; urgency=low
 
   * added history saving

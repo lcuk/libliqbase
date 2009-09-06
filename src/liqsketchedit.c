@@ -159,7 +159,7 @@ int post_to_liqbase_net(char *filename,char *datakey,int replyid)
 		liqapp_log("moo");
 		
 		
-		char *fn=liqcell_propgets(self,"liqsketcheditfilename",NULL);
+		char *fn=liqcell_propgets(self,"sketcheditfilename",NULL);
 		if(fn)
 		{
 
@@ -297,8 +297,8 @@ int post_to_liqbase_net(char *filename,char *datakey,int replyid)
 
 		liqsketch_clear(sketch);
 
-
-		char *fn=liqcell_propgets(editor,"liqsketcheditfilename",NULL);
+        
+		char *fn=liqcell_propgets(editor,"sketcheditfilename",NULL);        // fixed name bug would not reload, thanks javispedro
 		if(fn)
 		{
 			// 20090421_233231 lcuk : save it now with the special assigned name
@@ -330,7 +330,7 @@ int post_to_liqbase_net(char *filename,char *datakey,int replyid)
 
 		liqsketch_clear(sketch);
 
-		char *fn=liqcell_propgets(editor,"liqsketcheditfilename",NULL);
+		char *fn=liqcell_propgets(editor,"sketcheditfilename",NULL);      // fixed name bug would not delete, thanks javispedro
 		if(fn)
 		{
 			// 20090422_000423 lcuk : delete the actual file now
