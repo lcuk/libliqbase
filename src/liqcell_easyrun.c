@@ -1731,7 +1731,7 @@ moar:
 				//infotools = liqimage_cache_getfile("/usr/share/liqbase/libliqbase/media/package_system.png", 0,0,1);
                 
                 //infotools = liqimage_cache_getfile("/home/user/svn/liqbase-playground/liqbase_base_fs/usr/share/icons/hicolor/scalable/apps/liqbase_playground.png", 0,0,1);
-                infotools = liqimage_cache_getfile("/home/user/svn/liqbase-playground/media/liqbase_playground_use.png", 0,0,1);
+                infotools = liqimage_cache_getfile("/usr/share/liqbase/libliqbase/media/liqbase_playground_use.png", 0,0,1);
                 
                 
                 
