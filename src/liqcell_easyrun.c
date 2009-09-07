@@ -729,7 +729,7 @@ int liqcell_easyrun_hide_tools = 0;
  */
 int liqcell_easyrun(liqcell *self)
 {
-	liqapp_log("#################################### liqcell easyrun (%i,%i) :: %s",self->w,self->h,self->name);
+	liqapp_log("#################################### liqcell easyrun (%i,%i) :: %s (%i)",self->w,self->h,self->name,self->usagecount);
 	if(liqcell_showdebugboxes)
 		liqcell_print2(self);
 	if(self->w==0 || self->h==0)
@@ -1607,6 +1607,9 @@ quickfin:
 					liqcell_easyrun( zoom_app );
                     
                     liqcanvas_settitle( liqcell_getcaption(self) );
+                    
+                    // Mon Sep 07 22:13:27 2009 lcuk : was not releasing... tsk tsk
+                    liqcell_release(zoom_app);
 
 					zoom_app = NULL;
 
@@ -1861,7 +1864,7 @@ moar:
 		}
 	}
 	liqapp_log("liqcell easyrun complete %i",result);
-	
+	liqapp_log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ fin # liqcell easyrun (%i,%i) :: %s (%i)",self->w,self->h,self->name,self->usagecount);
 	
 	if( (liqcell_easyrunstack_used==1) )//&& (liqapp_pref_checkexists("noflashingcursor")==0) )
 	{
@@ -1881,6 +1884,9 @@ moar:
 	liqcell_easyrun_depth--;
 	
 	liqcell_historystore_historythumb(self);			// lol!
+
+    
+    
 	
 	return result;
 }
