@@ -720,6 +720,7 @@ liqcell *liqcell_findfirsthandler(liqcell*root,char *handlername)
 int liqcell_easyrun_depth=0;
 
 int liqcell_easyrun_hide_tools = 0;
+int liqcell_easyrun_hide_back = 0;
 
 /**
  * Main program event handler.
@@ -752,7 +753,11 @@ int liqcell_easyrun(liqcell *self)
 		// first cell, ask if tools should be globally available
 		liqcell_easyrun_hide_tools = liqcell_propgeti(self,"easyrun_hidetools",0);
 	}
-	
+	if( liqcell_easyrun_depth == 0 )
+	{
+		// first cell, ask if tools should be globally available
+		liqcell_easyrun_hide_back = liqcell_propgeti(self,"easyrun_hideback",0);
+	}	
 	
 	// set the 
 	//liqcell_propseti(self,"dialog_complete",0);
@@ -1355,7 +1360,7 @@ waitevent:
 						
 
 							//if( (omsx<64) && ((targetsurface->height-omsy)<64) && (omex<64) && ((targetsurface->height-omey)<64) )
-							if( (omsx<64) && ((canvas.pixelheight-omsy)<64) && (omex<64) && ((canvas.pixelheight-omey)<64) )
+							if( (omsx<64) && ((canvas.pixelheight-omsy)<64) && (omex<64) && ((canvas.pixelheight-omey)<64) && (liqcell_easyrun_hide_back==0)  )
 							{
 								if(ev.mouse.pressure!=0)
 								{
@@ -1436,7 +1441,7 @@ waitevent:
 							
 						// check if we need to send click
 						//if(  (liqcell_handlerfind(self,"mouse")==NULL) || (liqstroke_totallength(mouseargs.stroke) < 25)   )
-						if(  (liqstroke_totallength(mouseargs.stroke) < 50)) //25)   )
+						if(  (liqstroke_totallength(mouseargs.stroke) < 60)) //25)   )
 						{
 							
 							char buff[256];
@@ -1741,7 +1746,7 @@ moar:
 			}
 
             
-			if(infoback && infoclose)
+			if(infoback && infoclose &&     (liqcell_easyrun_hide_back==0)    )
 			{
 				//liqapp_log("************************************************************************************** use");
 				if(liqcell_easyrun_depth==1)
@@ -1750,6 +1755,8 @@ moar:
 				
 					liqcliprect_drawimagecolor(targetcr, infoback , 0,targetsurface->height-48,48,48, 1);
 			}
+            
+            
 			if( (infotools) && (liqcell_easyrun_hide_tools==0) )
 			{
 					liqcliprect_drawimagecolor(targetcr, infotools , targetsurface->width-48,0 ,48,48, 1);

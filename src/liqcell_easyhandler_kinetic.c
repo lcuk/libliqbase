@@ -21,7 +21,7 @@
     {
         liqapp_log("liqcell_easyhandler_content_zoom_click '%s'",self->name);
 
-		args->newdialogtoopen = liqcell_getcontent( self );
+		args->newdialogtoopen =liqcell_hold(  liqcell_getcontent( self ) );
         return 1;
        
     }

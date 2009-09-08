@@ -138,17 +138,13 @@ void liqcell_free(liqcell *self)
 	// and hence need dereferencing before use, decide later not important for now
 	
 
+
+
     
     // time to notify everyone about our impending death.
     liqcell_handlerrun(self,"destroy",NULL);
     
-	if(self->linkparent)
-	{
-		//
-		//liqcell_release(self->linkparent);
-		self->linkparent=NULL;
-	}    
-    
+
     if( self->classname && (strcmp(self->classname,"liqtimer")==0) )
     {
         // cheat to close down the thread!
@@ -162,7 +158,14 @@ void liqcell_free(liqcell *self)
             liqapp_log("liqcell_free thread cancelled for '%s'",self->name);
        }
     }
-	
+    
+	if(self->linkparent)
+	{
+		//
+		//liqcell_release(self->linkparent);
+		self->linkparent=NULL;
+	}    
+    	
 	
 	liqcell *c=self->linkchild;
 	

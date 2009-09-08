@@ -1,3 +1,10 @@
+libliqbase (0.3.35) unstable; urgency=low
+
+  * bugfixes
+  * serious issue with args->newdialogtoopen in click event.  it was not releasing memory.  now code which uses it must ensure it has correct ref count.  if you want the cell to remain alive, then liqcell_hold() it.
+
+ -- Gary Birkett <liquid@gmail.com>  08 September 2009 00:41:03 +0200
+
 libliqbase (0.3.34) unstable; urgency=low
 
   * Non-maintainer upload.

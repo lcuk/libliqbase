@@ -1263,6 +1263,7 @@ int b=(y+h);
 		{
 			// he here clipped from the top
 			iy = image->height * (cr.sy-y)/h;
+            iy--;
 		}
 	}
 
@@ -1368,6 +1369,7 @@ int b=(y+h);
 		{
 			// he here clipped from the top
 			iy = image->height * (cr.sy-y)/h;
+            iy--;
 		}
 	}
 
