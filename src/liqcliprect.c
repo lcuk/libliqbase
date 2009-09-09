@@ -1208,7 +1208,7 @@ inline void liqcliprect_drawimagecolor(		liqcliprect *self,liqimage *image,int x
 	if(!w || !h) return;
 	if(w<0){ x+=w;w=-w;}
 	if(h<0){ y+=h;h=-h;}
-	//liqapp_log("drawimg d(%i,%i)-step(%i,%i)  i(%i,%i)-step(%i,%i)  ",x,y,w,h,    0,0,image->width,image->height);
+	//liqapp_log("drawimg d(%i,%i)-step(%i,%i)  i(%i,%i)-step(%i,%i)  ",x,y,w,h,    0,0,image->width,image->height,aspectlock);
 
 	if(aspectlock)
 	{
@@ -1263,7 +1263,7 @@ int b=(y+h);
 		{
 			// he here clipped from the top
 			iy = image->height * (cr.sy-y)/h;
-            iy--;
+            ih--;
 		}
 	}
 
@@ -1281,7 +1281,7 @@ int b=(y+h);
 
 
 
-	//liqapp_log("dxy %i,%i dwh %i,%i    iwh %i,%i",dx,dy,dw,dh,  image->width-1,image->height-1);
+	//liqapp_log("dxy %i,%i dwh %i,%i    iwh %i,%i  cr(%i,%i wh %i,%i)",dx,dy,dw,dh,  image->width-1,image->height-1,cr.sx,cr.sy,cw,ch);
 
 	if(w==0||h==0)return;
 	xsurface_drawzoomimage( image,
@@ -1369,7 +1369,7 @@ int b=(y+h);
 		{
 			// he here clipped from the top
 			iy = image->height * (cr.sy-y)/h;
-            iy--;
+            ih--;
 		}
 	}
 

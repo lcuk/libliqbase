@@ -800,6 +800,7 @@ __tz_one("backdone");
 
 	if(!self->image)
 	{
+		//liqapp_log("paint_image trying to load for %s",self->name);
 		char *fn = liqcell_propgets(self,"imagefilename",NULL);
 		if(fn && (liqapp_fileexists(fn) || ishttp(fn)))
 		{
@@ -958,13 +959,15 @@ __tz_one("imageprep");
 #endif
 		{
 
-				//liqapp_log("imagestd: '%s' draw  %4i,%4i - %4i,%4i    ",self->name,x,y,w,h );
+			//	liqapp_log("imagestds: '%s' draw  %4i,%4i - %4i,%4i    ",self->name,x,y,w,h );
 
 			// standard..
 			if(liqcell_propgeti(self,"lockaspect",1)==1)
 				liqcliprect_drawimagecolor(cr,self->image,x,y,w,h,1);
 			else
 				liqcliprect_drawimagecolor(cr,self->image,x,y,w,h,0);
+
+			//	liqapp_log("imagestde: '%s' draw  %4i,%4i - %4i,%4i    ",self->name,x,y,w,h );
 		}
 		
 	}

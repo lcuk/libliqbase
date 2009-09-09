@@ -1614,7 +1614,10 @@ quickfin:
                     liqcanvas_settitle( liqcell_getcaption(self) );
                     
                     // Mon Sep 07 22:13:27 2009 lcuk : was not releasing... tsk tsk
-                    liqcell_release(zoom_app);
+// i bet this is where the bug is coming from.....
+// coding on the train to london is strange
+// yeah that stops the crash, but that does not help me here i shouldnt be touching zoom at all now
+                    //liqcell_release(zoom_app);
 
 					zoom_app = NULL;
 
