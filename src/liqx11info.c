@@ -57,6 +57,19 @@ static void x11_set_fullscreen_state(Display *display, Window window, int action
 
 
 
+	
+int liqx11info_regrab_focus(liqx11info *myx11info)
+{
+	// 20090708_200813 lcuk : thank you danielwilms for pointing me in the right direction
+	XSetInputFocus(myx11info->mydisplay, myx11info->mywindow, RevertToPointerRoot, CurrentTime);
+	if(!XRaiseWindow(myx11info->mydisplay, myx11info->mywindow))
+	{
+		{ liqapp_errorandfail(-1,"x11info XRaiseWindow, could not raise"); }
+	}
+}
+
+	
+
 //############################################################# 
 
 
@@ -247,21 +260,14 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 	liqx11overlay_refreshdisplay(myx11info->myoverlay);
 
 
-	// 20090708_200813 lcuk : thank you danielwilms for pointing me in the right direction
-	XSetInputFocus(myx11info->mydisplay, myx11info->mywindow, RevertToPointerRoot, CurrentTime);
-	if(!XRaiseWindow(myx11info->mydisplay, myx11info->mywindow))
-	{
-		{ liqapp_errorandfail(-1,"x11info XRaiseWindow, could not raise"); }
-	}
+    liqx11info_regrab_focus(myx11info);
 
 
 	
 	return 0;
 }
 	
-	
-	
-	
+
 	
 	
 	
@@ -545,6 +551,8 @@ foo:
 							liqx11overlay_refreshdisplay(myx11info->myoverlay);
 							//isbusyrendering=1;
 						}
+                        
+                        liqx11info_regrab_focus(myx11info);
 					break;				
 		
 				case LeaveNotify:
@@ -573,6 +581,8 @@ foo:
 							liqx11overlay_refreshdisplay(myx11info->myoverlay);
 							//isbusyrendering=1;
 						}
+                        
+                        liqx11info_regrab_focus(myx11info);
 					break;				
 		
 				case FocusOut:
@@ -628,6 +638,8 @@ foo:
 
 				//############################################ keyboard
 				
+                
+                
 				case KeyPress:
 					//liqapp_log("keypre in  mymod=%i prev=%i",liqx11_modifier,liqx11_modifierprev);
 					{
@@ -646,6 +658,7 @@ foo:
 							case XK_ISO_Level3_Shift:	newmask |= Mod5Mask;
 														break;
 						}
+                        
 						if(newmask)
 						{
 							//liqapp_log("modmod mod mask  %i",newmask);

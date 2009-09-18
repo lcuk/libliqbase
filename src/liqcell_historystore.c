@@ -66,6 +66,18 @@ int liqcell_historystore_historythumb(liqcell *self)
     if(!self)return -1;
     if(!self->classname)return -1;
     // check if the file exists?
+
+        char buf[FILENAME_MAX]={0};
+        
+        liqcell_historystore_historythumb_getfilename(buf,sizeof(buf),self->classname);
+
+
+	if(liqapp_fileexists(buf))
+	{
+		// ok, there is a file already existing, no point in regenerting right now
+		// tho in future it would be better storing a live  thumb, its just a bit worrysome with my drive
+		return 0;
+	}
     
     liqcell_hold(self);
     
@@ -98,13 +110,9 @@ int liqcell_historystore_historythumb(liqcell *self)
         liqapp_log("liqcell_historystore_historythumb painting cell %s",self->name);
         liqcell_easypaint(self,cr,0,0,80,48);
     
-        liqapp_log("liqcell_historystore_historythumb building filename class '%s'",self->classname);
+//        liqapp_log("liqcell_historystore_historythumb building filename class '%s'",self->classname);
     
-        char buf[FILENAME_MAX]={0};
-        
-        liqcell_historystore_historythumb_getfilename(buf,sizeof(buf),self->classname);
-        
-        //snprintf(buf,FILENAME_MAX,"%s/historythumb/liq.%s.historythumb.png",app.userdatapath,self->classname);
+		// already got        
      
         liqapp_log("liqcell_historystore_historythumb saving image as '%s'",buf);
     

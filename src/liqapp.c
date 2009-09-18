@@ -111,26 +111,19 @@ char *liqapp_gettitle()
 //#######################################################################
 
 	static const char *hardware_product_filename = "/proc/component_version";
-	//static const char *cpufreq_filename = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq";
-    
     static char *hardware_product[32]={0};
 	static int   hardware_product_ispowerful;
-	
 	int hardware_product_read()
 	{
         hardware_product[0]=0;
-        
 		FILE *fd;
 		int rs;
-
 		fd = fopen(hardware_product_filename, "r");
 		if(fd==NULL){ liqapp_log("hardware_product_read, cannot open for reading"); return -1;}	
 		char tit[32]={0};
 		char dat[32]={0};
-        
         while(!feof(fd))
 		{
-		
             dat[0]=0;
             tit[0]=0;
             rs=fscanf((FILE*) fd,"%10s %10s\n",tit,dat);
@@ -138,25 +131,18 @@ char *liqapp_gettitle()
             dat[31]=0;
             //liqapp_log("hardware_product_read version data line: '%s'='%s' %i",tit,dat,rs);
             if(rs != 2){ liqapp_log("hardware_product_read, cannot read information"); fclose(fd); return -2;}
-            
             if(strcasecmp(tit,"product")==0)
             {
                 strncpy(hardware_product,dat,32);
                 break;
-            }
-            
+            }       
         }        
         fclose(fd);
-        
-        
-        
- 
         if(strcasecmp(tit,"product")==0)
         {
             snprintf(hardware_product,sizeof(hardware_product),"%s",dat);
             return 0;
-        }
-        
+        }      
         liqapp_log("hardware_product_read, did not find product line");
         return 0;
 	}

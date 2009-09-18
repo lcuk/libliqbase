@@ -1,3 +1,16 @@
+libliqbase (0.3.37) unstable; urgency=low
+
+  * changes to the selected highlight (had altered incorrectly yesterday)
+  * changed the thumb history saving to check file exists and leave it if it does
+
+ -- Gary Birkett <liquid@gmail.com>  10 September 2009 00:41:03 +0200
+
+libliqbase (0.3.36) unstable; urgency=low
+
+  * changes to the highlight
+
+ -- Gary Birkett <liquid@gmail.com>  09 September 2009 00:41:03 +0200
+
 libliqbase (0.3.35) unstable; urgency=low
 
   * bugfixes
@@ -122,76 +135,4 @@ libliqbase (0.3.14) unstable; urgency=low
 
 libliqbase (0.3.11) unstable; urgency=low
 
-  * prevent multiple event handlers being fired if at least 1 is found 
-
- -- Gary Birkett <liquid@gmail.com>  21 June 2009 22:41:03 +0200
-
-libliqbase (0.3.10) unstable; urgency=low
-
-  * bugfixes towards kotcomix and vgraph and general cleanups 
-
- -- Gary Birkett <liquid@gmail.com>  21 June 2009 22:41:03 +0200
-
-libliqbase (0.3.9) unstable; urgency=low
-
-  * bug with the wmclass.. 
-
- -- Gary Birkett <liquid@gmail.com>  17 June 2009 22:41:03 +0200
-
-
-libliqbase (0.3.8) unstable; urgency=low
-
-  * bug with the new osso code.. 
-
- -- Gary Birkett <liquid@gmail.com>  16 June 2009 22:41:03 +0200
-
-libliqbase (0.3.7) unstable; urgency=low
-
-  * stop crashing hildon desktop, cant use "liqbase-playground" as service name.
-  * forced osso initialize to "liqbase_playground" in lib, and changed files here.
-  * skipped a couple of revs also
-
- -- Gary Birkett <liquid@gmail.com>  16 June 2009 21:41:03 +0200
-
-libliqbase (0.3.4) unstable; urgency=low
-
-  * tweaks
-
- -- Gary <liquid@gmail.com>  15 June 2009 12:40:03 +0200
-
-libliqbase (0.3.3) unstable; urgency=low
-
-  * knob bugfixes and scrollbars
-
- -- Gary <liquid@gmail.com>  15 June 2009 12:40:03 +0200
-
-libliqbase (0.3.2) unstable; urgency=low
-
-  * bugfix to cellprop, was doubly freeing memory tsktsk
-
- -- Gary <liquid@gmail.com>  14 June 2009 12:40:03 +0200
-
-libliqbase (0.3.1) unstable; urgency=low
-
-  * remove xsp.
-
- -- Gary <liquid@gmail.com>  Tue, 09 June 2009 23:40:03 +0200
-
-libliqbase (0.3) unstable; urgency=low
-
-  * trying again.
-
- -- Gary <liquid@gmail.com>  Mon, 08 June 2009 23:40:03 +0200
-
-libliqbase (0.2.1-dev-1) unstable; urgency=low
-
-  * forgot libpng in debain folder, fixed calendar location.
-
- -- Gary <liquid@gmail.com>  Mon, 07 June 2009 23:40:03 +0200
-
-libliqbase (0.2-dev-1) unstable; urgency=low
-
-  * Initial release, Kees Jongenburger prepared baseline packaging.
-
- -- Gary <liquid@gmail.com>  Sat, 30 May 2009 13:18:03 +0200
-
+  * prevent multiple event handlers bein

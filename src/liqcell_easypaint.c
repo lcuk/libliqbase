@@ -1575,13 +1575,25 @@ __tz_one("disablerdone");
 	//if(t)
     if(liqcell_getselected(self))
 	{
-		//liqapp_log("textcolor :: '%s'",t);
-		//if(decodecolor(t, &bcy, &bcu, &bcv , &bca))
-        if(h<240)  // shock!   was w<400 && h<240
+		//if(liqcell_handlerfind(self,"click") || liqcell_handlerfind(self,"mouse"))
 		{
 
-    		liqcliprect_drawboxwashcolor(     cr,x,y,w,h, 60,240);
-			liqcliprect_drawboxlinecolor(     cr,x,y,w,h,200,20,240);
+
+			//liqapp_log("textcolor :: '%s'",t);
+			//if(decodecolor(t, &bcy, &bcu, &bcv , &bca))
+        	if(h<240)  // shock!   was w<400 && h<240
+			{
+
+
+	    		liqcliprect_drawboxwashcolor(     cr,x,y,w,h, 60,240);
+				liqcliprect_drawboxlinecolor(     cr,x,y,w,h,200,20,240);
+	
+				//t = "rgb(232,206,162)";
+				//decodecolor(t, &bcy, &bcu, &bcv, &bca,&bcc );
+	    		//liqcliprect_drawboxwashcolor(     cr,x,y,w,h, bcu,bcv);
+			//	liqcliprect_drawboxlinecolor(     cr,x,y,w,h,bcy,bcu*0.3,bcv);
+// onedotzero want no border
+			}
 		}
 	}
 
@@ -1594,12 +1606,34 @@ __tz_one("selecteddone");
 	{
 		//liqapp_log("textcolor :: '%s'",t);
 		//if(decodecolor(t, &bcy, &bcu, &bcv , &bca))
+
+
+/*
         if(w<400 && h<240)  // shock!
 		{
 
     		liqcliprect_drawboxwashcolor(     cr,x,y,w,h, 60,80);
 			liqcliprect_drawboxlinecolor(     cr,x,y,w,h,200,20,40);
 		}
+*/
+
+		if(liqcell_handlerfind(self,"click") || liqcell_handlerfind(self,"mouse"))
+		{
+
+
+			//liqapp_log("textcolor :: '%s'",t);
+			//if(decodecolor(t, &bcy, &bcu, &bcv , &bca))
+        	if(h<240)  // shock!   was w<400 && h<240
+			{
+	
+				t = "rgb(160,206,232)";
+				decodecolor(t, &bcy, &bcu, &bcv, &bca,&bcc );
+	    		liqcliprect_drawboxwashcolor(     cr,x,y,w,h, bcu,bcv);
+				//liqcliprect_drawboxlinecolor(     cr,x,y,w,h,bcy,bcu*0.3,bcv);
+			}
+		}
+
+
 	}
 
 
