@@ -757,6 +757,14 @@ void liqapp_ensurecleanusername(char *usernamewhichismodifiable)
 }
 
 
+int liqapp_usernamechange(char *newusername)
+{
+    if(app.username){ free(app.username); app.username=NULL; }
+    
+    app.username = strdup( newusername );
+    return 0;
+}
+
 
 static int liqapp_log_forwarding_count=0;
 

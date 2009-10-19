@@ -123,7 +123,7 @@ int         liqapp_filesize(char *filename);
 char *		liqapp_filename_walkoverpath(char *filename);
 char *		liqapp_filename_walktoextension(char *filename);
 int   		liqapp_file_copy (char * from, char * to, int allowoverwrite);
-
+int         liqapp_usernamechange(char *newusername);
 
 int         liqapp_url_wget(char *url,char *resultfilename,int resultbufsize);
 

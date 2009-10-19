@@ -97,6 +97,9 @@ int		vgraph_drawsketch(     			vgraph *self, int x, int y, int w,int h , liqsket
 int		vgraph_drawimage(      			vgraph *self, int x, int y, int w,int h , liqimage  *image      );
 int		vgraph_drawcell(       			vgraph *self, int x, int y, int w,int h , liqcell   *cell      );
 
+int		vgraph_drawcolorcube(   		vgraph *self, int x, int y, int w,int h    );
+int		vgraph_drawgreycol(   	    	vgraph *self, int x, int y, int w,int h    );
+
 
 int		vgraph_pget(       				vgraph *self, int x, int y, unsigned char *grey,unsigned char *u,unsigned char *v);
 

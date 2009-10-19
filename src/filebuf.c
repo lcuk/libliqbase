@@ -50,13 +50,18 @@ int 					filebuf_open(struct filebuf *self,char *filename)
 	self->filelength=0;
 	self->filedata=NULL;
 	
-	//app_log("filebuf_open, '%s'",filename);
+	liqapp_log("filebuf_open, '%s'",filename);
 	self->filename = strdup(filename);
 	if(self->filename==NULL)
 	{
     	{ return liqapp_warnandcontinue(-1,"filebuf open, name strdup allocation problem"); }
 	}
-		
+
+    if(liqapp_fileexists(filename)==0)
+    {
+        liqapp_log(-1,"filebuf open error, file not found: %s",filename);
+        return -1;
+    }		
 		
 	//app_log("filebuf_open, get file stats (used for size)");
 	struct stat filestatbuf;
@@ -64,7 +69,8 @@ int 					filebuf_open(struct filebuf *self,char *filename)
 	fs = stat(self->filename, &filestatbuf);
 	if (fs == -1)
 	{
-    	{ return liqapp_warnandcontinue(-1,"filebuf open, get stats problem"); }
+        liqapp_log(-1,"filebuf open, get stats problem: %s",filename);
+        return -1;
 	}
 	// allow whole length for mapping
 	self->filelength=filestatbuf.st_size;

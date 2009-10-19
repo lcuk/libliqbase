@@ -133,7 +133,7 @@ typedef union
 #define HILDON_APPVIEW_WIDTH           720
 
 
-#define HILDON_RX_51_APPVIEW_HEIGHT          420
+#define HILDON_RX_51_APPVIEW_HEIGHT          (480-56)
 #define HILDON_RX_51_APPVIEW_WIDTH           800
 
 

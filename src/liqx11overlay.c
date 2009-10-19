@@ -261,10 +261,16 @@ int liqx11overlay_hide(liqx11overlay *self)
 int liqx11overlay_refreshdisplay(liqx11overlay *self)
 {
 	//liqapp_log("refresh..");
+    
+    
+    
+    
 	
 	//liqapp_log("x11overlay refresh begin wh(%i,%i) ",self->yuv_image->width, self->yuv_image->height);
 	if(!self->yuv_shminfo_attached) return 0;
 	
+    //liqcliprect_drawcolorcube( liqcanvas_getcliprect(), 0,0, self->yuv_image->width, self->yuv_image->height,128);
+
 	int res=0;
 	
 //	if(self->yuv_image->width==480 && self->yuv_image->height==480)
@@ -282,6 +288,7 @@ int liqx11overlay_refreshdisplay(liqx11overlay *self)
 //		return 0;
 				
 	}
+    
 	
 	
 	//liqapp_log("x11overlay refresh getting geom");

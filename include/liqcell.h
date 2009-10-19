@@ -118,7 +118,9 @@ void    liqcell_free(liqcell *self);
 liqcell*  liqcell_quickcreatewidget(char *name,char *classname,int innerw,int innerh);
 liqcell*  liqcell_quickcreatevis(char *name,char *classname,int x,int y,int w,int h);
 liqcell*  liqcell_quickcreatedata(char *name,char *classname,void *data);
+liqcell*  liqcell_quickcreatecaption(char *name,char *classname,char *caption);
 liqcell*  liqcell_quickcreatenameclass(char *name,char *classname);
+
 //liqcell * liqcell_quickcreatefull(char *name,char *classname,char *context,void *data);
 
 //######################################################################### children and tree management

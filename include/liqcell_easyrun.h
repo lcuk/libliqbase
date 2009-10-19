@@ -10,6 +10,8 @@
 
 int liqcell_easyrun(liqcell *self);
 
+liqcell *liqcell_easyrunstack_topself();        // return the topmost cell in the very first window ("the universe")
+
 typedef struct liqcelleventargs
 {
 	// the event context passed to objects per paint event

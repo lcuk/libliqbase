@@ -30,6 +30,7 @@ int liqx11_modifierprev=0;
 int liqx11_modifier=0;
 
 
+
 //############################################################# 
 
 static void x11_set_fullscreen_state(Display *display, Window window, int action)

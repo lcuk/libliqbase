@@ -373,11 +373,15 @@ int b=(y+h)-1;
 	if(b>self->ey)b=self->ey;
 	if(r&1)r++;
 	if(b&1)b++;
+    
+    //xsurface_drawrect_grey(self->surface,x,y,w,h,grey);
 
 	int tw=(r-x)/16;
 	int th=(b-y)/16;
 	int u;
 	int v;
+    while((tw*16)<w)tw++;
+    while((th*16)<h)th++;
 	//xsurface_drawrect_yuv(self->surface,x,y,(r-x)+1,(b-y)+1,grey,u,v);
 	for(v=1;v<255;v+=16)
 	{
@@ -391,6 +395,50 @@ int b=(y+h)-1;
 	}
 }
 
+void liqcliprect_drawgreycol(liqcliprect *self,int x,int y,int w,int h)
+{
+	//if(w<=0)return;
+	//if(h<=0)return;
+	if(w<0){ x+=w;w=-w;}
+	if(h<0){ y+=h;h=-h;}
+int r=(x+w)-1;
+int b=(y+h)-1;
+
+	if(x<self->sx)x=self->sx;
+	if(y<self->sy)y=self->sy;
+	if(r>self->ex)r=self->ex;
+	if(b>self->ey)b=self->ey;
+	if(r&1)r++;
+	if(b&1)b++;
+    
+    
+    
+    
+    
+
+	int tw=(r-x)/16;
+	int th=(b-y)/16;
+    while((tw*16)<w)tw++;
+    while((th*16)<h)th++;
+    
+    int gg;
+    
+	//xsurface_drawrect_yuv(self->surface,x,y,(r-x)+1,(b-y)+1,grey,u,v);
+    for(gg=0;gg<=255;gg+=16)
+	//for(v=1;v<255;v+=16)
+	{
+        xsurface_drawrect_yuv(self->surface,x,y,w,th+1,gg,128,128);
+        
+		//int xx=x;
+		//for(u=1;u<255;u+=16)
+		//{
+		//	xsurface_drawrect_yuv(self->surface,xx,y,tw+1,th+1,grey,u,v);
+		//	xx+=tw;
+		//}
+		y+=th;
+	}
+
+}
 
 
 

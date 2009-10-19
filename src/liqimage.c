@@ -26,6 +26,8 @@
 
 
 
+void liqimage_mark_barcode(liqimage *self);
+
 //####################################################################
 //####################################################################
 //####################################################################
@@ -851,7 +853,12 @@ int 							row_stride;
 	jpeg_finish_decompress(&cinfo);
 	jpeg_destroy_decompress(&cinfo);
 	fclose(infile);
+    
 	liqapp_log("jpeg.complete");
+    
+    
+  //  liqimage_mark_barcode(self);
+    
 	return 0;
 }
 
@@ -1327,6 +1334,9 @@ int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata,
 		if(fp)fclose(fp);
 
 		liqapp_log("png finished");
+        
+        
+      //  liqimage_mark_barcode(self);
 
 		return 0;
 }

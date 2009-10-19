@@ -6,6 +6,11 @@
 
 
 
+
+
+
+
+
 /*
  
  
@@ -20,7 +25,16 @@
 
 */
 
+
+
+
+// maemo5
 #define VIDEO_SRC  "v4l2camsrc"
+
+// BBNS from #maemo irc offered this suggestion fr autofocus, this one didnt work, but see lower in code for more
+//#define VIDEO_SRC  "omap3camsrc"
+//#define VIDEO_SRC  "omap3cam"
+
 #define VIDEO_SINK "xvimagesink"
 
 
@@ -37,6 +51,7 @@
 #include "liqapp.h"
 #include "liqcamera.h"
 
+void liqimage_mark_barcode(liqimage *self);
 
 GstElement *CAMpipeline=NULL;
 int 		CAMW=0;
@@ -79,7 +94,7 @@ int CAMWd2=CAMW/2;
 		if(!CAMdestimage) return -1;
 		
 		
-		//if(ux==0){ app_log("line %i",uy); }
+	//	if(ux==0){ liqapp_log("line %i",uy); }
 		
 		unsigned long p= *UYVY++;
 		// Primary Grey channel
@@ -109,6 +124,8 @@ int CAMWd2=CAMW/2;
 		if(uy>=CAMH) break;
 	}
 	while(--zl);
+    
+    liqimage_mark_barcode(CAMdestimage);
 	
 	// tell our host that we updated (up to him what he does with the info)
 	if(CAMUpdateCallback)
@@ -150,6 +167,7 @@ int liqcamera_start(int argCAMW,int argCAMH,int argCAMFPS,liqimage * argCAMdesti
 	
 	liqapp_log("liqcamera: gst_init");
 	
+    
 	GstElement *camera_src;
 	GstElement *csp_filter;
 	GstElement *image_sink;
@@ -168,6 +186,20 @@ int liqcamera_start(int argCAMW,int argCAMH,int argCAMFPS,liqimage * argCAMdesti
 		liqapp_warnandcontinue(-1,"liqcamera : Couldn't create pipeline elements");
 		return -1;
 	}
+    
+    // BBNS suggested changing the driver to omap3cam
+    // to ensure that autofocus could be used
+    //#include <gst/gstv4l2camdriver.h>
+    //g_object_set(G_OBJECT(camera_src), "driver-name", "omap3cam", NULL);
+    //gst_photography_set_autofocus(GST_PHOTOGRAPHY(camera_src), TRUE);
+    
+ /*
+  player = gst_element_factory_make ("playbin", "player");
+  g_assert (player);
+  g_object_set (G_OBJECT (player), "uri", argv[1], NULL);
+  res = gst_element_set_state (player, GST_STATE_PLAYING);
+ */
+    
 	// ############################################################################ add everything to the CAMpipeline
 	liqapp_log("liqcamera: pipeline joining");
 	
@@ -175,18 +207,35 @@ int liqcamera_start(int argCAMW,int argCAMH,int argCAMFPS,liqimage * argCAMdesti
 	// ############################################################################ prepare the camera filter
 	
 	liqapp_log("liqcamera: obtaining video caps");
-	
+
+
+    char capstr[FILENAME_MAX];
+    snprintf(capstr,sizeof(capstr),"video/x-raw-yuv,format=(fourcc)UYVY,width=%i,height=%i,framerate=[1/%i,%i/1]",CAMW,CAMH,CAMFPS,CAMFPS);
+
+    //caps = gst_caps_from_string("video/x-raw-yuv,format=(fourcc)UYVY,width=320,height=240,framerate=[1/25,25/1]");
+    caps = gst_caps_from_string(capstr);
+   //liqapp_log("Testing caps from str: %s", gst_caps_to_string(caps));
+    //gst_caps_unref(caps);
+    
+/*    
 	caps = gst_caps_new_simple("video/x-raw-yuv",
             "format",    GST_TYPE_FOURCC, GST_MAKE_FOURCC ('U', 'Y', 'V', 'Y'),
 			"width",     G_TYPE_INT, CAMW,
 			"height",    G_TYPE_INT, CAMH,
 			"framerate", GST_TYPE_FRACTION, CAMFPS, 1,
 			NULL);
+    liqapp_log("Testing caps from sim: %s", gst_caps_to_string(caps));
+     
+*/    
 		if(!gst_element_link_filtered(camera_src, csp_filter, caps))
 		{
 			liqapp_warnandcontinue(-1,"liqcamera : Could not link camera_src to csp_filter");
 			return -1;
 		}
+        
+            
+    
+        
 	gst_caps_unref(caps);
 	
 	

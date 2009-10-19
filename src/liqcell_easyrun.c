@@ -113,7 +113,11 @@ static int liqcell_easyrunstack_used=-1;
 //########################################################################
 //########################################################################
 
-
+liqcell *liqcell_easyrunstack_topself()
+{
+    if(liqcell_easyrunstack_used<0)return NULL;
+    return liqcell_easyrunstack[liqcell_easyrunstack_used].runself;
+}
 	
 	
 
@@ -1485,6 +1489,8 @@ waitevent:
 										hadmouse=1;
 
 									}
+                                    
+                                    easyrun_realtime_reshape();
 								}
 							}
 						}
@@ -1612,6 +1618,8 @@ quickfin:
 					liqcell_easyrun( zoom_app );
                     
                     liqcanvas_settitle( liqcell_getcaption(self) );
+                    
+                    easyrun_realtime_reshape();
                     
                     // Mon Sep 07 22:13:27 2009 lcuk : was not releasing... tsk tsk
 // i bet this is where the bug is coming from.....
@@ -1799,8 +1807,8 @@ moar:
 			//liqapp_log("render adding framecount");		
 // 20090520_014021 lcuk : show frame information
 
-/*
 
+/*
 			static liqfont *infofont=NULL;
 			if(!infofont)
 			{
@@ -1813,12 +1821,12 @@ moar:
 				char buff[255];
 				int cpufreq=0;
 				//cpufreq_read(&cpufreq);
-				snprintf(buff,sizeof(buff),"liqbase '%s' %3i, %3.3f, %3.3f",cap,framecount, liqapp_fps(tz0,tz1,1) ,liqapp_fps(tzs,tz1,framecount) );
-				//liqapp_log(buff);
+				snprintf(buff,sizeof(buff),"%s '%s' %3i, %3.3f, %3.3f",app.title,cap,framecount, liqapp_fps(tz0,tz1,1) ,liqapp_fps(tzs,tz1,framecount) );
+				liqapp_log(buff);
 				int hh=liqfont_textheight(infofont);
 				liqcliprect_drawtextinside_color(targetcr, infofont,  0,0, targetsurface->width,hh, buff,0, 255,128,128);
 			}
- */	
+ */ 
  		
 			//liqapp_log("render refreshing");
 			

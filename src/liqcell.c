@@ -1862,11 +1862,14 @@ liqcell*  liqcell_quickcreatenameclass(char *name,char *classname)
 	return self;
 }
 
+
+
+
 /**
  * Create a liqcell and set the name, classname, and the data.
  * @param name The name of the liqcell
  * @param classname The class that the liqcell belongs to
- * @param data The data to be held by the liqcell
+ * @param data The data to be held by the liqcell, but is not realloced or released, it is under your control.
  * @return liqcell* The created liqcell
  * 
  */
@@ -1876,6 +1879,24 @@ liqcell*  liqcell_quickcreatedata(char *name,char *classname,void *data)
 	liqcell_setname(self,name);
 	liqcell_setclassname(self,classname);
 	liqcell_setdata(self,data);
+	self->kind |= cellkind_prop;
+	return self;
+}
+
+/**
+ * Create a liqcell and set the name, classname, and the caption.
+ * @param name The name of the liqcell
+ * @param classname The class that the liqcell belongs to
+ * @param caption The data to be copied and stored with the cell.
+ * @return liqcell* The created liqcell
+ * 
+ */
+liqcell*  liqcell_quickcreatecaption(char *name,char *classname,char *caption)
+{
+	liqcell *self = liqcell_new();
+	liqcell_setname(self,name);
+	liqcell_setclassname(self,classname);
+	liqcell_setcaption(self,caption);
 	self->kind |= cellkind_prop;
 	return self;
 }

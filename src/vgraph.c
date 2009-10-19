@@ -394,6 +394,48 @@ int		vgraph_drawbox(        vgraph *self, int x, int y, int w,int h       )
 }
 
 
+
+int		vgraph_drawcolorcube(   		vgraph *self, int x, int y, int w,int h    )
+{
+	//liqapp_log("draw.colorcube.in  %i,%i,%i,%i",x,y,w,h);
+	
+	x = self->scalex + (x * self->scalew / self->windoww);
+	y = self->scaley + (y * self->scaleh / self->windowh);
+	w = (w * self->scalew / self->windoww);
+	h = (h * self->scaleh / self->windowh);
+	
+	//liqapp_log("draw.colorcube.use %i,%i,%i,%i",x,y,w,h);
+
+	unsigned char *yuva = (unsigned char *)&self->pencolor;
+	liqcliprect_drawcolorcube( vgraph_getcliprect(self),   x,y,   w,h,    yuva[0] );
+
+	return 0;
+    
+}
+int		vgraph_drawgreycol(   	    	vgraph *self, int x, int y, int w,int h    )
+{
+	//liqapp_log("draw.greycol.in  %i,%i,%i,%i",x,y,w,h);
+	
+	x = self->scalex + (x * self->scalew / self->windoww);
+	y = self->scaley + (y * self->scaleh / self->windowh);
+	w = (w * self->scalew / self->windoww);
+	h = (h * self->scaleh / self->windowh);
+	
+	//liqapp_log("draw.greycol.use %i,%i,%i,%i",x,y,w,h);
+
+	unsigned char *yuva = (unsigned char *)&self->pencolor;
+	liqcliprect_drawgreycol( vgraph_getcliprect(self),   x,y,   w,h,    yuva[0] );
+
+	return 0;    
+}
+
+
+
+
+
+
+
+
 int		vgraph_drawrect(       vgraph *self, int x, int y, int w,int h       )
 {
 	
