@@ -26,7 +26,7 @@ LDFLAGS     = -lX11 -lXext -lXv -lm -lcurl `freetype-config --libs` -ljpeg -lpth
 RM          = /bin/rm -f
 
 OBJSUI      = liqx11overlay.o liqdialog_showtree.o liqlist.o liqcell_child_select.o liqx11info.o filebuf.o vgraph.o liqcell.o liqcell_arrange.o liqcell_prop.o liqcell_easyrun.o liqcell_easypaint.o liqcell_parse_filename.o liqcell_parse_liqbrain.o liqcell_easyhandler_kinetic.o liqcell_mk_star.o liqui.o liqcell_dllcache.o md5.o textbox.o liqkeyboard.o liqaccel.o  liqcell_historystore.o liqsketchedit.o liqimagescan.o
-OBJS        = liqtimer.o liqcell_easyrun_multitouch.o liqrecentphotoselect.o liqapp.o liqapp_hildon.o liqapp_prefs.o liqapp_filecache.o liqcanvas_firstrun_splash.o liq_xsurface.o liqcanvas.o liqimage.o liqfont.o liqfontview.o liqsketch.o liqsketchpagefilename.o liqcliprect.o liqapp_turbo.o $(OBJSUI) 
+OBJS        = liqtimer.o liqcell_easyrun_multitouch.o liqrecentphotoselect.o liqapp.o liqapp_hildon.o liqapp_prefs.o liqapp_filecache.o liqcanvas_firstrun_splash.o liq_xsurface.o liqcanvas.o liqimage.o liqfont.o liqfontview.o liqsketch.o liqsketchpagefilename.o liqcliprect.o liqapp_turbo.o $(OBJSUI) dialog_selectimage.o
 
 
 ifdef USE_OSSO
