@@ -9,7 +9,6 @@
 #include "liqx11overlay.h"
 
 
-
 //############################################################# keyboard bits
 
 #define ShiftMask               (1<<0)
@@ -68,6 +67,9 @@ int liqx11info_regrab_focus(liqx11info *myx11info)
 		{ liqapp_errorandfail(-1,"x11info XRaiseWindow, could not raise"); }
 	}
 }
+
+
+
 
 	
 
@@ -136,8 +138,13 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 	unsigned long 	myforeground;
 	unsigned long 	mybackground;
 	
-		mybackground  = BlackPixel(myx11info->mydisplay, myx11info->myscreen);
-		myforeground  = WhitePixel(myx11info->mydisplay, myx11info->myscreen);
+		//mybackground  = BlackPixel(myx11info->mydisplay, myx11info->myscreen);
+		//myforeground  = WhitePixel(myx11info->mydisplay, myx11info->myscreen);
+
+
+		myforeground  = BlackPixel(myx11info->mydisplay, myx11info->myscreen);
+		mybackground  = WhitePixel(myx11info->mydisplay, myx11info->myscreen);
+
 		
 		myhint.x      = 0;
 		myhint.y      = 0;
@@ -318,6 +325,7 @@ int liqx11info_eventgetcount(liqx11info *myx11info)
 
 
 
+
 int liqx11info_eventgetnext(liqx11info *myx11info,XEvent *event)
 {
 	return XNextEvent(myx11info->mydisplay, event);
@@ -330,8 +338,29 @@ int liqx11info_eventgetnext(liqx11info *myx11info,XEvent *event)
 
 
 
+
+
+
+
+
+
 int liqx11info_refreshdisplay(liqx11info *myx11info)
 {
+    XImage *liqimage_convert_to_ximage(liqimage *self, Display *dis, int screen);
+ 
+ 
+	//void *actualx11display;	// this will always be live within an x11 framework
+	//void *actualx11window; 
+    
+    XImage *img = liqimage_convert_to_ximage(canvas.surface, myx11info->mydisplay,myx11info->myscreen);
+    if(img)
+    {
+
+		XPutImage(myx11info->mydisplay, myx11info->mywindow, myx11info->mygc, img, 0, 0, 0, 0, img->width, img->height);
+		XFlush(myx11info->mydisplay);
+        XDestroyImage(img);
+    }
+    
 	return liqx11overlay_refreshdisplay(myx11info->myoverlay);
 }
 

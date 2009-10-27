@@ -219,6 +219,7 @@ int liqx11overlay_close(liqx11overlay *self)
 
 int liqx11overlay_show(liqx11overlay *self)
 {
+    return 0;    
 	liqapp_log("x11overlay show begin");
 	
 	if(self->yuv_shminfo_attached) return 0;
@@ -242,6 +243,7 @@ int liqx11overlay_show(liqx11overlay *self)
 int liqx11overlay_hide(liqx11overlay *self)
 {
 	
+    return 0;    
 	liqapp_log("x11overlay hide begin");
 	
 	if(!self->yuv_shminfo_attached) return 0;
@@ -263,7 +265,7 @@ int liqx11overlay_refreshdisplay(liqx11overlay *self)
 	//liqapp_log("refresh..");
     
     
-    
+    return 0;    
     
 	
 	//liqapp_log("x11overlay refresh begin wh(%i,%i) ",self->yuv_image->width, self->yuv_image->height);
