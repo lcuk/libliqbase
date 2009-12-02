@@ -116,9 +116,9 @@ XImage *liqimage_convert_to_ximage(liqimage *self, Display *dis, int screen)
                 unsigned char outg = clip(( 298 * ic - 100 * id - 208 * ie + 128) >> 8);
                 unsigned char outb = clip(( 298 * ic + 516 * id            + 128) >> 8);
 
-                outr=outr >> 3;
-                outg=outg >> 4;
-                outb=outb >> 3;
+                outr=outr >> 2;
+                outg=outg >> 3;
+                outb=outb >> 2;
 
 
                 //outr=outr*rRatio;

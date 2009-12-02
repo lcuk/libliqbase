@@ -432,8 +432,12 @@ int liqcell_child_arrange_makegrid_internal(liqcell *self,int viscolcount,int vi
 	}
 	
 	// 20090521_220229 lcuk : allow graceful reduction from optimal "busy" visibility
+	
+	int usegracefulreduction = liqcell_propgeti(self,"arrange_usegracefulreduction",1);
+	
+	
 retry:
-	if(answercount < (visrowcount * viscolcount) )
+	if((answercount < (visrowcount * viscolcount)) && usegracefulreduction)
 	{
 		//
 		if(viscolcount > visrowcount)

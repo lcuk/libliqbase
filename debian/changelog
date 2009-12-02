@@ -1,3 +1,9 @@
+libliqbase (0.3.57) unstable; urgency=low
+
+  * numerous preflight stability improvements
+
+ -- Gary Birkett <liquid@gmail.com>  01 December 2009 16:41:03 +0200
+
 libliqbase (0.3.45) unstable; urgency=low
 
   * lots of bugfixes and stability improvements

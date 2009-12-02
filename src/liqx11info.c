@@ -138,14 +138,11 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 	unsigned long 	myforeground;
 	unsigned long 	mybackground;
 	
-		//mybackground  = BlackPixel(myx11info->mydisplay, myx11info->myscreen);
-		//myforeground  = WhitePixel(myx11info->mydisplay, myx11info->myscreen);
+		mybackground  = BlackPixel(myx11info->mydisplay, myx11info->myscreen);
+		myforeground  = WhitePixel(myx11info->mydisplay, myx11info->myscreen);
 
 
-		myforeground  = BlackPixel(myx11info->mydisplay, myx11info->myscreen);
-		mybackground  = WhitePixel(myx11info->mydisplay, myx11info->myscreen);
-
-		
+	
 		myhint.x      = 0;
 		myhint.y      = 0;
 		myhint.width  = pixelwidth;
@@ -346,6 +343,8 @@ int liqx11info_eventgetnext(liqx11info *myx11info,XEvent *event)
 
 int liqx11info_refreshdisplay(liqx11info *myx11info)
 {
+    
+/*    
     XImage *liqimage_convert_to_ximage(liqimage *self, Display *dis, int screen);
  
  
@@ -360,7 +359,7 @@ int liqx11info_refreshdisplay(liqx11info *myx11info)
 		XFlush(myx11info->mydisplay);
         XDestroyImage(img);
     }
-    
+ */    
 	return liqx11overlay_refreshdisplay(myx11info->myoverlay);
 }
 

@@ -74,6 +74,8 @@ int newprio = 20;//PRIORITY_MIN ;// threadpriority;//20;
 	// safe to get existing scheduling param
 	ret = pthread_attr_getschedparam(&tattr, &param);
 	// set the priority; others are unchanged
+    
+
 
 	//liqapp_log("thread schedparam=%i (current)",param.sched_priority);
 
@@ -83,9 +85,20 @@ int newprio = 20;//PRIORITY_MIN ;// threadpriority;//20;
 	param.sched_priority = newprio;
 	// setting the new scheduling param
 	ret = pthread_attr_setschedparam(&tattr, &param);
-	// with new priority specified
 
+
+    // Wed Nov 11 20:03:43 2009 lcuk : now set the detach state
+    pthread_attr_setdetachstate(&tattr, PTHREAD_CREATE_DETACHED);
+
+    
+
+	// with new priority specified
 	ret = pthread_create(tid, &tattr, func, arg);
+    
+    
+    // Wed Nov 11 20:03:49 2009 lcuk : release this..
+    pthread_attr_destroy(&tattr);
+
 
 
 //	ret = pthread_create(tid, NULL, func, arg);
@@ -176,7 +189,9 @@ while( (mainthread_inprogress>1) ); //   || (par && (par->kineticx || par->kinet
 				//########################## does it already exist?
 
 				
-				if(liqapp_filesize(longbuf)>0)
+				//if(liqapp_filesize(longbuf)>0)
+				// there was a bug leaving files with 0 length a long time ago, now this is gone i should check for file existing
+				if(liqapp_fileexists(longbuf))
 				{
 					// the file has already been downloaded! sweet!
 					liqapp_log("http got valid file already..");

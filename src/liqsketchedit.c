@@ -72,7 +72,19 @@ int post_to_liqbase_net(char *filename,char *datakey,int replyid)
  
     int newid=0;
 
-   
+	char *username = app.username;
+	char *userpassmd5 = liqapp_pref_getvalue("userpassmd5");
+	if(!userpassmd5 || !*userpassmd5)
+	{
+		liqapp_log("post_to_liqbase_net not performed, no userpass configured");
+		return -1;
+	}
+    
+    liqapp_log("post_to_liqbase_net username: '%s'",username);
+    liqapp_log("post_to_liqbase_net upload '%s' starting",filename);
+    
+    
+    
     struct curl_memorybuffer resultchunk = {NULL,0};
 
 	CURL* easyhandle = curl_easy_init();
@@ -85,16 +97,7 @@ int post_to_liqbase_net(char *filename,char *datakey,int replyid)
 	curl_easy_setopt(easyhandle, CURLOPT_WRITEFUNCTION, curl_memorybuffer);
 	curl_easy_setopt(easyhandle, CURLOPT_WRITEDATA, (void *)&resultchunk);
     
-	char *username = app.username;
-	char *userpassmd5 = liqapp_pref_getvalue("userpassmd5");
-	if(!userpassmd5 || !*userpassmd5)
-	{
-		liqapp_log("post_to_liqbase_net not performed, no userpass configured");
-		return -1;
-	}
-    
-    liqapp_log("post_to_liqbase_net username: '%s'",username);
-    liqapp_log("post_to_liqbase_net upload '%s' starting",filename);
+
 	
 	struct curl_httppost *post=NULL;  
 	struct curl_httppost *last=NULL;  
@@ -231,15 +234,61 @@ int post_to_liqbase_net(char *filename,char *datakey,int replyid)
 	}
 
 
+	static int liqsketchedit_shown(liqcell *self, liqcelleventargs *args, void *context)
+	{
+        // shown for the first time :)
+        liqcell *cover = liqcell_child_lookup(self,"cover");
+        if(liqcell_getlinkparent( self) == NULL )
+        {
+            // no parent..
+            // make sure we show the cover
+            liqcell_setvisible(cover,1);
+        }
+        else
+        {
+            // got a parent..
+            // make sure we hide the cover
+            liqcell_setvisible(cover,0);
+        }
+    }
 
-
-
+	static int liqsketchedit_dialog_open(liqcell *self, liqcelleventargs *args, void *context)
+	{
+        
+        liqcell *cover = liqcell_child_lookup(self,"cover");
+        if(liqcell_getlinkparent( self) == NULL )
+        {
+            // no parent..
+            // make sure we hide the cover
+            liqcell_setvisible(cover,0);
+        }
+        else
+        {
+            // got a parent..
+            // make sure we hide the cover
+            liqcell_setvisible(cover,0);
+        }
+    }
 
 
 
 
 	static int liqsketchedit_dialog_close(liqcell *self, liqcelleventargs *args, void *context)
 	{
+        
+        liqcell *cover = liqcell_child_lookup(self,"cover");
+        if(liqcell_getlinkparent( self) == NULL )
+        {
+            // no parent..
+            // make sure we show the cover
+            liqcell_setvisible(cover,1);
+        }
+        else
+        {
+            // got a parent..
+            // make sure we hide the cover
+            liqcell_setvisible(cover,0);
+        }        
 		// save the sketch?
 
 		//liqcell *content = liqcell_child_lookup( self,"content");
@@ -481,6 +530,7 @@ int post_to_liqbase_net(char *filename,char *datakey,int replyid)
 static int liqsketchedit_resize(liqcell *self, liqcelleventargs *args, void *context)
 {
 	//liqcell *base = liqcell_getbasewidget(self);
+	liqcell *cover = liqcell_child_lookup(self,"cover");
 	liqcell *undo = liqcell_child_lookup(self,"undo");
 	liqcell *clear = liqcell_child_lookup(self,"clear");
 	liqcell *save = liqcell_child_lookup(self,"save");
@@ -490,6 +540,7 @@ static int liqsketchedit_resize(liqcell *self, liqcelleventargs *args, void *con
 	int ww=liqcell_getw(self);
 	int hh=liqcell_geth(self);
 	
+	liqcell_setrect(cover,  0,  0,            ww*1.0,hh*1.0);
 	liqcell_setrect(undo,  ww*0.9,  0,        ww*0.1,hh*0.3);
 	liqcell_setrect(clear, ww*0.9,  hh*0.3,   ww*0.1,hh*0.3);
 	liqcell_setrect(save , ww*0.9,  hh*0.6,   ww*0.1,hh*0.3);
@@ -551,6 +602,11 @@ liqcell *liqsketchedit_create()
 		
 		liqcell *b;
 
+		b = liqcell_quickcreatevis("cover","picture",  0,0,   800,480 );
+        liqcell_propsets(  b, "imagefilename", "/usr/share/liqbase/libliqbase/media/liqsketch_cover.png" );
+        liqcell_setvisible(b,0);
+		liqcell_child_insert( self, b );
+
 		b = liqcell_quickcreatevis("undo","button",  800-180,20,   160,160 );
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
 		liqcell_handleradd(b,    "click",   liqsketchedit_undo_click);
@@ -593,9 +649,14 @@ liqcell *liqsketchedit_create()
 		//liqcell_setvisible(b,0);
 
 
+
+
+
 		liqsketchedit_resize(self,NULL, NULL);
 
 		//liqcell_handleradd_withcontext(self,    "keypress",   liqsketchedit_keypress,   self);
+        liqcell_handleradd_withcontext(self,    "shown",   liqsketchedit_shown,   self);
+		liqcell_handleradd_withcontext(self,    "dialog_open",   liqsketchedit_dialog_open,   self);
 		liqcell_handleradd_withcontext(self,    "dialog_close",   liqsketchedit_dialog_close,   self);
 		liqcell_handleradd_withcontext(self,    "mouse",   liqsketchedit_mouse,   self);
 		liqcell_handleradd_withcontext(self,    "resize",   liqsketchedit_resize,   self);
