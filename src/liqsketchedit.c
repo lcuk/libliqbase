@@ -74,9 +74,9 @@ int post_to_liqbase_net(char *filename,char *datakey,int replyid)
 
 	char *username = app.username;
 	char *userpassmd5 = liqapp_pref_getvalue("userpassmd5");
-	if(!userpassmd5 || !*userpassmd5)
+	if(!userpassmd5 || !*userpassmd5 || !username || !*username)
 	{
-		liqapp_log("post_to_liqbase_net not performed, no userpass configured");
+		liqapp_log("post_to_liqbase_net not performed, no username or pass configured");
 		return -1;
 	}
     

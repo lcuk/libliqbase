@@ -1,3 +1,9 @@
+libliqbase (0.3.58) unstable; urgency=low
+
+  * added LIQBASE_WALLMOUNT define which will keep the back/close button in lower left, otherwise it moves to maemo default place
+
+ -- Gary Birkett <liquid@gmail.com>  05 December 2009 16:41:03 +0200
+
 libliqbase (0.3.57) unstable; urgency=low
 
   * numerous preflight stability improvements

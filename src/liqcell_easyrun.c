@@ -22,6 +22,9 @@
  *
  */
 
+// if liqbase is run in wallmount mode, make sure this is set
+//#define LIQBASE_WALLMOUNT
+
 
 // 20090728_001621 lcuk : set this to have a 25fps limit to framerate, otherwise runs at fastest possible
 //#define LIMIT_FRAMERATE 1
@@ -1319,8 +1322,7 @@ waitevent:
 
 				}
 
-
-							//if( ((targetsurface->width-omsx)<64) && (omsy<64) && ((targetsurface->width-omex)<64) && (omey<64) && (liqcell_easyrun_hide_tools==0) )
+#ifdef LIQBASE_WALLMOUNT
 							if( ((canvas.pixelwidth-omsx)<64) && (omsy<64) && ((canvas.pixelwidth-omex)<64) && (omey<64) && (liqcell_easyrun_hide_tools==0) )
 							{
 								if(ev.mouse.pressure!=0)
@@ -1329,11 +1331,7 @@ waitevent:
 								}
 								else
 								{
-									
 									// tools button :)
-									
-
-									
 									if(strcasecmp( liqcell_getname(self), "tools" )==0)
 									{
 										// 20090606_013753 lcuk : if we are already in a tools object, close it again :)
@@ -1341,30 +1339,29 @@ waitevent:
 										goto quickfin;
 										
 									}
-
 											// 20090606_003219 lcuk : mark these as clear and shortcut the process
 											mouseargs.mcnt=0;
 											mouseargs.hit = NULL;
-
 											hot=self;
 											hotx=0;
 											hoty=0;
-
 											zoom_app=toolclick(self);
 											zoom_in_progress=1;
 											zoom_start=liqapp_GetTicks();
 											zoom_direction = 1;
-
 									goto quickfin;
-
-
 								}
-								
 							}
-						
+#endif						
 
-							//if( (omsx<64) && ((targetsurface->height-omsy)<64) && (omex<64) && ((targetsurface->height-omey)<64) )
+
+#ifdef LIQBASE_WALLMOUNT
+
 							if( (omsx<64) && ((canvas.pixelheight-omsy)<64) && (omex<64) && ((canvas.pixelheight-omey)<64) && (liqcell_easyrun_hide_back==0)  )
+#else
+							if( ((canvas.pixelwidth-omsx)<80) && (omsy<56) && ((canvas.pixelwidth-omex)<80) && (omey<56) && (liqcell_easyrun_hide_back==0) )
+
+#endif
 							{
 								if(ev.mouse.pressure!=0)
 								{
@@ -1756,7 +1753,8 @@ moar:
                 
 			}
 
-            
+#ifdef LIQBASE_WALLMOUNT
+
 			if(infoback && infoclose &&     (liqcell_easyrun_hide_back==0)    )
 			{
 				//liqapp_log("************************************************************************************** use");
@@ -1772,7 +1770,30 @@ moar:
 			{
 					liqcliprect_drawimagecolor(targetcr, infotools , targetsurface->width-48,0 ,48,48, 1);
 			}
- 		
+
+#else
+
+			if(infoback && infoclose &&     (liqcell_easyrun_hide_back==0)    )
+			{
+				//liqapp_log("************************************************************************************** use");
+				
+				//liqapp_log("infoback %i,%i",infoback->width,infoback->height);
+				
+				if(liqcell_easyrun_depth==1)
+					liqcliprect_drawimagecolor(targetcr, infoclose, targetsurface->width-80,0 ,80,56, 1);
+				else
+				
+					liqcliprect_drawimagecolor(targetcr, infoback , targetsurface->width-80,0 ,80,56, 1);
+			}
+            
+            
+			//if( (infotools) && (liqcell_easyrun_hide_tools==0) )
+			//{
+			//		liqcliprect_drawimagecolor(targetcr, infotools , targetsurface->width-48,0 ,48,48, 1);
+			//}
+
+
+#endif
 			// 20090712_224448 lcuk : i want MAX 25fps, just to see
 			//ft2=liqapp_GetTicks();
 #ifdef LIMIT_FRAMERATE		
