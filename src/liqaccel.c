@@ -52,6 +52,8 @@ static int ocnt=0;
 static int oax=0;
 static int oay=0;
 static int oaz=0;
+
+static float oangle=0;
 	
 static const char *accel_filename = "/sys/class/i2c-adapter/i2c-3/3-001d/coord";
 
@@ -77,5 +79,33 @@ int liqaccel_read(int *ax,int *ay,int *az)
 	oay=*ay;
 	oaz=*az;
 	ocnt++;
+	oangle=0;
 	return 0;
+}
+
+int liqaccel_inuse()
+{
+	return (ocnt!=0);
+}
+
+void liqaccel_reset()
+{
+	// turn ourselves off
+	// any new user will instantly switch it back on again
+	ocnt=0;
+}
+float liqaccel_getangle()
+{
+	// try not to calc this too often
+	// just reread when exactly 0
+	// 
+	if(ocnt==0)return 0;
+	if(oangle==0)
+	{
+		float faax = oax;
+		float faay = oay;
+		oangle=atan2(faax,-faay );
+	}
+	return oangle;
+	
 }

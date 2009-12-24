@@ -11,6 +11,120 @@
 #include "liqcanvas.h"
 #include "liqimage.h"
 #include "liqsketch.h"
+#include "liqaccel.h"
+
+//############################################### costable
+#define PI 3.14159265358979323846f
+
+#define costable_size      (512)
+#define costable_size_div2 (costable_size / 2)
+#define costable_size_div4 (costable_size / 4)
+#define costable_size_last (costable_size - 1)
+
+float   costable[ costable_size ];
+int     costable_fudged[ costable_size ];
+int     costable_ready = 0;
+#define costable_fudge 1024
+
+inline float costable_getcos(float n)
+{
+	float f = n * costable_size_div2 / PI;
+	int i = f;
+	if (i < 0) i=-i;
+	return costable[ (i + costable_size_div4) % costable_size_last];
+}
+
+inline float costable_getsin(float n)
+{
+	float f = n * costable_size_div2 / PI;
+	int i = f;
+	if (i < 0)
+		return costable[ -((-i) % costable_size_last) + costable_size  ];
+	else
+		return costable[ (i) % costable_size_last];
+}
+
+inline float costable_fudgegetcos(float n)
+{
+	float f = n * costable_size_div2 / PI;
+	int i = f;
+	if (i < 0) i=-i;
+	return costable_fudged[ (i + costable_size_div4) % costable_size_last];
+}
+
+inline float costable_fudgegetsin(float n)
+{
+	float f = n * costable_size_div2 / PI;
+	int i = f;
+	if (i < 0)
+		return costable_fudged[ -((-i) % costable_size_last) + costable_size  ];
+	else
+		return costable_fudged[ (i) % costable_size_last];
+}
+
+
+void costable_init()
+{
+	if(costable_ready)return;
+	int i;
+	for (i=0;i<costable_size;i++)
+	{
+		costable[i] = (float)sin(i * PI / costable_size_div2);
+		costable_fudged[i] = costable_fudge * sin(i * PI / costable_size_div2);
+	}
+	costable_ready=1;
+
+}
+
+//###############################################
+
+				// stupendously slow proof of concept
+
+
+				void matrot_slow( int cx,int cy, int *px,int *py,float angle )
+				{
+					if(!angle)return;	// all ok
+					float p1x = *px - cx;
+					float p1y = *py - cy;
+					// finally rotating
+					
+					*px = cx + p1x * cos(angle) - p1y * sin(angle);
+					*py = cy + p1x * sin(angle) + p1y * cos(angle);
+					
+				}
+				
+				// make it faster
+				// improvise however required :)
+				
+
+				void matrot_mid( int cx,int cy, int *px,int *py,float angle )
+				{
+					if(!angle)return;	// all ok
+					float p1x = *px - cx;
+					float p1y = *py - cy;
+					// finally rotating
+					
+					*px = cx + p1x * costable_getcos(angle) - p1y * costable_getsin(angle);
+					*py = cy + p1x * costable_getsin(angle) + p1y * costable_getcos(angle);
+					
+				}
+		
+		 		// maybe a bit buggy, testing previous version
+				// seems stable now :) and fast enough
+				// it was reading the accelerometer so often
+				
+				void matrot( int cx,int cy, int *px,int *py,float angle )
+				{
+					if(!angle)return;	// all ok
+					int p1x = *px - cx;
+					int p1y = *py - cy;
+					// finally rotating
+					
+					*px = cx + (p1x * costable_fudgegetcos(angle) / costable_fudge) - (p1y * costable_fudgegetsin(angle) / costable_fudge);
+					*py = cy + (p1x * costable_fudgegetsin(angle) / costable_fudge) + (p1y * costable_fudgegetcos(angle) / costable_fudge);
+					
+				}
+		
 //##################################################################
 //##################################################################
 //##################################################################
@@ -730,6 +844,7 @@ int _liqcliprect_recursion_depth=0;
 
 void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,int h,int drawmode)	// 0=preview, 1=detailed, 2=latest point only 4=no aspect
 {
+	
 	if(!page)return;
 	if(l+w<self->sx || t+h<self->sy) return;
 	if(l>=self->ex) return;
@@ -765,6 +880,41 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 		if(fmx==0 || fmy==0) return;
 
 	}
+
+
+	// required for rotation
+	// for now, test one theory
+	// adjust the angle to be cd ..
+	//#define angle (3.1415)/2
+
+
+			int aax=0;
+			int aay=0;
+			int aaz=0;
+			
+//			liqaccel_read(&aax,&aay,&aaz);
+
+
+//			float faax = aax;
+//			float faay = aay;
+			
+//	float angleloc=atan2(faax,-faay );
+
+
+
+
+	float angle = (drawmode ? 0 : liqaccel_getangle());
+	
+	
+	//liqapp_log("ang:   %-3.3f   loc:   %-3.3f",angle,angleloc);
+			   
+	
+	costable_init();
+	
+	
+	// FromCentre used for rotation to know the centre of the from used block
+	int fcx = fox + fmx/2;
+	int fcy = foy + fmy/2;
 
 
 
@@ -863,7 +1013,7 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 	
 	
 	// Sun Aug 23 12:41:07 2009 lcuk : fuckit, try full res always and see
-	if(liqapp_hardware_product_ispowerful_get())
+	if(liqapp_hardware_product_ispowerful_get() && (angle==0))
 		rpt=1;
 
 	rpt=0;
@@ -1015,6 +1165,11 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 
 				p1x=p1->x;	// rotate now..
 				p1y=p1->y;
+				
+				// finally rotating
+				matrot(fcx,fcy, &p1x,&p1y,angle);
+
+
 
 				p2 = p1->linknext;
 				while(p2)
@@ -1023,11 +1178,21 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 					p2x=p2->x;   // rotate now..
 					p2y=p2->y;
 
+					// finally rotating
+					matrot(fcx,fcy, &p2x,&p2y,angle);
+
+
 					// the heavy math part is here...
 					lsx=tox+((p1x-fox)*tmx/fmx);
 					lsy=toy+((p1y-foy)*tmy/fmy);
 					lex=tox+((p2x-fox)*tmx/fmx);
 					ley=toy+((p2y-foy)*tmy/fmy);
+					
+					// idea:
+					// try rotating the target coords instead of the dest
+					// the thinking here is that it gets me in thinking for the cliprect at the head of the function
+					//matrot(tcx,tcy, &lxs,&lsy,angle);
+					//matrot(tcx,tcy, &les,&ley,angle);
 
 
 					// high definition color scaling :)
@@ -1448,5 +1613,61 @@ int b=(y+h);
 
 								blend
 								);
+
+
+/* this is just thoughts, and was going to implement this here to test making a 9block rounded edge blitter work
+    // the aim is to allow a specified image to be used in a stretch corners concept
+	// to keep rounded edges looking sharp and correct
+	// but allowing a textured core area to stretch easily
+	// test of the special renderer
+
+	int iw=w ;
+	int ih=h ;
+
+	int gw=8;
+	int gh=8;
+	
+	
+	void blit(int cx,int cy,int cw,int ch)
+	{
+		cx+=x;
+		cy+=y;
+		//
+		if(cx+cw < dx){ return; }
+		if(cx    < dx){ cw-=(dx-cx); cx=dx; }
+		if(cx    > dx+dw){ return; }
+		if(cx+cw > dx+dw){ cw=cx-(dx+dw); }
+		if(cy+ch < dy){ return; }
+		if(cy    < dy){ ch-=(dy-cy); cy=dy; }
+		if(cy    > dy+dh){ return; }
+		if(cy+ch > dy+dh){ ch=cy-(dy+dh); }
+		
+		xsurface_drawzoomblendimage( image, cx,cy,cw,ch ,
+							self->surface,
+								//x,y,
+								//w,h
+								cr.sx,cr.sy,
+								cw,ch,
+
+								blend
+								);		
+	}
+
+
+
+	blit(0,    0,      gw,      gh);
+	blit(gw,   0,      iw-gw-gw,gh);
+	blit(iw-gw,0,      gw,      gh);
+
+
+
+	blit(0,    gh,      gw,      ih-gh-gh);
+	blit(gw,   gh,      iw-gw-gw,gh-gh-gh);
+	blit(iw-gw,gh,      gw,      gh-gh-gh);
+
+	blit(0,    ih-gh,   gw,      gh);
+	blit(gw,   ih-gh,   iw-gw-gw,gh);
+	blit(iw-gw,ih-gh,   gw,      gh);
+*/
 
 }

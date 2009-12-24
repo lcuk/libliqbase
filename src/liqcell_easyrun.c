@@ -1590,7 +1590,7 @@ quickfin:
 
 		if(refreshinprogress==0 && self->visible==0)break;
 		
-		// check for dialog complete dignal and bail
+		// check for dialog complete signal and bail
 		
 		if(refreshinprogress==0 && liqcell_propgeti(self,"dialog_running",1)==0 ) break;
 
@@ -1688,6 +1688,16 @@ moar:
 		}
 		if(refreshinprogress==0) if(running==0) break;
 		if(paintargs.runfast) dirty=1;
+		if( (dirty==0) && (refreshinprogress==0) && (mouseargs.mcnt==0) && liqaccel_inuse())
+		{
+			int aax=0;
+			int aay=0;
+			int aaz=0;
+			
+			liqaccel_read(&aax,&aay,&aaz);
+			dirty=1;
+			
+		}
 		if(((dirty==1) && (refreshinprogress==0)))
 		{
 		//	liqapp_log("render %i  ud=%i",framecount,universe->dirty);
