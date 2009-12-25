@@ -903,7 +903,18 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 
 
 
-	float angle = (drawmode ? 0 : liqaccel_getangle());
+	float angle;
+	if(drawmode)
+	{
+		angle=0;
+	}
+	else
+	{
+		if(liqapp_pref_checkexists("autorotate"))
+			angle = page->angle + liqaccel_getangle();
+		else
+			angle = page->angle;
+	}
 	
 	
 	//liqapp_log("ang:   %-3.3f   loc:   %-3.3f",angle,angleloc);

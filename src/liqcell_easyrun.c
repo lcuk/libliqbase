@@ -1688,7 +1688,7 @@ moar:
 		}
 		if(refreshinprogress==0) if(running==0) break;
 		if(paintargs.runfast) dirty=1;
-		if( (dirty==0) && (refreshinprogress==0) && (mouseargs.mcnt==0) && liqaccel_inuse())
+		if( (dirty==0) && (refreshinprogress==0) && (mouseargs.mcnt==0) && liqapp_pref_checkexists("autorotate") )
 		{
 			int aax=0;
 			int aay=0;
