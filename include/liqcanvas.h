@@ -60,7 +60,9 @@ typedef struct
 	
 	void *x11info;
 	
-	unsigned int expansion[16];
+	int framecount;			// hold number of frames :)
+	
+	unsigned int expansion[15];
 	
 } liqcanvas;
 

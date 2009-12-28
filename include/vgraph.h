@@ -16,7 +16,8 @@ typedef unsigned int vcolor;
 //#define vcolor_YUV(y,u,v)  ((unsigned int)( (((unsigned int)(y))<<24) | (((unsigned int)(u))<<16) | (((unsigned int)(v))<<8) | 0) )
 
 // this is endian specific and horrible, it just means if memory converted to char * its ordered "YUVA"
-#define vcolor_YUV(y,u,v)  ((unsigned int)( (((unsigned int)(v))<<16) | (((unsigned int)(u))<<8) | (((unsigned int)(y))) ) )
+#define vcolor_YUV(y,u,v)     ((unsigned int)(                             (((unsigned int)(v))<<16) | (((unsigned int)(u))<<8) | (((unsigned int)(y))) ) )
+#define vcolor_YUVA(y,u,v,a)  ((unsigned int)( (((unsigned int)(a))<<24) | (((unsigned int)(v))<<16) | (((unsigned int)(u))<<8) | (((unsigned int)(y))) ) )
 
 typedef
 struct vgraph
@@ -90,6 +91,7 @@ int		vgraph_drawline(       			vgraph *self, int x, int y, int ex,int ey     );
 int		vgraph_drawbox(        			vgraph *self, int x, int y, int w,int h       );
 int		vgraph_drawrect(       			vgraph *self, int x, int y, int w,int h       );
 int		vgraph_drawrectwash(   			vgraph *self, int x, int y, int w,int h       );
+int		vgraph_drawrectfadeoutcolor(    vgraph *self, int x, int y, int w,int h       );
 int		vgraph_drawcircle(     			vgraph *self, int x, int y, int radius        );
 int		vgraph_drawellipse(    			vgraph *self, int x, int y, int rx,int ry     );
 int		vgraph_drawtext(       			vgraph *self, int x, int y, char *text        );

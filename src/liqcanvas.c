@@ -429,6 +429,8 @@ int liqcanvas_refreshdisplay()
 	
 	liqx11info_refreshdisplay( liqcanvas_getx11info() );
 	
+	canvas.framecount++;
+	
 	return 0;
 }
 

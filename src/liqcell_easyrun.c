@@ -29,7 +29,7 @@
 // 20090728_001621 lcuk : set this to have a 25fps limit to framerate, otherwise runs at fastest possible
 //#define LIMIT_FRAMERATE 1
 
-
+#define ABS(x)  ((x)<0 ? -(x) : (x))
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -934,7 +934,58 @@ liqcellclickeventargs clickargs;
 	liqcell_easyrunstack[liqcell_easyrunstack_used].keyargs = &keyargs;
 	liqcell_easyrunstack[liqcell_easyrunstack_used].clickargs = &clickargs;
 	
+
+int fademode = 0;
+int fadestartx = 0;
+int fadestarty = 0;
+int fadeatx = 0;
+int fadeaty = 0;
+float fadeupto = 0.0;
+
+
 	
+	if( (liqcell_propgeti(self,"dialog_zoomed",0))  || (liqcell_easyrunstack_used==0))
+	{
+		// crap already hacked zoomin
+		// there shouldnt be any slidefade cos its already done earlier
+	}
+	else
+	{
+		// ooh nice, lets try it
+		
+		fadestartx = liqcell_propgeti(self,"fadestartx",0);
+		fadestarty = liqcell_propgeti(self,"fadestarty",0);
+		if(fadestartx || fadestarty)
+		{
+			// specified fadeslide in
+			fademode = 1;		// zooming in
+			fadeatx = fadestartx;
+			fadeaty = fadestarty;
+			fadeupto=1;
+		}
+		else
+		{
+			// NO specified fadeslide in, lets try this..
+			liqapp_log("liqcell_easyrun auto fade set to slidein");
+			fademode=1;
+			fadestartx = targetsurface->width;
+			fadestarty = 0;
+
+			//fadestartx = 0;//targetsurface->width;
+			//fadestarty = targetsurface->height;
+
+			fadeatx = fadestartx;
+			fadeaty = fadestarty;
+			
+			fadeupto=1;
+			
+			
+		}
+	}
+	
+	
+
+
 
 
 int wx=0;
@@ -1111,7 +1162,12 @@ waitevent:
 			if( (ev.type == LIQEVENT_TYPE_KEY) && (ev.state==LIQEVENT_STATE_PRESS) && (ev.key.keycode==65307) )	//ESC
 			{
 				liqapp_log("Escape Pressed, Cancelling");
-				running=0;
+				//running=0;
+				if(fadestartx || fadestarty)
+				{	fademode=-1;  fadeatx=0; fadeaty=0; }
+				else
+				{	running=0; }
+
 				//result=NULL;
 				break;
 			}
@@ -1222,7 +1278,7 @@ waitevent:
 			}
 
 
-			else if(ev.type == LIQEVENT_TYPE_MOUSE && (zoom_in_progress==0)   )// && ev.mouse.pressure==0)
+			else if(ev.type == LIQEVENT_TYPE_MOUSE && (zoom_in_progress==0)  && (fademode==0)  )// && ev.mouse.pressure==0)
 			{
 				// mouse moving! w00t
 				
@@ -1233,6 +1289,9 @@ waitevent:
 				int mx=ev.mouse.x;
 				int my=ev.mouse.y;
 			//	liqapp_log("event mouse scrn (%i,%i)",mx,my);
+			
+				mx -= fadeatx;	// let this have its position adjusted
+				my -= fadeaty;
 
 
 				// convert to be in the context of a cell
@@ -1335,7 +1394,11 @@ waitevent:
 									if(strcasecmp( liqcell_getname(self), "tools" )==0)
 									{
 										// 20090606_013753 lcuk : if we are already in a tools object, close it again :)
-										running=0;
+										//running=0;
+										if(fadestartx || fadestarty)
+										{	fademode=-1;  fadeatx=0; fadeaty=0; }
+										else
+										{	running=0; }
 										goto quickfin;
 										
 									}
@@ -1355,6 +1418,31 @@ waitevent:
 #endif						
 
 
+
+
+
+							if( ((omsx)<80) && (omsy<56) && ((omex)<80) && (omey<56) )
+							{
+								if(ev.mouse.pressure!=0)
+								{
+									hot=NULL;
+								}
+								else
+								{
+                                    hot=NULL;
+									// todo, call the shell command to slide back to dashboard (cant find the page right now)
+								}
+								
+							}
+
+
+
+
+
+
+
+
+
 #ifdef LIQBASE_WALLMOUNT
 
 							if( (omsx<64) && ((canvas.pixelheight-omsy)<64) && (omex<64) && ((canvas.pixelheight-omey)<64) && (liqcell_easyrun_hide_back==0)  )
@@ -1370,13 +1458,37 @@ waitevent:
 								else
 								{
                                     hot=NULL;
-									running=0;
+									//running=0;
+									if(fadestartx || fadestarty)
+									{	fademode=-1;  fadeatx=0; fadeaty=0; }
+									else
+									{	running=0; }
 									goto quickfin;
 								}
 								
 							}
 
 
+// for future reference
+// the act of painting a cell makes it wet.
+// this state is the highest memory usage.
+// the cell should retain this value
+// and if skipped on subsequent renders shall be checked
+// and if it is no longer visible, it dries out.
+// a dried event should occur.
+// note, this should be most effective within lists
+// to give the individual tiles a chance to reevaluate themselves
+// i suppose writing the framenumber to a property of cell would suffice
+// then in the render loop if rendering fails due to being outside and the index was set previously
+// send the event and clear the flag
+// any cell listening for this gets a chance to release its data
+
+// adjust and tweak, maybe allow it to skip 5 frames or something
+// it might be nice to still allow a fair scrollback
+// worth a try :)
+// the cell might choose to reset its shown flag too :)
+// which would make the entire process nicely reusable
+// even for more than simple widgets
 
 
 
@@ -1462,6 +1574,10 @@ waitevent:
 								{
 									liqapp_log("click run '%s'",vhit->name);
 									if( liqcell_handlerrun(vhit,"click",&clickargs) )
+									{}
+									
+									
+									// dont care about result, we knew we had a click event, and we should do this anyway
 									{
                                         
                                         liqcanvas_settitle( liqcell_getcaption(self) );
@@ -1481,9 +1597,10 @@ waitevent:
 
 
 										wantwait=0;
-										//refreshinprogress=0;
+										refreshinprogress=0;		// bring this back too
 										dirty=1;
 										hadmouse=1;
+										liqapp_log("click done");
 
 									}
                                     
@@ -1577,6 +1694,7 @@ quickfin:
 
 			else
 			{
+				if(fademode) break;
 				// anything else, just ignore it
 //#ifndef USE_MAEMO
 				wantwait=1;
@@ -1588,15 +1706,78 @@ quickfin:
 //skipev:
 
 
-		if(refreshinprogress==0 && self->visible==0)break;
+		if(refreshinprogress==0 && self->visible==0) break;
 		
 		// check for dialog complete signal and bail
 		
-		if(refreshinprogress==0 && liqcell_propgeti(self,"dialog_running",1)==0 ) break;
+		
+		
+		if(refreshinprogress==0 && (fademode==0) && liqcell_propgeti(self,"dialog_running",1)==0 ) break;
 
 
 
 		float zoom_duration = 0.15;//0.4;//0.01;//0.1;//0.2;	// time to go from fullscreen to zoomed in
+		
+		
+		//###########################################################
+		int slidetowards(int valuenow,int target)
+		{
+			if(valuenow==target) return 0;
+			int diff = target - valuenow;
+			if(ABS(diff)>1)
+			{
+				if(ABS(diff)>3)
+					return diff/3 ;
+				else
+					return (diff<0)?-1:1;
+			}
+			else
+				return diff;
+		}
+		
+		
+		if((fademode) && (refreshinprogress==0))
+		{
+			//liqapp_log("liqcell_easyrun fade in %i,%i",fadeatx,fadeaty);
+			if(fademode==1)
+			{
+				// just halve distance per step
+				fademode=0;
+				int diffx = slidetowards(fadeatx,0);
+				int diffy = slidetowards(fadeaty,0);
+				
+				//liqapp_log("liqcell_easyrun fade in %i,%i, +1(a) diff %i,%i",fadeatx,fadeaty,diffx,diffy);
+				
+				if(diffx) { fadeatx+=diffx; dirty=1; fademode=1; } else { fadeatx = 0; }
+				if(diffy) { fadeaty+=diffy; dirty=1; fademode=1; } else { fadeaty = 0; }
+				dirty=1;
+				
+				fadeupto = (float)(fadeatx+fadeaty) / (float)(fadestartx+fadestarty);
+				
+				//liqapp_log("liqcell_easyrun fade in %i,%i, +1(b) diff %i,%i",fadeatx,fadeaty,diffx,diffy);
+			}
+			else
+			{
+				fademode=0;
+				int diffx = slidetowards(fadeatx,fadestartx);
+				int diffy = slidetowards(fadeaty,fadestarty);
+				
+				//liqapp_log("liqcell_easyrun fade in %i,%i, -1 diff %i,%i",fadeatx,fadeaty,diffx,diffy);
+				
+				if(diffx) { fadeatx+=diffx; dirty=1; fademode=-1; } else { fadeatx = fadestartx; }
+				if(diffy) { fadeaty+=diffy; dirty=1; fademode=-1; } else { fadeaty = fadestarty; }
+				dirty=1;
+				
+				fadeupto = (float)(fadeatx+fadeaty) / (float)(fadestartx+fadestarty);
+				
+				// if the fademode is now unset, we change fademode=0; and running=0;
+				//if(ABS(diffx)<5 && ABS(diffy)<5)running=0;
+				
+				if(fadeupto > 0.95)running=0;
+			}
+		}
+		//###########################################################
+		
 		if((zoom_in_progress) && (hot) && (refreshinprogress==0))
 		{
 			float zoomruntime = (liqapp_GetTicks()-zoom_start) / (1000.0);
@@ -1611,8 +1792,12 @@ quickfin:
 
 					//zoom_in_progress=0;
 					// run the zoom_app :)
+					
+					liqcell_propseti(zoom_app,"dialog_zoomed",1);
 
-					liqcell_easyrun( zoom_app );
+						liqcell_easyrun( zoom_app );
+					
+					liqcell_propremovei(zoom_app,"dialog_zoomed");
                     
                     liqcanvas_settitle( liqcell_getcaption(self) );
                     
@@ -1672,6 +1857,7 @@ moar:
 
 			dirty=1;
 		}
+		
 		if(self->dirty && (refreshinprogress==0))// && (dirty==0))
 		{
 			
@@ -1688,6 +1874,10 @@ moar:
 		}
 		if(refreshinprogress==0) if(running==0) break;
 		if(paintargs.runfast) dirty=1;
+		
+		/*
+		 // remove autorotate from here, i should enable it per dialog
+		 // because by putting it here messes up normal stuff and thats not desired
 		if( (dirty==0) && (refreshinprogress==0) && (mouseargs.mcnt==0) && liqapp_pref_checkexists("autorotate") )
 		{
 			int aax=0;
@@ -1698,6 +1888,9 @@ moar:
 			dirty=1;
 			
 		}
+		*/
+		
+		
 		if(((dirty==1) && (refreshinprogress==0)))
 		{
 		//	liqapp_log("render %i  ud=%i",framecount,universe->dirty);
@@ -1735,7 +1928,52 @@ moar:
 			//liqcell_easyrun_cursor_on_screen = 0;
 			
 			//liqapp_log("render drawing wh(%i,%i)",w,h);
+			
+			if(fademode)
+			{
+								
+				//liqapp_log("liqcell_easyrun fade in %i,%i, fm(%i) stack(%i)",fadeatx,fadeaty,fademode,liqcell_easyrunstack_used );
+
+				if(liqcell_easyrunstack_used>0)
+				{
+					// draw the background
+					liqcell *prev = liqcell_easyrunstack[liqcell_easyrunstack_used-1].runself;
+					//liqapp_log("liqcell_easyrun fade : drawing prev %s",prev->name);
+					
+					// optimize this soon to ONLY draw + darken the visible area :)
+					// adjust the cliprect to compensate for the covered area
+					// this should block the rest automatically, but th einterface isnt there yet
+					
+					unsigned char backbright = ((1.0-fadeupto) * 255.0);
+					
+					liqapp_log("fadeupto %3.3f   %i",fadeupto,backbright);
+					if(fadeatx>0 && fadeaty==0)
+					{
+						vgraph_drawcell(graph,x-(w-fadeatx),y,w,h,prev);
+						//vgraph_setbackcolor(graph, vcolor_YUVA(0,128,128, backbright ) );
+						//vgraph_drawrectfadeoutcolor(graph,x-(w-fadeatx),y,w,h);
+
+					}
+					else
+					{
+						vgraph_drawcell(graph,x,y,w,h,prev);
+						//vgraph_setbackcolor(graph, vcolor_YUVA(0,128,128, backbright) );
+						//vgraph_drawrectfadeoutcolor(graph,x,y,w,h);
+
+					}
+				}
+				// adjust offset
+				x+=fadeatx;
+				y+=fadeaty;
+				
+				// dark fill the area here
+				vgraph_setbackcolor(graph, vcolor_YUVA(0,128,128, 0) );
+				vgraph_drawrect(graph,x,y,w,h);
+			}
+
+			
 			vgraph_drawcell(graph,x,y,w,h,self);
+			
 			//liqapp_log("render adding nav items");
 			static liqimage *infoback=NULL;
 			static liqimage *infoclose=NULL;

@@ -162,6 +162,7 @@ liqimage *liqimage_cache_getfile(char *filename,int maxw,int maxh,int allowalpha
 	//for(f=0;f<cacheused;f++)
 	for(f=cacheused-1;f>=0;f--)
 	{
+		// pagefault here (at least according to gdb), its most likely related to the bug noticed below, will investigate more
 		if(strcmp(cachestack[f].key,cachekey)==0)
 		{
 			// no differences..
@@ -201,6 +202,11 @@ liqimage *liqimage_cache_getfile(char *filename,int maxw,int maxh,int allowalpha
 	//self->usagecount=1;
 
 	//liqapp_log( "TTF cache inserting %s", cachekey );
+	
+	
+	// todo:  fix the bug here when threaded loading occuring
+	// the RMW cycle is badly mixed up when creating a cache item and adding its data
+	// multithreaded handling of this is wrong since both may grab the same input
 
 	f=cacheused;
 	cachestack[f].key  = strdup(cachekey);

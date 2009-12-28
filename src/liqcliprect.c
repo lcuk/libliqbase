@@ -1218,9 +1218,18 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 					unsigned char sy=	    (char)(      f * (fy    )) ;
 					unsigned char su=	    (char)(128 + f * (fu-128)) ;
 					unsigned char sv=	    (char)(128 + f * (fv-128)) ;
-					liqcliprect_drawlinecolor(self,lsx,lsy,lex,ley,    sy,su,sv);
-
-					if(isselected) liqcliprect_drawlinecolor(self,lsx+1,lsy+1,lex+1,ley+1,    sy,su,sv);
+					
+					
+					
+					//liqcliprect_drawthicklinecolor(self,lsx,lsy,lex,ley,  thick_ratio,  sy,su,sv);
+					//if(isselected) liqcliprect_drawlinecolor(self,lsx+1,lsy+1,lex+1,ley+1,    sy,su,sv);
+					
+					stroke->pen_thick = 2;		// fakey!
+					int thick_ratio = (float)stroke->pen_thick * (fmap2/tmap2);
+					
+					liqapp_log("thick %i,  %3.3f %3.3f %3.3f",thick_ratio, fmap2,tmap2,(fmap2/tmap2));
+					if(isselected) thick_ratio+=2;
+					liqcliprect_drawthicklinecolor(self,lsx,lsy,lex,ley,  thick_ratio,  sy,su,sv);
 
 
 

@@ -475,6 +475,26 @@ int		vgraph_drawrectwash(       vgraph *self, int x, int y, int w,int h       )
 	liqcliprect_drawboxwashcolor( vgraph_getcliprect(self),   x,y,   w,h,    yuva[1],yuva[2] );
 	return 0;
 }
+int		vgraph_drawrectfadeoutcolor(       vgraph *self, int x, int y, int w,int h       )
+{
+	
+	//liqapp_log("draw.rect.in  %i,%i,%i,%i",x,y,w,h);
+	
+	x = self->scalex + (x * self->scalew / self->windoww);
+	y = self->scaley + (y * self->scaleh / self->windowh);
+	w = (w * self->scalew / self->windoww);
+	h = (h * self->scaleh / self->windowh);
+	
+	
+	
+	//liqapp_log("draw.rect.use %i,%i,%i,%i",x,y,w,h);
+	
+	unsigned char *yuva = (unsigned char *)&self->backcolor;
+	//liqcliprect_drawboxwashcolor( vgraph_getcliprect(self),   x,y,   w,h,    yuva[1],yuva[2] );
+	liqcliprect_drawboxfadeoutcolor(vgraph_getcliprect(self) ,x,y,   w,h,   yuva[0],yuva[1], yuva[2],yuva[3] );
+	return 0;
+}
+
 
 
 

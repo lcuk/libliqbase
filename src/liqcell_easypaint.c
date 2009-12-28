@@ -587,7 +587,19 @@ static int liqcell_kineticboiloff(liqcell *self)
 //
 }
 
-
+void liqcell_check_for_driedup(liqcell *self)
+{
+	if( !self->paintlastframenumber ) return;	// never painted
+	
+	if(self->paintlastframenumber+5 > canvas.framecount) return; // painted recently
+	
+	// its been painted a while ago, and its now offscreen
+	// tell the cell its going offscreen
+	liqapp_log("dried up '%s'",self->name);
+	self->paintlastframenumber=0;
+	liqcell_handlerrun(self,"driedup",NULL);
+	
+}
 
 
 void liqcell_easypaint(liqcell *self,liqcliprect *crorig,    int x,int y,    int w,int h)
@@ -620,16 +632,19 @@ __tz_one("start");
 	if(w<1 || h<1)
 	{
 		//liqapp_log("size0 bail!");
+		liqcell_check_for_driedup(self);
 		return;
 	}
 	if(self->w==0 || self->h==0)
 	{
 		//liqapp_log("box0 bail!");
+		liqcell_check_for_driedup(self);
 		return;
 	}
 	if(!self->visible)
 	{
 		//liqapp_log("vis bail!");
+		liqcell_check_for_driedup(self);
 		return;
 	}
 	
@@ -649,10 +664,14 @@ __tz_one("clipgot");
 	if(!liqcliprect_isvalid(cr))
 	{
 		//liqapp_log("cr bail!");
+		liqcell_check_for_driedup(self);
 		liqcliprect_release(cr);
 		return;
 	}
 __tz_one("clipok");
+
+	// onscreen, so save the frame number away
+	self->paintlastframenumber = canvas.framecount;
 
 	if(self->classname)
 	{
