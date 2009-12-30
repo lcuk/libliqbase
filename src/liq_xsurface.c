@@ -44,6 +44,8 @@
 //#define USE_AA_THICKLINE 1
 //#define USE_AA 1
 
+// 20091230_0417 lcuk : thick lines work for felt tip coloring, todo, thread a standard thickline api round here and cliprect/graph and adapt this correctly
+
 
 #include <memory.h>
 #include <stdlib.h> 

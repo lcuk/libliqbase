@@ -224,12 +224,16 @@ int liqx11overlay_show(liqx11overlay *self)
 	
 	if(self->yuv_shminfo_attached) return 0;
 	
+	//liqapp_sleep(500);
+	
 	liqapp_log("x11overlay showing");
 	
 	if (!XShmAttach(self->dpy, &self->yuv_shminfo)) 
 	{
 		{ return liqapp_errorandfail(-1,"canvas XShmAttach failed"); }
 	}
+	
+	//liqapp_sleep(500);
 	
 	liqapp_log("x11overlay shown");
 	self->yuv_shminfo_attached=1;

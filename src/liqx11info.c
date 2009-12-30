@@ -261,6 +261,10 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 	
 	myx11info->myoverlay = &myx11info->myoverlaycore;
 	liqx11overlay_init(myx11info->myoverlay, myx11info->mydisplay,myx11info->myscreen,myx11info->mywindow,myx11info->mygc);
+	
+	
+	
+	
 	liqx11overlay_show(myx11info->myoverlay);
 	liqx11overlay_refreshdisplay(myx11info->myoverlay);
 

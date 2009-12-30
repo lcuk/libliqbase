@@ -1221,15 +1221,14 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 					
 					
 					
+					liqcliprect_drawlinecolor(self,lsx,lsy,lex,ley,  sy,su,sv);
+					if(isselected) liqcliprect_drawlinecolor(self,lsx+1,lsy+1,lex+1,ley+1,    sy,su,sv);
+					
+					//stroke->pen_thick = 4;		// fakey!
+					//int thick_ratio = (float)stroke->pen_thick * (fmap2/tmap2);
+					//liqapp_log("thick %i,  %3.3f %3.3f %3.3f",thick_ratio, fmap2,tmap2,(fmap2/tmap2));
+					//if(isselected) thick_ratio+=2;
 					//liqcliprect_drawthicklinecolor(self,lsx,lsy,lex,ley,  thick_ratio,  sy,su,sv);
-					//if(isselected) liqcliprect_drawlinecolor(self,lsx+1,lsy+1,lex+1,ley+1,    sy,su,sv);
-					
-					stroke->pen_thick = 2;		// fakey!
-					int thick_ratio = (float)stroke->pen_thick * (fmap2/tmap2);
-					
-					liqapp_log("thick %i,  %3.3f %3.3f %3.3f",thick_ratio, fmap2,tmap2,(fmap2/tmap2));
-					if(isselected) thick_ratio+=2;
-					liqcliprect_drawthicklinecolor(self,lsx,lsy,lex,ley,  thick_ratio,  sy,su,sv);
 
 
 

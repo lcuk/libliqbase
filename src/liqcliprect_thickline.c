@@ -23,6 +23,7 @@ void		liqcliprect_drawthicklinecolor(		liqcliprect *self,int x1, int y1,int x2, 
 {
 	if(size<=1)
 	{
+		
 		liqcliprect_drawlinecolor(self,x1,y1,x2,y2,grey,u,v);
 		return;
 	}
@@ -50,6 +51,8 @@ void		liqcliprect_drawthicklinecolor(		liqcliprect *self,int x1, int y1,int x2, 
 		liqcliprect_drawthicklinecolor(self,x1-2,y1  ,x2-2,y2,2,grey,u,v);
 		liqcliprect_drawthicklinecolor(self,x1  ,y1  ,x2,y2,2,grey,u,v);
 		liqcliprect_drawthicklinecolor(self,x1  ,y1+2,x2,y2+2,2,grey,u,v);
+		
+		
 		return;		
 	}	
 	

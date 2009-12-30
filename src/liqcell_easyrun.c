@@ -1712,7 +1712,23 @@ quickfin:
 		
 		
 		
-		if(refreshinprogress==0 && (fademode==0) && liqcell_propgeti(self,"dialog_running",1)==0 ) break;
+		//if(refreshinprogress==0 && (fademode==0) && liqcell_propgeti(self,"dialog_running",1)==0 ) break;
+		
+		
+		
+		if( (refreshinprogress==0) && (fademode==0) && liqcell_propgeti(self,"dialog_running",1)==0 )
+		{
+			if(fadestartx || fadestarty)
+			{
+				// fade out!
+				fademode=-1;
+			}
+			else
+			{
+				// just bail, we are out of here
+				break;
+			}
+		}
 
 
 

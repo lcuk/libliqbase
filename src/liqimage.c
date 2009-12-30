@@ -6,6 +6,7 @@
 #include <memory.h>
 
 
+
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
@@ -17,7 +18,8 @@
 #include <setjmp.h>
 #include <jpeglib.h>
 
-
+#include <pthread.h>
+#include <sched.h>
 
 #include "liqapp.h"
 #include "liqimage.h"
@@ -42,6 +44,7 @@ static struct
 static int  cachemax=4096-1;
 static int  cacheused=0;
 
+static pthread_mutex_t cachestack_lock = PTHREAD_MUTEX_INITIALIZER;
 
 static int liqimage_cache_clean_unused(int maxremove)
 {
@@ -207,11 +210,15 @@ liqimage *liqimage_cache_getfile(char *filename,int maxw,int maxh,int allowalpha
 	// todo:  fix the bug here when threaded loading occuring
 	// the RMW cycle is badly mixed up when creating a cache item and adding its data
 	// multithreaded handling of this is wrong since both may grab the same input
+	pthread_mutex_lock(&cachestack_lock);
 
 	f=cacheused;
 	cachestack[f].key  = strdup(cachekey);
 	cachestack[f].data = self;
 	cacheused++;
+	
+	pthread_mutex_unlock(&cachestack_lock);
+
 	////liqapp_log( "TTF cache completed %s", cachekey );
 	return self;
 }
