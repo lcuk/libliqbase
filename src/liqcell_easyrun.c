@@ -1891,10 +1891,12 @@ moar:
 		if(refreshinprogress==0) if(running==0) break;
 		if(paintargs.runfast) dirty=1;
 		
-		/*
+		
 		 // remove autorotate from here, i should enable it per dialog
 		 // because by putting it here messes up normal stuff and thats not desired
-		if( (dirty==0) && (refreshinprogress==0) && (mouseargs.mcnt==0) && liqapp_pref_checkexists("autorotate") )
+		 // put it back again (31/12)
+		 // changed it yet again to be a specific, per dialog flag
+		if( (dirty==0) && (refreshinprogress==0) && (mouseargs.mcnt==0) && (liqcell_propgeti(self,"autorotate",0)==1) )// liqapp_pref_checkexists("autorotate") )
 		{
 			int aax=0;
 			int aay=0;
@@ -1904,7 +1906,7 @@ moar:
 			dirty=1;
 			
 		}
-		*/
+		
 		
 		
 		if(((dirty==1) && (refreshinprogress==0)))

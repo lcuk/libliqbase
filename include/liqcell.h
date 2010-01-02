@@ -76,7 +76,9 @@ struct liqcell
 	
 	int paintlastframenumber;			// this is stored when the control is last painted, it holds the framecount.  on subsequent frames, if this frame is out of shot > n frames, a "driedup" event be raised
 
-	unsigned int unused[7];
+	int angle;							// gonna have to be used eventually..
+	
+	unsigned int unused[6];
 
 }	liqcell;
 

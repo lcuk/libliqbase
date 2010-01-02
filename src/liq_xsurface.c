@@ -1932,6 +1932,451 @@ unsigned int pw=surface->width;
 	v[0]=interal_getchar(x1,y1,&surface->data[vo],pw);
 }
 
+
+
+
+
+
+
+
+
+//########################################################################
+//######################################################################## line internal AA thickline
+//########################################################################
+
+
+
+ // dont like this though, its close but still feels more messy than direct pixels
+ // might do something about that
+ // also, ensure only the grey channel goes through here, theres no real need to smear the UV any further
+
+
+// from a vb class here:
+// http://www.bigresource.com/VB-Anti-aliasing-text-8vUifLfKBe.html
+
+/*
+#define kkointeral_linepaintchar_alpha(x,y,c,alpha,buffer,linewidth) \
+{ int off = (linewidth) * (y) + (x);  int b=buffer[ off ]; int cc=(c); float a=(alpha); buffer[ off ] = (b) + ((float)((cc)-(b)) * (a)); }
+
+
+
+#define interal_linepaintchar_alpha(x,y,c,alpha,buffer,linewidth) \
+{ int off = (linewidth) * (y) + (x);  int b=buffer[ off ]; int cc=(c); float a=(alpha); buffer[ off ] = (b*(1.0-a)) + (cc*(a)); }
+
+
+#define llinteral_linepaintchar_alpha(x,y,c,alpha,buffer,linewidth) \
+{ int off = (linewidth) * (y) + (x);  int b=buffer[ off ]; buffer[ off ] = (c) ; }
+ */
+
+#define interal_linepaintchar_alpha(x,y,c,alpha,buffer,linewidth) \
+{ int off = (linewidth) * (y) + (x);  int b=(unsigned char)buffer[ off ]; int cc=(unsigned char)(c); float a=(alpha); buffer[ off ] = b + (cc-b)*a; }
+
+inline float fracpart(float a)
+{
+	float b=((int)(a));
+      
+	return a - b;
+}
+
+
+
+
+
+
+inline void xsurface_interalline_aa(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char *buffer,int linewidth,unsigned char thickness)
+{
+float deltax, deltay;
+int loopc;
+int start , finish;
+float dx, dy, dydx;
+
+	//grey=255;
+
+
+//char LR , LG, LB;
+	//	xsurface_interalline_noaa(surface,x1,y1,x2,y2,grey/2,buffer,linewidth);
+
+	deltax = abs(x2 - x1); //' Calculate deltax and deltay for initialisation
+	deltay = abs(y2 - y1);
+
+
+		//LR = (AColor And &HFF&)
+		//LG = (AColor And &HFF00&) / &H100&
+		//LB = (AColor And &HFF0000) / &H10000
+		if (deltax > deltay) //' horizontal or vertical
+		{
+			if (y2 > y1) //' determine rise and run
+			{
+				dydx = -(deltay / deltax);
+			}
+			else
+			{
+				dydx = deltay / deltax;
+			}
+			if (x2 < x1)
+			{
+				start = x2; //' right to left
+				finish = x1;
+				dy = y2;
+			}
+			else
+			{
+				start = x1; //' left to right
+				finish = x2;
+				dy = y1;
+				dydx = -dydx; //' inverse slope
+			}
+			
+			
+			
+
+					
+				//liqapp_log("dy=%3.5f  (1.0-f(dy))=%3.5f  f(dy)=%3.5f",dy,1.0-fracpart(dy),fracpart(dy));
+				//AlphaBlendPixel (hdc, loopc, CInt(dy - 0.5), LR, LG, LB, 1 - FracPart(dy));
+				//AlphaBlendPixel (hdc, loopc, CInt(dy - 0.5) + 1, LR, LG, LB, FracPart(dy));
+				
+			if(thickness==1)
+			{
+				for(loopc = start; loopc<finish;loopc++)
+				{
+					interal_linepaintchar_alpha(loopc,((int)(dy))    ,grey,1.0               ,buffer,linewidth);					
+					dy = dy + dydx; //' next point
+				}
+			}
+			else
+			if(thickness==2)
+			{
+				for(loopc = start; loopc<finish;loopc++)
+				{
+					interal_linepaintchar_alpha(loopc,((int)(dy))    ,grey,1.0 - fracpart(dy),buffer,linewidth);
+					interal_linepaintchar_alpha(loopc,((int)(dy)) + 1,grey,      fracpart(dy),buffer,linewidth);
+					dy = dy + dydx; //' next point
+				}
+			}
+			else
+			if(thickness==3)
+			{
+				for(loopc = start; loopc<finish;loopc++)
+				{
+					interal_linepaintchar_alpha(loopc,((int)(dy)) - 1,grey,1.0 - fracpart(dy),buffer,linewidth);
+					interal_linepaintchar_alpha(loopc,((int)(dy))    ,grey,1.0               ,buffer,linewidth);
+					interal_linepaintchar_alpha(loopc,((int)(dy)) + 1,grey,      fracpart(dy),buffer,linewidth);
+					dy = dy + dydx; //' next point
+				}
+			}
+			else
+			if(thickness==4)
+			{
+				for(loopc = start; loopc<finish;loopc++)
+				{
+					interal_linepaintchar_alpha(loopc,((int)(dy)) - 1,grey,1.0 - fracpart(dy),buffer,linewidth);
+					interal_linepaintchar_alpha(loopc,((int)(dy))    ,grey,1.0               ,buffer,linewidth);
+					interal_linepaintchar_alpha(loopc,((int)(dy)) + 1,grey,1.0               ,buffer,linewidth);
+					interal_linepaintchar_alpha(loopc,((int)(dy)) + 2,grey,      fracpart(dy),buffer,linewidth);
+					dy = dy + dydx; //' next point
+				}
+			}
+			else
+			//if(thickness==5)
+			{
+				for(loopc = start; loopc<finish;loopc++)
+				{
+					interal_linepaintchar_alpha(loopc,((int)(dy)) - 2,grey,1.0 - fracpart(dy),buffer,linewidth);
+					interal_linepaintchar_alpha(loopc,((int)(dy)) - 1,grey,1.0               ,buffer,linewidth);
+					interal_linepaintchar_alpha(loopc,((int)(dy))    ,grey,1.0               ,buffer,linewidth);
+					interal_linepaintchar_alpha(loopc,((int)(dy)) + 1,grey,1.0               ,buffer,linewidth);
+					interal_linepaintchar_alpha(loopc,((int)(dy)) + 2,grey,      fracpart(dy),buffer,linewidth);
+					dy = dy + dydx; //' next point
+				}
+			}			
+			
+			
+			
+			
+
+		}
+		else
+		{
+			if(x2 > x1)  //' determine rise and run
+			{
+				dydx = -(deltax / deltay);
+			}
+			else
+			{
+				dydx = deltax / deltay;
+			}
+			if(y2 < y1)
+			{
+				start = y2; //' right to left
+				finish = y1;
+				dx = x2;
+			}
+			else
+			{
+				start = y1; //' left to right
+				finish = y2;
+				dx = x1;
+				dydx = -dydx; //' inverse slope
+			}
+			
+			
+			if(thickness==1)
+			{
+				for(loopc = start; loopc<finish;loopc++)
+				{
+					interal_linepaintchar_alpha(((int)(dx))    ,loopc,grey,1.0               ,buffer,linewidth);
+					dx = dx + dydx; //' next point
+				}
+			}
+			else
+			if(thickness==2)
+			{
+				for(loopc = start; loopc<finish;loopc++)
+				{
+					interal_linepaintchar_alpha(((int)(dx))    ,loopc,grey,1.0 - fracpart(dx),buffer,linewidth);
+					interal_linepaintchar_alpha(((int)(dx)) + 1,loopc,grey,      fracpart(dx),buffer,linewidth);
+					dx = dx + dydx; //' next point
+				}
+			}
+			else
+			if(thickness==3)
+			{
+				for(loopc = start; loopc<finish;loopc++)
+				{
+					interal_linepaintchar_alpha(((int)(dx)) - 1,loopc,grey,1.0 - fracpart(dx),buffer,linewidth);
+					interal_linepaintchar_alpha(((int)(dx))    ,loopc,grey,1.0               ,buffer,linewidth);
+					interal_linepaintchar_alpha(((int)(dx)) + 1,loopc,grey,      fracpart(dx),buffer,linewidth);
+					dx = dx + dydx; //' next point
+				}
+			}
+			else
+			if(thickness==4)
+			{
+				for(loopc = start; loopc<finish;loopc++)
+				{
+					interal_linepaintchar_alpha(((int)(dx)) - 1,loopc,grey,1.0 - fracpart(dx),buffer,linewidth);
+					interal_linepaintchar_alpha(((int)(dx))    ,loopc,grey,1.0               ,buffer,linewidth);
+					interal_linepaintchar_alpha(((int)(dx)) + 1,loopc,grey,1.0               ,buffer,linewidth);
+					interal_linepaintchar_alpha(((int)(dx)) + 2,loopc,grey,      fracpart(dx),buffer,linewidth);
+					dx = dx + dydx; //' next point
+				}
+			}
+			else
+			//if(thickness==4)
+			{
+				for(loopc = start; loopc<finish;loopc++)
+				{
+					interal_linepaintchar_alpha(((int)(dx)) - 2,loopc,grey,1.0 - fracpart(dx),buffer,linewidth);
+					interal_linepaintchar_alpha(((int)(dx)) - 1,loopc,grey,1.0               ,buffer,linewidth);
+					interal_linepaintchar_alpha(((int)(dx))    ,loopc,grey,1.0               ,buffer,linewidth);
+					interal_linepaintchar_alpha(((int)(dx)) + 1,loopc,grey,1.0               ,buffer,linewidth);
+					interal_linepaintchar_alpha(((int)(dx)) + 2,loopc,grey,      fracpart(dx),buffer,linewidth);
+					dx = dx + dydx; //' next point
+				}
+			}
+		}
+
+
+}
+
+
+
+/*
+
+
+inline void xsurface_interalline_aa_uv(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char *buffer,int linewidth,unsigned char thickness)
+{
+float deltax, deltay;
+int loopc;
+int start , finish;
+float dx, dy, dydx;
+
+	//grey=255;
+	linewidth/=2;
+	if(linewidth<=0)linewidth=1;
+
+
+//char LR , LG, LB;
+	//	xsurface_interalline_noaa(surface,x1,y1,x2,y2,grey/2,buffer,linewidth);
+
+	deltax = abs(x2 - x1); //' Calculate deltax and deltay for initialisation
+	deltay = abs(y2 - y1);
+	// 20090708_211634 lcuk : do all right now during test
+
+
+		//LR = (AColor And &HFF&)
+		//LG = (AColor And &HFF00&) / &H100&
+		//LB = (AColor And &HFF0000) / &H10000
+		if (deltax > deltay) //' horizontal or vertical
+		{
+			if (y2 > y1) //' determine rise and run
+			{
+				dydx = -(deltay / deltax);
+			}
+			else
+			{
+				dydx = deltay / deltax;
+			}
+			if (x2 < x1)
+			{
+				start = x2; //' right to left
+				finish = x1;
+				dy = y2;
+			}
+			else
+			{
+				start = x1; //' left to right
+				finish = x2;
+				dy = y1;
+				dydx = -dydx; //' inverse slope
+			}
+			for(loopc = start; loopc<finish;loopc++)
+			{
+				//liqapp_log("dy=%3.5f  (1.0-f(dy))=%3.5f  f(dy)=%3.5f",dy,1.0-fracpart(dy),fracpart(dy));
+				//AlphaBlendPixel (hdc, loopc, CInt(dy - 0.5), LR, LG, LB, 1 - FracPart(dy));
+				//AlphaBlendPixel (hdc, loopc, CInt(dy - 0.5) + 1, LR, LG, LB, FracPart(dy));
+				if(thickness==1)
+				{
+					interal_linepaintchar_alpha(loopc,((int)(dy))    ,grey,1.0               ,buffer,linewidth);
+				}
+				else
+ 				if(thickness==2)
+				{
+					interal_linepaintchar_alpha(loopc,((int)(dy))    ,grey,1.0 - fracpart(dy),buffer,linewidth);
+ 					interal_linepaintchar_alpha(loopc,((int)(dy)) + 1,grey,      fracpart(dy),buffer,linewidth);
+				}
+				else
+				{
+					interal_linepaintchar_alpha(loopc,((int)(dy)) - 1,grey,1.0 - fracpart(dy),buffer,linewidth);
+					interal_linepaintchar_alpha(loopc,((int)(dy))    ,grey,1.0               ,buffer,linewidth);
+					interal_linepaintchar_alpha(loopc,((int)(dy)) + 1,grey,      fracpart(dy),buffer,linewidth);
+				}
+
+				dy = dy + dydx; //' next point
+			}
+
+		}
+		else
+		{
+			if(x2 > x1)  //' determine rise and run
+			{
+				dydx = -(deltax / deltay);
+			}
+			else
+			{
+				dydx = deltax / deltay;
+			}
+			if(y2 < y1)
+			{
+				start = y2; //' right to left
+				finish = y1;
+				dx = x2;
+			}
+			else
+			{
+				start = y1; //' left to right
+				finish = y2;
+				dx = x1;
+				dydx = -dydx; //' inverse slope
+			}
+			for(loopc = start; loopc<finish;loopc++)
+			{
+				//AlphaBlendPixel hdc, CInt(dx - 0.5), loopc, LR, LG, LB, 1 - FracPart(dx)
+				//AlphaBlendPixel hdc, CInt(dx - 0.5) + 1, loopc, LR, LG, LB, FracPart(dx)
+
+				if(thickness==1)
+				{
+					interal_linepaintchar_alpha(((int)(dx))    ,loopc,grey,1.0               ,buffer,linewidth);
+				}
+				else
+ 				if(thickness==2)
+				{
+					interal_linepaintchar_alpha(((int)(dx))    ,loopc,grey,1.0 - fracpart(dx),buffer,linewidth);
+					interal_linepaintchar_alpha(((int)(dx)) + 1,loopc,grey,      fracpart(dx),buffer,linewidth);
+				}
+				else
+				{
+					interal_linepaintchar_alpha(((int)(dx)) - 1,loopc,grey,1.0 - fracpart(dx),buffer,linewidth);
+					interal_linepaintchar_alpha(((int)(dx))    ,loopc,grey,1.0               ,buffer,linewidth);
+					interal_linepaintchar_alpha(((int)(dx)) + 1,loopc,grey,      fracpart(dx),buffer,linewidth);
+				}
+
+
+				dx = dx + dydx; //' next point
+			}
+
+		}
+
+
+}
+
+
+*/
+
+
+
+
+
+
+
+//#############################################################################
+//#############################################################################
+//#############################################################################
+//#############################################################################
+
+
+inline void xsurface_drawthickline_yuv(liqimage *surface,int x1, int y1, int x2, int y2,unsigned char thickness, char grey,char u,char v)
+{
+	// if you call this, even with thickness 1, it will still run through the entire set
+	// this maybe slightly worrysome
+	if(x1<0)return;
+	if(y1<0)return;
+	if(x1>=surface->width)return;
+	if(y1>=surface->height)return;
+	if(x2<0)return;
+	if(y2<0)return;
+	if(x2>=surface->width)return;
+	if(y2>=surface->height)return;
+
+
+unsigned int pw=surface->width;
+//unsigned int ph=surface->height;
+//unsigned int uo = pw*ph;
+//unsigned int vo = uo + (uo >> 2);
+	unsigned int uo = surface->offsets[1];//pw*ph;
+	unsigned int vo = surface->offsets[2];//uo + (uo >> 2);
+	xsurface_interalline_aa(surface,x1,y1,   x2,y2,grey, (char *)&surface->data[surface->offsets[0]], pw, thickness);
+	x1>>=1;
+	y1>>=1;
+	x2>>=1;
+	y2>>=1;
+	pw>>=1;
+	if(thickness&1)thickness++;
+	thickness/=2;
+	if(thickness==0)thickness=1;
+	//xsurface_interalline_aa_uv(surface,x1,y1,   x2,y2,u   ,(char *)&surface->data[uo], pw, thickness);
+	//xsurface_interalline_aa_uv(surface,x1,y1,   x2,y2,v   ,(char *)&surface->data[vo], pw, thickness);
+	xsurface_interalline_aa(surface,x1,y1,   x2,y2,u   ,(char *)&surface->data[uo], pw, thickness);
+	xsurface_interalline_aa(surface,x1,y1,   x2,y2,v   ,(char *)&surface->data[vo], pw, thickness);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //########################################################################
 //######################################################################## line internal
 //########################################################################
@@ -1987,326 +2432,6 @@ inline void xsurface_interalline_noaa(liqimage *surface,int x1, int y1, int x2, 
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- // dont like this though, its close but still feels more messy than direct pixels
- // might do something about that
- // also, ensure only the grey channel goes through here, theres no real need to smear the UV any further
-
-
-// from a vb class here:
-// http://www.bigresource.com/VB-Anti-aliasing-text-8vUifLfKBe.html
-
-/*
-#define kkointeral_linepaintchar_alpha(x,y,c,alpha,buffer,linewidth) \
-{ int off = (linewidth) * (y) + (x);  int b=buffer[ off ]; int cc=(c); float a=(alpha); buffer[ off ] = (b) + ((float)((cc)-(b)) * (a)); }
-
-
-
-#define interal_linepaintchar_alpha(x,y,c,alpha,buffer,linewidth) \
-{ int off = (linewidth) * (y) + (x);  int b=buffer[ off ]; int cc=(c); float a=(alpha); buffer[ off ] = (b*(1.0-a)) + (cc*(a)); }
-
-
-#define llinteral_linepaintchar_alpha(x,y,c,alpha,buffer,linewidth) \
-{ int off = (linewidth) * (y) + (x);  int b=buffer[ off ]; buffer[ off ] = (c) ; }
- */
-
-#define interal_linepaintchar_alpha(x,y,c,alpha,buffer,linewidth) \
-{ int off = (linewidth) * (y) + (x);  int b=(unsigned char)buffer[ off ]; int cc=(unsigned char)(c); float a=(alpha); buffer[ off ] = b + (cc-b)*a; }
-
-inline float fracpart(float a)
-{
-	float b=((int)(a));
-      
-	return a - b;
-}
-
-
-
-
-
-
-inline void xsurface_interalline_aa(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char *buffer,int linewidth)
-{
-float deltax, deltay;
-int loopc;
-int start , finish;
-float dx, dy, dydx;
-
-	//grey=255;
-
-
-//char LR , LG, LB;
-	//	xsurface_interalline_noaa(surface,x1,y1,x2,y2,grey/2,buffer,linewidth);
-
-	deltax = abs(x2 - x1); //' Calculate deltax and deltay for initialisation
-	deltay = abs(y2 - y1);
-	// 20090708_211634 lcuk : do all right now during test
-#ifndef USE_AA_THICKLINE
-	if ((deltax != 0) && (deltay != 0))  //' it is not a horizontal or a vertical line
-#endif
-	{
-		//LR = (AColor And &HFF&)
-		//LG = (AColor And &HFF00&) / &H100&
-		//LB = (AColor And &HFF0000) / &H10000
-		if (deltax > deltay) //' horizontal or vertical
-		{
-			if (y2 > y1) //' determine rise and run
-			{
-				dydx = -(deltay / deltax);
-			}
-			else
-			{
-				dydx = deltay / deltax;
-			}
-			if (x2 < x1)
-			{
-				start = x2; //' right to left
-				finish = x1;
-				dy = y2;
-			}
-			else
-			{
-				start = x1; //' left to right
-				finish = x2;
-				dy = y1;
-				dydx = -dydx; //' inverse slope
-			}
-			for(loopc = start; loopc<finish;loopc++)
-			{
-				//liqapp_log("dy=%3.5f  (1.0-f(dy))=%3.5f  f(dy)=%3.5f",dy,1.0-fracpart(dy),fracpart(dy));
-				//AlphaBlendPixel (hdc, loopc, CInt(dy - 0.5), LR, LG, LB, 1 - FracPart(dy));
-				//AlphaBlendPixel (hdc, loopc, CInt(dy - 0.5) + 1, LR, LG, LB, FracPart(dy));
-                
-#ifdef USE_AA_THICKLINE
-				interal_linepaintchar_alpha(loopc,((int)(dy)) - 2,grey,1.0 - fracpart(dy),buffer,linewidth);
-				interal_linepaintchar_alpha(loopc,((int)(dy)) - 1,grey,1.0               ,buffer,linewidth);
-				interal_linepaintchar_alpha(loopc,((int)(dy))    ,grey,1.0               ,buffer,linewidth);
-				interal_linepaintchar_alpha(loopc,((int)(dy)) + 1,grey,1.0               ,buffer,linewidth);
-				interal_linepaintchar_alpha(loopc,((int)(dy)) + 2,grey,      fracpart(dy),buffer,linewidth);
-#else
-				interal_linepaintchar_alpha(loopc,((int)(dy))    ,grey,1.0 - fracpart(dy),buffer,linewidth);
-				interal_linepaintchar_alpha(loopc,((int)(dy)) + 1,grey,      fracpart(dy),buffer,linewidth);
-#endif
-
-
-				dy = dy + dydx; //' next point
-			}
-
-		}
-		else
-		{
-			if(x2 > x1)  //' determine rise and run
-			{
-				dydx = -(deltax / deltay);
-			}
-			else
-			{
-				dydx = deltax / deltay;
-			}
-			if(y2 < y1)
-			{
-				start = y2; //' right to left
-				finish = y1;
-				dx = x2;
-			}
-			else
-			{
-				start = y1; //' left to right
-				finish = y2;
-				dx = x1;
-				dydx = -dydx; //' inverse slope
-			}
-			for(loopc = start; loopc<finish;loopc++)
-			{
-				//AlphaBlendPixel hdc, CInt(dx - 0.5), loopc, LR, LG, LB, 1 - FracPart(dx)
-				//AlphaBlendPixel hdc, CInt(dx - 0.5) + 1, loopc, LR, LG, LB, FracPart(dx)
-
-
-#ifdef USE_AA_THICKLINE
-				interal_linepaintchar_alpha(((int)(dx)) - 2,loopc,grey,1.0 - fracpart(dx),buffer,linewidth);
-				interal_linepaintchar_alpha(((int)(dx)) - 1,loopc,grey,1.0               ,buffer,linewidth);
-				interal_linepaintchar_alpha(((int)(dx))    ,loopc,grey,1.0               ,buffer,linewidth);
-				interal_linepaintchar_alpha(((int)(dx)) + 1,loopc,grey,1.0               ,buffer,linewidth);
-				interal_linepaintchar_alpha(((int)(dx)) + 2,loopc,grey,      fracpart(dx),buffer,linewidth);
-#else
-				interal_linepaintchar_alpha(((int)(dx))    ,loopc,grey,1.0 - fracpart(dx),buffer,linewidth);
-				interal_linepaintchar_alpha(((int)(dx)) + 1,loopc,grey,      fracpart(dx),buffer,linewidth);
-#endif
-
-
-				dx = dx + dydx; //' next point
-			}
-
-		}
-
-	}
-#ifndef USE_AA_THICKLINE
-	else
-	{
-		xsurface_interalline_noaa(surface,x1,y1,x2,y2,grey,buffer,linewidth);
-	}
-#endif
-}
-
-
-
-
-inline void xsurface_interalline_aa_uv(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char *buffer,int linewidth)
-{
-float deltax, deltay;
-int loopc;
-int start , finish;
-float dx, dy, dydx;
-
-	//grey=255;
-
-
-//char LR , LG, LB;
-	//	xsurface_interalline_noaa(surface,x1,y1,x2,y2,grey/2,buffer,linewidth);
-
-	deltax = abs(x2 - x1); //' Calculate deltax and deltay for initialisation
-	deltay = abs(y2 - y1);
-	// 20090708_211634 lcuk : do all right now during test
-
-#ifndef USE_AA_THICKLINE
-	if ((deltax != 0) && (deltay != 0))  //' it is not a horizontal or a vertical line
-#endif
-	{
-		//LR = (AColor And &HFF&)
-		//LG = (AColor And &HFF00&) / &H100&
-		//LB = (AColor And &HFF0000) / &H10000
-		if (deltax > deltay) //' horizontal or vertical
-		{
-			if (y2 > y1) //' determine rise and run
-			{
-				dydx = -(deltay / deltax);
-			}
-			else
-			{
-				dydx = deltay / deltax;
-			}
-			if (x2 < x1)
-			{
-				start = x2; //' right to left
-				finish = x1;
-				dy = y2;
-			}
-			else
-			{
-				start = x1; //' left to right
-				finish = x2;
-				dy = y1;
-				dydx = -dydx; //' inverse slope
-			}
-			for(loopc = start; loopc<finish;loopc++)
-			{
-				//liqapp_log("dy=%3.5f  (1.0-f(dy))=%3.5f  f(dy)=%3.5f",dy,1.0-fracpart(dy),fracpart(dy));
-				//AlphaBlendPixel (hdc, loopc, CInt(dy - 0.5), LR, LG, LB, 1 - FracPart(dy));
-				//AlphaBlendPixel (hdc, loopc, CInt(dy - 0.5) + 1, LR, LG, LB, FracPart(dy));
-                
-#ifdef USE_AA_THICKLINE
-				interal_linepaintchar_alpha(loopc,((int)(dy)) - 1,grey,1.0 - fracpart(dy),buffer,linewidth);
-				interal_linepaintchar_alpha(loopc,((int)(dy))    ,grey,1.0               ,buffer,linewidth);
-				interal_linepaintchar_alpha(loopc,((int)(dy)) + 1,grey,      fracpart(dy),buffer,linewidth);
-#else
-				interal_linepaintchar_alpha(loopc,((int)(dy))    ,grey,1.0 - fracpart(dy),buffer,linewidth);
-				interal_linepaintchar_alpha(loopc,((int)(dy)) + 1,grey,      fracpart(dy),buffer,linewidth);
-#endif
-
-
-				dy = dy + dydx; //' next point
-			}
-
-		}
-		else
-		{
-			if(x2 > x1)  //' determine rise and run
-			{
-				dydx = -(deltax / deltay);
-			}
-			else
-			{
-				dydx = deltax / deltay;
-			}
-			if(y2 < y1)
-			{
-				start = y2; //' right to left
-				finish = y1;
-				dx = x2;
-			}
-			else
-			{
-				start = y1; //' left to right
-				finish = y2;
-				dx = x1;
-				dydx = -dydx; //' inverse slope
-			}
-			for(loopc = start; loopc<finish;loopc++)
-			{
-				//AlphaBlendPixel hdc, CInt(dx - 0.5), loopc, LR, LG, LB, 1 - FracPart(dx)
-				//AlphaBlendPixel hdc, CInt(dx - 0.5) + 1, loopc, LR, LG, LB, FracPart(dx)
-
-
-#ifdef USE_AA_THICKLINE
-				interal_linepaintchar_alpha(((int)(dx)) - 1,loopc,grey,1.0 - fracpart(dx),buffer,linewidth);
-				interal_linepaintchar_alpha(((int)(dx))    ,loopc,grey,1.0               ,buffer,linewidth);
-				interal_linepaintchar_alpha(((int)(dx)) + 1,loopc,grey,      fracpart(dx),buffer,linewidth);
-#else
-				interal_linepaintchar_alpha(((int)(dx))    ,loopc,grey,1.0 - fracpart(dx),buffer,linewidth);
-				interal_linepaintchar_alpha(((int)(dx)) + 1,loopc,grey,      fracpart(dx),buffer,linewidth);
-#endif
-
-
-				dx = dx + dydx; //' next point
-			}
-
-		}
-
-	}
-#ifndef USE_AA_THICKLINE
-	else
-	{
-		xsurface_interalline_noaa(surface,x1,y1,x2,y2,grey,buffer,linewidth);
-	}
-#endif
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2390,12 +2515,6 @@ inline void xsurface_interalline_invert(liqimage *surface,int x1, int y1, int x2
 //######################################################################## linecolor
 //########################################################################
 
-// 20090708_213512 lcuk : better more direct way of setting or unsetting to test
-#ifdef USE_AA
-#define xsurface_interalline xsurface_interalline_aa
-#else
-#define xsurface_interalline xsurface_interalline_noaa
-#endif
 
 inline void xsurface_drawline_yuv(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char u,char v)
 {
@@ -2417,7 +2536,7 @@ unsigned int pw=surface->width;
 	unsigned int vo = surface->offsets[2];//uo + (uo >> 2);
 // if changing to aa, just take the grey for now, the uv variation fails
     // 20090708_203046 lcuk : try this once again
-	xsurface_interalline(surface,x1,y1,   x2,y2,grey, (char *)&surface->data[surface->offsets[0]], pw);
+	xsurface_interalline_noaa(surface,x1,y1,   x2,y2,grey, (char *)&surface->data[surface->offsets[0]], pw);
 	//xsurface_interalline_noaa(surface,x1,y1,   x2,y2,grey, (char *)&surface->data[surface->offsets[0]], pw);
 	x1>>=1;
 	y1>>=1;
@@ -2427,16 +2546,12 @@ unsigned int pw=surface->width;
 	//xsurface_interalline_noaa(surface,x1,y1,   x2,y2,u   ,(char *)&surface->data[uo], pw);
 	//xsurface_interalline_noaa(surface,x1,y1,   x2,y2,v   ,(char *)&surface->data[vo], pw);
 
-#ifdef USE_AA
-	xsurface_interalline_aa_uv(surface,x1,y1,   x2,y2,u   ,(char *)&surface->data[uo], pw);
-	xsurface_interalline_aa_uv(surface,x1,y1,   x2,y2,v   ,(char *)&surface->data[vo], pw);
-
-#else
-	xsurface_interalline(surface,x1,y1,   x2,y2,u   ,(char *)&surface->data[uo], pw);
-	xsurface_interalline(surface,x1,y1,   x2,y2,v   ,(char *)&surface->data[vo], pw);
-
-#endif
+	xsurface_interalline_noaa(surface,x1,y1,   x2,y2,u   ,(char *)&surface->data[uo], pw);
+	xsurface_interalline_noaa(surface,x1,y1,   x2,y2,v   ,(char *)&surface->data[vo], pw);
 }
+
+
+
 
 //########################################################################
 //######################################################################## linegrey

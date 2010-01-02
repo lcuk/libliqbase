@@ -363,6 +363,28 @@ void liqcliprect_drawlinecolor(liqcliprect *self,int x1, int y1, int x2, int y2,
 	xsurface_drawline_yuv(self->surface,x1,y1,x2,y2,grey,u,v);
 }
 
+void		liqcliprect_drawthicklinecolor(		liqcliprect *self,int x1, int y1,int x2, int y2, unsigned char thickness, unsigned char grey,unsigned char u,unsigned char v)
+{
+	if(thickness<=1)
+	{
+		
+		liqcliprect_drawlinecolor(self,x1,y1,x2,y2,grey,u,v);
+		return;
+	}
+	// full line x1..x2,y1..y2
+	if(x1<self->sx) return;
+	if(x1>self->ex) return;
+	if(y1<self->sy) return;
+	if(y1>self->ey) return;
+
+	if(x2<self->sx) return;
+	if(x2>self->ex) return;
+	if(y2<self->sy) return;
+	if(y2>self->ey) return;
+	// draw the line now cleanly and technically without any further bound checking - it is 100% inside the boundary
+	xsurface_drawthickline_yuv(self->surface,x1,y1,x2,y2,thickness,grey,u,v);
+}
+
 //##################################################################
 //##################################################################
 //##################################################################
@@ -1223,6 +1245,13 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 					
 					liqcliprect_drawlinecolor(self,lsx,lsy,lex,ley,  sy,su,sv);
 					if(isselected) liqcliprect_drawlinecolor(self,lsx+1,lsy+1,lex+1,ley+1,    sy,su,sv);
+					
+					
+					//liqcliprect_drawthicklinecolor(self,lsx,lsy,lex,ley, 5, sy,su,sv);
+					//if(isselected) liqcliprect_drawthicklinecolor(self,lsx+1,lsy+1,lex+1,ley+1, 5,   sy,su,sv);
+					
+					
+					
 					
 					//stroke->pen_thick = 4;		// fakey!
 					//int thick_ratio = (float)stroke->pen_thick * (fmap2/tmap2);

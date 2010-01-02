@@ -389,45 +389,56 @@ liqcell *dllcache_runconstructorinner(char *classname)
 	//liqapp_log("runconstructorinner, looking for: '%s' (stack contains %i items)",classname,runstack_used);
 	
 	char symname[255];
-	snprintf(symname,255,"%s_create",classname);
-
-	// first thing to try is 
 	int idx=0;
-	for(idx=runstack_used-1;idx>=0;idx--)
+	int loop;
+	for(loop=0;loop<3;loop++)
 	{
-		dllcacheitem * dllcacheitem = runstack[ idx ];
+		// 20100101 try 2 variations of default startups
+		// added due to ui apps having _cover and _run as default widgets within instead of the standard
+		if(loop==0)
+			snprintf(symname,255,"%s_create",classname);
+		if(loop==1)
+			snprintf(symname,255,"%s_run_create",classname);
+		if(loop==2)
+			snprintf(symname,255,"%s_cover_create",classname);
 
-
-		//liqapp_log("runconstructorinner, checking stack %i,%s for %s",idx,dllcacheitem->key,classname);
-		
-		
-		liqcell *   	(*constructor)() = NULL;
-		
-		if(strcasecmp(dllcacheitem->key,classname)==0 )
+		// first thing to try is 
+		for(idx=runstack_used-1;idx>=0;idx--)
 		{
-			// to be on the list here we MUST already have the default constructor..
-			constructor = dllcacheitem->constructor;
-		}
-		else
-		{
-			// lets try and use whats available to us :)
-			constructor = dlsym( dllcacheitem->dll, symname);
-		}
-		if(constructor)
-		{
-			//liqapp_log("runconstructorinner, found sym  %i,%s for %s",idx,dllcacheitem->key,classname);
+			dllcacheitem * dllcacheitem = runstack[ idx ];
+	
+	
+			//liqapp_log("runconstructorinner, checking stack %i,%s for %s",idx,dllcacheitem->key,classname);
 			
-			// only interested if we got it, dont care for errors really if we didnt
 			
-			// store the pointer to the library on the stack 
-			runstack[runstack_used++] = dllcacheitem;
-			liqcell *res = constructor();
-			runstack_used--;
-			if(res) return res;
+			liqcell *   	(*constructor)() = NULL;
 			
-			liqapp_log("runconstructorinner, error running : '%s.%s_create'",dllcacheitem->key,classname);
-			return NULL;
-			
+			if(strcasecmp(dllcacheitem->key,classname)==0 )
+			{
+				// to be on the list here we MUST already have the default constructor..
+				constructor = dllcacheitem->constructor;
+			}
+			else
+			{
+				// lets try and use whats available to us :)
+				constructor = dlsym( dllcacheitem->dll, symname);
+			}
+			if(constructor)
+			{
+				//liqapp_log("runconstructorinner, found sym  %i,%s for %s",idx,dllcacheitem->key,classname);
+				
+				// only interested if we got it, dont care for errors really if we didnt
+				
+				// store the pointer to the library on the stack 
+				runstack[runstack_used++] = dllcacheitem;
+				liqcell *res = constructor();
+				runstack_used--;
+				if(res) return res;
+				
+				liqapp_log("runconstructorinner, error running : '%s.%s_create'",dllcacheitem->key,classname);
+				return NULL;
+				
+			}
 		}
 	}
 	
@@ -530,19 +541,35 @@ int idx=0;
 				// 20090615_231546 lcuk : in future, allow context to be used, so tagcloud_create_finger or tagcloud_create_thin etc can be used
 				
 				char symname[255];
-				snprintf(symname,255,"%s_create",dllcacheitem->key);
-				
-				//################################################# get it!
-				dllcacheitem->constructor = dlsym( dllcacheitem->dll, symname);
 
-				//################################################# check for errors
-				const char  *mydll_error;
-				mydll_error = dlerror();
-				if( mydll_error )
+				int loop;
+				for(loop=0;loop<3;loop++)
 				{
-					liqapp_log("dllcache_runconstructor missing constructor: '%s' err '%s'",symname, mydll_error);
-					return NULL;
-				}
+					if(loop==0)
+						snprintf(symname,255,"%s_create",dllcacheitem->key);
+					if(loop==1)
+						snprintf(symname,255,"%s_run_create",dllcacheitem->key);
+					if(loop==2)
+						snprintf(symname,255,"%s_cover_create",dllcacheitem->key);
+								
+								
+		
+						//snprintf(symname,255,"%s_create",dllcacheitem->key);
+						
+						//################################################# get it!
+						dllcacheitem->constructor = dlsym( dllcacheitem->dll, symname);
+						
+						if(dllcacheitem->constructor) break;
+				}		
+						//################################################# check for errors
+						const char  *mydll_error;
+						mydll_error = dlerror();
+						if( mydll_error )
+						{
+							liqapp_log("dllcache_runconstructor missing constructor: '%s' err '%s'",symname, mydll_error);
+							return NULL;
+						}
+
 			}
 			
 			//################################################# run the constructor
