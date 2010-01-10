@@ -66,11 +66,15 @@ int liqaccel_read(int *ax,int *ay,int *az)
 	rs=fscanf((FILE*) fd,"%i %i %i",ax,ay,az);	
 	fclose(fd);	
 	if(rs != 3){ liqapp_log("liqaccel, cannot read information"); return -2;}
-	int bx=*ax;
-	int by=*ay;
-	int bz=*az;
-	if(ocnt>0)
+	
+	// patch to allow smoothing to be configurable
+	char *prefsmooth = liqapp_pref_getvalue_def("liqaccel_usesmoothing","yes");
+	
+	if( ocnt>0 && (prefsmooth && *prefsmooth == 'y') )
 	{
+		int bx=*ax;
+		int by=*ay;
+		int bz=*az;
 		*ax=oax+(bx-oax)*0.1;
 		*ay=oay+(by-oay)*0.1;
 		*az=oaz+(bz-oaz)*0.1;

@@ -44,6 +44,7 @@
 
 		liqcell *par = liqcell_getlinkparent(self);
 		liqcell *body = self;
+		liqapp_log("# liqcell kinetic mous xy(%i,%i) wh(%i,%i)   ",args->mex,args->mey,args->mex-args->msx,args->mey-args->msy);
 		//liqapp_log("# liqcell kinetic body xy(%i,%i) wh(%i,%i) :: %s   ",body->x,body->y,  body->w,body->h,  body->name);
 		//liqapp_log("# liqcell kinetic par  xy(%i,%i) wh(%i,%i) :: %s   ",par->x,par->y,  par->w,par->h,  par->name);
 		if(body && par && par->h)
@@ -71,8 +72,8 @@
 			// entering this mode if the mouse if on the right hand side 20% of parent
 			// for testing leave as direct addressing of Y
 			
-			
-			if( (args->stroke->pointlast->t -  args->stroke->pointfirst->t) > 250 )  //liqstroke_totallength(args->stroke) > 25 )
+			// 20100110_150000 lcuk : removed for now..
+			if(0 &&  (args->stroke->pointlast->t -  args->stroke->pointfirst->t) > 250 )  //liqstroke_totallength(args->stroke) > 25 )
 			{
 				
 				if( liqstroke_totallength(args->stroke) > 20 )
