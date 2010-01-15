@@ -283,6 +283,14 @@ int liqcell_child_arrange_nooverlap(liqcell *self,liqcell *currentselection)
 
 					//	olw*=1.5;
 					//	olh*=1.5;
+					/*
+						float fracw = ( d->w / (c->w+d->w) ) ;
+						float frach = ( d->h / (c->h+d->h) ) ;
+						c->overlapx+=(float)olw*fracw;
+						c->overlapy+=(float)olh*frach;
+						d->overlapx-=(float)olw*(1-fracw);
+						d->overlapy-=(float)olh*(1-frach);
+					*/
 
 						// we know what the force is going to be and in which direction :)
 						//app_log("c %i, d %i",c->ident,d->ident);
@@ -355,8 +363,15 @@ int liqcell_child_arrange_nooverlap(liqcell *self,liqcell *currentselection)
 					{
 						// are free to make it a bit smaller
 						// need to however find the smallest size
+						
+					if(currentselection)
+					{
+						// can only make it smaller whilst pressing :)
 						if( (c->w-1) > (tilew) ) {c->x++; c->w-=2;  liqcell_setdirty(c,1); }
 						if( (c->h-1) > (tileh) ) {c->y++; c->h-=2;  liqcell_setdirty(c,1); }
+					}
+						
+						
 						if( (c->selected==0) && (c!=currentselection) )
 						{
 							liqcell_forceinboundparent(c);
