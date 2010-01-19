@@ -84,5 +84,5 @@ int         liqimage_pageloadpng_memstream( liqimage *self,char * filename,char 
 int 		liqimage_pagesavepng(liqimage *self,char * filename);
 
 liqimage *  liqimage_getthumbnail(          liqimage *original,int maxw,int maxh);
-
+int liqimage_find_thumbnail_for(char *resultbuffer,int resultsize,char *bigimagefilename);
 #endif

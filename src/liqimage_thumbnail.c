@@ -9,14 +9,11 @@
 #include <errno.h>
 #include <dirent.h>
 
-#include <liqbase/md5.h>
-#include <liqbase/liqbase.h>
-#include <liqbase/liqapp_prefs.h>
-#include <liqbase/liqcell.h>
-#include <liqbase/liqcell_prop.h>
-#include <liqbase/liqcell_easyrun.h>
-#include <liqbase/liqcell_easyhandler.h>
-
+#include "md5.h"
+#include "liqapp.h"
+#include "liqimage.h"
+#include "liqcanvas.h"
+#include "liqcliprect.h"
 
 #include  <stdio.h>
 #include  <stdlib.h>
@@ -24,6 +21,13 @@
 #include <elf.h>
 
 #define TRUE -1
+
+
+					//char imagethumb[ FILENAME_MAX ];
+					//if( liqimage_find_thumbnail_for(imagethumb,sizeof(imagethumb),fn) == 0 )
+					//{
+						// w00t!   (hello btw)
+					//}
 
 //#####################################################################
 //##################################################################### try to lookup a thumbnail, return 0 if filled in, -1 otherwise
