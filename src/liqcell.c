@@ -2131,7 +2131,8 @@ int liqcell_handlerrun(liqcell *self,char *handlername,void *args)
 							//liqcell_release(self);
 							return res;
 						}
-						return res;		// if the event existed, we run it, no consequence, later, inc ref count and allow recursive multiple event chains
+					//	return res;		// if the event existed, we run it, no consequence, later, inc ref count and allow recursive multiple event chains
+					// 20100129 lcuk removed the return, this should be fun.
 					}
 					//return 0;
 				}

@@ -818,7 +818,7 @@ int liqapp_vdeeplog(char *logentry, va_list arg)
 	}
 	*/	
 	//printf("%s: %s: ",buf,app.title);
-	printf("%s ",buf);
+	printf("%s [%s] ",buf,app.username);
 
 	vprintf(logentry, arg);
 	
@@ -948,19 +948,29 @@ int liqapp_formatnow(char *buffer,int buffersize,char *format)
 	time_t 		t;
 	  			t = time(NULL);
 	  			local = localtime(&t);
-	
-	
+if(strcmp(format,"yyyymmdd_hhmmss")==0)
+{
 	snprintf(buffer,buffersize,"%04i%02i%02i_%02i%02i%02i", 
 			 1900+local->tm_year,
 			 local->tm_mon+1,			// damn 0 based month..
 			 local->tm_mday,
-			 
 			 local->tm_hour,
 			 local->tm_min,
 			 local->tm_sec
-			 
-			 
 			 );
+}
+else
+if(strcmp(format,"yyyy/mm/dd")==0)
+{
+	snprintf(buffer,buffersize,"%04i/%02i/%02i", 
+			 1900+local->tm_year,
+			 local->tm_mon+1,			// damn 0 based month..
+			 local->tm_mday
+			 );	
+}
+else
+	snprintf(buffer,buffersize,"need fix liqapp_formatnow"); 
+
 	return 0;
 }
 

@@ -181,6 +181,10 @@ int dllcache_scan_dllfile(char *dll_filename)
 	
 	dllcacheitem * dllcacheitem=NULL;
 
+
+
+
+
 	
 	if(dll_filename==NULL)
 	{
@@ -212,6 +216,20 @@ int dllcache_scan_dllfile(char *dll_filename)
 		// 20090317_0231 lcuk : todo fix this still
 		snprintf(filetitlenoext,((int)(fileext-filetitle))>255 ? 255 : ((int)(fileext-filetitle)),"%s",filetitle);
 	
+
+
+		// first thing to try is to make sure it doesnt already exist
+		int idx;
+		for(idx=dllcache_used-1;idx>=0;idx--)
+		{
+			dllcacheitem = &dllcache[ idx ];
+			if(strcasecmp(dllcacheitem->key,filetitlenoext)==0 )
+			{
+				liqapp_log("dllcache_scan_dllfile duplicate '%s' with '%s'",dll_filename, liqapp_filename_walkoverpath(dllcacheitem->filename) );
+				// already exists..
+				return -1;
+			}
+		}
 	
 		//################################################# alloc and initialize the cache item :)
 		dllcacheitem = &dllcache[ dllcache_used++ ];
@@ -355,6 +373,16 @@ int dllcache_scan()
 		//{ return liqapp_warnandcontinue(-1,"dllcache scan, error while scan 'src/widgets'"); }			
 	}
 	
+	if(dllcache_scan_folder("/usr/share/liqbase")!=0)
+	{
+		// 20090607_193342 lcuk : cheat but might actually work
+		//{ return liqapp_warnandcontinue(-1,"dllcache scan, error while scan 'src/widgets'"); }			
+	}
+	if(dllcache_scan_folder("/usr/share/liqbase/widgets")!=0)
+	{
+		// 20090607_193342 lcuk : cheat but might actually work
+		//{ return liqapp_warnandcontinue(-1,"dllcache scan, error while scan 'src/widgets'"); }			
+	}		
     
     dllcache_scan_libraryinternal("liqkeyboard");
     dllcache_scan_libraryinternal("textbox");

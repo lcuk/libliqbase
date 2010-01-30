@@ -1431,6 +1431,8 @@ waitevent:
 								{
                                     hot=NULL;
 									// todo, call the shell command to slide back to dashboard (cant find the page right now)
+
+									system("/usr/bin/dbus-send --type=signal --session /com/nokia/hildon_desktop com.nokia.hildon_desktop.exit_app_view");
 								}
 								
 							}
