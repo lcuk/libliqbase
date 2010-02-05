@@ -511,6 +511,8 @@ int b=(y+h)-1;
 	if(b&1)b++;
     
     //xsurface_drawrect_grey(self->surface,x,y,w,h,grey);
+	
+
 
 	int tw=(r-x)/16;
 	int th=(b-y)/16;

@@ -155,10 +155,10 @@ static int dialog_selectimage_resize(liqcell *self,liqcelleventargs *args, liqce
 	float sy=((float)self->h)/((float)self->innerh);
 	
 	liqcell *cmdselect = liqcell_child_lookup(self, "cmdselect");
-	liqcell *liqrecentphotoselect1 = liqcell_child_lookup(self, "liqrecentphotoselect1");
+	liqcell *dialog_selectimage_grid1 = liqcell_child_lookup(self, "dialog_selectimage_grid1");
 	liqcell *title = liqcell_child_lookup(self, "title");
 	liqcell_setrect_autoscale( cmdselect, 580,420, 220,60, sx,sy);
-	liqcell_setrect_autoscale( liqrecentphotoselect1, 0,58, 800,420, sx,sy);
+	liqcell_setrect_autoscale( dialog_selectimage_grid1, 0,58, 800,420, sx,sy);
 	liqcell_setrect_autoscale( title, 0,0, 800,56, sx,sy);
 	return 0;
 }
@@ -170,18 +170,18 @@ static int cmdselect_click(liqcell *self,liqcelleventargs *args, liqcell *dialog
 {
     // we are done here.
 
-    liqcell *liqrecentphotoselect1 = liqcell_child_lookup(dialog_selectimage, "liqrecentphotoselect1");
+    liqcell *dialog_selectimage_grid1 = liqcell_child_lookup(dialog_selectimage, "dialog_selectimage_grid1");
     
            //########## major sideways hack.  classes need declarations and header files.
-            int liqrecentphotoselect_getselectedphoto_filename(liqcell *self,char *buffer,int bufferlen);
+            int dialog_selectimage_grid_getselectedphoto_filename(liqcell *self,char *buffer,int bufferlen);
             char selfn[FILENAME_MAX]={0};
-            liqrecentphotoselect_getselectedphoto_filename(liqrecentphotoselect1,selfn,sizeof(selfn) );
+            dialog_selectimage_grid_getselectedphoto_filename(dialog_selectimage_grid1,selfn,sizeof(selfn) );
 
             //liqapp_log("selimg a %s",selfn);
             
             //char *selfn=liqcell_propgets(  oneedit, "imagefilenameselected",NULL );
             
-            if( selfn && *selfn )
+            if( *selfn )
             {
                 liqapp_log("selimg got sel %s",selfn);
                 liqcell_propsets(  dialog_selectimage, "imagefilenameselected", selfn  );               
@@ -198,7 +198,7 @@ static int cmdselect_click(liqcell *self,liqcelleventargs *args, liqcell *dialog
 static void dialog_selectimage_child_test_seek(liqcell *self)
 {	  
 	liqcell *cmdselect = liqcell_child_lookup(self, "cmdselect");
-	liqcell *liqrecentphotoselect1 = liqcell_child_lookup(self, "liqrecentphotoselect1");
+	liqcell *dialog_selectimage_grid1 = liqcell_child_lookup(self, "dialog_selectimage_grid1");
 	liqcell *title = liqcell_child_lookup(self, "title");
 }
 
@@ -240,8 +240,8 @@ static void dialog_selectimage_child_test_seek(liqcell *self)
 		}
         */
         
-        liqcell *liqrecentphotoselect1=liqcell_child_lookup(dialog_selectimage,"liqrecentphotoselect1");
-        liqcell_filter_run(liqrecentphotoselect1,searchterm);
+        liqcell *dialog_selectimage_grid1=liqcell_child_lookup(dialog_selectimage,"dialog_selectimage_grid1");
+        liqcell_filter_run(dialog_selectimage_grid1,searchterm);
         
         /*
         liqcell *searchinprogress = liqcell_child_lookup(body,"searchinprogress");
@@ -328,7 +328,6 @@ liqcell *dialog_selectimage_create()
 	// Optimization:  defaults: background, prefer nothing, will be shown through if there is a wallpaper
 	// Optimization:  defaults: text, white, very fast rendering
 
-
 	//############################# title:label
 	liqcell *title = liqcell_quickcreatevis("title", "label", 0, 0, 800, 56);
 	liqcell_setfont(	title, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (29), 0) );
@@ -337,17 +336,18 @@ liqcell *dialog_selectimage_create()
 	liqcell_propsets(  title, "backcolor", "xrgb(0,0,0)" );
 	liqcell_propseti(  title, "textalign", 0 );
 	liqcell_child_append(  self, title);
-	//############################# liqrecentphotoselect1:liqrecentphotos
-	liqcell *liqrecentphotoselect1 = liqcell_quickcreatevis("liqrecentphotoselect1", "liqrecentphotoselect", 0, 58, 800, 420);
-	liqcell_child_append(  self, liqrecentphotoselect1);
+	//############################# dialog_selectimage_grid1:liqrecentphotos
+	liqcell *dialog_selectimage_grid1 = liqcell_quickcreatevis("dialog_selectimage_grid1", "dialog_selectimage_grid", 0, 58, 800, 420);
+	liqcell_child_append(  self, dialog_selectimage_grid1);
     //############################# cmdselect:commandbutton
-	liqcell *cmdselect = liqcell_quickcreatevis("cmdselect", "commandbutton", 580, 420, 220, 60);
+	liqcell *cmdselect = liqcell_quickcreatevis("cmdselect", "commandbutton", 580, 420, 210, 60);
 	liqcell_setfont(	cmdselect, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (29), 0) );
 	liqcell_setcaption(cmdselect, "Select" );
 	liqcell_propsets(  cmdselect, "textcolor", "rgb(255,255,255)" );
 	liqcell_propsets(  cmdselect, "backcolor", "xrgb(0,64,0)" );
 	liqcell_propsets(  cmdselect, "bordercolor", "rgb(255,255,255)" );
-	liqcell_propseti(  cmdselect, "textalign", 2 );
+	liqcell_propseti(  cmdselect, "textalign",  2 );
+	liqcell_propseti(  cmdselect, "textaligny", 2 );
 	liqcell_handleradd_withcontext(cmdselect, "click", cmdselect_click, self );
     //liqcell_setenabled(cmdselect,0);
 	liqcell_child_append(  self, cmdselect);

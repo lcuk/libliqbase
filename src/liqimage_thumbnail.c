@@ -33,7 +33,7 @@
 //##################################################################### try to lookup a thumbnail, return 0 if filled in, -1 otherwise
 //#####################################################################
 
-int liqimage_find_thumbnail_for_2(char *resultbuffer,int resultsize,char *bigimagefilename)
+int liqimage_find_thumbnail_for(char *resultbuffer,int resultsize,char *bigimagefilename)
 {
 	// turbo mode!
 	// no thumbnailing :o

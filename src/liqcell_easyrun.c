@@ -1734,8 +1734,9 @@ quickfin:
 
 
 
-		float zoom_duration = 0.15;//0.4;//0.01;//0.1;//0.2;	// time to go from fullscreen to zoomed in
+		float zoom_duration = 0.2; //0.15;//0.4;//0.01;//0.1;//0.2;	// time to go from fullscreen to zoomed in
 		
+		// todo make this a system config option
 		
 		//###########################################################
 		int slidetowards(int valuenow,int target)

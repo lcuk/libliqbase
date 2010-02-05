@@ -84,5 +84,20 @@ int         liqimage_pageloadpng_memstream( liqimage *self,char * filename,char 
 int 		liqimage_pagesavepng(liqimage *self,char * filename);
 
 liqimage *  liqimage_getthumbnail(          liqimage *original,int maxw,int maxh);
+
+
+
+//#########################################################################
+//#########################################################################
+//######################################################################### get hold of the filename of a thumbnail representation of specified image filename
+//#########################################################################
+//#########################################################################
+
+					//char imagethumb[ FILENAME_MAX ];
+					//if( liqimage_find_thumbnail_for(imagethumb,sizeof(imagethumb),fn) == 0 )
+					//{
+						// w00t!   (hello btw)
+					//}
 int liqimage_find_thumbnail_for(char *resultbuffer,int resultsize,char *bigimagefilename);
+
 #endif

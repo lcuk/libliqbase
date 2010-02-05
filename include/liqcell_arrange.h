@@ -32,6 +32,8 @@ static inline int dimension_overlapcalc(register int cs,register int ce,register
 //##################################################################
 //##################################################################
 //##################################################################
+int     liqcell_child_countvisible(liqcell *self);
+int     liqcell_child_countselected(liqcell *self);
 
 
 void liqcell_forceinboundparent(liqcell *self);

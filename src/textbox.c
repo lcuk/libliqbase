@@ -44,7 +44,8 @@
 #define  CYAN     "rgba(0,175,175,128)"
 #define  MAGENTA  "rgb(255,0,255)"
 
-
+// this should be here
+char *text_temp_paste = NULL;
 
 int textbox_selectall(liqcell *textbox)
 {
