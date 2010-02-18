@@ -40,7 +40,7 @@ extern XvImage  *	XvShmCreateImage(Display*, XvPortID, int, char*, int, int, XSh
 
 
 
-int liqx11overlay_init(liqx11overlay *self, Display *dpy, int screen, Window window, GC gc)
+int liqx11overlay_init(liqx11overlay *self, Display *dpy, int screen, Window window, GC gc, int attrswidth,int attrsheight)
 {
 	liqapp_log("x11overlay init begin");
 	
@@ -64,20 +64,20 @@ int liqx11overlay_init(liqx11overlay *self, Display *dpy, int screen, Window win
 	//################################################# find out our dimensions
 
 
-	XWindowAttributes attrs;
-	XGetWindowAttributes(
-								 self->dpy,
-								 self->window,
-								 &attrs );
+	//XWindowAttributes attrs;
+	//XGetWindowAttributes(
+	//							 self->dpy,
+	//							 self->window,
+	//							 &attrs );
 
-	self->yuv_width  = attrs.width;
-	self->yuv_height = attrs.height;
+	self->yuv_width  = attrswidth;
+	self->yuv_height = attrsheight;
 
 // Sat Aug 22 00:52:46 2009 lcuk : lowres flag added, if set half the resolution of the overlay
 if( liqapp_pref_checkexists("lowres") )
 {
-	self->yuv_width  = attrs.width/2;
-	self->yuv_height = attrs.height/2;
+	self->yuv_width  = attrswidth/2;
+	self->yuv_height = attrsheight/2;
 }
 
 	liqapp_log("x11overlay dims wh(%i,%i)",self->yuv_width,self->yuv_height);
@@ -126,6 +126,11 @@ if(self->yuv_width==480 && self->yuv_height==800)
 		{ return liqapp_errorandfail(-1,"canvas XShmQueryExtension failed"); }
 	}
 
+	// for green bug
+	// look into XvSetPortAttribute
+	// http://www.xfree86.org/current/XvSetPortAttribute.3.html
+	// http://lists.helixcommunity.org/pipermail/video-cvs/2009-September/001467.html
+	
 
 	//YUV12 and IV420 are same but U&V are swapped
 	self->yuv_image = XvShmCreateImage(self->dpy, self->xv_port, GUID_YUV12_PLANAR, 0, self->yuv_width, self->yuv_height, &self->yuv_shminfo);

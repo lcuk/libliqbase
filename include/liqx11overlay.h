@@ -51,7 +51,7 @@ typedef struct liqx11overlay
 
 
 
-int liqx11overlay_init(liqx11overlay *self, Display *dpy, int screen, Window window, GC gc);
+int liqx11overlay_init(liqx11overlay *self, Display *dpy, int screen, Window window, GC gc,   int attrswidth,int attrsheight);
 int liqx11overlay_show(liqx11overlay *self);
 int liqx11overlay_hide(liqx11overlay *self);
 int liqx11overlay_close(liqx11overlay *self);

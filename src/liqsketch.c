@@ -43,8 +43,16 @@
 //#########################################################################
 //#########################################################################
 //#########################################################################
+//#include <pthread.h>
+//#include <sched.h>
+	// crashing liqflow via osc when removing a node, this is bad
+	// its a threading issue tho
+	// one process is recurings each stroke, the other is using it
+	//
 
-
+//static pthread_mutex_t sketch_op_lock = PTHREAD_MUTEX_INITIALIZER;
+	//pthread_mutex_lock(&sketch_op_lock);
+	//pthread_mutex_unlock(&sketch_op_lock);
 
 liqpoint *liqpoint_new()
 {
@@ -698,12 +706,23 @@ void liqsketch_titlechange(liqsketch *self,char *title)
 
 // '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-
+void          liqsketch_strokefirst(liqsketch *self)
+{
+	return self->strokefirst;
+}
+void          liqsketch_strokelast(liqsketch *self)
+{
+	return self->strokelast;
+}
 
 void          liqsketch_strokeremove(liqsketch *self,liqstroke *s)
 {
 	//
 	if(!s)return;
+	
+	//pthread_mutex_lock(&sketch_op_lock);
+	//
+	
 	//if(! (s->linkpage==self) ) return;
 	liqstroke *l=s->linkprev;
 	liqstroke *r=s->linknext;
@@ -729,7 +748,11 @@ void          liqsketch_strokeremove(liqsketch *self,liqstroke *s)
 	s->linknext=NULL;
 	s->linkpage=NULL;
 	
-	liqstroke_free(s);
+	//pthread_mutex_unlock(&sketch_op_lock);
+	
+	//liqstroke_free(s);
+	liqstroke_release(s);
+	
 	
 	self->strokecount--;
 	

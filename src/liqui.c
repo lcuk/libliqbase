@@ -78,7 +78,7 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
 		liqcell_setcaption(liqcell_child_lookup( self,"app_title"), title );
 		liqcell_setcaption(liqcell_child_lookup( self,"app_desc"), description );
 
-
+/*
 			liqcell *clock = liqcell_quickcreatevis("clock",   "time",   500,0,   200,100 );
 			//char buf[80];
 			//liqapp_format_strftime(buf,80,"%H:%M:%S");
@@ -91,7 +91,7 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
 			liqcell_propsets(     clock, "textcolor", "rgb(255,255,255)" );
 		//	liqcell_handleradd(self,    "mouse",   widget_mouse);
 			liqcell_child_append( self, clock    );
-
+ */
 	}
 	return self;
 }
@@ -113,10 +113,10 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
  * @param infotext Caption of the bar
  * @return liqcell* The new infobar
  */
-liqcell *uiinfobar_create(char *infotext)
+liqcell *uiinfobar_create(char *key,char *infotext)
 {
 	
-	liqcell *self = liqcell_quickcreatewidget("uiinfobar","section", 800,80);
+	liqcell *self = liqcell_quickcreatewidget(key,"uiinfobar", 800,80);
 	
 	if(self)
 	{
@@ -155,7 +155,7 @@ liqcell *uiinfobar_create(char *infotext)
 liqcell *uitextbox_create(char *caption,char *datadefault)
 {
 	
-	liqcell *self = liqcell_quickcreatewidget("uitextbox","uitextbox", 800,80);
+	liqcell *self = liqcell_quickcreatewidget(caption,"uitextbox", 800,80);
 	
 	if(self)
 	{
@@ -177,36 +177,99 @@ liqcell *uitextbox_create(char *caption,char *datadefault)
 			liqcell_setcaption(data,  datadefault );
 		liqcell_child_insert( self, data );
 
-
-
-			//liqcell_propseti(  data,  "selstart",  5 );
-			//liqcell_propseti(  data,  "sellength", 12 );
-			//liqcell_propseti(  data,  "cursorpos", 17 );
-			
-		//	liqcell_handleradd(data,    "mouse",      textbox_mouse);
-		//	liqcell_handleradd(data,    "keypress",   textbox_keypress);
-		//	liqcell_handleradd(data,    "keyrelease", textbox_keyrelease);
-
-
-
-//liqcell *liqkeyboard_create();
-
-	//		liqcell *kb = liqcell_quickcreatevis("data","liqkeyboard", 500,0,   60,20);
-			//liqcell_setfont(   kb,  liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (36), 0) );
-			//liqcell_propsets(  kb,  "backcolor", "rgb(220,255,220)" );
-			//liqcell_propsets(  kb,  "textcolor", "rgb(0,0,0)" );
-			//liqcell_setcaption(kb,  datadefault );
-
-	//	liqcell_child_insert( data, kb );
-
-
-
-		
-		
 	}
 	return self;
 }
 
+
+
+
+
+
+
+/**	
+ * uitxtmsgbox.captionchange clicked
+ */	
+static int uitxtmsgbox_captionchange(liqcell *self,liqcelleventargs *args, liqcell *uitxtmsgbox)
+{
+
+	int tl = strlen(liqcell_getcaption(self));
+    
+
+    //liqcell *messageremain = liqcell_child_lookup(uitxtmsgbox, "messageremain");
+    //liqcell_setcaption_printf(messageremain,"%i",50-tl);
+	
+	if(tl>100)
+	{
+		liqcell_setfont(	self, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (29), 0) );
+	}
+	else
+	if(tl>80)
+	{
+		liqcell_setfont(	self, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (34), 0) );
+	}
+	else
+	if(tl>60)
+	{
+		liqcell_setfont(	self, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (40), 0) );
+	}
+	else
+	if(tl>40)
+	{
+		liqcell_setfont(	self, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (48), 0) );
+	}
+	else
+	if(tl>20)
+	{
+		liqcell_setfont(	self, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (56), 0) );
+	}
+	else
+	{
+		liqcell_setfont(	self, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (64), 0) );
+	}
+    
+    
+
+	return 0;
+}
+/**
+ * Create a txtmsgbox ui component, this is the development function
+ * @param caption Body Caption
+ * @param datadefault Caption of the data
+ * @return liqcell* The new textbox
+ */
+liqcell *uitxtmsgbox_create(char *caption,char *datadefault)
+{
+	
+	liqcell *self = liqcell_quickcreatewidget(caption,"txtmsgbox", 800,220);
+	
+	if(self)
+	{
+
+		liqcell_propsets(  self,  "backcolor", "rgb(0,0,0)" );
+		
+			liqcell *body = liqcell_quickcreatevis("body","frame", 10,10,   200,60);
+			liqcell_setfont(   body,  liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
+			liqcell_propsets(  body,  "backcolor", "rgb(40,40,40)" );
+			liqcell_propsets(  body,  "textcolor", "rgb(255,255,255)" );
+			liqcell_setcaption(body,  caption );
+		liqcell_child_insert( self, body );
+		
+		
+			liqcell *data = liqcell_quickcreatevis("data","textbox", 220,5,   560,210);
+			liqcell_setfont(   data,  liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (64), 0) );
+			liqcell_propsets(  data,  "backcolor", "rgb(220,255,220)" );
+			liqcell_propsets(  data,  "textcolor", "rgb(0,0,0)" );
+			liqcell_propseti(  data,  "wordwrap", 1 );
+			liqcell_propseti(  data,  "maxlength",  140 );
+			liqcell_handleradd_withcontext(data, "captionchange", uitxtmsgbox_captionchange ,self);
+
+			liqcell_setcaption(data,  datadefault );
+		liqcell_child_insert( self, data );
+
+	}
+	return self;
+}
 
 /**
  * Create a numberbox ui component
@@ -217,7 +280,7 @@ liqcell *uitextbox_create(char *caption,char *datadefault)
 liqcell *uinumberbox_create(char *caption,char *datadefault)
 {
 	
-	liqcell *self = liqcell_quickcreatewidget("uinumberbox","section", 800,80);
+	liqcell *self = liqcell_quickcreatewidget(caption,"uinumberbox", 800,80);
 	
 	if(self)
 	{
@@ -306,7 +369,7 @@ static int uienumbox_node_click(liqcell *self,liqcellclickeventargs *args, liqce
 liqcell *uienumbox_create(char *caption,char *datadefault,char *choices)
 {
 	
-	liqcell *self = liqcell_quickcreatewidget("uienumbox","section", 800,80);
+	liqcell *self = liqcell_quickcreatewidget(caption,"uienumbox", 800,80);
 	
 	if(self)
 	{
@@ -393,7 +456,7 @@ static int uipicturebox_click(liqcell *self,liqcellclickeventargs *args, liqcell
 liqcell *uipicturebox_create(char *caption,char *datadefaultimagefilename)
 {
 	
-	liqcell *self = liqcell_quickcreatewidget("uipicturebox","section", 800,150);
+	liqcell *self = liqcell_quickcreatewidget(caption,"uipicturebox", 800,150);
 	
 	if(self)
 	{
@@ -449,7 +512,7 @@ static int uicolorbox_click(liqcell *self,liqcellclickeventargs *args, liqcell *
 liqcell *uicolorbox_create(char *caption,char *datadefault)
 {
 	
-	liqcell *self = liqcell_quickcreatewidget("uicolorbox","section", 800,150);
+	liqcell *self = liqcell_quickcreatewidget(caption,"uicolorbox", 800,150);
 	
 	if(self)
 	{
@@ -506,7 +569,7 @@ liqcell *liqui_create()
 			liqcell *body = liqcell_quickcreatewidget("body","frame", 800,480);
 			
 			liqcell_child_append( body,  uititlebar_create(   "ui", "User Interface test1", "The very first UI example I've tried" ) );	
-			liqcell_child_append( body,  uiinfobar_create(    "this is a user interface test") );
+			liqcell_child_append( body,  uiinfobar_create(    "head", "this is a user interface test") );
 			liqcell_child_append( body,  uitextbox_create(    "nickname", "lcuk" ) );
 			liqcell_child_append( body,  uicolorbox_create(   "favoritecolor", "rgb(50,150,50)" ) );
 			liqcell_child_append( body,  uienumbox_create(    "level", "High", "Low;Medium;High;Godlike" ) );

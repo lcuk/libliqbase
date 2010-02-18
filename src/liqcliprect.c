@@ -1140,6 +1140,7 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 	liqstroke *stroke=page->strokefirst;
 	while(stroke)
 	{
+		liqstroke_hold(stroke);
 		if(stroke->pointcount>=2)
 		{
 			unsigned char y=stroke->pen_y;
@@ -1393,6 +1394,8 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 			// supposing we actually said this stroke was a BOX/Circle/Polygon/Triangle/Tile etc
 			// what would we draw then?
 		}
+		
+		liqstroke_release(stroke);
 		stroke=stroke->linknext;
 	}
 }

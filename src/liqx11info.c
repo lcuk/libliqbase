@@ -99,6 +99,7 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 	myx11info->myoverlay     = NULL;
 	myx11info->mydisplay     = XOpenDisplay("");
 	myx11info->myscreen      = DefaultScreen(myx11info->mydisplay);
+	myx11info->mywindow      = NULL;
 	
 	
 	myx11info->myinnotifyflag=0;
@@ -130,6 +131,9 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 	
 	
 	
+
+
+	//################################################# 
 	
 	
 	liqapp_log("x11info preparing baselines and hint");
@@ -234,24 +238,11 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
     XSetWMProtocols(myx11info->mydisplay, myx11info->mywindow, &myx11info->my_WM_DELETE_WINDOW, 1);
 
 
+	
 
 	
-	//################################################# lets make sure we are top of the pile
-	
-	XMapRaised(		myx11info->mydisplay,myx11info->mywindow);
 	
 	
-		XEvent event;
-		do 
-		{
-			XNextEvent(myx11info->mydisplay, &event);
-		}
-		while (event.type != MapNotify || event.xmap.event != myx11info->mywindow);
-	
-	
-	if(fullscreen)
-		x11_set_fullscreen_state(myx11info->mydisplay,myx11info->mywindow,1);
-	//isfullscreen=1;	
 	
 	
 	//################################################# put the overlay in place :)
@@ -260,16 +251,50 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 	liqapp_log("x11info allocating overlay");
 	
 	myx11info->myoverlay = &myx11info->myoverlaycore;
-	liqx11overlay_init(myx11info->myoverlay, myx11info->mydisplay,myx11info->myscreen,myx11info->mywindow,myx11info->mygc);
+	liqx11overlay_init(myx11info->myoverlay, myx11info->mydisplay,myx11info->myscreen,myx11info->mywindow,myx11info->mygc,  canvas.pixelwidth,canvas.pixelheight);
 	
-	
-	
-	
+	liqapp_log("x11info binding overlay to window");
+	myx11info->myoverlay->window = myx11info->mywindow;
+
+	liqapp_log("x11info showing overlay");
 	liqx11overlay_show(myx11info->myoverlay);
-	liqx11overlay_refreshdisplay(myx11info->myoverlay);
+		
+		
+		
+		
+		
+	//################################################# lets make sure we are top of the pile
+	
+	XMapRaised(		myx11info->mydisplay,myx11info->mywindow);
+	
+/*	
+		XEvent event;
+		do 
+		{
+			XNextEvent(myx11info->mydisplay, &event);
+		}
+		while (event.type != MapNotify || event.xmap.event != myx11info->mywindow);
+	
+*/
+	
 
+	if(fullscreen)
+		x11_set_fullscreen_state(myx11info->mydisplay,myx11info->mywindow,1);
+	//isfullscreen=1;	
+	
+	
+	
+		
+		
+	
+	//liqapp_log("x11info refreshing overlay");
+	//liqx11overlay_refreshdisplay(myx11info->myoverlay);
 
-    liqx11info_regrab_focus(myx11info);
+	
+	//XMapRaised(		myx11info->mydisplay,myx11info->mywindow);
+	
+	
+    //liqx11info_regrab_focus(myx11info);
 
 
 	
@@ -505,6 +530,8 @@ foo:
 					// such as size, position, border, and stacking order. 
 					liqapp_log("event.ConfigureNotify");
 					
+					//liqapp_log("green shortcut"); break;
+					
 					if(myx11info->myoverlay)
 					{				
 						//liqapp_sleep(100);
@@ -521,7 +548,7 @@ foo:
 					{
 					//	liqapp_sleep(100);
 						myx11info->myoverlay = &myx11info->myoverlaycore;
-						liqx11overlay_init(myx11info->myoverlay, myx11info->mydisplay,myx11info->myscreen,myx11info->mywindow,myx11info->mygc);
+						liqx11overlay_init(myx11info->myoverlay, myx11info->mydisplay,myx11info->myscreen,myx11info->mywindow,myx11info->mygc,   canvas.pixelwidth,canvas.pixelheight);
 						liqx11overlay_show(myx11info->myoverlay);
 						//isbusyrendering=0;
 					}
@@ -554,6 +581,8 @@ foo:
 	
 				case VisibilityNotify:
 					liqapp_log("event.VisibilityNotify state=%i",xev.xvisibility.state);
+					//liqapp_log("green shortcut"); break;
+					
 					
 					myx11info->myisvisibleflag = (xev.xvisibility.state == 0) || (xev.xvisibility.state==1);
 						
@@ -568,12 +597,13 @@ foo:
 				//############################################ focus
 				case EnterNotify:					
 					liqapp_log("event.EnterNotify");
+					//liqapp_log("green shortcut"); break;
 
                         if(!myx11info->myoverlay)
                         {
                         //	liqapp_sleep(100);
                             myx11info->myoverlay = &myx11info->myoverlaycore;
-                            liqx11overlay_init(myx11info->myoverlay, myx11info->mydisplay,myx11info->myscreen,myx11info->mywindow,myx11info->mygc);
+                            liqx11overlay_init(myx11info->myoverlay, myx11info->mydisplay,myx11info->myscreen,myx11info->mywindow,myx11info->mygc,    canvas.pixelwidth,canvas.pixelheight);
                             //liqx11overlay_show(myx11info->myoverlay);
                             //isbusyrendering=0;
                         }
@@ -590,6 +620,7 @@ foo:
 		
 				case LeaveNotify:
 					liqapp_log("event.LeaveNotify");
+					//liqapp_log("green shortcut"); break;
 					
 					//XUnmapWindow(mydisplay,mywindow);
 	
@@ -607,6 +638,7 @@ foo:
 				//############################################ focus
 				case FocusIn:					
 					liqapp_log("event.FocusIn");
+					//liqapp_log("green shortcut"); break;
 					myx11info->myisfocusflag=1;
 						if((myx11info->myoverlay))
 						{
@@ -638,13 +670,15 @@ foo:
 				
 				case Expose:
 					liqapp_log("event.expose count=%i         //render()",xev.xexpose.count);
+					//liqapp_log("green shortcut"); break;
+					
 					if (xev.xexpose.count == 0)
 					{
 						
 						if(!myx11info->myoverlay)
 						{
 							myx11info->myoverlay = &myx11info->myoverlaycore;
-							liqx11overlay_init(myx11info->myoverlay, myx11info->mydisplay,myx11info->myscreen,myx11info->mywindow,myx11info->mygc);
+							liqx11overlay_init(myx11info->myoverlay, myx11info->mydisplay,myx11info->myscreen,myx11info->mywindow,myx11info->mygc,    canvas.pixelwidth,canvas.pixelheight);
 							liqx11overlay_show(myx11info->myoverlay);
 						}
 						
@@ -1015,353 +1049,6 @@ foo:
 //liqapp_log("event completed :) returning type %i",ev->type);
 	
 	
-	return 0;
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	if(xev.type==KeyPress)
-	{
-		
-		if(!myx11info->myinnotifyflag) goto foo;
-
-
-
-		
-		ev->type = LIQEVENT_TYPE_KEY;
-		ev->key.state = LIQEVENT_STATE_PRESS;
-		ev->key.keycode = XLookupKeysym((XKeyEvent*)&xev,0); //xev.xkey.keycode;
-		ev->key.keystring[0]=0;
-		
-		keylen = XLookupString((XKeyEvent*)&xev,ev->key.keystring,16, (KeySym *) NULL, (XComposeStatus *) NULL);
-		liqapp_log("xNextEvent keypress %i",ev->key.keycode);
-
-
-
-
-			// right in the core i can save a screen when i press the [Fullscreen] key
-			if( (ev->type == LIQEVENT_TYPE_KEY) && (ev->state==LIQEVENT_STATE_PRESS) && (ev->key.keycode==65475) )	//FullScreen
-			{
-				char 		fmtnow[255];
-	 			liqapp_formatnow(fmtnow,255,"yyyymmdd_hhmmss");
-				char buf[FILENAME_MAX+1];
-				int pngerr =0;
-				
-				
-				liqimage *imgfrom=NULL;//liqcamera_getimage();
-				if(!imgfrom)
-				{
-					// camera not on, we are doing desktop
-					imgfrom = canvas.surface;
-				}
-				if(imgfrom)
-				{
-
-				/*		if(imgfrom != canvas.surface)
-						{
-							// save camera image
-							
-							snprintf(buf,FILENAME_MAX,"%s/liq.%s.%s.cam.png",app.sketchpath,fmtnow,app.username  );
-							liqapp_log("Fullscreen Pressed, saving camera  as '%s'",buf);
-							pngerr=liqimage_pagesavepng(imgdesk,buf);
-						}
-						else
-				*/
-						{
-							// save screenshot
-							snprintf(buf,FILENAME_MAX,"liq.%s.%s.scr.png",fmtnow,"lib"  );
-							liqapp_log("Fullscreen Pressed, saving canvas as '%s'",buf);
-							pngerr=liqimage_pagesavepng(imgfrom,buf);
-						}
-						
-				}
-				else
-				{
-					// no canvas
-					liqapp_log("Fullscreen Pressed, no canvas");
-				}
-			}
-	}
-	
-	
-	
-	else if(xev.type==KeyRelease)
-	{
-		
-		if(!myx11info->myinnotifyflag) goto foo;
-		
-		ev->type = LIQEVENT_TYPE_KEY;
-		ev->key.state = LIQEVENT_STATE_RELEASE;
-		ev->key.keycode =XLookupKeysym((XKeyEvent*)&xev,0); //xev.xkey.keycode;
-		ev->key.keystring[0]=0;
-		keylen = XLookupString((XKeyEvent*)&xev,ev->key.keystring,16, (KeySym *) NULL, (XComposeStatus *) NULL);
-		liqapp_log("xNextEvent keyrelease %i",ev->key.keycode);
-	}
-
-
-
-
-
-#ifdef USE_XSP
-
-	
-
-
-	else if (xev.type == xsp_event_base)  // RAWMOUSE
-	{
-		
-		//if(!xv_canvas_inNotify) goto foo;
-		
-		
-		XSPRawTouchscreenEvent xsp_event;
-		memcpy(&xsp_event, &xev,sizeof(XSPRawTouchscreenEvent));
-
-		//liqapp_log("RawMouse %i,%i,%i",xsp_event.x,xsp_event.y,xsp_event.pressure);
-		int t_x = xsp_event.x;
-		int t_y = xsp_event.y;
-
-		/* translate raw coordinates */
-		TRANSLATE_RAW_COORDS(&t_x, &t_y,canvas.pixelwidth,canvas.pixelheight);
-		if(t_x>=canvas.pixelwidth )t_x=canvas.pixelwidth -1;
-		if(t_y>=canvas.pixelheight)t_y=canvas.pixelheight-1;
-		if(t_x<0)t_x=0;
-		if(t_y<0)t_y=0;
-
-		ev->type = LIQEVENT_TYPE_MOUSE;
-		ev->mouse.state = LIQEVENT_STATE_MOVE;
-		ev->mouse.x = ((t_x));//*canvas.scalew);
-		ev->mouse.y = ((t_y));//*canvas.scaleh);
-		ev->mouse.pressure = xsp_event.pressure;
-
-	}	
-	
-#else // USE_XSP
-
-
-	else if(xev.type==ButtonPress)
-	{
-//#ifndef USE_MAEMO	
-//		if(!myx11info->myinnotifyflag) goto foo;
-//#endif
-
-		int xres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->width;
-		int yres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->height;
-	
-
-		
-        myx11info->myispressedflag=1;
-        
-        xev.xmotion.x= xev.xmotion.x * canvas.pixelwidth  / xres;
-        xev.xmotion.y= xev.xmotion.y * canvas.pixelheight / yres;
-        
-        //liqapp_log("buttonpress  %i,%i",xev.xmotion.x,xev.xmotion.y);
-		//liqapp_log("ButtonPress");
-		ev->type = LIQEVENT_TYPE_MOUSE;
-		ev->mouse.state = LIQEVENT_STATE_PRESS;
-		ev->mouse.x = ((xev.xmotion.x));
-		ev->mouse.y = ((xev.xmotion.y));
-        ev->mouse.pressure = 100;
-	}
-	else if(xev.type==MotionNotify)
-	{
-		if(!myx11info->myispressedflag)goto foo;
-//#ifndef USE_MAEMO
-//		if(!myx11info->myinnotifyflag) goto foo;
-//#endif
-		int xres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->width;
-		int yres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->height;
-		
-        xev.xmotion.x= xev.xmotion.x * canvas.pixelwidth  / xres;
-        xev.xmotion.y= xev.xmotion.y * canvas.pixelheight / yres;
- 
-        //liqapp_log("motion %i,%i",xev.xmotion.x,xev.xmotion.y);
-		ev->type = LIQEVENT_TYPE_MOUSE;
-		ev->mouse.state = LIQEVENT_STATE_MOVE;
-		ev->mouse.x = ((xev.xmotion.x));// *800)/canvas.pixelwidth;
-		ev->mouse.y = ((xev.xmotion.y));// *480)/canvas.pixelheight;
-        ev->mouse.pressure = 200;
-	}
-    else if(xev.type==ButtonRelease)
-	{
-//#ifndef USE_MAEMO		
-//		if(!myx11info->myinnotifyflag) goto foo;
-//#endif		
-		int xres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->width;
-		int yres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->height;
-		
-        myx11info->myispressedflag=0;
-        
-        xev.xmotion.x= xev.xmotion.x * canvas.pixelwidth  / xres;
-        xev.xmotion.y= xev.xmotion.y * canvas.pixelheight / yres;
- 
-        //liqapp_log("release %i,%i",xev.xmotion.x,xev.xmotion.y);
-
-		//liqapp_log("ButtonRelease");
-		ev->type = LIQEVENT_TYPE_MOUSE;
-		ev->mouse.state = LIQEVENT_STATE_RELEASE;
-		ev->mouse.x = ((xev.xmotion.x));
-		ev->mouse.y = ((xev.xmotion.y));
-        ev->mouse.pressure = 0;
-	}
-	
-	
-#endif	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-    
- 	else if (xev.type == 25)  // ResizeRequest
-	{
-		// obtain new dimensions and adjust our renderer to suit   
-	}
-	else if (xev.type == 65 || xev.type == 69 || xev.type == 77|| xev.type == 77)  // XShmCompletionEvent
-	{
-		//http://www.x.org/docs/Xv/video		
-		//	XvShmPutImage has a parameter:
-		//   send_event - Indicates whether or not an XShmCompletionEvent should be
-		//                sent.  If sent, the event's major_code and minor_code
-		//                fields will indicate the Xv extension's major code and
-		//                XvShmPutImage's minor code.
-		//if(myx11info->myinnotifyflag)
-		{
-		
-			ev->type = LIQEVENT_TYPE_REFRESHED;
-		}
-		//else
-		//{
-		//	// actually no point in telling the caller that we have finished refreshing :)
-		//	// lets leave him waiting for now
-		//}
-		
-	}
-	
-
-	else if (xev.type == EnterNotify) // EnterNotify
-	{
-		liqapp_log("event: EnterNotify");
-		//XRaiseWindow(dpy,window);
-		myx11info->myinnotifyflag = 1;
-	}
-	
-	
-
-	else if (xev.type == LeaveNotify) // LeaveNotify
-	{
-		liqapp_log("event: LeaveNotify");
-		//XRaiseWindow(dpy,window);
-		myx11info->myinnotifyflag = 0;
-	}
-	
-	
-	
-	
-	
-	
-
-
-	else if (xev.type == VisibilityNotify) // VisibilityNotify
-	{
-		liqapp_log("event: VisibilityNotify %i",xev.xvisibility.state);
-		//XRaiseWindow(dpy,window);
-	}
-	
-	
-	
-	
-	else if (xev.type == Expose) // expose
-	{
-		//XRaiseWindow(dpy,window);
-		//liqcanvas_refreshdisplay();
-		if(xev.xexpose.count>0) goto foo;
-
-
-		{
-			liqapp_log("event: Expose");
-			ev->type = LIQEVENT_TYPE_EXPOSE;
-		}
-		
-	}
-	
-	else if (xev.type == MappingNotify) // mapping notify
-	{
-		liqapp_log("event: MappingNotify");
-		//XRaiseWindow(dpy,window);
-	}
-	
-	else if (xev.type == MapNotify) // map notify
-	{
-		liqapp_log("event: MapNotify");
-		//XRaiseWindow(dpy,window);
-	}
-	
-	else if (xev.type == UnmapNotify) // unmap notify
-	{
-		liqapp_log("event: UnmapNotify");
-		//XRaiseWindow(dpy,window);
-	}
-	else if (xev.type == ClientMessage) // client message
-	{
-		liqapp_log("event: ClientMessage");
-		//XRaiseWindow(dpy,window);
-	}	
-	
-	else if (xev.type == 77) // ..
-	{
-		//liqapp_log("event: ...");
-		//XRaiseWindow(dpy,window);
-	}	
-	
-	else if (xev.type == 22) // ..
-	{
-		//liqapp_log("event: ...");
-		//XRaiseWindow(dpy,window);
-	}	
-
-	else if (xev.type == 94)// random events which dont occur in maemo..
-	{
-	
-	}
-	else if (xev.type == 6)// random events which dont occur in maemo.. came at a mouse move..
-	{
-	
-	}
-	else
-	{
-
-	// x11 event definitions: http://www.openmash.org/lxr/source/xlib/X11/X.h?c=tk8.3#L99
-	
-	//		ev->type = LIQEVENT_TYPE_UNKNOWN;
-			liqapp_log("Unknown event %i, let me know what happened at liquid@gmail.com",xev.type);
-			//exit(-1);
-	}
-
 	return 0;
 
 }

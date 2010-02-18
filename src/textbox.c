@@ -26,7 +26,11 @@
 #include <stdlib.h>
 
 
-#include "liqui.h"
+#include <liqbase/liqui.h>
+
+
+
+char *liqclip=NULL;
 
 
 
@@ -41,66 +45,12 @@
 #define  GREEN    "rgb(0,173,0)"
 #define  BLUE     "rgb(0,0,255)"
 #define  YELLOW   "rgb(225,225,0)"
-#define  CYAN     "rgba(0,175,175,128)"
+#define  CYAN     "rgb(0,175,175)"
 #define  MAGENTA  "rgb(255,0,255)"
 
-// this should be here
-char *text_temp_paste = NULL;
-
-int textbox_selectall(liqcell *textbox)
-{
-	// select all!
-	int selstart = liqcell_propgeti(  textbox,"selstart",-1);
-	int sellength = liqcell_propgeti(  textbox,"sellength",0);
-	int cursorpos = liqcell_propgeti(  textbox,"cursorpos",-1);
-	
-	char *caption = liqcell_getcaption(textbox);
-	int captionlen = strlen(caption);
-
-
-	liqcell_propseti(  textbox,  "selstart",  0 );
-	liqcell_propseti(  textbox,  "sellength", captionlen );
-	liqcell_propseti(  textbox,  "cursorpos", captionlen );
-       
-	
-}
-
-int textbox_fakebackspace(liqcell *textbox)
-{
-	// fake a backspace!
-	liqcellkeyeventargs keyargs={0};
-	keyargs.keycode = (int)8;
-	char delbuf[2];
-	delbuf[0]=8;
-	delbuf[1]=0;
-	snprintf(keyargs.keystring,sizeof(keyargs.keystring),delbuf);
-	keyargs.ispress = 1;
-	liqcell_handlerrun(textbox,"keypress",&keyargs);
-}
 
 
 
-
-int textbox_clear(liqcell *textbox)
-{
-	// clear
-
-	liqcell_setcaption(textbox,"");
-
-
-	liqcell_propseti(  textbox,  "selstart",  0 );
-	liqcell_propseti(  textbox,  "sellength", 0 );
-	liqcell_propseti(  textbox,  "cursorpos", 0 );
-       
-	return 0;
-}
-
-
-
-
-	// damn, this should be taken care of by the OS itself
-	// this is because the hitpoint will not always match with where I think it will be
-	// this is bad and good in practice
 	static int textbox_mouse(liqcell *self, liqcellmouseeventargs *args,void *context)
 	{
 		// if i have a font on my cell, surely it will have been rendered correctly first..
@@ -129,9 +79,81 @@ int textbox_clear(liqcell *textbox)
 		//int caplen = strlen(cap);
 		
 		
-		int mx = args->mex - liqcell_getx(self) - 2;
 		
-		int chpos = liqfont_textfitinside(font,cap,mx);
+		
+		//##########################
+		// this tells me where abouts I am on a single line
+		int mx = args->mex - liqcell_getx(self) - 8;		// available space per line
+		int my = args->mey - liqcell_gety(self) - 4;
+		int chpos = liqfont_textfitinside(font,cap,mx);		// char pos of selection
+		
+		
+		//##########################
+		// count all the lines	
+		#define linemax 128
+		char *linestarts[linemax];
+		int lineheight = liqfont_textheight(font);
+		int lineoffsets[linemax];
+		int linelengths[linemax];
+		int linecount=0;	
+		char *c = cap;
+		while(c && *c)
+		{
+			int tl = strlen(c);		// total length remaining
+			int lc = liqfont_textfitinside(font, c, liqcell_getw(self)-4 );
+					if(lc<tl)
+					{
+						int le = lc;
+						while(le>0)
+						{
+							switch(c[le-1])
+							{
+								case ' ':
+								case ',':
+								case ';':
+								case ':':
+								case '.':
+									le--;
+									break;
+								default:
+									goto fin;
+							}
+						}
+						fin:
+						if(le>0)lc=le;
+						while(c[lc]==' ')lc++;
+					}	
+			linestarts[linecount] = c;
+			lineoffsets[linecount] = c-cap;
+			linelengths[linecount] = lc;
+			linecount++;
+			c=&c[lc];
+		}
+		
+		
+		
+		
+		//##########################
+		// work out which line the mouse has hit
+		int lx=mx;
+		int ly=0;
+		
+		ly = my / lineheight;
+		//liqapp_log("mx=%3i, my=%3i, chpos=%3i   lx=%3i, ly=%3i",mx,my,chpos, lx,ly);
+		
+		if(ly>=linecount)ly=linecount-1;
+		
+		if(ly>=0)
+		{
+			// adjust chpos to make sure now we are selecting from the correct line
+			chpos = lineoffsets[ly] + liqfont_textfitinside(font, linestarts[ly] ,mx);
+		}
+		
+		
+		
+		
+		
+		
 										  
 		// neat :) i know where the mouse clicked (left aligned text only...)
 		// todo: handle other alignments
@@ -187,8 +209,8 @@ int textbox_clear(liqcell *textbox)
 		char *caption = liqcell_getcaption(self);
 		int captionlen = strlen(caption);
 		
-		char *key = args->keystring;
-		if(!key)key="";
+		char *key =strdup( args->keystring ? args->keystring : "");
+		//if(!key)key="";
 		if(*key && *key<32)
 		{
 			if(*key==10)
@@ -199,7 +221,7 @@ int textbox_clear(liqcell *textbox)
 				// Wed Aug 19 00:23:17 2009 lcuk : alternative is a default button as in visual basic
 				// Wed Aug 19 00:23:41 2009 lcuk : how do i find the related default button though within the system
 				liqcell_handlerrun(self,"keypress_enter",NULL);
-				key="";
+				free(key);	key=strdup("");
 			}
 			if(*key==8 || *key==9)
 			{
@@ -208,7 +230,7 @@ int textbox_clear(liqcell *textbox)
 			else
 			{
 				// ack! ignore these in single line textbox!
-				key="";
+				free(key);	key=strdup("");
 			}
 		}
 
@@ -275,7 +297,36 @@ int textbox_clear(liqcell *textbox)
 					liqcell_propseti(  self,  "selstart",  selstart);
 					liqcell_propseti(  self,  "sellength", sellength);
 					liqcell_propseti(  self,  "cursorpos", cursorpos);
-				}	
+				}
+				else
+				{
+				
+
+					if(args->keycode==120 && (args->keymodifierstate&4))
+					{
+						liqapp_log("key CTRL X :: CUT");
+						if(liqclip){free(liqclip);liqclip=NULL;}
+						liqclip = strndup(&caption[selstart],sellength);
+						free(key);	key=strdup(""); keylen = strlen(key);
+						goto selch;
+					}
+					if(args->keycode==99 && (args->keymodifierstate&4))
+					{
+						liqapp_log("key CTRL C :: COPY");
+						if(liqclip){free(liqclip);liqclip=NULL;}
+						liqclip = strndup(&caption[selstart],sellength);
+						free(key);
+						return 0;
+					}
+	
+					if(args->keycode==118 && (args->keymodifierstate&4))
+					{
+						liqapp_log("key CTRL V :: PASTE");
+						free(key); key=strdup(liqclip?liqclip:"");
+						keylen = strlen(key);
+						goto selch;
+					}
+				}
 
 			}
 			else
@@ -284,15 +335,15 @@ int textbox_clear(liqcell *textbox)
 				if(*key==8)
 				{
 					// delete ;)
-					key="";
-					keylen=0;
+					free(key);	key=strdup(""); keylen = strlen(key);
 					if(selstart>0 && sellength==0)
 					{
 						selstart--;
 						sellength++;
 					}
 				}
-			
+
+selch:	{ }		
 				//
 				//liqcell_setcaption(self,args->keystring);
 				char *aftersel=&caption[selstart+sellength];
@@ -301,6 +352,14 @@ int textbox_clear(liqcell *textbox)
 				// then the result is start..selstart
 				// newbit
 				// selstart+sellen..end
+				
+				
+				int maxlen = liqcell_propgeti(  self,"maxlength",0);
+				if(maxlen>0)
+				{
+					if( (selstart + keylen + aftersellen)>maxlen ) keylen = maxlen-(selstart+aftersellen);
+					if(keylen<0)keylen=0;
+				}
 				
 				
 				// !-- BUG FIX BY ZACH HABERSANG -- !
@@ -348,7 +407,7 @@ int textbox_clear(liqcell *textbox)
 			
 		}
 		
-		
+		if(key)free(key);
 		return 0;
 
 	}
@@ -430,10 +489,18 @@ liqcell *textbox_create()
 	{
 			
 		liqcell_setfont(   self,  liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
-		liqcell_propsets(  self,  "backcolor", "rgb(100,255,150)" );
-		liqcell_propsets(  self,  "textcolor", "rgb(20,30,40)" );
-		liqcell_propsets(  self,  "bordercolor", "rgb(255,255,255)" );
-		
+		//liqcell_propsets(  self,  "backcolor", "rgb(100,255,150)" );
+		//liqcell_propsets(  self,  "textcolor", "rgb(20,30,40)" );
+		//liqcell_propsets(  self,  "bordercolor", "rgb(255,255,255)" );
+
+        liqcell_propsets(  self,  "textcolor", "rgb(0,0,0)" );
+		//liqcell_setimage(  self,  liqimage_cache_getfile("/usr/share/liqbase/onedotzero/media/2_text_back.png", 0,0,1) );
+        //liqcell_setimage(  self,  liqimage_cache_getfile("/usr/share/liqbase/onedotzero/media/2.message/message_input_field.png", 0,0,1) );
+		liqcell_propseti(  self,  "lockaspect",  0 );
+		//liqcell_propremoves(  self,  "bordercolor" );
+		//liqcell_propremoves(  self,  "backcolor" );
+				
+		liqcell_propseti(  self,  "maxlength",  140 );
 
 		liqcell_propseti(  self,  "selstart",  0 );
 		liqcell_propseti(  self,  "sellength", 0 );
@@ -457,15 +524,7 @@ liqcell *textbox_create()
 		liqcell_propseti(vkbd_command, "textaligny", 2);
 		liqcell_propseti(vkbd_command, "lockaspect", 1);
 		
-		if( strcasecmp("RX-34", liqapp_hardware_product_get() ) ==0 )
-		{
-			// keep visible
-		}
-		else
-		{
-			// hide
-			liqcell_setvisible(vkbd_command,0);
-		}
+		liqcell_setvisible(vkbd_command,0);		// Wed Aug 19 19:08:20 2009 lcuk : proper way would be checking for no keyboard..
 		
 		liqcell_child_insert(self, vkbd_command);
 	}
