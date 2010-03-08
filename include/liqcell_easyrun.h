@@ -115,7 +115,9 @@ typedef struct liqcellmouseeventargs
 	int         multiy;
 	int         multiw;
 	int         multih;
-
+	
+	int         multifx;		// first initial report obtained for the 2nd finger
+	int         multify;		// important to know we are now larger than we were at the start
 
 }
 	liqcellmouseeventargs;

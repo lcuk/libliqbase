@@ -40,6 +40,9 @@ int liqimage_find_thumbnail_for(char *resultbuffer,int resultsize,char *bigimage
 	//snprintf(resultbuffer,resultsize,"%s", bigimagefilename);
 	//return 0;
 
+	if(resultsize<=0)return -1;
+	if(!resultbuffer)return -2;
+	*resultbuffer = 0;
 
 	char imageuri[FILENAME_MAX+10];
 	
@@ -58,6 +61,7 @@ int liqimage_find_thumbnail_for(char *resultbuffer,int resultsize,char *bigimage
 			snprintf (&imageuri_md5[i*2],3, "%02x", (unsigned int) checksum[i]);
 			//printf ("%02x  %i", (unsigned int) checksum[i],i);
 		}
+		
 		imageuri_md5[32]=0;
 		
 	//liqapp_log("liqimage_find_thumbnail_for: checking for '%s' %s",imageuri_md5,imageuri);
@@ -66,18 +70,23 @@ int liqimage_find_thumbnail_for(char *resultbuffer,int resultsize,char *bigimage
 	
 	snprintf(thumbpath,sizeof(thumbpath),"%s/.thumbnails/cropped/%s.jpeg",app.homepath,imageuri_md5);
 	
+	// change of character. the hashed thumbnail path is returned always
+	// the result value returns its existence.
+	// some functions may want the icon itself whether or not it exists.
+	snprintf(resultbuffer,resultsize,"%s", thumbpath);
 	
 	if(liqapp_fileexists(thumbpath))
 	{
 		// thumb exists
-		snprintf(resultbuffer,resultsize,"%s", thumbpath);
+		// already copied whatever the result
+		//snprintf(resultbuffer,resultsize,"%s", thumbpath);
 		return 0;
 		
 	}
 	// thumb does not exist
 	// lets not waste time (argggg)
 	//snprintf(resultbuffer,resultsize,"%s", bigimagefilename);
-	return -1;
+	return -3;
 
 }
 

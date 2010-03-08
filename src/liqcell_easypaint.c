@@ -601,8 +601,96 @@ void liqcell_check_for_driedup(liqcell *self)
 	
 }
 
+void liqcell_easypaint_int(liqcell *self,liqcliprect *crorig,    int x,int y,    int w,int h);
+void liqcell_easypaintkkk(liqcell *self,liqcliprect *crorig,    int x,int y,    int w,int h)
+{
 
+	if(w<1 || h<1)
+	{
+		//liqapp_log("size0 bail!");
+		liqcell_check_for_driedup(self);
+		return;
+	}
+	if(self->w==0 || self->h==0)
+	{
+		//liqapp_log("box0 bail!");
+		liqcell_check_for_driedup(self);
+		return;
+	}
+	if(!self->visible)
+	{
+		//liqapp_log("vis bail!");
+		liqcell_check_for_driedup(self);
+		return;
+	}
+	// shit this is at wrong location, theres many reasons to bailout which this does not handle
+	
+
+	liqcliprect *crvis= liqcliprect_new();
+	liqcliprect_copy(crvis,crorig);
+	liqcliprect_shrink(crvis,x,y,x+w,y+h);
+
+//unsigned long 	tz0=liqapp_GetTicks();
+
+__tz_one("clipgot");
+	//liqapp_log("easypaint 1");
+
+	if(!liqcliprect_isvalid(crvis))
+	{
+		//liqapp_log("cr bail!");
+		liqcell_check_for_driedup(self);
+		liqcliprect_release(crvis);
+		return;
+	}
+
+	// allow gravity to dictate the angle
+	// or for this demo flip it upsidedown
+	int angle=0;
+	if(w<=400 && h<=240)angle=90;
+	if(angle==0)
+	{
+		liqcell_easypaint_int(self,crorig,x,y,w,h);
+	}
+	else
+	if(angle==90)
+	{
+		// make a bitmap(h*w), draw on it, rotblit it into space
+		//liqcell_easypaint_int(self,crorig,x,y,w,h);
+
+
+		liqapp_log("...creating image %i,%i",h,w);	
+		liqimage *img = liqimage_newatsize(h,w,0);
+		
+		liqapp_log("...creating cliprect");
+		liqcliprect *cr = liqcliprect_newfromimage(img);
+		
+		liqapp_log("rendering image.." );
+		liqcliprect_hold(cr);
+		liqcell_easypaint_int(self,cr,0,0,h,w);
+		
+		
+		liqapp_log("rot blitting image.." );
+		// todo.
+		
+		liqcliprect_drawimagecolor(crorig, img, x,y, w,h, 0);
+		
+		liqapp_log("...releasing cr");
+		liqcliprect_release(cr);
+		
+		liqapp_log("...releasing image");
+		liqimage_release(img);		
+		
+		liqapp_log("...fin");
+
+	}
+	
+	liqcliprect_release(crvis);
+}
 void liqcell_easypaint(liqcell *self,liqcliprect *crorig,    int x,int y,    int w,int h)
+{
+	liqcell_easypaint_int(self,crorig,x,y,w,h);
+}
+void liqcell_easypaint_int(liqcell *self,liqcliprect *crorig,    int x,int y,    int w,int h)
 {
 
 
@@ -629,6 +717,8 @@ __tz_one("start");
 
 
 //char cy,cu,cv;
+/*
+
 	if(w<1 || h<1)
 	{
 		//liqapp_log("size0 bail!");
@@ -647,7 +737,7 @@ __tz_one("start");
 		liqcell_check_for_driedup(self);
 		return;
 	}
-	
+*/	
 	//liqapp_log("easypaint 0");
 	
 __tz_one("sizeok");

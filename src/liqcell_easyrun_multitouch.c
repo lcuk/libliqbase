@@ -167,6 +167,12 @@ int liqcell_easyrun_mouseeventargs_multitouchprepare(liqcell *self, liqcellmouse
 																	);
 										liqcell_setvisible(userf3,liqcell_getvisible(userf2));
 
+										// store this first time away
+										// this is the first identification of a second finger we have
+										args->multifx = liqcell_getcx(userf1);
+										args->multify = liqcell_getcy(userf1);
+
+
 									}
 									else
 									{

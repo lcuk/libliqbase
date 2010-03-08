@@ -258,8 +258,12 @@ int liqx11overlay_hide(liqx11overlay *self)
 	if(!self->yuv_shminfo_attached) return 0;
 
 	liqapp_log("x11overlay hiding");
+	
+	XFlush (self->dpy);
 
 	XShmDetach(self->dpy,&self->yuv_shminfo);
+	
+	XFlush (self->dpy);
 
 	self->yuv_shminfo_attached=0;
 

@@ -439,6 +439,10 @@ int liqcanvas_refreshdisplay()
 int liqcanvas_minimize()
 {
 	//liqcanvas_xv_minimize();
+	
+	
+	liqx11info_minimize(  liqcanvas_getx11info() );
+	
 	return 0;
 }
 

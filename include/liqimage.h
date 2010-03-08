@@ -98,6 +98,12 @@ liqimage *  liqimage_getthumbnail(          liqimage *original,int maxw,int maxh
 					//{
 						// w00t!   (hello btw)
 					//}
+					// now returns the expected thumbnail whether or not it exists
+					// return value 
+					//  0 == exists and matches
+					// -1 no datasize
+					// -2 no data
+					// -3 no file
 int liqimage_find_thumbnail_for(char *resultbuffer,int resultsize,char *bigimagefilename);
 
 #endif
