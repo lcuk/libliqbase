@@ -196,18 +196,26 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 
 
 XvPortID  xvport_num = x11_get_first_xvport(myx11info->mydisplay);
-int       xvoverlaycolorkey=0;
+int       xvoverlaycolorkey=-1;
 
         Atom xv_colorkey = XInternAtom(myx11info->mydisplay, "XV_COLORKEY", 0);
         XvGetPortAttribute(myx11info->mydisplay, xvport_num, xv_colorkey, &xvoverlaycolorkey);
+		
+		
+		
+int       xvautopaintcolorkey=-1;
+
+        Atom xv_autopaintcolorkey = XInternAtom(myx11info->mydisplay, "XV_AUTOPAINT_COLORKEY", 0);
+        XvGetPortAttribute(myx11info->mydisplay, xvport_num, xv_autopaintcolorkey, &xvautopaintcolorkey);
 
 
-
+	liqapp_log("xv_colorkey %d,%d",xvoverlaycolorkey,xvautopaintcolorkey);
 	xvoverlaycolorkey=1;
-
 	XvSetPortAttribute(myx11info->mydisplay, xvport_num, XInternAtom(myx11info->mydisplay, "XV_COLORKEY", True), xvoverlaycolorkey );
 
 
+	xvautopaintcolorkey=1;
+	XvSetPortAttribute(myx11info->mydisplay, xvport_num, XInternAtom(myx11info->mydisplay, "XV_AUTOPAINT_COLORKEY", True), xvautopaintcolorkey );
 	
 
 
@@ -600,10 +608,35 @@ foo:
 					liqapp_log("x11.event.ConfigureNotify (%i,%i)-step(%i,%i) above=%d overrideredirect=%d",
 							   xev.xconfigure.x,xev.xconfigure.y,xev.xconfigure.width,xev.xconfigure.height,
 							   xev.xconfigure.above,xev.xconfigure.override_redirect);
+					
 					if( myx11info->myisvisibleflag==0 && myx11info->myisfocusflag==0)
 					{
 						break;
 					}					
+					if( myx11info->myisvisibleflag==0 && myx11info->myisfocusflag==1)
+					{
+						liqapp_log("x11.eep");
+							if(myx11info->myoverlay)
+							{				
+								//liqapp_sleep(100);
+								//xev.xconfigure.width
+								liqx11overlay_close(myx11info->myoverlay);
+								myx11info->myoverlay = NULL;
+								//isbusyrendering=0;
+							}
+							if(!myx11info->myoverlay)
+							{
+							//	liqapp_sleep(100);
+								myx11info->myoverlay = &myx11info->myoverlaycore;
+								liqx11overlay_init(myx11info->myoverlay, myx11info->mydisplay,myx11info->myscreen,myx11info->mywindow,myx11info->mygc,   canvas.pixelwidth,canvas.pixelheight);
+								//isbusyrendering=0;
+							}
+							liqx11overlay_show(myx11info->myoverlay);
+							myx11info->myisvisibleflag = 1;
+							cover_image_release(myx11info);			
+							ev->type = LIQEVENT_TYPE_RESIZE;
+							break;
+					}
 					
 					if( myx11info->myisvisibleflag==0 && myx11info->myisfocusflag==0)
 					{
@@ -747,6 +780,7 @@ foo:
 								xev.xcrossing.same_screen,
 								xev.xcrossing.window,
 								xev.xcrossing.subwindow);
+					
 					/*
 					if( (xev.xcrossing.focus==0) && (myx11info->myisfocusflag==0))
 					{
@@ -1075,7 +1109,7 @@ foo:
 				case 69:
 				case 76:
 				case 77:
-						//liqapp_log("x11.event.XShmCompletionEvent");
+						liqapp_log("x11.event.XShmCompletionEvent");
 						//isbusyrendering=0;
 						ev->type = LIQEVENT_TYPE_REFRESHED;
 						break;	

@@ -2101,7 +2101,7 @@ moar:
 // 20090520_014021 lcuk : show frame information
 
 
-/*
+
 			static liqfont *infofont=NULL;
 			if(!infofont)
 			{
@@ -2119,7 +2119,7 @@ moar:
 				int hh=liqfont_textheight(infofont);
 				liqcliprect_drawtextinside_color(targetcr, infofont,  0,0, targetsurface->width,hh, buff,0, 255,128,128);
 			}
- */ 
+  
  		
 			//liqapp_log("render refreshing");
 			
