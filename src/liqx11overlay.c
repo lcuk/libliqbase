@@ -38,8 +38,6 @@ extern XvImage  *	XvShmCreateImage(Display*, XvPortID, int, char*, int, int, XSh
 //#############################################################
 
 
-
-
 int liqx11overlay_init(liqx11overlay *self, Display *dpy, int screen, Window window, GC gc, int attrswidth,int attrsheight)
 {
 	liqapp_log("x11overlay init begin");
@@ -116,6 +114,7 @@ if(self->yuv_width==480 && self->yuv_height==800)
 	{
 		{ return liqapp_errorandfail(-1,"canvas No XV Port on default adapter"); }	
 	}
+
 
 	//################################################# setup shared memory access
 	
@@ -229,7 +228,7 @@ int liqx11overlay_show(liqx11overlay *self)
 	
 	if(self->yuv_shminfo_attached) return 0;
 	
-	//liqapp_sleep(500);
+	liqapp_sleep(500);
 	
 	liqapp_log("x11overlay showing");
 	
@@ -284,8 +283,8 @@ int liqx11overlay_refreshdisplay(liqx11overlay *self)
 	//liqapp_log("x11overlay refresh begin wh(%i,%i) ",self->yuv_image->width, self->yuv_image->height);
 	if(!self->yuv_shminfo_attached) return 0;
 	
-    //liqcliprect_drawcolorcube( liqcanvas_getcliprect(), 0,0, self->yuv_image->width, self->yuv_image->height,128);
-
+   // liqcliprect_drawcolorcube( liqcanvas_getcliprect(), 0,0, self->yuv_image->width, self->yuv_image->height,128);
+	//liqapp_sleep(1000);
 	int res=0;
 	
 //	if(self->yuv_image->width==480 && self->yuv_image->height==480)

@@ -65,6 +65,35 @@ void cover_image_blit(liqx11info *myx11info)
 
 //############################################################# 
 
+int x11_get_first_xvport(Display *display)
+{
+	
+	
+	
+	//################################################# get adapter info and find our port
+	int             ret;
+	unsigned int	p_num_adaptors;
+	XvAdaptorInfo*  ai;
+	
+
+	ret = XvQueryAdaptors(display, DefaultRootWindow(display), &p_num_adaptors, &ai);  
+	if (ret != Success) 
+	{
+		{ return liqapp_errorandfail(-1,"x11_get_first_xvport XvQueryAdaptors failed"); }
+	}
+
+	if(p_num_adaptors==0) 
+	{
+		{ return liqapp_errorandfail(-1,"x11_get_first_xvport XvQueryAdaptors returned no adapters"); }
+	}
+    
+    liqapp_log("x11_get_first_xvport Xv p_num_adaptors=%i  ai[0].base_id=%d",p_num_adaptors, ai[0].base_id);
+	
+	return ai[0].base_id;
+	
+}
+
+
 static void x11_set_fullscreen_state(Display *display, Window window, int action)
 {
     XEvent xev;
@@ -81,7 +110,8 @@ static void x11_set_fullscreen_state(Display *display, Window window, int action
     xev.xclient.data.l[3]	= 0;
     xev.xclient.data.l[4]	= 0;
     /* finally send that damn thing */
-    if( !XSendEvent(display, DefaultRootWindow(display), False, SubstructureRedirectMask | SubstructureNotifyMask, &xev) )
+  //  if( !XSendEvent(display, DefaultRootWindow(display), False, SubstructureRedirectMask | SubstructureNotifyMask, &xev) )
+    if( !XSendEvent(display, DefaultRootWindow(display), False, SubstructureRedirectMask , &xev) )
 	{
 		{ liqapp_errorandfail(-1,"canvas x11 could not set fullscreen"); }
     }
@@ -132,7 +162,7 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 	myx11info->myoverlay     = NULL;
 	myx11info->mydisplay     = XOpenDisplay("");
 	myx11info->myscreen      = DefaultScreen(myx11info->mydisplay);
-	myx11info->mywindow      = NULL;
+	myx11info->mywindow      = 0;//NULL;
 	
 	
 	myx11info->myinnotifyflag=0;
@@ -162,7 +192,22 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 	}
 	
 	
-	
+
+
+
+XvPortID  xvport_num = x11_get_first_xvport(myx11info->mydisplay);
+int       xvoverlaycolorkey=0;
+
+        Atom xv_colorkey = XInternAtom(myx11info->mydisplay, "XV_COLORKEY", 0);
+        XvGetPortAttribute(myx11info->mydisplay, xvport_num, xv_colorkey, &xvoverlaycolorkey);
+
+
+
+	xvoverlaycolorkey=1;
+
+	XvSetPortAttribute(myx11info->mydisplay, xvport_num, XInternAtom(myx11info->mydisplay, "XV_COLORKEY", True), xvoverlaycolorkey );
+
+
 	
 
 
@@ -177,6 +222,10 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 	
 		mybackground  = BlackPixel(myx11info->mydisplay, myx11info->myscreen);
 		myforeground  = WhitePixel(myx11info->mydisplay, myx11info->myscreen);
+		
+		liqapp_log("colors Back=%d fore=%d key=%d",mybackground,myforeground,xvoverlaycolorkey);
+		
+		mybackground = xvoverlaycolorkey;
 
 
 	
@@ -235,8 +284,9 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 	// ################### good x11 info
 	// http://www.openmash.org/lxr/source/xlib/X11/X.h?c=tk8.3#L99
 	// http://static.cray-cyber.org/Documentation/NEC_SX_R10_1/G1AE02E/CHAP10.HTML
-	
-	
+
+
+
  	//################################################# init normal x11 handler mask
 	// set the actual event mask we normally want for this window
 	XSelectInput(	myx11info->mydisplay,myx11info->mywindow,
@@ -270,16 +320,28 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
     myx11info->my_WM_DELETE_WINDOW = XInternAtom(myx11info->mydisplay, "WM_DELETE_WINDOW", True);
     XSetWMProtocols(myx11info->mydisplay, myx11info->mywindow, &myx11info->my_WM_DELETE_WINDOW, 1);
 
+		
+	
+	//################################################# lets make sure we are top of the pile
+	
+	XMapRaised(		myx11info->mydisplay,myx11info->mywindow);
+		
+	
+	if(fullscreen)
+	{
+		liqapp_log("x11info going fullscreen");
+		x11_set_fullscreen_state(myx11info->mydisplay,myx11info->mywindow,1);
+	}
 
-	
+	XEvent event;
+	do 
+	{
+		XNextEvent(myx11info->mydisplay, &event);
+		liqapp_log("looping %i  %i",event.type,MapNotify);
+	}
+	while (event.type != MapNotify || event.xmap.event != myx11info->mywindow);
 
-	
-	
-	
-	
-	
 	//################################################# put the overlay in place :)
-	
 
 	liqapp_log("x11info allocating overlay");
 	
@@ -291,44 +353,6 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 
 	liqapp_log("x11info showing overlay");
 	liqx11overlay_show(myx11info->myoverlay);
-		
-		
-		
-		
-		
-	//################################################# lets make sure we are top of the pile
-	
-	XMapRaised(		myx11info->mydisplay,myx11info->mywindow);
-	
-/*	
-		XEvent event;
-		do 
-		{
-			XNextEvent(myx11info->mydisplay, &event);
-		}
-		while (event.type != MapNotify || event.xmap.event != myx11info->mywindow);
-	
-*/
-	
-
-	if(fullscreen)
-		x11_set_fullscreen_state(myx11info->mydisplay,myx11info->mywindow,1);
-	//isfullscreen=1;	
-	
-	
-	
-		
-		
-	
-	//liqapp_log("x11info refreshing overlay");
-	//liqx11overlay_refreshdisplay(myx11info->myoverlay);
-
-	
-	//XMapRaised(		myx11info->mydisplay,myx11info->mywindow);
-	
-	
-    //liqx11info_regrab_focus(myx11info);
-
 
 	
 	return 0;
@@ -346,9 +370,7 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 int liqx11info_close(liqx11info *myx11info)
 {
 	
-	
-	
-	liqapp_log("shutting down");
+	liqapp_log("x11 shutting down");
 	
 	
 
@@ -374,8 +396,6 @@ int liqx11info_close(liqx11info *myx11info)
 
 int liqx11info_eventgetcount(liqx11info *myx11info)
 {
-//	return XPending(myx11info->mydisplay);
-
 	int evc=XEventsQueued(myx11info->mydisplay, QueuedAfterFlush);
 	//liqapp_log("evc %i",evc);
 	return evc;
@@ -516,6 +536,12 @@ unsigned long ticksnow=ev->ticks;
 	}
 	
 	
+	// pan out, visibility gone
+	// THEN(1)pan to other app, focus gone too
+	// THEN(2)pan back in, configurenotify should restore visibility
+	
+	
+	
 	//myx11info->myisvisibleflag = 1;
 	
 foo:
@@ -527,13 +553,14 @@ foo:
 	
 	liqx11info_eventgetnext( myx11info, &xev );
 	
-	
+	//http://linux.die.net/man/3/xanyevent
 	
 	int keylen=0;
-	//liqapp_log("xNextEvent %i",xev.type);
+	liqapp_log("x11.NextEvent %i  dpy=%d window=%d root=%d subwindow=%d,   vis=%d foc=%d",
+			   xev.type,xev.xany.display,xev.xany.window, xev.xcrossing.root,xev.xcrossing.subwindow,
+			   myx11info->myisvisibleflag,myx11info->myisfocusflag);
 	
-	
-	
+
 	
 	
 			switch (xev.type)
@@ -543,25 +570,25 @@ foo:
 				case ClientMessage:
 					if (xev.xclient.data.l[0] == myx11info->my_WM_DELETE_WINDOW)
 					{
-						liqapp_log("event.WM_DELETE_WINDOW");
+						liqapp_log("x11.event.WM_DELETE_WINDOW");
 						// deleting window
 						// done=1;
 						// Sat Aug 29 20:54:44 2009 lcuk : find much cleaner way to handle this
 						exit(0);
 						break;
 					}
-					liqapp_log("event.ClientMessage");
+					liqapp_log("x11.event.ClientMessage");
 					break;
 					
 						
 				//############################################ Child lifetime events 
 	
 				case CreateNotify:
-					liqapp_log("event.CreateNotify");
+					liqapp_log("x11.event.CreateNotify");
 					break;
 				
 				case DestroyNotify:
-					liqapp_log("event.DestroyNotify");
+					liqapp_log("x11.event.DestroyNotify");
 					break;			
 				
 				//############################################ Notify events: principle actors in arranging the window 
@@ -570,8 +597,20 @@ foo:
 					// http://tronche.com/gui/x/xlib/events/window-state-change/configure.html
 					// The X server can report ConfigureNotify events to clients wanting information about actual changes to a window's state,
 					// such as size, position, border, and stacking order. 
-					liqapp_log("event.ConfigureNotify (%i,%i)-step(%i,%i)",xev.xconfigure.x,xev.xconfigure.y,xev.xconfigure.width,xev.xconfigure.height );
+					liqapp_log("x11.event.ConfigureNotify (%i,%i)-step(%i,%i) above=%d overrideredirect=%d",
+							   xev.xconfigure.x,xev.xconfigure.y,xev.xconfigure.width,xev.xconfigure.height,
+							   xev.xconfigure.above,xev.xconfigure.override_redirect);
+					if( myx11info->myisvisibleflag==0 && myx11info->myisfocusflag==0)
+					{
+						break;
+					}					
 					
+					if( myx11info->myisvisibleflag==0 && myx11info->myisfocusflag==0)
+					{
+						myx11info->myisvisibleflag=1;
+					}
+
+				
 					
 					//if( !myx11info->myisvisibleflag ) break;
 					
@@ -591,50 +630,72 @@ foo:
 					
 					//liqapp_log("green shortcut"); break;
 					
-					if(myx11info->myoverlay)
-					{				
-						//liqapp_sleep(100);
-
-						//xev.xconfigure.width
-						liqx11overlay_close(myx11info->myoverlay);
-						myx11info->myoverlay = NULL;
-						//isbusyrendering=0;
+					//if( xev.xconfigure.above==0 || xev.xconfigure.above==myx11info->mywindow)
+					//{
+					//	myx11info->myisfocusflag=1;
+					//}
 
 
-					}
-	
-					if(!myx11info->myoverlay)
+					
+					if( ( xev.xconfigure.width == liqcanvas_getwidth() ) &&
+					    ( xev.xconfigure.height == liqcanvas_getheight() ) &&
+						( myx11info->myoverlay ) 
+					  )
 					{
-					//	liqapp_sleep(100);
-						myx11info->myoverlay = &myx11info->myoverlaycore;
-						liqx11overlay_init(myx11info->myoverlay, myx11info->mydisplay,myx11info->myscreen,myx11info->mywindow,myx11info->mygc,   canvas.pixelwidth,canvas.pixelheight);
-						//isbusyrendering=0;
+						//ev->type = LIQEVENT_TYPE_RESIZE;
+						//break;
+						// already at correct dimensions
+					}
+					else
+					{
+							
+						if( myx11info->myisfocusflag )
+						{
+					
+							if(myx11info->myoverlay)
+							{				
+								//liqapp_sleep(100);
+								//xev.xconfigure.width
+								liqx11overlay_close(myx11info->myoverlay);
+								myx11info->myoverlay = NULL;
+								//isbusyrendering=0;
+							}
+			
+							if(!myx11info->myoverlay)
+							{
+							//	liqapp_sleep(100);
+								myx11info->myoverlay = &myx11info->myoverlaycore;
+								liqx11overlay_init(myx11info->myoverlay, myx11info->mydisplay,myx11info->myscreen,myx11info->mywindow,myx11info->mygc,   canvas.pixelwidth,canvas.pixelheight);
+								//isbusyrendering=0;
+							}
+						}
 					}
 					//dirty=1;
 					
-						liqx11overlay_show(myx11info->myoverlay);
-						myx11info->myisvisibleflag = 1;
-						
-						cover_image_release(myx11info);
 					
+				if( myx11info->myisfocusflag )
+				{
+					
+					liqx11overlay_show(myx11info->myoverlay);
+					myx11info->myisvisibleflag = 1;
+					cover_image_release(myx11info);
+				}					
 					ev->type = LIQEVENT_TYPE_RESIZE;
-					
-					
 					// need to update the cr and stuff
 	
 					
 					break;
 				
 				case ReparentNotify:
-					liqapp_log("event.ReparentNotify");
+					liqapp_log("x11.event.ReparentNotify");
 					break;
 				
 				case MapNotify:
-					liqapp_log("event.MapNotify");
+					liqapp_log("x11.event.MapNotify");
 					break;
 				
 				case MappingNotify:
-					liqapp_log("event.MappingNotify");
+					liqapp_log("x11.event.MappingNotify");
 					break;				
 				
 				
@@ -642,10 +703,7 @@ foo:
 	
 	
 				case VisibilityNotify:
-					liqapp_log("event.VisibilityNotify state=%i",xev.xvisibility.state);
-					//liqapp_log("green shortcut"); break;
-					
-					
+					liqapp_log("x11.event.VisibilityNotify state=%i",xev.xvisibility.state);
 					myx11info->myisvisibleflag = (xev.xvisibility.state == 0) || (xev.xvisibility.state==1);
 					if( myx11info->myisvisibleflag )
 					{
@@ -657,6 +715,10 @@ foo:
 							//isbusyrendering=1;
 						}
 						cover_image_release(myx11info);
+						
+						// visible so make this happen..
+						//myx11info->myisfocusflag=1;
+						// occurs when panout
 					}
 					else
 					{
@@ -667,13 +729,43 @@ foo:
 							liqx11overlay_hide(myx11info->myoverlay);
 							//liqx11overlay_refreshdisplay(myx11info->myoverlay);
 						}
+						// not visible so force this..
+						//myx11info->myisfocusflag=0;
 						
 					}
 					break;				
 		
 				//############################################ focus
-				case EnterNotify:					
-					liqapp_log("event.EnterNotify");
+				case EnterNotify:
+					//http://tronche.com/gui/x/xlib/events/window-entry-exit/
+					
+					liqapp_log("x11.event.EnterNotify focus=%d state=%d mode=%d detail=%d same_screen=%d window=%d subwindow=%d",
+								xev.xcrossing.focus,
+								xev.xcrossing.state,
+								xev.xcrossing.mode,
+								xev.xcrossing.detail,
+								xev.xcrossing.same_screen,
+								xev.xcrossing.window,
+								xev.xcrossing.subwindow);
+					/*
+					if( (xev.xcrossing.focus==0) && (myx11info->myisfocusflag==0))
+					{
+						// we are potentially being brought back to life
+						// strongly dislike all this on/off
+						//liqx11info_regrab_focus(myx11info);
+						break;
+					}
+					else
+					{
+						if( !myx11info->myisvisibleflag ) break;
+					}
+					*/
+
+					if( myx11info->myisvisibleflag==0 && myx11info->myisfocusflag==0)
+					{
+						myx11info->myisvisibleflag=1;
+						myx11info->myisfocusflag=1;
+					}		
 					
 					if( !myx11info->myisvisibleflag ) break;
 					
@@ -701,7 +793,7 @@ foo:
 					break;				
 		
 				case LeaveNotify:
-					liqapp_log("event.LeaveNotify");
+					liqapp_log("x11.event.LeaveNotify");
 					
 					if( !myx11info->myisvisibleflag ) break;
 					
@@ -722,7 +814,7 @@ foo:
 	
 				//############################################ focus
 				case FocusIn:					
-					liqapp_log("event.FocusIn");
+					liqapp_log("x11.event.FocusIn");
 					//liqapp_log("green shortcut"); break;
 					myx11info->myisfocusflag=1;
 						if((myx11info->myoverlay))
@@ -736,7 +828,7 @@ foo:
 					break;				
 		
 				case FocusOut:
-					liqapp_log("event.FocusOut");
+					liqapp_log("x11.event.FocusOut");
 					myx11info->myisfocusflag=0;
 	
 						if((myx11info->myoverlay))
@@ -744,8 +836,8 @@ foo:
 							//liqx11overlay_hide(myx11info->myoverlay);
 							//liqx11overlay_refreshdisplay(myx11info->myoverlay);
 
-							liqx11overlay_show(myx11info->myoverlay);
-							liqx11overlay_refreshdisplay(myx11info->myoverlay);
+							//liqx11overlay_show(myx11info->myoverlay);
+							//liqx11overlay_refreshdisplay(myx11info->myoverlay);
 							//isbusyrendering=1;
 						}
 						
@@ -754,7 +846,7 @@ foo:
 				//############################################ render
 				
 				case Expose:
-					liqapp_log("event.expose count=%i         //render()",xev.xexpose.count);
+					liqapp_log("x11.event.expose count=%i         //render()",xev.xexpose.count);
 					//liqapp_log("green shortcut"); break;
 					
 					cover_image_blit(myx11info);
@@ -983,7 +1075,7 @@ foo:
 				case 69:
 				case 76:
 				case 77:
-						//liqapp_log("event.XShmCompletionEvent");
+						//liqapp_log("x11.event.XShmCompletionEvent");
 						//isbusyrendering=0;
 						ev->type = LIQEVENT_TYPE_REFRESHED;
 						break;	
