@@ -551,6 +551,17 @@ for(idx=0;idx<5;idx++)
 int		vgraph_drawtext(       vgraph *self, int x, int y, char *text        )
 {
 	if(!self->font)return -1;
+	if(!text)return -1;
+	if(!*text) return 0;
+
+	x = self->scalex + (x * self->scalew / self->windoww);
+	y = self->scaley + (y * self->scaleh / self->windowh);
+	//w = (w * self->scalew / self->windoww);
+	//h = (h * self->scaleh / self->windowh);
+	
+	unsigned char *yuva = (unsigned char *)&self->pencolor;
+	
+	liqcliprect_drawtext_color( vgraph_getcliprect(self),self->font,   x,y, text,  yuva[0],yuva[1],yuva[2]);
 	
 	return 0;
 }

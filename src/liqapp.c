@@ -601,7 +601,17 @@ int 		liqapp_init(int argc, char* argv[],char *title,char *version)
 	liqapp_log("You passed %i arguments",argc);
 	int i;
 	for(i=0;i<argc;i++)
+	{
 		liqapp_log("Argument %i = %s",i,argv[i]);
+		if( strcmp(argv[i],"--showdebugboxes")==0)
+		{
+			liqcell_showdebugboxes = 1;
+		}
+		if( strcmp(argv[i],"--showfps")==0)
+		{
+			liqcell_showfps = 1;
+		}		
+	}
 
 
 
@@ -736,6 +746,16 @@ int 		liqapp_init(int argc, char* argv[],char *title,char *version)
 	liqapp_log("app.username     =%s",app.username);
 	liqapp_log("#############");
 
+
+	// run tests :)
+	if(strcmp(app.title,"liqflow")==0)
+	{
+		liqcell_parse_liqbrain_test();
+	}
+	
+	liqcell_showfps =        1 == atoi(liqapp_pref_getvalue_def("showfps","0"));
+	liqcell_showdebugboxes = 1 == atoi(liqapp_pref_getvalue_def("showdebugboxes","0"));
+	
 	return 0;
 	
 }

@@ -1199,6 +1199,9 @@ int    	liqcell_getinnerh(liqcell *self)
 }
 
 
+
+
+
 //#########################################################################
 //#########################################################################
 //######################################################################### cell linkage
@@ -1393,6 +1396,24 @@ int liqcell_child_removeallvisual(liqcell *self)
 	}
 	return 0;
 }
+
+/**
+ * Remove all children of a specified class
+ * @param self The liqcell to remove the children of
+ * @return int Success or Failure
+ */
+int liqcell_child_removeallclass(liqcell *self, char *classname)
+{
+	liqcell *c=liqcell_getlinkchild(self);
+	while(  c   )
+	{
+		liqcell *d = c->linknext;
+		if( liqcell_isclass(c,classname) ) liqcell_child_remove(self,c);
+		c=d;
+	}
+	return 0;
+}
+
 
 /**
  * Remove a child from the provided parent

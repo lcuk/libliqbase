@@ -114,6 +114,7 @@ int liqfont_setview(liqfont *self,float scalew,float scaleh);
 
 liqfontglyph *liqfont_getglyph(liqfont *self,int glyphindex);	// release afterwards : liqfontglyph_release
 int liqfont_getglyphwidth(liqfont *self,int glyphindex);		// automatic handling
+int liqfont_getglyphheight(liqfont *self,int glyphindex);
 
 int liqfont_textfitinside(liqfont *self,char *data,int availablewidth);
 int liqfont_textwidth(liqfont *self,char *data);

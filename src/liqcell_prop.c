@@ -75,6 +75,26 @@ int liqcell_propremovei(liqcell *self,char *name)
 	return -1;
 }
 
+
+/**
+ * Remove a pointer prop
+ * @param self The liqcell to remove the prop from
+ * @param name The prop to remove
+ * @return int Success or Failure
+ */
+int liqcell_propremovep(liqcell *self,char *name)
+{
+	liqcell *c=liqcell_local_lookup_nameclass(self,name,"prop.p");
+	if(c)
+	{
+		liqcell_child_remove(self,c);
+		//liqcell_release(c);
+		return 0;
+	}
+	return -1;
+}
+
+
 /**
  * Get an integer prop
  * @param self The liqcell to get the prop from
@@ -93,6 +113,52 @@ int liqcell_propgeti(liqcell *self,char *name,int valueifnotfound)
 	// if i find a match there i should perhaps duplicate it here?
 	return valueifnotfound;
 }
+
+/**
+ * Get a pointer prop
+ * @param self The liqcell to get the prop from
+ * @param name The name of the prop to get
+ * @param valueifnotfound Return this value if prop not found
+ * @return int The integer prop or valueifnotfound
+ */
+void *liqcell_propgetp(liqcell *self,char *name,void *valueifnotfound)
+{
+	liqcell *c=liqcell_local_lookup_nameclass(self,name,"prop.p");
+	if(c)
+	{
+		return (void *)c->tag;
+	}
+	// i should now also check the ancestor
+	// if i find a match there i should perhaps duplicate it here?
+	return valueifnotfound;
+}
+
+
+/**
+ * Create a child liqcell for the parent (self) with .tag defined as the
+ * pointer value provided. This uses liqcell nameclass "prop.i".
+ * 
+ * @param self The parent liqcell
+ * @param name The name of the prop
+ * @param value The value to set the child's .tag to
+ * @return pointer value
+ * 
+ */
+void * liqcell_propsetp(liqcell *self,char *name,void * value)
+{
+	liqcell *c=liqcell_child_lookup_nameclass(self,name,"prop.p");
+	if(!c) c = liqcell_child_insert(self, liqcell_quickcreatenameclass(name,"prop.p") );
+	if(c)
+	{
+		c->tag = (unsigned int)value;
+	}
+	else
+	{
+		
+	}
+	return value;
+}
+
 
 /**
  * Create a child liqcell for the parent (self) with .tag defined as the

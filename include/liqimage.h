@@ -106,4 +106,23 @@ liqimage *  liqimage_getthumbnail(          liqimage *original,int maxw,int maxh
 					// -3 no file
 int liqimage_find_thumbnail_for(char *resultbuffer,int resultsize,char *bigimagefilename);
 
+
+
+
+//#########################################################################
+//#########################################################################
+//#########################################################################
+//#########################################################################
+//#########################################################################
+
+// call a simple rotate method on the images
+// the image needs to be defined properly 
+
+int liqimage_rotate(liqimage *self,liqimage *original,int angle);
+
+
+
+
+
+
 #endif

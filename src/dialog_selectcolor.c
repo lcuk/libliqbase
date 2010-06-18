@@ -189,6 +189,11 @@ static int greycube_mouse(liqcell *self, liqcellmouseeventargs *args,liqcell *di
  */	
 static int cmdaccept_click(liqcell *self,liqcellclickeventargs *args, liqcell *dialog_selectcolor)
 {
+
+
+
+	
+	
 	liqcell *greycube1 = liqcell_child_lookup(dialog_selectcolor, "greycube1");
 	liqcell *colorcube1 = liqcell_child_lookup(dialog_selectcolor, "colorcube1");
 	liqcell *picture1 = liqcell_child_lookup(dialog_selectcolor, "picture1");

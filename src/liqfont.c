@@ -231,6 +231,18 @@ int liqfont_getglyphwidth(liqfont *self,int glyphindex)
 	return w;
 }
 
+int liqfont_getglyphheight(liqfont *self,int glyphindex)
+{
+	// the intent bug crops up here for unicode glyphs, since we do too much just to get its size
+	int h=0;
+	liqfontglyph *g = liqfont_getglyph(self,glyphindex);
+	if(g)
+	{
+		h=g->glyphh;
+	}
+	return h;
+}
+
 int liqfont_textfitinside(liqfont *self,char *data,int availablewidth)
 {
 	if(!data) return 0;

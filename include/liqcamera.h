@@ -40,6 +40,10 @@ void liqcamera_stop();
 liqimage * liqcamera_getimage(); // return the current image of this camera, if NULL camera is switched off
 
 
+
+int liqcamera_settorch(int newvalue);
+int liqcamera_setfocus(int newvalue);
+
 #ifdef __cplusplus
 }
 #endif

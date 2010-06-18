@@ -38,7 +38,7 @@
 // ie a reference to the current cell
 
 int liqcell_showdebugboxes=0;
-
+int liqcell_showfps=0;
 
 
 
@@ -604,7 +604,7 @@ void liqcell_check_for_driedup(liqcell *self)
 void liqcell_easypaint_int(liqcell *self,liqcliprect *crorig,    int x,int y,    int w,int h);
 void liqcell_easypaintkkk(liqcell *self,liqcliprect *crorig,    int x,int y,    int w,int h)
 {
-
+	// this needs more work, its not going to work as is
 	if(w<1 || h<1)
 	{
 		//liqapp_log("size0 bail!");
@@ -632,7 +632,7 @@ void liqcell_easypaintkkk(liqcell *self,liqcliprect *crorig,    int x,int y,    
 
 //unsigned long 	tz0=liqapp_GetTicks();
 
-__tz_one("clipgot");
+//__tz_one("clipgot");
 	//liqapp_log("easypaint 1");
 
 	if(!liqcliprect_isvalid(crvis))
@@ -686,10 +686,18 @@ __tz_one("clipgot");
 	
 	liqcliprect_release(crvis);
 }
+
+
+
+
 void liqcell_easypaint(liqcell *self,liqcliprect *crorig,    int x,int y,    int w,int h)
 {
 	liqcell_easypaint_int(self,crorig,x,y,w,h);
 }
+
+
+
+
 void liqcell_easypaint_int(liqcell *self,liqcliprect *crorig,    int x,int y,    int w,int h)
 {
 

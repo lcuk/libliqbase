@@ -10,6 +10,14 @@
 //#include "liqcell_easyrun.h"
 //#include "liqcell_prop.h"
 
+//###################################################
+// set with command line --showdebugboxes
+// shows frames and information and logs lots of output
+extern int liqcell_showdebugboxes;
+//###################################################
+// set with command line --showfps
+// shows framesrate
+extern int liqcell_showfps;
 
 //#########################################################################
 //#########################################################################
@@ -136,7 +144,7 @@ liqcell*  liqcell_child_insertsortedbyname(liqcell *self, liqcell * ch,int sortp
 int liqcell_child_remove(liqcell *self,liqcell *child);
 int liqcell_child_removeall(liqcell *self);
 int liqcell_child_removeallvisual(liqcell *self);
-
+int liqcell_child_removeallclass(liqcell *self,char *classname);
 liqcell*  liqcell_child_lookup(liqcell *self,char *name); // use dotted branches
 liqcell*  liqcell_child_lookup_simple(liqcell *self,char *name);	// ignore dotted branches
 liqcell*  liqcell_child_lookup_nameclass(liqcell *self,char *name,char *classname);
@@ -161,7 +169,7 @@ liqcell *	liqcell_getlinkchild_visible(liqcell *self);
 //liqcell*  liqcell_findfirst(liqcell *self,char *query);
 liqcell*  liqcell_findnext(liqcell *self,char *query);
 
-
+int       liqcell_isclass(liqcell *self,char *classname);
 
 liqcell*  liqcell_local_lookup(liqcell *self,char *name);
 liqcell*  liqcell_local_lookup_nameclass(liqcell *self,char *name,char *classname);

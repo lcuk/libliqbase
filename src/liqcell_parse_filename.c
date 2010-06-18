@@ -39,6 +39,9 @@ liqcell * liqcell_parse_filename(char *filename)
 			// create a cell indicating the folder
 
 			self=liqcell_quickcreatenameclass(filename,"dir");
+            liqcell_propseti(self,"filesize", statbuf.st_size);
+            liqcell_propseti(self,"filecount",1);
+			//liqcell_propsets(self,"filestamp",statbuf.st_datestamp);
 
 			// now, recurse :)
 
@@ -62,8 +65,21 @@ liqcell * liqcell_parse_filename(char *filename)
 					
 					// make sure we account for the size :)
 					liqcell_propseti(self,"filesize"  , liqcell_propgeti(self,"filesize",0)  + liqcell_propgeti(c,"filesize", 0) );
-					liqcell_propseti(self,"filecount" , liqcell_propgeti(self,"filecount",0) + liqcell_propgeti(c,"filecount",0) );
+					liqcell_propseti(self,"filecount" , liqcell_propgeti(self,"filecount",0) + liqcell_propgeti(c,"filecount",1) );
+
+					// its a folder.. it should have a range of datestamps within
+					// we should do same for others, will add later					
+					//if( strcmp( liqcell_propgets(self,"filedatemin",""), liqcell_propgets(c,"filedate","") ) < 0)
+					//{
+					//	liqcell_propsets(self,"filedatemin", liqcell_propgets(c,"filedate","") );
+					//}
+					//if( strcmp( liqcell_propgets(self,"filedatemax",""), liqcell_propgets(c,"filedate","") ) > 0)
+					//{
+					//	liqcell_propsets(self,"filedatemax", liqcell_propgets(c,"filedate","") );
+					//}
 					
+					//liqcell_propsets(self,"filedatemin","statbuf.st_datestamp");
+					//liqcell_propsets(self,"filedatemax","statbuf.st_datestamp");
 					
 					
 					
@@ -173,6 +189,7 @@ liqcell * liqcell_parse_filename(char *filename)
             {
                 liqcell_propseti(self,"filesize", statbuf.st_size);
                 liqcell_propseti(self,"filecount",1);
+				//liqcell_propsets(self,"filedate",statbuf.st_datestamp);
             }
 			
 			

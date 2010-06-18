@@ -791,7 +791,7 @@ int liqcell_easyrun(liqcell *self)
 	//vgraph_setwindow( graph,  (self)                  );
 	
 	
-liqimage    *targetsurface = NULL;//liqcanvas_getsurface();
+//liqimage    *targetsurface = NULL;//liqcanvas_getsurface();
 liqcliprect *targetcr      = NULL;//liqcanvas_getcliprect();
 
 int idle_lazyrun_wanted = liqcell_propgeti(self,"idle_lazyrun_wanted",0);
@@ -835,8 +835,8 @@ int idle_lazyrun_wanted = liqcell_propgeti(self,"idle_lazyrun_wanted",0);
 		vgraph_setwindow( graph,  (self)                  );
 		
 		
-		targetsurface = liqcanvas_getsurface();
-		targetcr      = liqcanvas_getcliprect();
+		//targetsurface = liqcanvas_getsurface();
+		targetcr      = vgraph_getcliprect(graph);
 		
 	}
 
@@ -968,11 +968,11 @@ float fadeupto = 0.0;
 			// NO specified fadeslide in, lets try this..
 			liqapp_log("liqcell_easyrun auto fade set to slidein");
 			fademode=1;
-			fadestartx = targetsurface->width;
+			fadestartx = liqcliprect_getw(targetcr);
 			fadestarty = 0;
 
-			//fadestartx = 0;//targetsurface->width;
-			//fadestarty = targetsurface->height;
+			//fadestartx = 0;//liqcliprect_getw(targetcr);
+			//fadestarty = liqcliprect_getw(targetcr);
 
 			fadeatx = fadestartx;
 			fadeaty = fadestarty;
@@ -1920,7 +1920,13 @@ moar:
 		//	liqapp_log("render %i  ud=%i",framecount,universe->dirty);
 			//liqapp_log("rendering %i",framecount);
 			//liqcliprect_drawclear(liqcanvas_getcliprect(),255,128,128);
-			liqcliprect_drawclear(liqcanvas_getcliprect(),0,128,128);
+			
+			
+			//liqcliprect_drawclear(liqcanvas_getcliprect(),0,128,128);
+			vgraph_setbackcolor(graph, vcolor_YUV(0,128,128) );
+			vgraph_drawclear(graph);
+			
+			
 			// ensure runfast is unset before attmpting the next loop
 			paintargs.runfast=0;
 			//##################################################### render handler
@@ -1952,6 +1958,10 @@ moar:
 			//liqcell_easyrun_cursor_on_screen = 0;
 			
 			//liqapp_log("render drawing wh(%i,%i)",w,h);
+			
+			
+			
+			
 			
 			if(fademode)
 			{
@@ -2031,16 +2041,16 @@ moar:
 			{
 				//liqapp_log("************************************************************************************** use");
 				if(liqcell_easyrun_depth==1)
-					liqcliprect_drawimagecolor(targetcr, infoclose, 0,targetsurface->height-48,48,48, 1);
+					liqcliprect_drawimagecolor(targetcr, infoclose, 0,liqcliprect_getw(targetcr)-48,48,48, 1);
 				else
 				
-					liqcliprect_drawimagecolor(targetcr, infoback , 0,targetsurface->height-48,48,48, 1);
+					liqcliprect_drawimagecolor(targetcr, infoback , 0,liqcliprect_geth(targetcr)-48,48,48, 1);
 			}
             
             
 			if( (infotools) && (liqcell_easyrun_hide_tools==0) )
 			{
-					liqcliprect_drawimagecolor(targetcr, infotools , targetsurface->width-48,0 ,48,48, 1);
+					liqcliprect_drawimagecolor(targetcr, infotools , liqcliprect_getw(targetcr)-48,0 ,48,48, 1);
 			}
 
 #else
@@ -2052,16 +2062,16 @@ moar:
 				//liqapp_log("infoback %i,%i",infoback->width,infoback->height);
 				
 				if(liqcell_easyrun_depth==1)
-					liqcliprect_drawimagecolor(targetcr, infoclose, targetsurface->width-80,0 ,80,56, 1);
+					liqcliprect_drawimagecolor(targetcr, infoclose, liqcliprect_getw(targetcr)-80,0 ,80,56, 1);
 				else
 				
-					liqcliprect_drawimagecolor(targetcr, infoback , targetsurface->width-80,0 ,80,56, 1);
+					liqcliprect_drawimagecolor(targetcr, infoback , liqcliprect_getw(targetcr)-80,0 ,80,56, 1);
 			}
             
             
 			//if( (infotools) && (liqcell_easyrun_hide_tools==0) )
 			//{
-			//		liqcliprect_drawimagecolor(targetcr, infotools , targetsurface->width-48,0 ,48,48, 1);
+			//		liqcliprect_drawimagecolor(targetcr, infotools , liqcliprect_getw(targetcr)-48,0 ,48,48, 1);
 			//}
 
 
@@ -2100,8 +2110,9 @@ moar:
 			//liqapp_log("render adding framecount");		
 // 20090520_014021 lcuk : show frame information
 
-/*
 
+if(liqcell_showfps)
+{
 			static liqfont *infofont=NULL;
 			if(!infofont)
 			{
@@ -2115,13 +2126,14 @@ moar:
 				int cpufreq=0;
 				//cpufreq_read(&cpufreq);
 				snprintf(buff,sizeof(buff),"%s '%s' %3i, %3.3f, %3.3f",app.title,cap,framecount, liqapp_fps(tz0,tz1,1) ,liqapp_fps(tzs,tz1,framecount) );
-				liqapp_log(buff);
+			//	liqapp_log(buff);
 				int hh=liqfont_textheight(infofont);
-				liqcliprect_drawtextinside_color(targetcr, infofont,  0,0, targetsurface->width,hh, buff,0, 255,128,128);
+				liqcliprect_drawtextinside_color(targetcr, infofont,  0,0, liqcliprect_getw(targetcr),hh, buff,0, 255,128,128);
 			}
-  
- */		
+} 
+ 		
 			//liqapp_log("render refreshing");
+			
 			
 			
 

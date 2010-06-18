@@ -795,28 +795,58 @@ liqfontglyph *g = liqfont_getglyph(font,glyph);
 
 int liqcliprect_drawtext_color(liqcliprect *self,liqfont *font,int xs,int ys,char *data,unsigned char grey,unsigned char u,unsigned char v)
 {
-	int x=xs;
-	unsigned char ch;
-	while ( (ch=*data++) )
+	if(font->rotation==0 || font->rotation==180)
 	{
-		liqcliprect_drawglyph_color(self,font,x,ys, ch , grey,u,v);
-		x+=liqfont_getglyphwidth(font,ch);//font->glyphwidths[ch];
+		int x=xs;
+		unsigned char ch;
+		while ( (ch=*data++) )
+		{
+			liqcliprect_drawglyph_color(self,font,x,ys, ch , grey,u,v);
+			x+=liqfont_getglyphwidth(font,ch);//font->glyphwidths[ch];
+		}
+		return x;
 	}
-	return x;
+	else
+	{
+		int y=ys;
+		unsigned char ch;
+		while ( (ch=*data++) )
+		{
+			liqcliprect_drawglyph_color(self,font,xs,y, ch , grey,u,v);
+			y+=liqfont_getglyphheight(font,ch);//font->glyphwidths[ch];
+		}
+		return y;
+	}
 }
 
 int liqcliprect_drawtextn_color(liqcliprect *self,liqfont *font,int xs,int ys,char *data,int datalen,unsigned char grey,unsigned char u,unsigned char v)
 {
-	int x=xs;
-	unsigned char ch;
-	if(datalen<=0)return x;
-	while(datalen--)
-	{
-		ch=*data++;
-		liqcliprect_drawglyph_color(self,font,x,ys, ch , grey,u,v );
-		x+=liqfont_getglyphwidth(font,ch);//font->glyphwidths[ch];
+	if(font->rotation==0 || font->rotation==180)
+	{	
+		int x=xs;
+		unsigned char ch;
+		if(datalen<=0)return x;
+		while(datalen--)
+		{
+			ch=*data++;
+			liqcliprect_drawglyph_color(self,font,x,ys, ch , grey,u,v );
+			x+=liqfont_getglyphwidth(font,ch);//font->glyphwidths[ch];
+		}
+		return x;
 	}
-	return x;
+	else
+	{
+		int y=ys;
+		unsigned char ch;
+		if(datalen<=0)return y;
+		while(datalen--)
+		{
+			ch=*data++;
+			liqcliprect_drawglyph_color(self,font,xs,y, ch , grey,u,v );
+			y+=liqfont_getglyphheight(font,ch);//font->glyphwidths[ch];
+		}
+		return y;
+	}
 }
 
 void liqcliprect_drawtextcentredon_color(liqcliprect *self,liqfont *font,int cx,int cy,char *text,unsigned char grey,unsigned char u,unsigned char v)

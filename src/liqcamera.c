@@ -5,8 +5,10 @@
 #include <gst/gst.h>
 
 
+#include <pthread.h>
+#include <sched.h>
 
-
+static pthread_mutex_t image_push_lock = PTHREAD_MUTEX_INITIALIZER;
 
 
 
@@ -61,12 +63,18 @@ liqimage *	CAMdestimage=NULL;
 void *      CAMtag;
 void 		(*CAMUpdateCallback)(void *);
 
+
+/*
 static inline char mute(char pix)
 {
 	int v=128+(   (((int)pix)-128)>>1   );
 	//int v=pix;// 128+(   (((int)pix)-128)>>1   );
 	return (char)v;
 }
+*/
+
+
+#define mute(pix) (pix)
 
 static int image_push(char *data)
 {
@@ -74,6 +82,11 @@ static int image_push(char *data)
 	
 	// todo: ensure n800 camera flip is handled, need to read the sensor bit and organise accordingly
 	// todo: ensure mirroring option is accounted for
+
+
+	pthread_mutex_lock(&image_push_lock);
+
+
 	
 // ok a 32bit long contains  UYVY
 unsigned long * UYVY = (unsigned long *)data;
@@ -87,18 +100,19 @@ int zl = (CAMW*CAMH)/2;
 unsigned char *ddy= dy+(CAMW  )-1;
 unsigned char *ddu= du+(CAMW/2)-1;
 unsigned char *ddv= dv+(CAMW/2)-1;
+	//	liqapp_sleep(50);
 
 int CAMWd2=CAMW/2;
 	do
 	{
-		if(!CAMdestimage) return -1;
+	//	if(!CAMdestimage) return -1;
 		
 		
 	//	if(ux==0){ liqapp_log("line %i",uy); }
 		
 		unsigned long p= *UYVY++;
 		// Primary Grey channel
-/*		*dy++ = (p & (255<<8 )) >> 8;
+		*dy++ = (p & (255<<8 )) >> 8;
 		*dy++ = (p & (255<<24)) >> 24;
 		
 		if(!(uy & 1))
@@ -107,7 +121,10 @@ int CAMWd2=CAMW/2;
 			*du++ = mute((p & (255<<16)) >> 16);
 			*dv++ = mute((p & (255    )));
 		}
-*/		
+	
+
+/*
+ 		// switching this around ..
 		
 		*ddy-- = (p & (255<<8 )) >> 8;
 		*ddy-- = (p & (255<<24)) >> 24;
@@ -119,17 +136,24 @@ int CAMWd2=CAMW/2;
 			*ddv-- = mute((p & (255    )));
 		}
 		
+*/
+		
 		ux+=2;
 		if(ux>=CAMW){ ux=0;uy++;   ddy=dy+(CAMW*(uy+1))-1; ddu=du+(CAMWd2*((uy>>1)+1))-1; ddv=dv+(CAMWd2*((uy>>1)+1))-1;        }
 		if(uy>=CAMH) break;
 	}
 	while(--zl);
     
-    liqimage_mark_barcode(CAMdestimage);
+  //  liqimage_mark_barcode(CAMdestimage);
 	
 	// tell our host that we updated (up to him what he does with the info)
 	if(CAMUpdateCallback)
 		(*CAMUpdateCallback)(CAMtag);
+		
+
+	pthread_mutex_unlock(&image_push_lock);
+		
+		
 	return 0;
 }
 
@@ -138,7 +162,7 @@ int CAMWd2=CAMW/2;
 
 static gboolean buffer_probe_callback( GstElement *image_sink, GstBuffer *buffer, GstPad *pad, int *stuff)
 {
-	liqapp_log("liqcamera: callback!");
+	//liqapp_log("liqcamera: callback!");
 	char *data_photo = (char *) GST_BUFFER_DATA(buffer);
 	image_push(data_photo);	
 	return TRUE;
@@ -210,7 +234,10 @@ int liqcamera_start(int argCAMW,int argCAMH,int argCAMFPS,liqimage * argCAMdesti
 
 
     char capstr[FILENAME_MAX];
-    snprintf(capstr,sizeof(capstr),"video/x-raw-yuv,format=(fourcc)UYVY,width=%i,height=%i,framerate=[1/%i,%i/1]",CAMW,CAMH,CAMFPS,CAMFPS);
+	// this conversion slows the camera down
+	// 
+    //snprintf(capstr,sizeof(capstr),"video/x-raw-yuv,format=(fourcc)UYVY,width=%i,height=%i,framerate=[1/%i,%i/1]",CAMW,CAMH,CAMFPS,CAMFPS);
+    snprintf(capstr,sizeof(capstr),"video/x-raw-yuv,format=(fourcc)UYVY,width=%i,height=%i",CAMW,CAMH);
 
     //caps = gst_caps_from_string("video/x-raw-yuv,format=(fourcc)UYVY,width=320,height=240,framerate=[1/25,25/1]");
     caps = gst_caps_from_string(capstr);

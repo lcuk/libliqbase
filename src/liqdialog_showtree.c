@@ -29,11 +29,6 @@ static const int treeindent=25;
 //#####################################################################
 
 
-static int liqcell_isclass(liqcell *self,char *classname)
-{
-	// return if this cell is a member of a class
-	return ( (self) && (self->classname) && (strcmp(self->classname, classname)==0) );
-}
 
 
 
