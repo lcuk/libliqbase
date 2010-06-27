@@ -114,16 +114,6 @@ liqcell *liqtimer_create()
 	{
 		
 		// todo: should make sure we break out of duldrums if the user enables or disables us
-		
-		mkmeta_group(
-					mkmeta_title(        "liqtimer"),
-					mkmeta_description(  "a small control to send repeated liqtimer events"),
-					mkmeta_author(       "liquid@gmail.com"),
-					mkmeta_version(      "1.0"),
-					NULL);
-
-
-
 		liqcell_setvisible(self,0);	// not visible in the render window ever
 		liqcell_setenabled(self,0);
 		liqcell_propseti(self,"timerinterval",100);

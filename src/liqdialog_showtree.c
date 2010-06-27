@@ -402,14 +402,6 @@ int liqdialog_showtree(char *key,char *title,char *description,liqcell *data)
 
 	if(self)
 	{
-		liqcell *meta = mkmeta_group(
-							mkmeta_title(        "liqtreebrowse"),
-							mkmeta_description(  "this is a test description"),
-							mkmeta_author(       "liquid@gmail.com"),
-							mkmeta_version(      "1.0"),
-							NULL);
-		liqcell_child_append(self,meta);
-
 		//! create header
 	//	liqcell *thead = uititlebar_create("thead",title,description);
 	//	liqcell_child_append( self, thead    );	
