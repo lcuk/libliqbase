@@ -76,7 +76,7 @@ extern "C" {
 
 
 
-inline unsigned int doblendy(int s,int t, int blend)
+static inline unsigned int doblendy(int s,int t, int blend)
 {
 	//int s=*Source;
 	//int t=*Target;
@@ -91,7 +91,7 @@ inline unsigned int doblendy(int s,int t, int blend)
 
 }
 
-inline unsigned int doblenduv(int s,int t, int blend)
+static inline unsigned int doblenduv(int s,int t, int blend)
 {
 	//int s=*Source;
 	//int t=*Target;
@@ -106,7 +106,7 @@ inline unsigned int doblenduv(int s,int t, int blend)
 
 }
 
-inline void xsurface_drawstrip_colortest1(
+void xsurface_drawstrip_colortest1(
 	register unsigned int  linecount,
 	register unsigned int  charsperline,
 	register unsigned char *srcdataptr,
@@ -222,7 +222,7 @@ inline void xsurface_drawstrip_colortest1(
 
 
 
-inline void xsurface_drawstrip_or(
+void xsurface_drawstrip_or(
 	register unsigned int  linecount,
 	register unsigned int  charsperline,
 	register unsigned char *srcdataptr,
@@ -374,7 +374,7 @@ inline void xsurface_drawstrip_or(
 
 
 
-inline void xsurface_drawstrip(
+void xsurface_drawstrip(
 	register unsigned int  linecount,
 	register unsigned int  charsperline,
 	register unsigned char *srcdataptr,
@@ -526,7 +526,7 @@ inline void xsurface_drawstrip(
 
 
 
-inline void xdata_drawimage_grey(unsigned char *surfdata,int surfw,int surfh,   unsigned char *imgdata,int imgw,int imgh,int x,int y)
+void xdata_drawimage_grey(unsigned char *surfdata,int surfw,int surfh,   unsigned char *imgdata,int imgw,int imgh,int x,int y)
 {
 	// cleanse this function now, it requires TLC
 	// font has all changed and there is no longer a single contigious glyph buffer
@@ -590,7 +590,7 @@ inline void xdata_drawimage_grey(unsigned char *surfdata,int surfw,int surfh,   
 }
 
 
-inline void xsurface_drawimage_color(liqimage *surface,liqimage *image,int x,int y)
+void xsurface_drawimage_color(liqimage *surface,liqimage *image,int x,int y)
 {
 	int surfw=surface->width;
 	int surfh=surface->height;
@@ -616,7 +616,7 @@ inline void xsurface_drawimage_color(liqimage *surface,liqimage *image,int x,int
 //#######################################################################################
 
 
-inline void ScaleLine_grey_slow(unsigned char *Target, unsigned char *Source, int SrcWidth, int TgtWidth,int TgtDrawStartOffset, int TgtDrawPixelCount)
+void ScaleLine_grey_slow(unsigned char *Target, unsigned char *Source, int SrcWidth, int TgtWidth,int TgtDrawStartOffset, int TgtDrawPixelCount)
 {
   int NumPixels = TgtDrawPixelCount;//TgtWidth;
   int IntPart = SrcWidth / TgtWidth;
@@ -648,7 +648,7 @@ inline void ScaleLine_grey_slow(unsigned char *Target, unsigned char *Source, in
 
 //################################################################### attempt at faster..
 
-inline void ScaleLine_grey(unsigned char *Target, unsigned char *Source, int SrcWidth, int TgtWidth,int TgtDrawStartOffset, int TgtDrawPixelCount)
+void ScaleLine_grey(unsigned char *Target, unsigned char *Source, int SrcWidth, int TgtWidth,int TgtDrawStartOffset, int TgtDrawPixelCount)
 {
 	// todo: important: make this routine fast
 	// it must end up using shorts and longs
@@ -725,7 +725,7 @@ inline void ScaleLine_grey(unsigned char *Target, unsigned char *Source, int Src
 
 
 
-inline void ScaleLine_uv(unsigned char *Target,unsigned  char *Source, int SrcWidth, int TgtWidth,int TgtDrawStartOffset, int TgtDrawPixelCount)
+void ScaleLine_uv(unsigned char *Target,unsigned  char *Source, int SrcWidth, int TgtWidth,int TgtDrawStartOffset, int TgtDrawPixelCount)
 {
   int NumPixels = TgtDrawPixelCount;//TgtWidth;
   int IntPart = SrcWidth / TgtWidth;
@@ -802,7 +802,7 @@ inline void ScaleLine_uv(unsigned char *Target,unsigned  char *Source, int SrcWi
 //#######################################################################################
 
 
-inline void ScaleLine_alphablend_grey(unsigned char *Target, unsigned char *Source, int SrcWidth, int TgtWidth,int TgtDrawStartOffset, int TgtDrawPixelCount,unsigned char *Src_alphachannelfullres,unsigned char blend)
+void ScaleLine_alphablend_grey(unsigned char *Target, unsigned char *Source, int SrcWidth, int TgtWidth,int TgtDrawStartOffset, int TgtDrawPixelCount,unsigned char *Src_alphachannelfullres,unsigned char blend)
 {
   int NumPixels = TgtDrawPixelCount;//TgtWidth;
   int IntPart = SrcWidth / TgtWidth;
@@ -840,7 +840,7 @@ inline void ScaleLine_alphablend_grey(unsigned char *Target, unsigned char *Sour
 
 
 
-inline void ScaleLine_alphablend_uv(unsigned char *Target, unsigned char *Source, int SrcWidth, int TgtWidth,int TgtDrawStartOffset, int TgtDrawPixelCount,unsigned char *Src_alphachanneldoubleres,unsigned char blend)
+void ScaleLine_alphablend_uv(unsigned char *Target, unsigned char *Source, int SrcWidth, int TgtWidth,int TgtDrawStartOffset, int TgtDrawPixelCount,unsigned char *Src_alphachanneldoubleres,unsigned char blend)
 {
   int NumPixels = TgtDrawPixelCount;//TgtWidth;
   int IntPart = SrcWidth / TgtWidth;
@@ -890,7 +890,7 @@ inline void ScaleLine_alphablend_uv(unsigned char *Target, unsigned char *Source
 
 
 
-inline void ScaleLine_blend_grey(unsigned char *Target, unsigned char *Source, int SrcWidth, int TgtWidth,int TgtDrawStartOffset, int TgtDrawPixelCount,unsigned char blend)
+void ScaleLine_blend_grey(unsigned char *Target, unsigned char *Source, int SrcWidth, int TgtWidth,int TgtDrawStartOffset, int TgtDrawPixelCount,unsigned char blend)
 {
   int NumPixels = TgtDrawPixelCount;//TgtWidth;
   int IntPart = SrcWidth / TgtWidth;
@@ -929,7 +929,7 @@ inline void ScaleLine_blend_grey(unsigned char *Target, unsigned char *Source, i
 
 
 
-inline void ScaleLine_blend_uv(unsigned char *Target, unsigned char *Source, int SrcWidth, int TgtWidth,int TgtDrawStartOffset, int TgtDrawPixelCount,unsigned char blend)
+void ScaleLine_blend_uv(unsigned char *Target, unsigned char *Source, int SrcWidth, int TgtWidth,int TgtDrawStartOffset, int TgtDrawPixelCount,unsigned char blend)
 {
   int NumPixels = TgtDrawPixelCount;//TgtWidth;
   int IntPart = SrcWidth / TgtWidth;
@@ -1344,7 +1344,7 @@ void xsurface_drawzoomimage(
 //########################################################################
 
 
-inline void xsurface_drawglyph_grey(liqimage *surface,liqfont *font,int x,int y,unsigned char glyph)
+void xsurface_drawglyph_grey(liqimage *surface,liqfont *font,int x,int y,unsigned char glyph)
 {
 	// cleanse this function now, it requires TLC
 	// font has all changed and there is no longer a single contigious glyph buffer
@@ -1457,7 +1457,7 @@ int xsurface_drawtextn_grey(liqimage *surface,liqfont *font,int xs,int ys,char *
 //######################################################################## clear canvass
 //########################################################################
 
-inline void xsurface_drawclear_grey(liqimage *surface,unsigned char grey)
+void xsurface_drawclear_grey(liqimage *surface,unsigned char grey)
 {
 	int uo = surface->width*surface->height;
 	//int vo = uo + (uo >> 2);
@@ -1467,7 +1467,7 @@ inline void xsurface_drawclear_grey(liqimage *surface,unsigned char grey)
 	memset(&surface->data[surface->offsets[2]] ,128 ,uvplanesize);
 }
 
-inline void xsurface_drawclear_yuv(liqimage *surface,unsigned char grey,unsigned char u,unsigned char v)
+void xsurface_drawclear_yuv(liqimage *surface,unsigned char grey,unsigned char u,unsigned char v)
 {
 	int uo = surface->width*surface->height;
 	//int vo = uo + (uo >> 2);
@@ -1493,7 +1493,7 @@ inline void xsurface_drawclear_yuv(liqimage *surface,unsigned char grey,unsigned
 
 
 
-inline void xsurface_drawfadeoutrect_yuv(liqimage *surface,int x,int y,int w,int h, unsigned char grey,unsigned char u,unsigned char v,unsigned char spread)
+void xsurface_drawfadeoutrect_yuv(liqimage *surface,int x,int y,int w,int h, unsigned char grey,unsigned char u,unsigned char v,unsigned char spread)
 {
 	if(x+w<0)return;
 	if(y+h<0)return;
@@ -1641,7 +1641,7 @@ inline void xsurface_drawfadeoutrect_yuv(liqimage *surface,int x,int y,int w,int
 //########################################################################
 //fixed:todo: fix bug with unaligned widths, at present it does not fill upto 3 right hand side pixels
 
-inline void xsurface_drawrect_yuv(liqimage *surface,int x,int y,int w,int h, unsigned char grey,unsigned char u,unsigned char v)
+void xsurface_drawrect_yuv(liqimage *surface,int x,int y,int w,int h, unsigned char grey,unsigned char u,unsigned char v)
 {
 	if(x+w<0)return;
 	if(y+h<0)return;
@@ -1731,7 +1731,7 @@ unsigned int grey4;
 //######################################################################## drawrectwash uv wash
 //########################################################################
 //fixed:todo: fix bug with unaligned widths, at present it does not fill upto 3 right hand side pixels
-inline void xsurface_drawrectwash_uv(liqimage *surface,int x,int y,int w,int h, unsigned char u,unsigned char v)
+void xsurface_drawrectwash_uv(liqimage *surface,int x,int y,int w,int h, unsigned char u,unsigned char v)
 {
 	if(x+w<0)return;
 	if(y+h<0)return;
@@ -1823,7 +1823,7 @@ unsigned short v2;
 //######################################################################## drawrect grey optimised
 //########################################################################
 //fixed:todo: fix bug with unaligned widths, at present it does not fill upto 3 right hand side pixels
-inline void xsurface_drawrect_grey(liqimage *surface,int x,int y,int w,int h, unsigned char grey)
+void xsurface_drawrect_grey(liqimage *surface,int x,int y,int w,int h, unsigned char grey)
 {
 	if(x+w<0)return;
 	if(y+h<0)return;
@@ -1869,7 +1869,7 @@ unsigned int grey4;
 //######################################################################## pset color
 //########################################################################
 
-inline void xsurface_drawpset_yuv(liqimage *surface,int x,int y,char grey,char u,char v)
+void xsurface_drawpset_yuv(liqimage *surface,int x,int y,char grey,char u,char v)
 {
 	if(x<0)return;
 	if(y<0)return;
@@ -1894,7 +1894,7 @@ inline void xsurface_drawpset_yuv(liqimage *surface,int x,int y,char grey,char u
 //######################################################################## pset grey
 //########################################################################
 
-inline void xsurface_drawpset_grey(liqimage *surface,int x,int y,char grey)
+void xsurface_drawpset_grey(liqimage *surface,int x,int y,char grey)
 {
 	if(x<0)return;
 	if(y<0)return;
@@ -1909,7 +1909,7 @@ inline void xsurface_drawpset_grey(liqimage *surface,int x,int y,char grey)
 
 #define interal_getchar(x,y,buffer,linewidth)  (buffer)[ (linewidth) * (y) + (x) ]
 
-inline void xsurface_drawpget_yuv(liqimage *surface,int x1, int y1, unsigned char *grey,unsigned char *u,unsigned char *v)
+void xsurface_drawpget_yuv(liqimage *surface,int x1, int y1, unsigned char *grey,unsigned char *u,unsigned char *v)
 {
 unsigned int pw=surface->width;
 //unsigned int ph=surface->height;
@@ -1967,7 +1967,7 @@ unsigned int pw=surface->width;
 #define interal_linepaintchar_alpha(x,y,c,alpha,buffer,linewidth) \
 { int off = (linewidth) * (y) + (x);  int b=(unsigned char)buffer[ off ]; int cc=(unsigned char)(c); float a=(alpha); buffer[ off ] = b + (cc-b)*a; }
 
-inline float fracpart(float a)
+static inline float fracpart(float a)
 {
 	float b=((int)(a));
       
@@ -1979,7 +1979,7 @@ inline float fracpart(float a)
 
 
 
-inline void xsurface_interalline_aa(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char *buffer,int linewidth,unsigned char thickness)
+void xsurface_interalline_aa(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char *buffer,int linewidth,unsigned char thickness)
 {
 float deltax, deltay;
 int loopc;
@@ -2321,7 +2321,7 @@ float dx, dy, dydx;
 //#############################################################################
 
 
-inline void xsurface_drawthickline_yuv(liqimage *surface,int x1, int y1, int x2, int y2,unsigned char thickness, char grey,char u,char v)
+void xsurface_drawthickline_yuv(liqimage *surface,int x1, int y1, int x2, int y2,unsigned char thickness, char grey,char u,char v)
 {
 	// if you call this, even with thickness 1, it will still run through the entire set
 	// this maybe slightly worrysome
@@ -2379,7 +2379,7 @@ unsigned int pw=surface->width;
 
 #define interal_linepaintchar(x,y,c,buffer,linewidth)  buffer[ (linewidth) * (y) + (x) ] = (c)
 
-inline void xsurface_interalline_noaa(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char *buffer,int linewidth)
+void xsurface_interalline_noaa(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char *buffer,int linewidth)
 {
                 // 20090520_012704 lcuk : boundary is already confirmed as existing within the buffer
                 // 20090520_012727 lcuk : this is a greyscale line and it exhibits aliasing effects
@@ -2460,7 +2460,7 @@ inline void xsurface_interalline_noaa(liqimage *surface,int x1, int y1, int x2, 
 
 #define interal_linepaintchar_invert(x,y,buffer,linewidth)  { unsigned char c=buffer[ (linewidth) * (y) + (x) ];buffer[ (linewidth) * (y) + (x) ] = 255-c; }
 
-inline void xsurface_interalline_invert(liqimage *surface,int x1, int y1, int x2, int y2, char *buffer,int linewidth)
+void xsurface_interalline_invert(liqimage *surface,int x1, int y1, int x2, int y2, char *buffer,int linewidth)
 {
 	int dx=x2-x1;		// distance
 	int dy=y2-y1;
@@ -2512,7 +2512,7 @@ inline void xsurface_interalline_invert(liqimage *surface,int x1, int y1, int x2
 //########################################################################
 
 
-inline void xsurface_drawline_yuv(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char u,char v)
+void xsurface_drawline_yuv(liqimage *surface,int x1, int y1, int x2, int y2, char grey,char u,char v)
 {
 	if(x1<0)return;
 	if(y1<0)return;
@@ -2553,7 +2553,7 @@ unsigned int pw=surface->width;
 //######################################################################## linegrey
 //########################################################################
 
-inline void xsurface_drawline_grey(liqimage *surface,int x1, int y1, int x2, int y2, char grey)
+void xsurface_drawline_grey(liqimage *surface,int x1, int y1, int x2, int y2, char grey)
 {
 	if(x1<0)return;
 	if(y1<0)return;
@@ -2579,7 +2579,7 @@ unsigned int pw=surface->width;
 //######################################################################## linegreyinvert
 //########################################################################
 
-inline void xsurface_drawline_greyinv(liqimage *surface,int x1, int y1, int x2, int y2)
+void xsurface_drawline_greyinv(liqimage *surface,int x1, int y1, int x2, int y2)
 {
 	if(x1<0)return;
 	if(y1<0)return;
@@ -2600,7 +2600,7 @@ unsigned int pw=surface->width;
 //######################################################################## linegreyinvert
 //########################################################################
 
-inline void interal_linepaintcharf(int x, int y,char c,char *buffer,int linewidth,int numlines)
+void interal_linepaintcharf(int x, int y,char c,char *buffer,int linewidth,int numlines)
 {
 	if(x<0)return;
 	if(y<0)return;
@@ -2622,7 +2622,7 @@ inline void interal_linepaintcharf(int x, int y,char c,char *buffer,int linewidt
 			interal_linepaintcharf(cx-y,cy-x,                         c,buffer,linewidth,numlines); \
 		}
 
-inline void xsurface_interalcircle(int cx, int cy, int r,char grey,char *buffer,int linewidth,int numlines)
+void xsurface_interalcircle(int cx, int cy, int r,char grey,char *buffer,int linewidth,int numlines)
 {
 int d=3-(2*r);
 int x=0;
@@ -2644,7 +2644,7 @@ int y=r;
 //######################################################################## circlegrey
 //########################################################################
 
-inline void xsurface_drawcircle_grey(liqimage *surface,int cx, int cy, int r,unsigned char grey)
+void xsurface_drawcircle_grey(liqimage *surface,int cx, int cy, int r,unsigned char grey)
 {
 unsigned int pw=surface->width;
 unsigned int ph=surface->height;

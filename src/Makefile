@@ -1,7 +1,7 @@
 LIBRARY     = libliqbase
 VERS        = 0.3.0
-CC          = gcc
-LD          = gcc
+CC          = g++
+LD          = g++
 
 OPT_FLAGS   =  -O3
 

@@ -61,9 +61,9 @@ void    		liqpoint_free(liqpoint *self);
 
 
 liqpoint         *liqpoint_clone(liqpoint *s);
-inline void   liqpoint_copy(liqpoint *self,liqpoint *s) ;
-inline void   liqpoint_getdiff(liqpoint *self,liqpoint *s,liqpoint *e) ;
-inline int    liqpoint_issame(liqpoint *self,liqpoint *s);
+void   liqpoint_copy(liqpoint *self,liqpoint *s) ;
+void   liqpoint_getdiff(liqpoint *self,liqpoint *s,liqpoint *e) ;
+int    liqpoint_issame(liqpoint *self,liqpoint *s);
 
 //##################################################################
 
