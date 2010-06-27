@@ -363,7 +363,7 @@ int res = strtol(param, &paramend, 0);
  * @return int 1 if success, 0 otherwise
  */
 
-int liqapp_folderexists(char *pathname)
+int liqapp_folderexists(const char *pathname)
 {
 	struct stat     statbuf;
 	if(stat(pathname, &statbuf) == -1)
@@ -385,7 +385,7 @@ int liqapp_folderexists(char *pathname)
  * @return int 1 if success, 0 otherwise
  */
 
-int liqapp_pathexists(char *pathname)
+int liqapp_pathexists(const char *pathname)
 {
 	struct stat     statbuf;
 	if(stat(pathname, &statbuf) == -1)
@@ -400,7 +400,7 @@ int liqapp_pathexists(char *pathname)
  * @param char *filename including path
  * @return int 1 if success, 0 otherwise
  */
-int liqapp_fileexists(char *filename)
+int liqapp_fileexists(const char *filename)
 {
 	struct stat     statbuf;
 	if(stat(filename, &statbuf) == -1)
@@ -422,7 +422,7 @@ int liqapp_fileexists(char *filename)
  * @param char *filename including path
  * @return int size if success, -1 otherwise
  */
-int liqapp_filesize(char *filename)
+int liqapp_filesize(const char *filename)
 {
 	struct stat     statbuf;
 	if(stat(filename, &statbuf) == -1)
@@ -440,14 +440,14 @@ int liqapp_filesize(char *filename)
  * @param char *filename including path
  * @return char * to the first character of the filename itself, or to the start of the filename if no '/' detected 
  */
-char *liqapp_filename_walkoverpath(char *filename)
+const char *liqapp_filename_walkoverpath(const char *filename)
 {
 	if(!filename || *filename==0)
 	{
 		return filename;
 	}
-	char *fnstart = filename;
-	char *fnend  = filename;
+	const char *fnstart = filename;
+	const char *fnend  = filename;
 	// walk quickly to the end
 	while(*fnend)
 	{
@@ -457,12 +457,13 @@ char *liqapp_filename_walkoverpath(char *filename)
 	}
 	return fnstart;
 }
+
 /**
  * find and return the extension part of a filename
  * @param char *filename to get the extension from
  * @return char * to the first character of the extension, or to the start of the filename if no '.' detected 
  */
-char *liqapp_filename_walktoextension(char *filename)
+const char *liqapp_filename_walktoextension(const char *filename)
 {
 	filename = liqapp_filename_walkoverpath(filename);
 	
@@ -471,8 +472,8 @@ char *liqapp_filename_walktoextension(char *filename)
 		return filename;
 	}
 	
-	char *fnstart = filename;
-	char *fnend  = filename;
+	const char *fnstart = filename;
+	const char *fnend  = filename;
 	// walk quickly to the end
 	while(*fnend)
 	{
@@ -485,7 +486,7 @@ char *liqapp_filename_walktoextension(char *filename)
 
 
 //http://www.koders.com/cpp/fid0B921B251D9F6C17A083FBD5C9565285C637C785.aspx?s=md5
-int liqapp_file_copy (char * from, char * to, int allowoverwrite)
+int liqapp_file_copy (const char * from, const char * to, int allowoverwrite)
 {
     size_t nmemb;
     //int nmemb;
@@ -561,7 +562,7 @@ static int trymakepath(char *path)
  * @param version The version of the application
  * @return int 0 for success
  */
-int 		liqapp_init(int argc, char* argv[],char *title,char *version)
+int 		liqapp_init(int argc, char* argv[], const char *title, const char *version)
 {
 	
 
@@ -651,7 +652,7 @@ int 		liqapp_init(int argc, char* argv[],char *title,char *version)
 	}
 	
 
-	char *envhome = getenv("HOME");
+	const char *envhome = getenv("HOME");
 	if(!envhome)
 	{
 		// wrong, but will suffice
@@ -772,7 +773,7 @@ void liqapp_ensurecleanusername(char *usernamewhichismodifiable)
 }
 
 
-int liqapp_usernamechange(char *newusername)
+int liqapp_usernamechange(const char *newusername)
 {
     if(app.username){ free(app.username); app.username=NULL; }
     
@@ -791,7 +792,7 @@ static int liqapp_log_forwarding_count=0;
  * @param list of parameters for completing the formatting
  * @return int 0 for success
  */
-int liqapp_vdeeplog(char *logentry, va_list arg)
+int liqapp_vdeeplog(const char *logentry, va_list arg)
 {
     time_t     now;
     struct tm  *ts;
@@ -877,7 +878,7 @@ int liqapp_deeplog(char *logentry, ...)
  * @param list of parameters for completing the formatting
  * @return int 0 for success
  */
-int liqapp_log(char *logentry, ...)
+int liqapp_log(const char *logentry, ...)
 {
 	//return 0;
 	if(app.infologgingenabled==0) return 1;
@@ -897,10 +898,10 @@ int liqapp_log(char *logentry, ...)
  * @param logentry The error message to log
  * @return int returnstatus
  */
-int liqapp_errorandfail(int returnstatus,char *logentry)
+int liqapp_errorandfail(int returnstatus, const char *logentry)
 {
 	char buff[255];
-	char *syserror = strerror(errno); // Get latest system error, enhancement by Zach
+	const char *syserror = strerror(errno); // Get latest system error, enhancement by Zach
 	if(!syserror) syserror="*UNKNOWN ERROR*";
 	snprintf(buff,255,"FAILED: %i : %s : System Error : %s",returnstatus, logentry, syserror);
 	liqapp_deeplog(buff);
@@ -915,7 +916,7 @@ int liqapp_errorandfail(int returnstatus,char *logentry)
  * @param logentry The warning message to log
  * @return int returnstatus
  */
-int liqapp_warnandcontinue(int returnstatus,char *logentry)
+int liqapp_warnandcontinue(int returnstatus, const char *logentry)
 {
 	char buff[255];
 	snprintf(buff,255,"WARN: %i : %s",returnstatus,logentry);
@@ -956,7 +957,7 @@ int liqapp_close()
 // char datestamp[20];
 // liqapp_formatnow(datestamp,sizeof(datestamp),"yyyymmdd_hhmmss");
 
-int liqapp_formatnow(char *buffer,int buffersize,char *format)
+int liqapp_formatnow(char *buffer, int buffersize, const char *format)
 {
 
 	struct tm 	*local;

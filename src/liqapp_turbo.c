@@ -44,7 +44,7 @@ extern "C" {
 
 
 int 		cpufreq_governor_read(char *result,int resultmaxlength);
-int 		cpufreq_governor_write(char *newgovernor);
+int 		cpufreq_governor_write(const char *newgovernor);
 int 		cpufreq_governor_changeto(char *newgovernor);
 
 
@@ -119,7 +119,7 @@ int cpufreq_governor_read(char *result,int resultmaxlength)
 
 
 
-int cpufreq_governor_write(char *newgovernor)
+int cpufreq_governor_write(const char *newgovernor)
 {
 	//lcuk: instead of directly writing this, I now use an alternative method
 	char newcmd[FILENAME_MAX];

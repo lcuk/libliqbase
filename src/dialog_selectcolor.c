@@ -33,8 +33,6 @@ static int dialog_selectcolor_refresh(liqcell *self,liqcelleventargs *args, liqc
  */	
 static int dialog_selectcolor_dialog_open(liqcell *self,liqcelleventargs *args, liqcell *context)
 {
-	liqcell *greycube1 = liqcell_child_lookup(self, "greycube1");
-	liqcell *colorcube1 = liqcell_child_lookup(self, "colorcube1");
 	liqcell *picture1 = liqcell_child_lookup(self, "picture1");
 
 	char *t = liqcell_propgets(self,"colorselected",NULL);
@@ -73,20 +71,7 @@ static int dialog_selectcolor_click(liqcell *self, liqcellclickeventargs *args,l
 {
 	return 0;
 }
-/**	
- * dialog_selectcolor keypress - the user pressed a key
- */	
-static int dialog_selectcolor_keypress(liqcell *self, liqcellkeyeventargs *args,liqcell *context)
-{
-	return 0;
-}
-/**	
- * dialog_selectcolor keyrelease - the user released a key
- */	
-static int dialog_selectcolor_keyrelease(liqcell *self, liqcellkeyeventargs *args,liqcell *context)
-{
-	return 0;
-}
+
 /**	
  * dialog_selectcolor paint - being rendered.  use the vgraph held in args to do custom drawing at scale
  */	
@@ -129,7 +114,6 @@ static int dialog_selectcolor_resize(liqcell *self,liqcelleventargs *args, liqce
  */	
 static int colorcube_mouse(liqcell *self, liqcellmouseeventargs *args,liqcell *dialog_selectcolor)
 {
-	liqcell *greycube1 = liqcell_child_lookup(dialog_selectcolor, "greycube1");
 	liqcell *colorcube1 = liqcell_child_lookup(dialog_selectcolor, "colorcube1");
 	liqcell *picture1 = liqcell_child_lookup(dialog_selectcolor, "picture1");
 	// the grey cube has been touched
@@ -162,7 +146,6 @@ static int colorcube_mouse(liqcell *self, liqcellmouseeventargs *args,liqcell *d
  */	
 static int greycube_mouse(liqcell *self, liqcellmouseeventargs *args,liqcell *dialog_selectcolor)
 {
-	liqcell *greycube1 = liqcell_child_lookup(dialog_selectcolor, "greycube1");
 	liqcell *colorcube1 = liqcell_child_lookup(dialog_selectcolor, "colorcube1");
 	liqcell *picture1 = liqcell_child_lookup(dialog_selectcolor, "picture1");
 	// the grey cube has been touched
@@ -193,13 +176,6 @@ static int greycube_mouse(liqcell *self, liqcellmouseeventargs *args,liqcell *di
  */	
 static int cmdaccept_click(liqcell *self,liqcellclickeventargs *args, liqcell *dialog_selectcolor)
 {
-
-
-
-	
-	
-	liqcell *greycube1 = liqcell_child_lookup(dialog_selectcolor, "greycube1");
-	liqcell *colorcube1 = liqcell_child_lookup(dialog_selectcolor, "colorcube1");
 	liqcell *picture1 = liqcell_child_lookup(dialog_selectcolor, "picture1");
 
 	char *t = liqcell_propgets(picture1,"backcolor",NULL);
@@ -213,21 +189,7 @@ static int cmdaccept_click(liqcell *self,liqcellclickeventargs *args, liqcell *d
 
 	return 0;
 }
-/**	
- * dialog_selectcolor_child_test_seek this function shows how to access members
- */	
-	  
-static void dialog_selectcolor_child_test_seek(liqcell *dialog_selectcolor)
-{	  
-	liqcell *greycube1 = liqcell_child_lookup(dialog_selectcolor, "greycube1");
-	liqcell *colorcube1 = liqcell_child_lookup(dialog_selectcolor, "colorcube1");
-	liqcell *picture1 = liqcell_child_lookup(dialog_selectcolor, "picture1");
-	liqcell *currentselhead = liqcell_child_lookup(dialog_selectcolor, "currentselhead");
-	liqcell *brightnesshead = liqcell_child_lookup(dialog_selectcolor, "brightnesshead");
-	liqcell *title = liqcell_child_lookup(dialog_selectcolor, "title");
-	liqcell *cmdaccept = liqcell_child_lookup(dialog_selectcolor, "cmdaccept");
-	liqcell *colorhead = liqcell_child_lookup(dialog_selectcolor, "colorhead");
-}	  
+
 /**	
  * create a new dialog_selectcolor widget
  */	

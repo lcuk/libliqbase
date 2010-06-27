@@ -19,7 +19,7 @@ extern "C" {
 // walk a string and produce a set of spans matching the input
 
 
-int liqcell_parse_html(liqcell *self,char *inputdata);
+int liqcell_parse_html(liqcell *self, const char *inputdata);
 
 
 //###########################################################################
@@ -40,8 +40,8 @@ static int html();
 static int somehtml();
 typedef unsigned int spanpoint;
 	
-static char *infirst;
-static char *indat;
+static const char *infirst;
+static const char *indat;
 //static int   inlen;
 static int   inlinenum;
 
@@ -55,7 +55,7 @@ static int   inlinenum;
 
 
 
-int liqcell_parse_liqbrain(liqcell *self,char *inputdata)
+int liqcell_parse_liqbrain(liqcell *self, const char *inputdata)
 {
 	// this should simply be an EXPANSION class
 	// it should simply follow a rule tree
@@ -165,7 +165,7 @@ int outmore(int outused, char *outbuf, int amount)
  * Print a tree of liqcells starting with the provided liqcell
  * @param self The provided liqcell
  */
-static void liqcell_parse_liqbrain_print2(liqcell *self,int s,char *inbuffer)
+static void liqcell_parse_liqbrain_print2(liqcell *self,int s, const char *inbuffer)
 {
 	//static int recdep=0;
 	//liqcell_print(self,"self",recdep*4);
@@ -177,12 +177,6 @@ static void liqcell_parse_liqbrain_print2(liqcell *self,int s,char *inbuffer)
 	int wid = liqcell_getw(self);
 	
 	int insiz=strlen(inbuffer);
-	
-	int x=s+off;
-	
-	if(strcmp(app.title,"liqflow")==0)
-	{
-	}
 	
 	char outbuf[512]={0};
 	int outused=0;
@@ -274,7 +268,7 @@ int liqcell_parse_liqbrain_test()
 		
 		
 		int res;
-		char *buffer;
+		const char *buffer;
 		
 		
 		parse1=liqcell_quickcreatenameclass("parse1","parse");
@@ -325,9 +319,9 @@ int liqcell_parse_liqbrain_test()
 // see will attempt to match a micro constant with the data
 // it is space dodging
 
-static int see(char *pattern)
+static int see(const char *pattern)
 {
-char *start=indat;
+const char *start=indat;
 //char *pattorig=pattern;
 	if(!pattern || !*pattern) return 0;
 	if(!indat   || !*indat  ) return 0;
@@ -395,7 +389,7 @@ char *start=indat;
 //###########################################################################
 static int seeqstring()
 {
-char *start=indat;
+const char *start=indat;
 	if(!indat   || !*indat  ) return 0;
 	//see(" ");
 int cnt=0;
@@ -441,7 +435,7 @@ int cnt=0;
 
 static int seecstring()
 {
-char *start=indat;
+const char *start=indat;
 	if(!indat   || !*indat  ) return 0;
 	//see(" ");
 int cnt=0;
@@ -486,7 +480,7 @@ int cnt=0;
 
 static int seecchar()
 {
-char *start=indat;
+const char *start=indat;
 	if(!indat   || !*indat  ) return 0;
 	//see(" ");
 int cnt=0;
@@ -532,7 +526,7 @@ int cnt=0;
 
 static int seenumber()
 {
-char *start=indat;
+const char *start=indat;
 	if(!indat   || !*indat  ) return 0;
 	see(" ");
 int cnt=0;
@@ -582,7 +576,7 @@ int cnt=0;
 
 static int seecommentline()
 {
-char *start=indat;
+const char *start=indat;
 	if(!indat   || !*indat  ) return 0;
 	//see(" ");
 	if(see(" //"))
@@ -610,7 +604,6 @@ char *start=indat;
 
 static int seesinglecharacter()
 {
-char *start=indat;
 	if(!indat   || !*indat  ) return 0;
 	// return and advance a character
 	indat++;
@@ -620,11 +613,11 @@ char *start=indat;
 	
 static int seeidentifier()
 {
-char *start=indat;
+const char *start=indat;
 	if(!indat   || !*indat  ) return 0;
 	see(" ");
 	
-char *startnospace=indat;
+const char *startnospace=indat;
 int cnt=0;
 	if((*indat>='a' && *indat<='z') || (*indat>='A' && *indat<='Z') || (*indat=='_'))
 	{
@@ -687,7 +680,7 @@ int cnt=0;
 
 
 
-static spanpoint upto(char *breadcrumb)
+static spanpoint upto(const char *breadcrumb)
 {
 	//liqapp_log("upto   %3i,%s",(indat-infirst),breadcrumb);
 	return (spanpoint)(indat-infirst);
@@ -706,7 +699,7 @@ static int shift(int what)
 		return 0;
 	}
 }
-static int reduce(spanpoint start,char *identifier)
+static int reduce(spanpoint start, const char *identifier)
 {
 	
 liqcell *t = NULL;
@@ -719,7 +712,7 @@ liqcell *t = NULL;
 		// we want to also store the complete original text in the data property :)
 		
 		// remove trailing whitespace from the buffer
-		char *infin = indat;
+		const char *infin = indat;
 		if(infin && infin > (char *)start)
 		{
 			while(infin > (char *)start && ( infin[-1]==' ' || infin[-1]=='\t' || infin[-1]==10 || infin[-1]==13 ) )
@@ -768,7 +761,7 @@ liqcell *t = NULL;
 
 	return 1;
 }
-static int warn(spanpoint start,char *identifier,char *reason)
+static int warn(spanpoint start, const char *identifier, const char *reason)
 {
 	// should pop the stack
 	//liqapp_log("fail  msg    %3i :: %s",(indat-infirst),reason);
@@ -783,7 +776,7 @@ static int warn(spanpoint start,char *identifier,char *reason)
 	// then wrap all this up :)
 	return reduce(start,"warn");
 }
-static int fail(spanpoint start,char *reason)
+static int fail(spanpoint start, const char *reason)
 {
 	// should pop the stack
 	//liqapp_log("fail  msg    %3i :: %s",(indat-infirst),reason);
@@ -1449,9 +1442,6 @@ static int htmltagarg()
 
 	if( shift(exprref()) )
 	{
-		liqcell *tagreference = stack;
-		
-		
 		if(shift(see(" =")))
 		{
 			if(shift(exprconst()))
@@ -1661,7 +1651,7 @@ static int somehtml()
 
 
 
-int liqcell_parse_html(liqcell *self,char *inputdata)
+int liqcell_parse_html(liqcell *self, const char *inputdata)
 {
 	// this should simply be an EXPANSION class
 	// it should simply follow a rule tree

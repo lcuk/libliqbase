@@ -42,7 +42,7 @@ liqcell *build_vkbd();
 //######################################################################
 //######################################################################
 //######################################################################
-static liqcell *mkframe(liqcell *self,char *title,int w,int h)
+static liqcell *mkframe(liqcell *self, const char *title,int w,int h)
 {
 	liqcell *ch= liqcell_quickcreatevis(title,NULL,0,0,w,h);
 	//liqcell_pageautoloadbytitle_apg(ch);
@@ -51,7 +51,7 @@ static liqcell *mkframe(liqcell *self,char *title,int w,int h)
 }
 
 
-static liqcell *mkkey(liqcell *self,char *title,int w,int h)
+static liqcell *mkkey(liqcell *self, const char *title,int w,int h)
 {
 	liqcell *ch= liqcell_quickcreatevis(title,"keycap",0,0,w,h);
 	//liqcell_pageautoloadbytitle_apg(ch);
@@ -163,7 +163,6 @@ static int buttondel_click(liqcell *self,liqcelleventargs *args, liqcell *keyboa
 
 static int vkbd_textbox_shown(liqcell *self, liqcelleventargs *args, liqcell *keyboard)
 {
-	char *caption = liqcell_propgets(keyboard, "remote_textbox_caption", 0);
 	liqcell_setcaption(self, "test");
 	return 0;
 }
@@ -235,12 +234,12 @@ liqcell *liqkeyboard_create()
 //######################################################################
 //######################################################################
 //######################################################################
-static liqcell *keyrowstart(liqcell *keyboard, char *title)
+static liqcell *keyrowstart(liqcell *keyboard, const char *title)
 {
 	return mkframe(keyboard,title,700,240/5);
 }
 
-static liqcell *keystd(liqcell *keyboard, liqcell *keyrow, int keysize,char *keycode,char *normal,char *caps)
+static liqcell *keystd(liqcell *keyboard, liqcell *keyrow, int keysize,const char *keycode, const char *normal, const char *caps)
 {
 	float sizes[9] = { 1.0,      1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 6.0, 20.0};
 	// width/15

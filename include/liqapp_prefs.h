@@ -40,13 +40,12 @@ extern "C" {
 
 
 int 		liqapp_prefs_load();
-char * 		liqapp_pref_getvalue(char *prefkey);
-char *      liqapp_pref_getvalue_def(char *prefkey,char *defaultifmissing);
-liqcell *	liqapp_pref_getitem(char *prefkey);
-int 		liqapp_pref_checkexists(char *prefkey);
-char * 		liqapp_pref_setvalue(char *prefkey,char *prefvalue);
-//char * 		liqapp_pref_setvalue_vprintf(char *prefkey,char *prefformat, va_list arg);
-char * 		liqapp_pref_setvalue_printf(char *prefkey,char *prefformat, ...);
+char * 		liqapp_pref_getvalue(const char *prefkey);
+const char *      liqapp_pref_getvalue_def(const char *prefkey, const char *defaultifmissing);
+liqcell *	liqapp_pref_getitem(const char *prefkey);
+int 		liqapp_pref_checkexists(const char *prefkey);
+const char * 		liqapp_pref_setvalue(const char *prefkey, const char *prefvalue);
+const char * 		liqapp_pref_setvalue_printf(const char *prefkey, const char *prefformat, ...);
 int 		liqapp_prefs_save();
 
 #ifdef __cplusplus

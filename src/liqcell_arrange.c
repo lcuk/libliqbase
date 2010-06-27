@@ -525,7 +525,6 @@ retry:
 	int isfinished=1;
 
 	c=liqcell_getlinkchild_visible(self);
-	int remain = answercount;
 	while(c)
 	{
 		

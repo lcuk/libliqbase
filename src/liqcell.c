@@ -22,7 +22,6 @@
  *
  */
 
-#define _GNU_SOURCE
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -54,13 +53,13 @@
 extern "C" {
 #endif
 
-char*  liqcell_local_lookup_getname(liqcell *self,char *name)
+char*  liqcell_local_lookup_getname(liqcell *self, const char *name)
 {
 	liqcell *c = liqcell_local_lookup(self,name);
 	if(c) return liqcell_getname(c);
 	return NULL;
 }
-char*  liqcell_local_lookup_getcaption(liqcell *self,char *name)
+char*  liqcell_local_lookup_getcaption(liqcell *self, const char *name)
 {
 	liqcell *c = liqcell_local_lookup(self,name);
 	if(c) return liqcell_getcaption(c);
@@ -500,7 +499,7 @@ int    	liqcell_getdirty(liqcell *self)
  * @param self The liqcell to modify
  * @param name The name of the liqcell
  */
-void liqcell_setname(liqcell *self,char *name)
+void liqcell_setname(liqcell *self, const char *name)
 {
 	if(self->name)
 	{
@@ -515,7 +514,7 @@ void liqcell_setname(liqcell *self,char *name)
  * @param self The liqcell to modify
  * @param caption The caption of the liqcell
  */
-void liqcell_setcaption(liqcell *self,char *caption)
+void liqcell_setcaption(liqcell *self, const char *caption)
 {
 	// 20090626_213441 lcuk : did some extra logging for zachmon's benefit
 	if(!self)
@@ -544,7 +543,7 @@ void liqcell_setcaption(liqcell *self,char *caption)
 //############################################################# 
 
 /** Helper function for liqcell_setcaption */
-void liqcell_setcaption_vprintf(liqcell *self,char *format, va_list arg)
+void liqcell_setcaption_vprintf(liqcell *self, const char *format, va_list arg)
 {
     //time_t     now;
     //struct tm  *ts;
@@ -556,7 +555,7 @@ void liqcell_setcaption_vprintf(liqcell *self,char *format, va_list arg)
 /**
  * Set formatted string prop and 
  */
-void liqcell_setcaption_printf(liqcell *self,char *format, ...)
+void liqcell_setcaption_printf(liqcell *self, const char *format, ...)
 {
 	va_list arg;
 	va_start(arg, format);
@@ -575,7 +574,7 @@ void liqcell_setcaption_printf(liqcell *self,char *format, ...)
  * @param self The liqcell to modify
  * @param classname The classname of the liqcell
  */
-void liqcell_setclassname(liqcell *self,char *classname)
+void liqcell_setclassname(liqcell *self, const char *classname)
 {
 	if(self->classname)
 	{
@@ -590,7 +589,7 @@ void liqcell_setclassname(liqcell *self,char *classname)
  * @param self The liqcell to modify
  * @param context The context of the liqcell
  */
-void liqcell_setcontext(liqcell *self,char *context)
+void liqcell_setcontext(liqcell *self, const char *context)
 {
 	if(self->context)
 	{
@@ -1622,7 +1621,7 @@ liqcell* liqcell_child_insertsortedbyname(liqcell *self,liqcell * ch,int sortpos
  * @param name The name of the child to find
  * @return liqcell* The found child or NULL
  */
-liqcell* liqcell_child_lookup_simple(liqcell *self,char *name)
+liqcell* liqcell_child_lookup_simple(liqcell *self, const char *name)
 {
 	// 20090615_031345 lcuk : ignore dot name in this variation
 
@@ -1645,7 +1644,7 @@ liqcell* liqcell_child_lookup_simple(liqcell *self,char *name)
  * @param name The name of the child to find
  * @return liqcell* The found child or NULL
  */
-liqcell* liqcell_child_lookup(liqcell *self,char *name)
+liqcell* liqcell_child_lookup(liqcell *self, const char *name)
 {
 	// find a named child
 	char *dot=strchr(name,'.');
@@ -1696,7 +1695,7 @@ liqcell* liqcell_child_lookup(liqcell *self,char *name)
  * @param classname The classname
  * @return liqcell* The found liqcell or NULL
  */
-liqcell*  liqcell_child_lookup_nameclass(liqcell *self,char *name,char *classname)
+liqcell*  liqcell_child_lookup_nameclass(liqcell *self, const char *name, const char *classname)
 {
 	//liqapp_log("find a child called '%s:%s'",name,classname);
 	liqcell *c=self->linkchild;
@@ -1718,7 +1717,7 @@ liqcell*  liqcell_child_lookup_nameclass(liqcell *self,char *name,char *classnam
  * @param name The name of the child to find
  * @return liqcell* The found child or NULL
  */
-liqcell *liqcell_local_lookup(liqcell *self,char *name)
+liqcell *liqcell_local_lookup(liqcell *self, const char *name)
 {
 	liqcell *p=self;
 	//while(p)
@@ -1736,7 +1735,7 @@ liqcell *liqcell_local_lookup(liqcell *self,char *name)
  * @param name The name of the child to find
  * @return liqcell* The found child or NULL
  */
-liqcell*  liqcell_local_lookup_nameclass(liqcell *self,char *name,char *classname)
+liqcell*  liqcell_local_lookup_nameclass(liqcell *self, const char *name, const char *classname)
 {
 	liqcell *p=self;
 	//while(p)
@@ -1754,7 +1753,7 @@ liqcell*  liqcell_local_lookup_nameclass(liqcell *self,char *name,char *classnam
  * @param name The name of the child to find
  * @return liqcell* The found child or NULL
  */
-liqcell*  liqcell_global_lookup(liqcell *self,char *name)
+liqcell*  liqcell_global_lookup(liqcell *self, const char *name)
 {
 	liqcell *p=self;
 	while(p)
@@ -1772,7 +1771,7 @@ liqcell*  liqcell_global_lookup(liqcell *self,char *name)
  * @param name The name of the child to find
  * @return liqcell* The found child or NULL
  */
-liqcell*  liqcell_global_lookup_nameclass(liqcell *self,char *name,char *classname)
+liqcell*  liqcell_global_lookup_nameclass(liqcell *self, const char *name, const char *classname)
 {
 	liqcell *p=self;
 	while(p)
@@ -1811,7 +1810,7 @@ liqcell*  liqcell_global_lookup_nameclass(liqcell *self,char *name,char *classna
  * @param innerh Inner height
  * @return liqcell* The new liqcell
  */
-liqcell*  liqcell_quickcreatewidget(char *name,char *classname,int innerw,int innerh)
+liqcell*  liqcell_quickcreatewidget(const char *name, const char *classname,int innerw,int innerh)
 {
 	liqcell *self = liqcell_new();
 	if(classname && *classname)
@@ -1845,13 +1844,13 @@ liqcell*  liqcell_quickcreatewidget(char *name,char *classname,int innerw,int in
  * @return liqcell* The created liqcell
  * 
  */
-liqcell*  liqcell_quickcreatevis(char *name,char *classname,int x,int y,int w,int h)
+liqcell*  liqcell_quickcreatevis(const char *name, const char *classname,int x,int y,int w,int h)
 {
 	liqcell *self=NULL;	
 	if(classname && *classname)
 	{
 		// gulp!
-		liqcell *dllcache_runconstructor(char *classname);
+		liqcell *dllcache_runconstructor(const char *classname);
 		self = dllcache_runconstructor(classname);
 	}
 	if(!self)
@@ -1877,7 +1876,7 @@ liqcell*  liqcell_quickcreatevis(char *name,char *classname,int x,int y,int w,in
  * @return liqcell* The created liqcell
  * 
  */
-liqcell*  liqcell_quickcreatenameclass(char *name,char *classname)
+liqcell*  liqcell_quickcreatenameclass(const char *name, const char *classname)
 {
 	liqcell *self = liqcell_new();
 	liqcell_setname(self,name);
@@ -1897,7 +1896,7 @@ liqcell*  liqcell_quickcreatenameclass(char *name,char *classname)
  * @return liqcell* The created liqcell
  * 
  */
-liqcell*  liqcell_quickcreatedata(char *name,char *classname,void *data)
+liqcell*  liqcell_quickcreatedata(const char *name, const char *classname,void *data)
 {
 	liqcell *self = liqcell_new();
 	liqcell_setname(self,name);
@@ -1915,7 +1914,7 @@ liqcell*  liqcell_quickcreatedata(char *name,char *classname,void *data)
  * @return liqcell* The created liqcell
  * 
  */
-liqcell*  liqcell_quickcreatecaption(char *name,char *classname,char *caption)
+liqcell*  liqcell_quickcreatecaption(const char *name, const char *classname, const char *caption)
 {
 	liqcell *self = liqcell_new();
 	liqcell_setname(self,name);
@@ -1964,7 +1963,7 @@ int liqcell_iskind(liqcell *self,int cellkind)
  * @param title Title in printinf the tree
  * @param recdep Used in the recursive loop to generate indention
  */
-void liqcell_print(liqcell *self,char *title,int recdep)
+void liqcell_print(liqcell *self, const char *title,int recdep)
 {
 	char *indent = (char *)malloc(recdep+1);
 	if(!indent) return;
@@ -2036,7 +2035,7 @@ int strcmpx (const char * s1, const char * s2)
  * @param handlername The name of the handler to find
  * @return void* The handler
  */
-void*  liqcell_handlerfind(liqcell *self,char *handlername)
+void*  liqcell_handlerfind(liqcell *self, const char *handlername)
 {
 	liqcell *p=self;
 	// only check self
@@ -2075,7 +2074,7 @@ void*  liqcell_handlerfind(liqcell *self,char *handlername)
  * @return liqcell Newly created child liqcell
  * 
  */
-liqcell*  liqcell_handleradd(liqcell *self,char *handlername, void *handler)
+liqcell*  liqcell_handleradd(liqcell *self, const char *handlername, void *handler)
 {
 	//liqapp_log("add %s:%s %i",handlername,"handler",(int)handler);
 
@@ -2092,10 +2091,10 @@ liqcell*  liqcell_handleradd(liqcell *self,char *handlername, void *handler)
  * @return liqcell Newly created child liqcell
  * 
  */
-liqcell*  liqcell_handleradd_withcontext(liqcell *self,char *handlername, void *handler,void *context)
+liqcell*  liqcell_handleradd_withcontext(liqcell *self, const char *handlername, void *handler,void *context)
 {
 	//liqapp_log("add %s:%s %i",handlername,"handler",(int)handler);
-	liqcell *h = liqcell_quickcreatedata(handlername,"handler",handler);
+	liqcell *h = liqcell_quickcreatedata(handlername,"handler", handler);
 	liqcell_settag(h,context);
 	return liqcell_child_insert(self, h );
 }
@@ -2111,7 +2110,7 @@ liqcell*  liqcell_handleradd_withcontext(liqcell *self,char *handlername, void *
  * for success
  * 
  */
-int liqcell_handlerrun(liqcell *self,char *handlername,void *args)
+int liqcell_handlerrun(liqcell *self, const char *handlername,void *args)
 {
 	int (*event_handler)(liqcell *cell,void *args,void *context);
 	liqcell *p=self;
@@ -2194,7 +2193,7 @@ liqcell *liqcell_getbasewidget(liqcell *self)
  * @param classname The string to cechk
  * @param int True or False
  */
-int liqcell_isclass(liqcell *self,char *classname)
+int liqcell_isclass(liqcell *self, const char *classname)
 {
 	// return if this cell is a member of a class
 	return ( (self) && (self->classname) && (strcasecmp(self->classname, classname)==0) );

@@ -28,20 +28,7 @@ static int dialog_selectcolor_greycube_refresh(liqcell *self,liqcelleventargs *a
 	// you should do your best to account for this filter in any way you see fit
 	return 0;
 }
-/**	
- * dialog_selectcolor_greycube dialog_open - the user zoomed into the dialog
- */	
-static int dialog_selectcolor_greycube_dialog_open(liqcell *self,liqcelleventargs *args, liqcell *context)
-{
-	return 0;
-}
-/**	
- * dialog_selectcolor_greycube dialog_close - the dialog was closed
- */	
-static int dialog_selectcolor_greycube_dialog_close(liqcell *self,liqcelleventargs *args, liqcell *context)
-{
-	return 0;
-}
+
 /**	
  * dialog_selectcolor_greycube widget shown - occurs once per lifetime
  */	
@@ -49,34 +36,7 @@ static int dialog_selectcolor_greycube_shown(liqcell *self,liqcelleventargs *arg
 {
 	return 0;
 }
-/**	
- * dialog_selectcolor_greycube mouse - occurs all the time as you stroke the screen
- */	
-static int dialog_selectcolor_greycube_mouse(liqcell *self, liqcellmouseeventargs *args,liqcell *context)
-{
-	return 0;
-}
-/**	
- * dialog_selectcolor_greycube click - occurs when a short mouse stroke occured
- */	
-static int dialog_selectcolor_greycube_click(liqcell *self, liqcellclickeventargs *args,liqcell *context)
-{
-	return 0;
-}
-/**	
- * dialog_selectcolor_greycube keypress - the user pressed a key
- */	
-static int dialog_selectcolor_greycube_keypress(liqcell *self, liqcellkeyeventargs *args,liqcell *context)
-{
-	return 0;
-}
-/**	
- * dialog_selectcolor_greycube keyrelease - the user released a key
- */	
-static int dialog_selectcolor_greycube_keyrelease(liqcell *self, liqcellkeyeventargs *args,liqcell *context)
-{
-	return 0;
-}
+
 /**	
  * dialog_selectcolor_greycube paint - being rendered.  use the vgraph held in args to do custom drawing at scale
  */	
@@ -93,22 +53,14 @@ static int dialog_selectcolor_greycube_paint(liqcell *self, liqcellpainteventarg
  */	
 static int dialog_selectcolor_greycube_resize(liqcell *self,liqcelleventargs *args, liqcell *context)
 {
-	float sx=((float)self->w)/((float)self->innerw);
-	float sy=((float)self->h)/((float)self->innerh);
+	//float sx=((float)self->w)/((float)self->innerw);
+	//float sy=((float)self->h)/((float)self->innerh);
 	
 	//liqcell *image2 = liqcell_child_lookup(self, "image2");
 	//liqcell_setrect_autoscale( image2, 0,0, 116,322, sx,sy);
 	return 0;
 }
 
-/**	
- * dialog_selectcolor_greycube_child_test_seek this function shows how to access members
- */	
-	  
-static void dialog_selectcolor_greycube_child_test_seek(liqcell *dialog_selectcolor_greycube)
-{	  
-	//liqcell *image2 = liqcell_child_lookup(dialog_selectcolor_greycube, "image2");
-}	  
 /**	
  * create a new dialog_selectcolor_greycube widget
  */	

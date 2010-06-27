@@ -146,7 +146,7 @@ int dllcache_close()
 
 
 
-int dllcache_scan_libraryinternal(char *classname)
+int dllcache_scan_libraryinternal(const char *classname)
 {
 	// we are gonna expand our dllcache
 	
@@ -168,11 +168,13 @@ int dllcache_scan_libraryinternal(char *classname)
 		dllcacheitem->filename   = strdup(classname);
 		dllcacheitem->dll        = dlopen(NULL, RTLD_LAZY | RTLD_GLOBAL );//RTLD_NOW);
 		dllcacheitem->constructor= NULL;
+		
+		return 0;
 }
 
 
 
-int dllcache_scan_dllfile(char *dll_filename)
+int dllcache_scan_dllfile(const char *dll_filename)
 {
 	// we are gonna expand our dllcache
 	
@@ -210,9 +212,9 @@ int dllcache_scan_dllfile(char *dll_filename)
 		
 		//################################################# prepare the name for usage as a key
 		
-		char *filetitle= liqapp_filename_walkoverpath(dll_filename);
+		const char *filetitle= liqapp_filename_walkoverpath(dll_filename);
 			if(!filetitle){ return liqapp_warnandcontinue(-1,"dllcache_scan_dllfile, no filetitle"); }
-		char *fileext  = liqapp_filename_walktoextension(filetitle);
+		const char *fileext  = liqapp_filename_walktoextension(filetitle);
 			if(!fileext){ return liqapp_warnandcontinue(-1,"dllcache_scan_dllfile, no fileext"); }
 		char filetitlenoext[256];
 		// bug will exist here if i dont watch for it
@@ -261,7 +263,7 @@ int dllcache_scan_dllfile(char *dll_filename)
 
 
 
-int dllcache_scan_folder(char *widgetpath)
+int dllcache_scan_folder(const char *widgetpath)
 {
 
 	// scan all files inside the /widgets folder
@@ -313,7 +315,7 @@ int dllcache_scan_folder(char *widgetpath)
 		{
 			// its a regular file
 			
-			char *ext=liqapp_filename_walktoextension(ft);
+			const char *ext=liqapp_filename_walktoextension(ft);
 			if(!ext || !*ext)
 			{
 				// nothing to see here..
@@ -412,7 +414,7 @@ int dllcache_scan()
 
 
 
-liqcell *dllcache_runconstructorinner(char *classname)
+liqcell *dllcache_runconstructorinner(const char *classname)
 {
 	// must have at least one item in the stack
 	if(runstack_used==0)return NULL;
@@ -495,7 +497,7 @@ liqcell *dllcache_runconstructorinner(char *classname)
  * run a specified constructor and return the result
  */
 
-liqcell *dllcache_runconstructor(char *classname)
+liqcell *dllcache_runconstructor(const char *classname)
 {
 	if(dllcache_size==0)
 	{

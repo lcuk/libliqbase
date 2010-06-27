@@ -54,7 +54,7 @@ extern "C" {
  * @param description Describe what this titlebar is for
  * @return liqcell* The new titlebar
  */
-liqcell *uititlebar_create(char *key,char *title,char *description)
+liqcell *uititlebar_create(const char *key, const char *title, const char *description)
 {
 	
 	liqcell *self = liqcell_quickcreatewidget(key,"section", 800,100);
@@ -116,7 +116,7 @@ liqcell *uititlebar_create(char *key,char *title,char *description)
  * @param infotext Caption of the bar
  * @return liqcell* The new infobar
  */
-liqcell *uiinfobar_create(char *key,char *infotext)
+liqcell *uiinfobar_create(const char *key, const char *infotext)
 {
 	
 	liqcell *self = liqcell_quickcreatewidget(key,"uiinfobar", 800,80);
@@ -155,7 +155,7 @@ liqcell *uiinfobar_create(char *key,char *infotext)
  * @param datadefault Caption of the data
  * @return liqcell* The new textbox
  */
-liqcell *uitextbox_create(char *caption,char *datadefault)
+liqcell *uitextbox_create(const char *caption, const char *datadefault)
 {
 	
 	liqcell *self = liqcell_quickcreatewidget(caption,"uitextbox", 800,80);
@@ -241,7 +241,7 @@ static int uitxtmsgbox_captionchange(liqcell *self,liqcelleventargs *args, liqce
  * @param datadefault Caption of the data
  * @return liqcell* The new textbox
  */
-liqcell *uitxtmsgbox_create(char *caption,char *datadefault)
+liqcell *uitxtmsgbox_create(const char *caption, const char *datadefault)
 {
 	
 	liqcell *self = liqcell_quickcreatewidget(caption,"txtmsgbox", 800,220);
@@ -280,7 +280,7 @@ liqcell *uitxtmsgbox_create(char *caption,char *datadefault)
  * @param datafefault Data caption
  * @return liqcell* The new numberbox
  */
-liqcell *uinumberbox_create(char *caption,char *datadefault)
+liqcell *uinumberbox_create(const char *caption, const char *datadefault)
 {
 	
 	liqcell *self = liqcell_quickcreatewidget(caption,"uinumberbox", 800,80);
@@ -369,7 +369,7 @@ static int uienumbox_node_click(liqcell *self,liqcellclickeventargs *args, liqce
  * @param choices semicolon delim list of items (only a short qty the paradigm is only for simple choices)
  * @return liqcell* The new enumbox
  */
-liqcell *uienumbox_create(char *caption,char *datadefault,char *choices)
+liqcell *uienumbox_create(const char *caption, const char *datadefault, const char *choices)
 {
 	
 	liqcell *self = liqcell_quickcreatewidget(caption,"uienumbox", 800,80);
@@ -456,7 +456,7 @@ static int uipicturebox_click(liqcell *self,liqcellclickeventargs *args, liqcell
  * @param datafefault Data caption
  * @return liqcell* The new picturebox
  */
-liqcell *uipicturebox_create(char *caption,char *datadefaultimagefilename)
+liqcell *uipicturebox_create(const char *caption, const char *datadefaultimagefilename)
 {
 	
 	liqcell *self = liqcell_quickcreatewidget(caption,"uipicturebox", 800,150);
@@ -512,7 +512,7 @@ static int uicolorbox_click(liqcell *self,liqcellclickeventargs *args, liqcell *
  * @param datafefault Data caption
  * @return liqcell* The new colorbox
  */
-liqcell *uicolorbox_create(char *caption,char *datadefault)
+liqcell *uicolorbox_create(const char *caption, const char *datadefault)
 {
 	
 	liqcell *self = liqcell_quickcreatewidget(caption,"uicolorbox", 800,150);

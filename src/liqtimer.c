@@ -115,12 +115,12 @@ liqcell *liqtimer_create()
 		
 		// todo: should make sure we break out of duldrums if the user enables or disables us
 		
-		liqcell *meta = mkmeta_group(
-							mkmeta_title(        "liqtimer"),
-							mkmeta_description(  "a small control to send repeated liqtimer events"),
-							mkmeta_author(       "liquid@gmail.com"),
-							mkmeta_version(      "1.0"),
-							NULL);
+		mkmeta_group(
+					mkmeta_title(        "liqtimer"),
+					mkmeta_description(  "a small control to send repeated liqtimer events"),
+					mkmeta_author(       "liquid@gmail.com"),
+					mkmeta_version(      "1.0"),
+					NULL);
 
 
 
@@ -153,37 +153,6 @@ liqcell *liqtimer_create()
 	}
 
 	return self;
-}
-
-
-
-
-//#####################################################################
-//#####################################################################
-//##################################################################### main :)
-//#####################################################################
-//#####################################################################
-
-// this is only used when liqtreebrowse is compiled as a standalone binary
-// otherwise it can be constructed as a widget and exist with exactly the same lifespan
-
-static void liqcell_easyrun_internal(liqcell *dialog)
-{
-	// 20090414_210111 lcuk : very simple test of an easyrun automaticl opening wrapper
-	// 20090414_210124 lcuk : it is clear to me now that easyrun itself should maintain a stack of the items it is currently
-	// 20090414_210144 lcuk : showing and in that it willalso be able to list them and show them properly
-	
-	if(0!=liqcanvas_init( 800,480, 1))
-	{
-		liqapp_errorandfail(-1,"canvas Init");
-		//closeall();
-		return;
-	}
-		
-	liqcell_easyrun( dialog );
-		
-	liqcanvas_close();
-
 }
 
 #ifdef __cplusplus

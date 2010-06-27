@@ -72,7 +72,7 @@ int liqaccel_read(int *ax,int *ay,int *az)
 	if(rs != 3){ liqapp_log("liqaccel, cannot read information"); return -2;}
 	
 	// patch to allow smoothing to be configurable
-	char *prefsmooth = liqapp_pref_getvalue_def("liqaccel_usesmoothing","yes");
+	const char *prefsmooth = liqapp_pref_getvalue_def("liqaccel_usesmoothing","yes");
 	
 	if( ocnt>0 && (prefsmooth && *prefsmooth == 'y') )
 	{

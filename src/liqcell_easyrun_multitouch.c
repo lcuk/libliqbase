@@ -97,12 +97,6 @@ static void liqmultitouch_initrectfromliqpointstream(liqcell *self,liqpoint *mos
  */	
 int liqcell_easyrun_mouseeventargs_multitouchprepare(liqcell *self, liqcellmouseeventargs *args,liqcell *context)
 {
-		liqcell *par = self;//liqcell_getlinkparent(self);
-		liqcell *body = self;
-		//liqapp_log("# liqcell kinetic body xy(%i,%i) wh(%i,%i) :: %s   ",body->x,body->y,  body->w,body->h,  body->name);
-		//liqapp_log("# liqcell kinetic par  xy(%i,%i) wh(%i,%i) :: %s   ",par->x,par->y,  par->w,par->h,  par->name);
-			
-					
 			//	if((args->msy-args->oy) >= (par->h*0.8))
 				{
 					// 20090724_034021 lcuk :  i'd like to try something here..

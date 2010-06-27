@@ -152,7 +152,7 @@ int pagefilename_breakapart(struct pagefilename *self,char *filename)
 	
 	//########################################### break into columns, removing the '.'s as we go
 	char * inorig = strdup(fnstart);
-		char *cols[80]={"X","X","X","X","X","X","X","X"};
+		const char *cols[80]={"X","X","X","X","X","X","X","X"};
 		int colcount=0;
 		char *indat=inorig;
 		cols[0] = indat;

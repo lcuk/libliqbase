@@ -99,7 +99,7 @@ typedef union
 {
 	struct							// evtype 0,3,4
 	{
-		unsigned int type;
+		int type;
 		unsigned long ticks;
 		unsigned int state;
 	};

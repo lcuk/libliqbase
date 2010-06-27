@@ -142,6 +142,7 @@ int liqcanvas_settitle(char *newtitle)
     
     XSetStandardProperties(liqcanvas_getx11info()->mydisplay, liqcanvas_getx11info()->mywindow, newtitle,
             newtitle, None, NULL, 0, NULL);
+    return 0;
 }
 
 

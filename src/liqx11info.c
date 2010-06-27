@@ -133,6 +133,8 @@ int liqx11info_regrab_focus(liqx11info *myx11info)
 	{
 		{ liqapp_errorandfail(-1,"x11info XRaiseWindow, could not raise"); }
 	}
+	
+	return 0;
 }
 
 
@@ -505,6 +507,8 @@ static int liqx11info_overlay_bring_online(liqx11info *myx11info)
 
 						myx11info->myisvisibleflag=1;
 						myx11info->myisfocusflag=1;
+						
+						return 0;
 }
 
 
@@ -519,7 +523,9 @@ int liqx11info_minimize(liqx11info *myx11info)
 							cover_image_blit(myx11info);
 							liqx11overlay_hide(myx11info->myoverlay);
 							//liqx11overlay_refreshdisplay(myx11info->myoverlay);
-						}	
+						}
+						
+						return 0;	
 }
 
 

@@ -25,9 +25,6 @@
 extern "C" {
 #endif
 
-static int monitor_run(liqcell *context);
-
-
 //#include "liqdialogs.h"
 
 
@@ -43,19 +40,19 @@ static int monitor_run(liqcell *context);
     {
         if(!self)
         {
-            snprintf(buffer,bufferlen,"");
+            *buffer = '\0';
             return -1;
         }
         liqcell *body= liqcell_child_lookup(self, "body");
         if(!body)
         {
-            snprintf(buffer,bufferlen,"");
+            *buffer = '\0';
             return -2;
         }
         liqcell *c=liqcell_getlinkchild_visual(body);
         if(!c)
         {
-            snprintf(buffer,bufferlen,"");
+            *buffer = '\0';
             return -1;
         }
         snprintf(buffer,bufferlen,"%s",liqcell_propgets(c,"imagefilename",""));
@@ -347,10 +344,6 @@ int autothumb_getthumb(liqcell *self,char *bigfilename)
 		liqimage *myimg = liqcell_getimage(self);
 		if(myimg && liqcell_propgets(self,"imagefilenamebig",NULL)==NULL)
 		{
-			
-			
-			
-			
 			liqapp_log("item loaded, we loaded the full image, but we want the thumbnail");
 			// the image assigned should be the BIG image
 			// shall we throw it away and replace it with a thumb?
@@ -378,6 +371,8 @@ int autothumb_getthumb(liqcell *self,char *bigfilename)
 
 			}
 		}
+		
+		return 0;
 	}
 
 	//##########################################################################
@@ -407,174 +402,10 @@ int autothumb_getthumb(liqcell *self,char *bigfilename)
 				*/
 			}
 		}
-	}
-
-
-
-
-
-
-static int liqrecentphotoselect_item_add(liqcell *self,char *filenamebuffer)
-{
-	// 20090528_215559 lcuk : first attempt at runtime expansion
-	// 20090528_215639 lcuk : its a hack because i should be using the filemonitor class elsewhere
-	// 20090528_215654 lcuk : and it should be automatic
-	// 20090528_215943 lcuk : class should be pre-tested or something here
-	// 20090528_215951 lcuk : this runtime function would obviously be too slow for normal use
-
-	liqapp_log("adding %s",filenamebuffer);
-
-	//struct pagefilename pfn;
-	//if(	(pagefilename_breakapart(&pfn,filenamebuffer) == 0) )
-    
-	{
-		
-		
-		//char buf[FILENAME_MAX];			snprintf(buf,sizeof(buf),"%s%s",pfn.filedate,pfn.filetitle);
-
-		liqcell *body = liqcell_child_lookup( self,"body");
-
-
-			struct stat     statbuf;
-			if(stat(filenamebuffer, &statbuf) == -1)
-			{
-				liqapp_log("liqrecentphotoselect_item_add stat failed: '%s'",filenamebuffer);
-				return -1;
-			}
-                
-						struct tm     *pictm;
-						pictm = localtime(&statbuf.st_mtime);
-						char   picdate[64];
-						strftime(picdate,sizeof(picdate), "%Y%m%d_%H%M%S",pictm);
-                        
-                        
-						char pickey[FILENAME_MAX];
-						snprintf(pickey,sizeof(pickey),"%s_%s", picdate, liqapp_filename_walkoverpath(filenamebuffer) );
-                        
-                        
-                        
-
-	
-						liqcell *c = liqcell_quickcreatevis(pickey,   "picture",   1,1,1,1    );
-						liqcell_propseti(c,"lockaspect",1);
-						liqcell_propsets(c,"imagefilename",filenamebuffer);
-						
-						liqcell_handleradd(c,    "shown",         (void *)liqrecentphotoselect_item_shown);
-						liqcell_handleradd(c,    "click",         (void *)liqrecentphotoselect_item_click);
-						liqcell_handleradd(c,    "imageloaded",   (void *)liqrecentphotoselect_item_imageloaded);
-
-						liqcell_handleradd_withcontext(c, "dialog_open", (void *)liqrecentphotoselect_item_dialog_open ,self);
-						liqcell_handleradd_withcontext(c, "dialog_close", (void *)liqrecentphotoselect_item_dialog_close ,self);
-
-
-						liqcell_child_insertsortedbyname( body, c,0);
-						
-						
-						
-						liqcell_handlerrun(self,"layout",NULL);
-						
-						
-						
-						
-						//liqcell_setsize(body,self->w,self->h);
-						//liqcell_child_arrange_makegrid(body,3,3);
-	}					
-}
-
-
-
-
-
-
-
-static liqcell *editoverlay_create(int w,int h)
-{
-	//
-
-	liqcell *self = liqcell_quickcreatewidget("editoverlay","overlay", w,h);
-
-	if(self)
-	{
-		liqcell *c;
-
-					//liqcell_propseti(self,"levelofdetail",1);
-					c = liqcell_quickcreatevis("zoom",   "picture",   w*0,0,w/4,h    );
-					liqcell_propseti(c,"lockaspect",1);
-					liqcell_propsets(c,"imagefilename","/usr/share/liqbase/media/zoom.png");
-					//liqcell_handleradd(c,    "mouse",   widget_mouse);
-					//liqcell_handleradd(c,    "click",   widget_click);
-					liqcell_child_append( self, c );
-
-
-					//liqcell *c;
-					c = liqcell_quickcreatevis("barcode",   "picture",   w*0.25,0,w/4,h    );
-					liqcell_propseti(c,"lockaspect",1);
-					liqcell_propsets(c,"imagefilename","/usr/share/liqbase/media/barcode.png");
-					//liqcell_handleradd(c,    "mouse",   widget_mouse);
-					//liqcell_handleradd(c,    "click",   widget_click);
-					liqcell_child_append( self, c );
-
-
-					c = liqcell_quickcreatevis("postcard",   "picture",   w*0.5,0,w/4,h    );
-					liqcell_propseti(c,"lockaspect",1);
-					liqcell_propsets(c,"imagefilename","/usr/share/liqbase/media/postcard.png");
-					//liqcell_handleradd(c,    "mouse",   widget_mouse);
-					//liqcell_handleradd(c,    "click",   widget_click);
-					liqcell_child_append( self, c );
-/*
-
-					c = liqcell_quickcreatevis("more",   "picture",   w*0.75,0,w/4,h    );
-					liqcell_propseti(c,"lockaspect",1);
-					liqcell_propsets(c,"imagefilename","media/more.png");
-					//liqcell_handleradd(c,    "mouse",   widget_mouse);
-					//liqcell_handleradd(c,    "click",   widget_click);
-					liqcell_child_append( self, c );
-
-
-					c = liqcell_quickcreatevis("management",   "picture",   w*0.75,0,w/4,h    );
-					liqcell_propseti(c,"lockaspect",1);
-					liqcell_propsets(c,"imagefilename","media/manage.png");
-					//liqcell_handleradd(c,    "mouse",   widget_mouse);
-					//liqcell_handleradd(c,    "click",   widget_click);
-					liqcell_child_append( self, c );*/
-
-
-			//liqcell_child_arrange_autoflow(self);
-			//liqcell_child_arrange_easytile(self);
-
-	}
-	return self;
-}
-
-
-
-
-
-
-
-	static int timer_tick(liqcell *self, liqcellmouseeventargs *args, liqcell *context)
-	{
-		liqcell_propseti(self,"timerinterval", 32767 );
-		liqcell_setenabled(self,0);
-		// now, run the channel? :D
-		//liqfilemonitor_run((liqcell*)self->tag);
-		monitor_run(context);
 		
 		return 0;
 	}
 
-
-
-
-
-
-
-//    struct tm     *tm;
-//           tm = localtime(&statbuf.st_mtime);
-//           strftime(datestring, sizeof(datestring), nl_langinfo(D_T_FMT), tm);
-		   
-		   
-		   
 static int liqcell_scan_folder_for_images(liqcell *self,char *path)
 {
 	liqcell *body= liqcell_child_lookup(self, "body");
@@ -584,8 +415,6 @@ static int liqcell_scan_folder_for_images(liqcell *self,char *path)
 		struct dirent *	dir_entry_p;
 		char 			fn[FILENAME_MAX+1];
 		char          * ft;
-		
-		struct pagefilename pfn;
 		
 		dir_p = opendir( widgetpath );			
 		if(!dir_p)
@@ -618,7 +447,7 @@ static int liqcell_scan_folder_for_images(liqcell *self,char *path)
 			// got the information we need
 			if ( S_ISREG(statbuf.st_mode) )
 			{
-				char *ext=liqapp_filename_walktoextension(ft);
+				const char *ext=liqapp_filename_walktoextension(ft);
 				if(!ext || !*ext)
 				{
 					// nothing to see here..
@@ -677,6 +506,8 @@ static int liqcell_scan_folder_for_images(liqcell *self,char *path)
 			}
 		}
 		closedir(dir_p);
+		
+		return 0;
 }
 
 
@@ -821,25 +652,12 @@ static int liqcell_scan_folder_for_images(liqcell *self,char *path)
  * liqrecentphotoselect layout - make any adjustments to fill the content as are required
  */	
 static int liqrecentphotoselect_layout(liqcell *self,liqcelleventargs *args, liqcell *context)
-{
-	
-	liqcell *title= liqcell_child_lookup(self, "title");
+{	
 	liqcell *body= liqcell_child_lookup(self, "body");
-		liqcell *headskip= liqcell_child_lookup(body, "__headskip");
 	
 		// make a normal grid
 		liqcell_setrect( body, 0, 0, liqcell_getw(self),liqcell_geth(self) );
-		liqcell_child_arrange_makegrid(body,3,3);
-		
-//### use only if title in use
-		
-		// make sure the headerskip is adjusted
-//		liqcell_setsize(headskip,liqcell_getw(title),liqcell_geth(title));
-		// now flow the rest
-//		liqcell_child_arrange_autoflow(body);
-		// and make sure its positioned correctly
-//		liqcell_setrect( body, 0, 0, liqcell_getw(self),liqcell_geth(body) );
-		
+		liqcell_child_arrange_makegrid(body,3,3);		
  
 	return 0;
 }
@@ -941,7 +759,6 @@ liqcell *liqrecentphotoselect_create()
 		liqcell_propsets(  self, "monitorpath" , buf);
 		//liqcell_propsets(  self, "watchpattern" , "liq.*");
 
-		int cnt=0;
 		liqcell *c=NULL;
 
 		//liqcell_child_arrange_makegrid(body,3,3);
@@ -973,195 +790,6 @@ liqcell *liqrecentphotoselect_create()
 	}
 	
 	return self;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <string.h>
-#include <stdio.h>
-#include <errno.h>
-#include <sys/inotify.h>
-
-
-
-
-
-
-
-// 20090620_215315 lcuk : this was defined as 1024 units, WAY over the top
-
-#define BUFF_SIZE ((sizeof(struct inotify_event)+FILENAME_MAX)*32)
-
-
-
-
-static void monitor_get_event(int fd, const char * target,liqcell *context)
-{
-   ssize_t len=0, i = 0;
-   char action[81+FILENAME_MAX] = {0};
-   char buff[BUFF_SIZE] = {0};
-
-	//liqapp_log("inotify_getevent reading from '%s'",target);
-
-   len = read (fd, buff, BUFF_SIZE);
-   
-   while (i < len)
-   {
-      struct inotify_event *pevent = (struct inotify_event *)&buff[i];
-      char action[81+FILENAME_MAX] = {0};
-	  
-	  if ( (pevent->len) )
-	  {
-        char *ext=liqapp_filename_walktoextension(pevent->name);
-		if(!ext || !*ext)
-        {
-        }
-        else
-        {
-            // silly hack
-            if( strcasecmp(ext,"filepart")==0 ) goto nextitem;
-        }
-
-		snprintf(action,sizeof(action),"%s/%s",target,pevent->name);
-		
-		liqapp_log("inotify_getevent '%s', %i %i   %i::'%s'",target,i,len,pevent->mask,action);
-
-   		  // dealing with a file
-		  if( (pevent->mask & IN_CLOSE_WRITE) || (pevent->mask & IN_MOVED_TO) )
-		  {
-			liqrecentphotoselect_item_add(context,action);
-		  }
-			
-		//  if(pevent->mask & IN_CREATE)
-		//    liqrecentsketches_sketch_add(context,pevent->name);
-	  }
-nextitem:
-{}
-      i += sizeof(struct inotify_event) + pevent->len;
-
-   }
-
-} 
-
-
-
-
-
-static int monitor_run(liqcell *context)
-{
-   char *target;//[FILENAME_MAX];
-   int result;
-   int fd;
-   int wd;   /* watch descriptor */
-
-	char * folder = liqcell_propgets(context,"monitorpath",".");
-
-	if( (!folder) || (!*folder) || (!liqapp_pathexists(folder)) )
-	{
-      liqapp_log( "inotify monitor path does not exist\n");
-      return -1;		
-	}
-
-   //strcpy (target, folder);
-   target=strdup(folder);
-   if(!target)
-   {
-      liqapp_log( "inotify could not alloc target\n");
-      return -1;	
-   }
-   
-   liqapp_log("inotify about to init() for '%s'",target);
-   fd = inotify_init();
-   liqapp_log("inotify init() returned %i",fd);
-   if (fd < 0)
-   {
-      liqapp_log( "monitor error init: %s\n", strerror(errno));
-	  free(target);
-      return 1;
-   }
-   liqapp_log("inotify about to add_watch for '%s'",target);
-   wd = inotify_add_watch(fd, target, IN_CLOSE_WRITE | IN_MOVED_TO);//IN_ALL_EVENTS);
-   //wd = inotify_add_watch(fd, target, IN_ALL_EVENTS);
-   liqapp_log("inotify add_watch returned %i",wd);
-   if (wd < 0)
-   {
-      liqapp_log( "monitor error add: %s\n", strerror(errno));
-	  free(target);
-      return -1;
-   }
-   
-   liqapp_log("inotify looping for '%s'",target);
-
-         //monitor_get_event(fd, target,context);
-  
-   while (1)
-   {
-		liqapp_sleep(25);
-        monitor_get_event(fd, target,context);
-   }
-   
-   free(target);
-
-   return 0;
 }
 
 #ifdef __cplusplus

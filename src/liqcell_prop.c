@@ -47,7 +47,7 @@ extern "C" {
  * @param name The prop to remove
  * @return int Success or Failure
  */
-int liqcell_propremoves(liqcell *self,char *name)
+int liqcell_propremoves(liqcell *self, const char *name)
 {
 	liqcell *c=liqcell_local_lookup_nameclass(self,name,"prop.s");
 	if(c)
@@ -67,7 +67,7 @@ int liqcell_propremoves(liqcell *self,char *name)
  * @param name The prop to remove
  * @return int Success or Failure
  */
-int liqcell_propremovei(liqcell *self,char *name)
+int liqcell_propremovei(liqcell *self, const char *name)
 {
 	liqcell *c=liqcell_local_lookup_nameclass(self,name,"prop.i");
 	if(c)
@@ -86,7 +86,7 @@ int liqcell_propremovei(liqcell *self,char *name)
  * @param name The prop to remove
  * @return int Success or Failure
  */
-int liqcell_propremovep(liqcell *self,char *name)
+int liqcell_propremovep(liqcell *self, const char *name)
 {
 	liqcell *c=liqcell_local_lookup_nameclass(self,name,"prop.p");
 	if(c)
@@ -106,7 +106,7 @@ int liqcell_propremovep(liqcell *self,char *name)
  * @param valueifnotfound Return this value if prop not found
  * @return int The integer prop or valueifnotfound
  */
-int liqcell_propgeti(liqcell *self,char *name,int valueifnotfound)
+int liqcell_propgeti(liqcell *self, const char *name,int valueifnotfound)
 {
 	liqcell *c=liqcell_local_lookup_nameclass(self,name,"prop.i");
 	if(c)
@@ -125,7 +125,7 @@ int liqcell_propgeti(liqcell *self,char *name,int valueifnotfound)
  * @param valueifnotfound Return this value if prop not found
  * @return int The integer prop or valueifnotfound
  */
-void *liqcell_propgetp(liqcell *self,char *name,void *valueifnotfound)
+void *liqcell_propgetp(liqcell *self, const char *name,void *valueifnotfound)
 {
 	liqcell *c=liqcell_local_lookup_nameclass(self,name,"prop.p");
 	if(c)
@@ -148,7 +148,7 @@ void *liqcell_propgetp(liqcell *self,char *name,void *valueifnotfound)
  * @return pointer value
  * 
  */
-void * liqcell_propsetp(liqcell *self,char *name,void * value)
+void * liqcell_propsetp(liqcell *self, const char *name,void * value)
 {
 	liqcell *c=liqcell_child_lookup_nameclass(self,name,"prop.p");
 	if(!c) c = liqcell_child_insert(self, liqcell_quickcreatenameclass(name,"prop.p") );
@@ -174,7 +174,7 @@ void * liqcell_propsetp(liqcell *self,char *name,void * value)
  * @return int value
  * 
  */
-int liqcell_propseti(liqcell *self,char *name,int value)
+int liqcell_propseti(liqcell *self, const char *name,int value)
 {
 	liqcell *c=liqcell_child_lookup_nameclass(self,name,"prop.i");
 	if(!c) c = liqcell_child_insert(self, liqcell_quickcreatenameclass(name,"prop.i") );
@@ -196,7 +196,7 @@ int liqcell_propseti(liqcell *self,char *name,int value)
  * @param valueifnotfound Return this value if prop not found
  * @return char* The string prop or valueifnotfound
  */
-char *liqcell_propgets(liqcell *self,char *name,char *valueifnotfound)
+char *liqcell_propgets(liqcell *self, const char *name,char *valueifnotfound)
 {
 	liqcell *c=liqcell_local_lookup_nameclass(self,name,"prop.s");
 	if(c)
@@ -213,7 +213,7 @@ char *liqcell_propgets(liqcell *self,char *name,char *valueifnotfound)
  * @param value The value to set to prop "name"
  * @return char* The value provided
  */
-char *liqcell_propsets(liqcell *self,char *name,char *value)
+char *liqcell_propsets(liqcell *self, const char *name,char *value)
 {
 	liqcell *c=liqcell_child_lookup_nameclass(self,name,"prop.s");
 	if(!c) c = liqcell_child_insert(self, liqcell_quickcreatenameclass(name,"prop.s") );
@@ -235,7 +235,7 @@ char *liqcell_propsets(liqcell *self,char *name,char *value)
 //############################################################# 
 
 /** Helper function for liqcell_propsets_printf */
-char *liqcell_propsets_vprintf(liqcell *self,char *name,char *format, va_list arg)
+char *liqcell_propsets_vprintf(liqcell *self, const char *name, const char *format, va_list arg)
 {
     //time_t     now;
     //struct tm  *ts;
@@ -252,7 +252,7 @@ char *liqcell_propsets_vprintf(liqcell *self,char *name,char *format, va_list ar
  * @param ... va_list args
  * @return char* The formatted string prop
  */
-char *liqcell_propsets_printf(liqcell *self,char *name,char *format, ...)
+char *liqcell_propsets_printf(liqcell *self, const char *name, const char *format, ...)
 {
 	va_list arg;
 	va_start(arg, format);

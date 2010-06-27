@@ -67,10 +67,10 @@ extern liqapp app;
 
 //#######################################################
 unsigned long liqapp_GetTicks();
-int 		liqapp_init(int argc, char* argv[],char *title,char *version);
-int 		liqapp_log(char *logentry, ...);
-int 		liqapp_errorandfail(int returnstatus,char *logentry);
-int 		liqapp_warnandcontinue(int returnstatus,char *logentry);
+int 		liqapp_init(int argc, char* argv[], const char *title, const char *version);
+int 		liqapp_log(const char *logentry, ...);
+int 		liqapp_errorandfail(int returnstatus, const char *logentry);
+int 		liqapp_warnandcontinue(int returnstatus, const char *logentry);
 int 		liqapp_close();
 
 
@@ -91,7 +91,7 @@ int 		liqapp_sleep(unsigned long millisec);
 
 
 
-int 		liqapp_formatnow(char *buffer,int buffersize,char *format);
+int 		liqapp_formatnow(char *buffer,int buffersize, const char *format);
 // 20090718_163211 lcuk : example of use:
 
 // char datestamp[20];
@@ -115,16 +115,16 @@ int liqapp_datestamp_to_date(char *datestamp,struct tm *timebuf);		// convert a 
 char * 		liqapp_format_strftime(char *buffer,int buffersize,char *strftime_fmt);
 
 
-int 		liqapp_folderexists(char *pathname);
-int   		liqapp_pathexists(char *pathname);
-int   		liqapp_fileexists(char *filename);
-int         liqapp_filesize(char *filename);
-char *		liqapp_filename_walkoverpath(char *filename);
-char *		liqapp_filename_walktoextension(char *filename);
-int   		liqapp_file_copy (char * from, char * to, int allowoverwrite);
-int         liqapp_usernamechange(char *newusername);
+int 		liqapp_folderexists(const char *pathname);
+int   		liqapp_pathexists(const char *pathname);
+int   		liqapp_fileexists(const char *filename);
+int         liqapp_filesize(const char *filename);
+const char *		liqapp_filename_walkoverpath(const char *filename);
+const char *		liqapp_filename_walktoextension(const char *filename);
+int   		liqapp_file_copy (const char * from, const char * to, int allowoverwrite);
+int         liqapp_usernamechange(const char *newusername);
 
-int         liqapp_url_wget(char *url,char *resultfilename,int resultbufsize);
+int         liqapp_url_wget(const char *url, char *resultfilename,int resultbufsize);
 
 //#######################################################
 

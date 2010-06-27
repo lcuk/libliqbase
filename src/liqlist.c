@@ -50,7 +50,7 @@ int liqlist_clear(liqcell *liqlist)
 }
         
         
-int liqlist_additem(liqcell *liqlist,char *item)
+int liqlist_additem(liqcell *liqlist, const char *item)
 {
     //liqcell *listitemtemplate = liqcell_child_lookup(liqlist, "listitemtemplate");
 	liqcell *backplane = liqcell_child_lookup(liqlist, "backplane");
@@ -69,6 +69,7 @@ int liqlist_additem(liqcell *liqlist,char *item)
     liqcell_setselected(listitemtemplate,1);
     liqcell_child_arrange_easycol(backplane);
     liqcell_ensurevisible(listitemtemplate);
+    return 0;
 }
 
 int liqlist_setindex(liqcell *liqlist,int index)
@@ -208,15 +209,6 @@ static int liqlist_resize(liqcell *self,liqcelleventargs *args, liqcell *context
 	return 0;
 }
 
-/**	
- * liqlist_child_test_seek this function shows how to access members
- */	
-	  
-static void liqlist_child_test_seek(liqcell *self)
-{	  
-    liqcell *listitemtemplate = liqcell_child_lookup(self, "listitemtemplate");
-	liqcell *backplane = liqcell_child_lookup(self, "backplane");
-}	  
 /**	
  * create a new liqlist widget
  */	

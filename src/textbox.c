@@ -26,7 +26,7 @@
 #include <stdlib.h>
 
 
-#include <liqbase/liqui.h>
+#include "liqui.h"
 
 
 
@@ -137,7 +137,6 @@ extern "C" {
 		
 		//##########################
 		// work out which line the mouse has hit
-		int lx=mx;
 		int ly=0;
 		
 		ly = my / lineheight;
@@ -421,17 +420,6 @@ selch:	{ }
 static int textbox_keyrelease(liqcell *self, liqcellkeyeventargs *args)
 {
 	return 0;
-}
-
-
-
-static int widget_click(liqcell *self, liqcellclickeventargs *args)
-{
-	liqcell *dialog=liqcell_getcontent(self);
-	liqcell_easyrun(dialog);
-	liqcell_setvisible(dialog,1);
-	//args->newdialogtoopen = liqcell_getcontent(self);
-	return 1;
 }
 
 static int keyboard_show_button_click(liqcell *self,liqcellclickeventargs *args, liqcell *textbox)

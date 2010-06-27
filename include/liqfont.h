@@ -96,9 +96,9 @@ struct liqfont
 };
 
 // use the cache functions for speed :)
-liqfont *liqfont_cache_getttf(char *name,int size,int rotation);
+liqfont *liqfont_cache_getttf(const char *name,int size,int rotation);
 void     liqfont_cache_release(liqfont *self);
-liqfont * liqfont_newfromfilettf(char *name,int size,int rotation);
+liqfont * liqfont_newfromfilettf(const char *name,int size,int rotation);
 
 liqfont *liqfont_new();
 liqfont *liqfont_hold(liqfont *self);
@@ -116,9 +116,9 @@ liqfontglyph *liqfont_getglyph(liqfont *self,int glyphindex);	// release afterwa
 int liqfont_getglyphwidth(liqfont *self,int glyphindex);		// automatic handling
 int liqfont_getglyphheight(liqfont *self,int glyphindex);
 
-int liqfont_textfitinside(liqfont *self,char *data,int availablewidth);
-int liqfont_textwidth(liqfont *self,char *data);
-int liqfont_textwidthn(liqfont *self,char *data,int datalen);
+int liqfont_textfitinside(liqfont *self, const char *data,int availablewidth);
+int liqfont_textwidth(liqfont *self, const char *data);
+int liqfont_textwidthn(liqfont *self, const char *data,int datalen);
 int liqfont_textheight(liqfont *self);
 
 

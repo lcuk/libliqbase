@@ -22,7 +22,7 @@ int textbox_fakebackspace(liqcell *textbox);
 
 
 int liqlist_clear(liqcell *liqlist); 
-int liqlist_additem(liqcell *liqlist,char *item);
+int liqlist_additem(liqcell *liqlist, const char *item);
 int liqlist_setindex(liqcell *liqlist,int index);
 int liqlist_getindex(liqcell *liqlist);
 int liqlist_count(liqcell *liqlist);

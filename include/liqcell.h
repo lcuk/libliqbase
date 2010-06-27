@@ -131,11 +131,11 @@ void    liqcell_free(liqcell *self);
 
 //######################################################################### standard constructors
 
-liqcell*  liqcell_quickcreatewidget(char *name,char *classname,int innerw,int innerh);
-liqcell*  liqcell_quickcreatevis(char *name,char *classname,int x,int y,int w,int h);
-liqcell*  liqcell_quickcreatedata(char *name,char *classname,void *data);
-liqcell*  liqcell_quickcreatecaption(char *name,char *classname,char *caption);
-liqcell*  liqcell_quickcreatenameclass(char *name,char *classname);
+liqcell*  liqcell_quickcreatewidget(const char *name, const char *classname,int innerw,int innerh);
+liqcell*  liqcell_quickcreatevis(const char *name, const char *classname,int x,int y,int w,int h);
+liqcell*  liqcell_quickcreatedata(const char *name, const char *classname,void *data);
+liqcell*  liqcell_quickcreatecaption(const char *name, const char *classname, const char *caption);
+liqcell*  liqcell_quickcreatenameclass(const char *name, const char *classname);
 
 //liqcell * liqcell_quickcreatefull(char *name,char *classname,char *context,void *data);
 
@@ -149,9 +149,9 @@ int liqcell_child_remove(liqcell *self,liqcell *child);
 int liqcell_child_removeall(liqcell *self);
 int liqcell_child_removeallvisual(liqcell *self);
 int liqcell_child_removeallclass(liqcell *self,char *classname);
-liqcell*  liqcell_child_lookup(liqcell *self,char *name); // use dotted branches
-liqcell*  liqcell_child_lookup_simple(liqcell *self,char *name);	// ignore dotted branches
-liqcell*  liqcell_child_lookup_nameclass(liqcell *self,char *name,char *classname);
+liqcell*  liqcell_child_lookup(liqcell *self, const char *name); // use dotted branches
+liqcell*  liqcell_child_lookup_simple(liqcell *self, const char *name);	// ignore dotted branches
+liqcell*  liqcell_child_lookup_nameclass(liqcell *self, const char *name, const char *classname);
 
 liqcell *liqcell_lastchild(liqcell *self);
 
@@ -171,21 +171,21 @@ liqcell *	liqcell_getlinkchild_visible(liqcell *self);
 //######################################################################### searching
 
 //liqcell*  liqcell_findfirst(liqcell *self,char *query);
-liqcell*  liqcell_findnext(liqcell *self,char *query);
+liqcell*  liqcell_findnext(liqcell *self, const char *query);
 
-int       liqcell_isclass(liqcell *self,char *classname);
+int       liqcell_isclass(liqcell *self, const char *classname);
 
-liqcell*  liqcell_local_lookup(liqcell *self,char *name);
-liqcell*  liqcell_local_lookup_nameclass(liqcell *self,char *name,char *classname);
-liqcell*  liqcell_global_lookup(liqcell *self,char *name);
-liqcell*  liqcell_global_lookup_nameclass(liqcell *self,char *name,char *classname);
+liqcell*  liqcell_local_lookup(liqcell *self, const char *name);
+liqcell*  liqcell_local_lookup_nameclass(liqcell *self, const char *name, const char *classname);
+liqcell*  liqcell_global_lookup(liqcell *self, const char *name);
+liqcell*  liqcell_global_lookup_nameclass(liqcell *self, const char *name, const char *classname);
 
-void *  liqcell_handlerfind(liqcell *self,char *handlername);
-liqcell*  liqcell_handleradd( liqcell *self,char *handlername, void *handler);
+void *  liqcell_handlerfind(liqcell *self, const char *handlername);
+liqcell*  liqcell_handleradd( liqcell *self, const char *handlername, void *handler);
 // add a handler but pass in some context data
 // the context is passed into the handler through an additional 3rd parameter
-liqcell*  liqcell_handleradd_withcontext( liqcell *self,char *handlername, void *handler,void *context);
-int 	liqcell_handlerrun( liqcell *self,char *handlername,void *args);
+liqcell*  liqcell_handleradd_withcontext( liqcell *self, const char *handlername, void *handler,void *context);
+int 	liqcell_handlerrun( liqcell *self, const char *handlername,void *args);
 
 
 
@@ -194,34 +194,34 @@ int 	liqcell_handlerrun( liqcell *self,char *handlername,void *args);
 //int 	handler(liqcell *self,void *eventargs,void *context);
 
 
-char*  liqcell_local_lookup_getname(liqcell *self,char *name);
-char*  liqcell_local_lookup_getcaption(liqcell *self,char *name);
+char*  liqcell_local_lookup_getname(liqcell *self, const char *name);
+char*  liqcell_local_lookup_getcaption(liqcell *self, const char *name);
 
 
 //######################################################################### standard control properties
 
-void 	liqcell_setname(liqcell *self,char *name);				// symbolic identifier
+void 	liqcell_setname(liqcell *self, const char *name);				// symbolic identifier
 char *	liqcell_getname(liqcell *self);
 
 
 
-void 	liqcell_setcaption(liqcell *self,char *caption);		// easy translatable label
+void 	liqcell_setcaption(liqcell *self, const char *caption);		// easy translatable label
 char *	liqcell_getcaption(liqcell *self);
 
 
 
-void 	liqcell_setcaption_vprintf(liqcell *self,char *format, va_list arg);
-void 	liqcell_setcaption_printf(liqcell *self,char *format, ...);
+void 	liqcell_setcaption_vprintf(liqcell *self, const char *format, va_list arg);
+void 	liqcell_setcaption_printf(liqcell *self, const char *format, ...);
 
 
 
 
-void 	liqcell_setclassname(liqcell *self,char *classname);	// class name used to construct
+void 	liqcell_setclassname(liqcell *self, const char *classname);	// class name used to construct
 char *	liqcell_getclassname(liqcell *self);
 
 
 
-void 	liqcell_setcontext(liqcell *self,char *context);		// variation used (if applicable)
+void 	liqcell_setcontext(liqcell *self, const char *context);		// variation used (if applicable)
 char *	liqcell_getcontext(liqcell *self);
 
 
@@ -322,7 +322,7 @@ int     liqcell_ensurevisible_centred(liqcell *self);
 void 	liqcell_zorder_totop(liqcell *self);  // moves the cell to the top of the zorder, NULL function at present
 liqcell * liqcell_getbasewidget(liqcell *self); // called from within an event steps backwards until it finds the base widget this item was created by
 
-void liqcell_print(liqcell *self,char *title,int recdep);
+void liqcell_print(liqcell *self, const char *title,int recdep);
 void liqcell_print2(liqcell *self);
 
 //######################################################################### Arrangement and Layout tools

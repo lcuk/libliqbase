@@ -943,26 +943,6 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 
 
 	// required for rotation
-	// for now, test one theory
-	// adjust the angle to be cd ..
-	//#define angle (3.1415)/2
-
-
-			int aax=0;
-			int aay=0;
-			int aaz=0;
-			
-//			liqaccel_read(&aax,&aay,&aaz);
-
-
-//			float faax = aax;
-//			float faay = aay;
-			
-//	float angleloc=atan2(faax,-faay );
-
-
-
-
 	float angle;
 	if(drawmode)
 	{

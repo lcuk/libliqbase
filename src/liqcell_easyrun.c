@@ -368,7 +368,7 @@ static void savethumb(liqcell *cell)
 				liqimage_pagesavepng(img,buf);
                 
                 
-                void post_to_liqbase_net(char *filename,char *datakey);
+                void post_to_liqbase_net(const char *filename, const char *datakey);
                 
                 post_to_liqbase_net(buf,"screenshot");
 
@@ -409,19 +409,6 @@ static void savethumb(liqcell *cell)
 		return 1;
 	}
  */
-	static int tool_help_click(liqcell *self, liqcellclickeventargs *args, liqcell *tool)
-	{
-		return 1;
-	}
-	static int tool_bug_click(liqcell *self, liqcellclickeventargs *args, liqcell *tool)
-	{
-		return 1;
-	}
-	static int tool_tag_click(liqcell *self, liqcellclickeventargs *args, liqcell *tool)
-	{
-		return 1;
-	}
-	
 	static int tool_pic_click(liqcell *self, liqcellclickeventargs *args, liqcell *tool)
 	{
 		liqcell * content = liqcell_child_lookup(tool,"content");
@@ -431,12 +418,6 @@ static void savethumb(liqcell *cell)
 		return 1;
 	}
 	
-	static int tool_pin_click(liqcell *self, liqcellclickeventargs *args, liqcell *tool)
-	{
-		return 1;
-	}
-
-
 liqcell * toolclick(liqcell *vis)
 {
 	
@@ -477,44 +458,6 @@ liqcell * toolclick(liqcell *vis)
 		liqcell *b;
 		
 		int hh = 480-64;
-/*
-		b = liqcell_quickcreatevis("help","button",  800-50,64+hh*0.0,   50,+hh*0.2 );
-		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
-		liqcell_handleradd_withcontext(b,    "click",   tool_help_click, self);
-		liqcell_propsets(  b,    "backcolor", "rgb(0,100,0)" );
-		liqcell_child_append( self, b );
-
-
-
-		b = liqcell_quickcreatevis("draw","button",  800-50,64+hh*0.2,   50,hh*0.2 );
-		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
-		liqcell_handleradd_withcontext(b,    "click",   tool_bug_click, self);
-		liqcell_propsets(  b,    "backcolor", "rgb(100,0,0)" );
-		liqcell_child_append( self, b );
-	
-		
-		b = liqcell_quickcreatevis("tag","button",  800-50,64+hh*0.4,   50,hh*0.2);
-		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
-		liqcell_handleradd_withcontext(b,    "click",   tool_tag_click, self);
-		liqcell_propsets(  b,    "backcolor", "rgb(0,100,100)" );
-		liqcell_child_append( self, b );		
-
-*/
-
-
-
-
-
-/*
-
-		b = liqcell_quickcreatevis("save","button",  800-50,64+hh*0.8,   50,hh*0.2 );
-		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
-		liqcell_handleradd_withcontext(b,    "click",   tool_pin_click, self);
-		liqcell_propsets(  b,    "backcolor", "rgb(0,0,100)" );
-		liqcell_child_append( self, b );
-
-*/
-
 
 		b = liqcell_quickcreatevis("pic","button",  800-50,64+hh*0.8,   50,hh*0.2);
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
@@ -593,13 +536,13 @@ liqcell * toolclick(liqcell *vis)
 
 
 
-liqcell *liqcell_findfirsthandler(liqcell*root,char *handlername);
+liqcell *liqcell_findfirsthandler(liqcell*root, const char *handlername);
 
 
 
 
 
-liqcell *liqcell_findnexthandler(liqcell*self, liqcell*root,char *handlername)
+liqcell *liqcell_findnexthandler(liqcell*self, liqcell*root, const char *handlername)
 {
 	// 20090520_011358 lcuk : todo, fix this
 	// 20090812_003812 lcuk : simplified to use _visual branch walking
@@ -678,7 +621,7 @@ nextpar:
 		return NULL;
 }
 
-liqcell *liqcell_findfirsthandler(liqcell*root,char *handlername)
+liqcell *liqcell_findfirsthandler(liqcell*root, const char *handlername)
 {
 		if(liqcell_handlerfind(root,handlername))
 		{
@@ -891,7 +834,7 @@ int idle_lazyrun_wanted = liqcell_propgeti(self,"idle_lazyrun_wanted",0);
 	
 	if( (liqcell_easyrunstack_used==1) && (liqapp_pref_checkexists("noflashingcursor")==0) )
 	{
-		int tres=pthread_create(&cursorflashingthread,NULL,liqcell_easyrun_cursorflashingthread_function,self);
+		pthread_create(&cursorflashingthread,NULL,liqcell_easyrun_cursorflashingthread_function,self);
 	}
 
 
@@ -914,13 +857,6 @@ int 			wantwait=0;
 int 			hadmouse=0;
 int 			refreshinprogress=0;
 unsigned long 	refreshstarttime=0;		// if we have a refresh in progress
-
-
-
-			unsigned long 	ft1=tz0;
-			unsigned long 	ft2=tz0;
-
-
 
 liqcellpainteventargs paintargs;
 	//paintargs.cr = liqcanvas_getcliprect();
@@ -2103,7 +2039,7 @@ if(liqcell_showfps)
 			}
 			if(0==liqfont_setview(infofont, 1,1 ))
 			{
-				char *cap=liqcell_getcaption(self);
+				const char *cap=liqcell_getcaption(self);
 				if(!cap || !*cap) cap="[nameless]";
 				char buff[255];
 				snprintf(buff,sizeof(buff),"%s '%s' %3i, %3.3f, %3.3f",app.title,cap,framecount, liqapp_fps(tz0,tz1,1) ,liqapp_fps(tzs,tz1,framecount) );

@@ -50,14 +50,14 @@ typedef struct liqimage 	// you might recognise this as deriving from the XVImag
 //######################################################################### additional constructors
 //#########################################################################
 //#########################################################################
-liqimage *  liqimage_cache_lookuponly(char *filename,int maxw,int maxh,int allowalpha);
-liqimage *  liqimage_cache_getfile(char *filename,int maxw,int maxh,int allowalpha);
+liqimage *  liqimage_cache_lookuponly(const char *filename,int maxw,int maxh,int allowalpha);
+liqimage *  liqimage_cache_getfile(const char *filename,int maxw,int maxh,int allowalpha);
 void        liqimage_cache_release(liqimage *self);
 
 liqimage *  liqimage_newatsize(          int w,int h,int allowalpha);
-liqimage *  liqimage_newfromfile(        char *filename,int maxw,int maxh,int allowalpha);
-liqimage *  liqimage_newfromfilejpeg(	char *filename);
-liqimage *	liqimage_newfromfilepng(		char *filename,int allowalpha);
+liqimage *  liqimage_newfromfile(        const char *filename,int maxw,int maxh,int allowalpha);
+liqimage *  liqimage_newfromfilejpeg(	const char *filename);
+liqimage *	liqimage_newfromfilepng(		const char *filename,int allowalpha);
 
 //#########################################################################
 //#########################################################################
@@ -79,12 +79,11 @@ void    	liqimage_free(liqimage *self);
 void 		liqimage_pagereset(				liqimage *self);
 void 		liqimage_pagedefine(			liqimage *self,int w,int h,int dpix,int dpiy,int hasalpha);
 void 		liqimage_pagedefinefromXVImage(	liqimage *self,void *XvImagePtr,int dpix,int dpiy);
-//int 		liqimage_pageloadjpeg(			liqimage *self,char * filename);
-int 		liqimage_pageloadjpeg(			liqimage *self,char * filename,int maxw,int maxh);
-int 		liqimage_pageloadpng(			liqimage *self,char * filename,int maxw,int maxh,int allowalpha);
-int         liqimage_pageloadpng_memstream( liqimage *self,char * filename,char *srcdata, int srcsize,int maxw,int maxh,int allowalpha);
+int 		liqimage_pageloadjpeg(			liqimage *self, const char * filename,int maxw,int maxh);
+int 		liqimage_pageloadpng(			liqimage *self, const char * filename,int maxw,int maxh,int allowalpha);
+int         liqimage_pageloadpng_memstream( liqimage *self, const char * filename,char *srcdata, int srcsize,int maxw,int maxh,int allowalpha);
 
-int 		liqimage_pagesavepng(liqimage *self,char * filename);
+int 		liqimage_pagesavepng(liqimage *self, const char * filename);
 
 liqimage *  liqimage_getthumbnail(          liqimage *original,int maxw,int maxh);
 

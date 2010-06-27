@@ -107,7 +107,7 @@ static int liqimage_cache_clean_unused(int maxremove)
 
 
 
-liqimage *liqimage_cache_lookuponly(char *filename,int maxw,int maxh,int allowalpha)
+liqimage *liqimage_cache_lookuponly(const char *filename,int maxw,int maxh,int allowalpha)
 {
 	//
 	liqimage *self=NULL;
@@ -146,7 +146,7 @@ liqimage *liqimage_cache_lookuponly(char *filename,int maxw,int maxh,int allowal
 
 
 
-liqimage *liqimage_cache_getfile(char *filename,int maxw,int maxh,int allowalpha)
+liqimage *liqimage_cache_getfile(const char *filename,int maxw,int maxh,int allowalpha)
 {
 	//
 	liqimage *self=NULL;
@@ -318,10 +318,9 @@ liqimage *  liqimage_newatsize(          int w,int h,int allowalpha)
 }
 
 
-liqimage *liqimage_newfromfile(char *filename,int maxw,int maxh,int allowalpha)
+liqimage *liqimage_newfromfile(const char *filename,int maxw,int maxh,int allowalpha)
 {
-	
-	char *ext = liqapp_filename_walktoextension(filename);
+	const char *ext = liqapp_filename_walktoextension(filename);
 	if(!ext || !*ext)
 	{
 		liqapp_log("liqimage_newfromfile invalid filename '%s'",filename);
@@ -439,7 +438,7 @@ liqimage *liqimage_newfromfile(char *filename,int maxw,int maxh,int allowalpha)
 
 
 
-liqimage *liqimage_newfromfilejpeg(char *filename)
+liqimage *liqimage_newfromfilejpeg(const char *filename)
 {
 
 		//app.infologgingenabled=0;
@@ -458,7 +457,7 @@ liqimage *liqimage_newfromfilejpeg(char *filename)
 }
 
 
-liqimage *liqimage_newfromfilepng(char *filename,int allowalpha)
+liqimage *liqimage_newfromfilepng(const char *filename,int allowalpha)
 {
 
 		//app.infologgingenabled=0;
@@ -705,7 +704,7 @@ void liqimage_jpeg_error_exit(j_common_ptr cinfo)
 
 
 
-int liqimage_pageloadjpeg(liqimage *self,char * filename,int maxw,int maxh)
+int liqimage_pageloadjpeg(liqimage *self, const char * filename,int maxw,int maxh)
 {
 	// why did this take so much code for such a straight forward job?
 	// will I have to go through similar for other image formats?
@@ -907,7 +906,7 @@ int 							row_stride;
 // http://trac.enlightenment.org/e/browser/trunk/PROTO/enesim/examples/image.c?rev=35582
 
 //static image_info_t *decompress_png(const char *filename)
-int liqimage_pageloadpng(liqimage *self,char * filename,int maxw,int maxh,int allowalpha)
+int liqimage_pageloadpng(liqimage *self, const char * filename,int maxw,int maxh,int allowalpha)
 {
 	return liqimage_pageloadpng_memstream(self,filename,NULL,0,maxw,maxh,allowalpha);
 }
@@ -949,7 +948,7 @@ static void png_read_data(png_structp png_ptr, png_bytep area, png_size_t size)
 }
 
 
-int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata, int srcsize,int maxw,int maxh,int allowalpha)
+int liqimage_pageloadpng_memstream(liqimage *self, const char * filename,char *srcdata, int srcsize,int maxw,int maxh,int allowalpha)
 {
 	// 20090715_224851 lcuk : srcdata and srcsize are memory array versions
 	// 20090715_224901 lcuk : pass NULL and 0 as well as a valid filename to use standard procedure
@@ -1388,64 +1387,9 @@ int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata,
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 inline static unsigned char clip(int indat){ return (indat<0) ? 0 : ( (indat>255) ? 255 : indat) ;  }
 
-int liqimage_pagesavepng(liqimage *self,char * filename)
+int liqimage_pagesavepng(liqimage *self, const char * filename)
 {
 	//
 	liqapp_log("png save called %i,%i: to '%s'",self->width,self->height,filename);

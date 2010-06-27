@@ -49,24 +49,24 @@ liqcell *mkmeta_group(liqcell *first,...);
  *
  */
 
-liqcell *mkmeta_title(char *key);
+liqcell *mkmeta_title(const char *key);
 /**
  * construct a meta_description element
  *
  */
 
-liqcell *mkmeta_author(char *key);
+liqcell *mkmeta_author(const char *key);
 /**
  * construct a meta_description element
  *
  */
-liqcell *mkmeta_description(char *key);
+liqcell *mkmeta_description(const char *key);
 
 /**
  * construct a meta_version element
  *
  */
-liqcell *mkmeta_version(char *key);
+liqcell *mkmeta_version(const char *key);
 
 
 
@@ -99,7 +99,7 @@ liqcell *mkmeta_version(char *key);
  *
  */
 
-liqcell *mkgroupa(char *key,char *classname,liqcell *first,va_list arg);
+liqcell *mkgroupa(const char *key, const char *classname,liqcell *first,va_list arg);
 
 
 /**
@@ -107,7 +107,7 @@ liqcell *mkgroupa(char *key,char *classname,liqcell *first,va_list arg);
  *
  */
 
-liqcell *mkgroup(char *key,liqcell *first,...);
+liqcell *mkgroup(const char *key, liqcell *first,...);
 
 
 /**

@@ -41,9 +41,9 @@ int dllcache_init();
 
 int dllcache_close();
 
-int dllcache_scan_dllfile(char *dll_filename);
+int dllcache_scan_dllfile(const char *dll_filename);
 
-int dllcache_scan_folder(char *widgetpath);
+int dllcache_scan_folder(const char *widgetpath);
 
 /**
  * scan the files to initialize the cache
@@ -55,7 +55,7 @@ int dllcache_scan();
  * run a specified constructor and return the result
  */
 
-liqcell *dllcache_runconstructor(char *classname);
+liqcell *dllcache_runconstructor(const char *classname);
 
 dllcacheitem *dllcache_getbase();
 int           dllcache_getsize();

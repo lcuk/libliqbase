@@ -94,19 +94,19 @@ int liqimage_find_thumbnail_for(char *resultbuffer,int resultsize,char *bigimage
     {
         if(!self)
         {
-            snprintf(buffer,bufferlen,"");
+            *buffer = '\0';
             return -1;
         }
         liqcell *body= liqcell_child_lookup(self, "body");
         if(!body)
         {
-            snprintf(buffer,bufferlen,"");
+            *buffer = '\0';
             return -2;
         }
         liqcell *c=liqcell_getlinkchild_visual(body);
         if(!c)
         {
-            snprintf(buffer,bufferlen,"");
+            *buffer = '\0';
             return -1;
         }
 		
@@ -226,8 +226,6 @@ static int liqcell_scan_folder_for_images(liqcell *self,char *path)
 		char 			fn[FILENAME_MAX+1];
 		char          * ft;
 		
-		struct pagefilename pfn;
-		
 		dir_p = opendir( widgetpath );			
 		if(!dir_p)
 		{
@@ -262,7 +260,7 @@ static int liqcell_scan_folder_for_images(liqcell *self,char *path)
 			// got the information we need
 			if ( S_ISREG(statbuf.st_mode) )
 			{
-				char *ext=liqapp_filename_walktoextension(ft);
+				const char *ext=liqapp_filename_walktoextension(ft);
 				if(!ext || !*ext)
 				{
 					// nothing to see here..
@@ -316,6 +314,8 @@ static int liqcell_scan_folder_for_images(liqcell *self,char *path)
 			}
 		}
 		closedir(dir_p);
+		
+		return 0;
 }
 
 
@@ -455,10 +455,7 @@ static int liqcell_scan_folder_for_images(liqcell *self,char *path)
  */	
 static int dialog_selectimage_grid_layout(liqcell *self,liqcelleventargs *args, liqcell *context)
 {
-	
-	liqcell *title= liqcell_child_lookup(self, "title");
-	liqcell *body= liqcell_child_lookup(self, "body");
-		liqcell *headskip= liqcell_child_lookup(body, "__headskip");
+		liqcell *body= liqcell_child_lookup(self, "body");
 	
 		// make a normal grid
 		liqcell_setrect( body, 0, 0, liqcell_getw(self),liqcell_geth(self) );
@@ -521,8 +518,6 @@ liqcell *dialog_selectimage_grid_create()
 		
 		liqcell_handleradd_withcontext(self, "resize", (void*)dialog_selectimage_grid_resize ,self);
 		
-
-		int cnt=0;
 		liqcell *c=NULL;
 
 

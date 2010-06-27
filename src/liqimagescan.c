@@ -82,63 +82,6 @@ static void spanstretch_dumb(unsigned char *src,int srclen,unsigned char *dest,i
 	return;
 }
 
-static void spanstretch_urg(unsigned char *src,int srclen,unsigned char *dest,int destlen,unsigned char mid,unsigned char min,unsigned char max)
-{
-	// stretch srclen characters of src all the way along dest so they occupy destlen space
-	// faster general
-	int ppx;
-	const int grain=10;
-	for(ppx=0;ppx<destlen;ppx++)
-	{
-		int xx = ppx * (srclen-1) / (destlen-1);
-		//*dest++ = src[ppx];//xx];
-		
-		int l=src[xx-1];
-		int c=src[xx];
-		int r=src[xx+1];
-		int pix=0;
-
-		if(isnear(c,l,grain))
-		{
-			// l==c
-			if(isnear(c,r,grain))
-				pix = c>=mid?max:min;
-			else if(c<r)
-				pix = c>=mid?max:min;
-			else
-				pix = c>=mid?max:min;
-		}
-		else if(l<c)
-		{
-			// l<c
-			if(isnear(c,r,grain))
-				pix = c>=mid?max:min;
-			else if(c<r)
-				pix = c>=mid?max:min;
-			else
-				pix = max;
-		}
-		else
-		{
-			// l>c
-			if(isnear(c,r,grain))
-				pix = c>=mid?max:min;
-			else if(c<r)
-				pix = min;
-			else
-				pix = c>=mid?max:min;
-		}
-		//pix = (l+c+r)/3;
-		pix=c>=mid?max:min;
-		//pix=c;
-
-		
-		*dest++ = pix;//src[xx];
-	}
-	return;
-}
-
-
 
 unsigned int bucket[96]={0};
 
@@ -364,7 +307,6 @@ int ean_decode(int* bitfields12, char *resbuf14)
 	char *resbuf=resbuf14;
 	// using the array of 12 digits 0..11
 	// decode the data and fill in 13digit+NULL resbuf
-	int  digits12[12];		// store the digits returned
 	char digitpar[6];		// store the parity results for the first 6
 	int idx;
 	int dig;
@@ -417,6 +359,8 @@ int ean_decode(int* bitfields12, char *resbuf14)
 	//liqapp_log("ean_decode got to end! ... %d %d %d %d %d %d ..... %d %d %d %d %d %d ... %s", digits12[0],digits12[1],digits12[2],digits12[3],digits12[4],digits12[5],digits12[6],digits12[7],digits12[8],digits12[9],digits12[10],digits12[11],resbuf );
 
 	// now, work out the checksum!
+	
+	return 0;
 }
 
 
@@ -512,13 +456,13 @@ int resr=-1;
 
 //#####################################################################
 
-					int getmid(unsigned char *indat,int bitcount,unsigned char *outmin,unsigned char *outmax)
+					int getmid(unsigned const char *indat,int bitcount,unsigned char *outmin,unsigned char *outmax)
 					{
 						int idx;
 						int min=0;
 						int max=0;
 						int mid=0;
-						unsigned char *src;
+						unsigned const char *src;
 						src=indat;
 						for(idx=0;idx<bitcount;idx++)
 						{
@@ -542,7 +486,7 @@ int resr=-1;
 					}
 					
 
-					int tobinary(unsigned char *indat,int bitcount)
+					int tobinary(unsigned const char *indat,int bitcount)
 					{
 						int res=0;
 						int idx;
@@ -552,7 +496,7 @@ int resr=-1;
 						
 						mid= min + (max-min) * 0.6;
 						unsigned char *src;
-						src=indat;
+						src= (unsigned char *)indat; // XXX: we pass tobinary() string literals.. this isn't technically safe
 						for(idx=0;idx<bitcount;idx++)
 						{
 							//if(idx>0)res=res+res;
@@ -618,7 +562,7 @@ int liqimage_get_white_strip(liqimage *self, unsigned char *src,int x,unsigned c
 	return sex-ssx;
 }
 
-static int tryb(unsigned char *indat,int bitlength,char *kind)
+static int tryb(unsigned const char *indat,int bitlength, const char *kind)
 {
    int bitfield = tobinary(indat,bitlength);
    return bitfield;
@@ -642,15 +586,12 @@ void liqimage_mark_barcode(liqimage *self)
 	
 	int foundcount=0;	
 	
-	unsigned char py=0,pu=0,pv=0;
-
 	int y;
 	for(y=0;y<self->height;y++)
 	{
 		//##################################### step 1:  identify the flats and tips of this line
 		//                                               the sharp edges that our barcode is expected to have
 		int x;
-		int sc;
 		
 		
 		//##################################### find variance within line
@@ -680,7 +621,6 @@ void liqimage_mark_barcode(liqimage *self)
 			{
 				
 				int ex;
-				int ec;
 				for(ex=x+sc+90;ex<self->width;ex++)
 				{
 					int ec=liqimage_get_white_strip(self, src,ex,midgrey,2);

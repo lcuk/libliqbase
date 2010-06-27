@@ -111,7 +111,7 @@ static int liqfont_cache_clean_unused(int maxremove)
 //####################################################################
 
 
-liqfont *liqfont_cache_getttf(char *name,int size,int rotation)
+liqfont *liqfont_cache_getttf(const char *name,int size,int rotation)
 {
 	//
 	liqfont *self=NULL;
@@ -246,7 +246,7 @@ int liqfont_getglyphheight(liqfont *self,int glyphindex)
 	return h;
 }
 
-int liqfont_textfitinside(liqfont *self,char *data,int availablewidth)
+int liqfont_textfitinside(liqfont *self, const char *data,int availablewidth)
 {
 	if(!data) return 0;
 	int x=0;
@@ -267,7 +267,7 @@ int liqfont_textfitinside(liqfont *self,char *data,int availablewidth)
 	return len;
 }
 
-int liqfont_textwidth(liqfont *self,char *data)
+int liqfont_textwidth(liqfont *self, const char *data)
 {
 	if(!data) return 0;
 	int x=0;
@@ -285,7 +285,7 @@ int liqfont_textwidth(liqfont *self,char *data)
 }
 	
 
-int liqfont_textwidthn(liqfont *self,char *data,int datalen)
+int liqfont_textwidthn(liqfont *self, const char *data,int datalen)
 {
 	if(!data) return 0;
 	int x=0;
@@ -381,8 +381,7 @@ void liqfont_close(liqfont *self)
 	}
 }
 
-
-liqfont * liqfont_newfromfilettf(char *name,int size,int rotation)
+liqfont * liqfont_newfromfilettf(const char *name,int size,int rotation)
 {
 
 	//rotation=90;

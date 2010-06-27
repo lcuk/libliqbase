@@ -25,10 +25,10 @@ extern "C" {
 
 
 
-int liqapp_url_wget(char *url,char *resultfilename,int resultbufsize)
+int liqapp_url_wget(const char *url, char *resultfilename, int resultbufsize)
 {
 
-	char *fn = url;
+	const char *fn = url;
 	
 
 			char cachefn[2048];

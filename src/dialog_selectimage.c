@@ -193,19 +193,6 @@ static int cmdselect_click(liqcell *self,liqcelleventargs *args, liqcell *dialog
     liqcell_setvisible(dialog_selectimage,0);
 	return 0;
 }
-/**	
- * dialog_selectimage_child_test_seek this function shows how to access members
- */	
-	  
-static void dialog_selectimage_child_test_seek(liqcell *self)
-{	  
-	liqcell *cmdselect = liqcell_child_lookup(self, "cmdselect");
-	liqcell *dialog_selectimage_grid1 = liqcell_child_lookup(self, "dialog_selectimage_grid1");
-	liqcell *title = liqcell_child_lookup(self, "title");
-}
-
-
-	
     
 //#####################################################################
 //#####################################################################

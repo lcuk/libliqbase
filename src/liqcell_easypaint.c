@@ -1,6 +1,5 @@
 
 
-#define _GNU_SOURCE
 #include <string.h>
 #include <stdlib.h>
 
@@ -125,7 +124,6 @@ void *mainthread(void* mainthread_data)
 	//liqapp_sleep(100 + (rand() % 4000));
 	//liqapp_sleep(100 + (rand() % 2000));
 	liqcell *self = (liqcell *)mainthread_data;
-	liqcell *par=liqcell_getlinkparent(self);
 do
 {
 //	liqapp_sleep(10 + (rand() % 100));
@@ -142,9 +140,6 @@ while( (mainthread_inprogress>1) ); //   || (par && (par->kineticx || par->kinet
 	//
 
 	// we are here to load the image named on self and then finish
-
-
-	liqimage *img = liqcell_getimage(self);
 
 	//if(img == easypaint_isloading_image)
     
@@ -393,7 +388,7 @@ static float calcaspect(int captionw,int captionh,int availw,int availh)
 }
 
 
-unsigned int decodecolor(char *source,unsigned char *ry,unsigned char *ru,unsigned char *rv,unsigned char *ra,unsigned char *rc)
+unsigned int decodecolor(const char *source,unsigned char *ry,unsigned char *ru,unsigned char *rv,unsigned char *ra,unsigned char *rc)
 {
 	char inbuf[1024];
 	snprintf(inbuf,1024,source);
@@ -880,7 +875,7 @@ __tz_one("paintdone");
 
 
 
-	char *t=NULL;
+	const char *t=NULL;
 	unsigned char bcy=255;
 	unsigned char bcu=128;
 	unsigned char bcv=128;
@@ -1024,14 +1019,12 @@ __tz_one("imageprep");
 
 
 				//################################################## lj variaton
-				unsigned long timer1 = liqapp_GetTicks();
-				
 				float secs=0;// = ((float)timer1 / 1000.0);
 				
 				
 				
 				
-				int rs=sscanf(fstr,"%f",&secs);
+				sscanf(fstr,"%f",&secs);
 				
 				
 				
@@ -1041,7 +1034,7 @@ __tz_one("imageprep");
 				
 
 				
-				unsigned int rndofname = *(unsigned int *)&self->name;
+				unsigned int rndofname = *(unsigned int *)self->name;
 				
 				secs+=rndofname;
 

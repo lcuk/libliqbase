@@ -23,9 +23,9 @@ extern "C" {
 liqcell *prefsroot=NULL;
 
 
-static liqcell *qpref(char *key,char *data)
+static liqcell *qpref(const char *key, const char *data)
 {
-	liqcell *self=liqcell_quickcreatedata(key,"pref.x",data);
+	liqcell *self=liqcell_quickcreatedata(key,"pref.x", (void*)data);
 	//liqcell_keychange(self,key);
 	//liqcell_titlechange(self,data);
 	return self;
@@ -157,37 +157,39 @@ int liqapp_prefs_load()
 
 
 
-char * liqapp_pref_setvalue_vprintf(char *prefkey,char *prefformat, va_list arg)
+const char * liqapp_pref_setvalue_vprintf(const char *prefkey, const char *prefformat, va_list arg)
 {
     char       buf[2048];
 	vsnprintf(buf,2048,prefformat,arg);
 	return liqapp_pref_setvalue(prefkey,buf);
 }
-char * liqapp_pref_setvalue_printf(char *prefkey,char *prefformat, ...)
+
+const char * liqapp_pref_setvalue_printf(const char *prefkey, const char *prefformat, ...)
 {
 	va_list arg;
 	va_start(arg, prefformat);
-	char *res = liqapp_pref_setvalue_vprintf(prefkey,prefformat, arg);
+	const char *res = liqapp_pref_setvalue_vprintf(prefkey,prefformat, arg);
 	va_end(arg);
 	return res;
 }
 
 
 
-char * liqapp_pref_setvalue(char *prefkey,char *prefvalue)
+const char * liqapp_pref_setvalue(const char *prefkey, const char *prefvalue)
 {
 	if(prefvalue)	prefvalue=strdup(prefvalue);
 	liqcell *p=liqcell_child_lookup(prefsroot,prefkey);
 	if(p)
 	{
 		char *x=(char *)liqcell_getdata(p); if(x)free(x);
-		liqcell_setdata(p,prefvalue);
+		liqcell_setdata(p, (void*)prefvalue);
 		return prefvalue;
 	}
 	liqcell_child_insertsorted( prefsroot, qpref(prefkey,prefvalue) );
 	return NULL;
 }
-char * liqapp_pref_getvalue_def(char *prefkey,char *defaultifmissing)
+
+const char * liqapp_pref_getvalue_def(const char *prefkey, const char *defaultifmissing)
 {
 	liqcell *p=liqcell_child_lookup(prefsroot,prefkey);
 	if(p)
@@ -201,7 +203,7 @@ char * liqapp_pref_getvalue_def(char *prefkey,char *defaultifmissing)
 	return NULL;
 }
 
-char * liqapp_pref_getvalue(char *prefkey)
+char * liqapp_pref_getvalue(const char *prefkey)
 {
 	liqcell *p=liqcell_child_lookup(prefsroot,prefkey);
 	if(p)
@@ -210,7 +212,8 @@ char * liqapp_pref_getvalue(char *prefkey)
 	}
 	return NULL;
 }
-liqcell *liqapp_pref_getitem(char *prefkey)
+
+liqcell *liqapp_pref_getitem(const char *prefkey)
 {
 	liqcell *p=liqcell_child_lookup(prefsroot,prefkey);
 	if(p)
@@ -219,7 +222,8 @@ liqcell *liqapp_pref_getitem(char *prefkey)
 	}
 	return NULL;
 }
-int liqapp_pref_checkexists(char *prefkey)
+
+int liqapp_pref_checkexists(const char *prefkey)
 {
 	liqcell *p=liqcell_child_lookup(prefsroot,prefkey);
 	if(p)

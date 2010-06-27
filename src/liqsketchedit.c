@@ -71,7 +71,7 @@ static size_t curl_memorybuffer(void *ptr, size_t size, size_t nmemb, void *data
 
 
 
-int post_to_liqbase_net(char *filename,char *datakey,int replyid)
+int post_to_liqbase_net(const char *filename, const char *datakey,int replyid)
 {
 	if(!datakey)datakey="liqbase";
  
@@ -179,7 +179,6 @@ int post_to_liqbase_net(char *filename,char *datakey,int replyid)
 			{
 				char filedate[256];	
 				liqapp_formatnow(filedate,sizeof(filedate),"yyyymmdd_hhmmss");
-				char *filetitle =liqapp_filename_walkoverpath(fn);
 				// got a file
 				char s[FILENAME_MAX*3];
 				snprintf(s,sizeof(s),"mv %s %s.old.%s",fn,fn,filedate);
@@ -197,7 +196,7 @@ int post_to_liqbase_net(char *filename,char *datakey,int replyid)
 		}
 		
 		liqcell *notes = liqcell_child_lookup(self,"notes");
-		char *key;
+		const char *key;
 		
 		
 		if(notes)
@@ -256,6 +255,8 @@ int post_to_liqbase_net(char *filename,char *datakey,int replyid)
             // make sure we hide the cover
             liqcell_setvisible(cover,0);
         }
+        
+        return 0;
     }
 
 	static int liqsketchedit_dialog_open(liqcell *self, liqcelleventargs *args, void *context)
@@ -274,6 +275,8 @@ int post_to_liqbase_net(char *filename,char *datakey,int replyid)
             // make sure we hide the cover
             liqcell_setvisible(cover,0);
         }
+        
+        return 0;
     }
 
 
@@ -393,7 +396,6 @@ int post_to_liqbase_net(char *filename,char *datakey,int replyid)
 			{
 				char filedate[256];	
 				liqapp_formatnow(filedate,sizeof(filedate),"yyyymmdd_hhmmss");
-				char *filetitle =liqapp_filename_walkoverpath(fn);
 				// got a file
 				char s[FILENAME_MAX*3];
 				snprintf(s,sizeof(s),"mv %s %s.del.%s",fn,fn,filedate);
@@ -554,7 +556,7 @@ static int liqsketchedit_resize(liqcell *self, liqcelleventargs *args, void *con
 	liqcell_setrect(notes ,  ww*0.25,  hh*1,   ww*0.5,hh*0.1);
 	
 	
-	
+	return 0;
 }
 
 	static int liqsketchedit_paint(liqcell *self, liqcellpainteventargs *args,liqcell *liqsketchedit)
@@ -582,6 +584,8 @@ static int liqsketchedit_resize(liqcell *self, liqcelleventargs *args, void *con
 				liqcell_setdirty(liqsketchedit,1);
 			}
 		}
+		
+		return 0;
 	}
 
 

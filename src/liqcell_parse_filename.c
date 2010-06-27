@@ -105,7 +105,7 @@ liqcell * liqcell_parse_filename(char *filename)
 			
 			
 			
-			char *ext=liqapp_filename_walktoextension(filename);
+			const char *ext=liqapp_filename_walktoextension(filename);
 			if(!ext || !*ext)
 			{
 				// nothing to see here..

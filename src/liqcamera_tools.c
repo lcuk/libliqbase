@@ -2,9 +2,9 @@
 #include <time.h>			// req for sleep
 #include <sys/time.h>		// req for getticks
 
-#include <liqbase/liqcell.h>
-#include <liqbase/liqcell_prop.h>
-#include <liqbase/liqcell_easyrun.h>
+#include "liqcell.h"
+#include "liqcell_prop.h"
+#include "liqcell_easyrun.h"
 
 #include <linux/videodev2.h>
 #include <sys/ioctl.h>
@@ -104,7 +104,6 @@ error 22 getting ext_ctrl Flash strobe
 #define V4L2_CID_INDICATOR_INTENSITY            (V4L2_CID_CAMERA_CLASS_BASE+21)
 
 static int liqcamera_currentfocus=0;
-static int liqcamera_currentfocusdir=1;
 
 
 int doioctl(int fd, unsigned long int request, void *parm, const char *name)
@@ -147,7 +146,7 @@ int liqcamera_setbrightness(int newvalue)
 	
 	char buf[255];
 	snprintf(buf,sizeof(buf),"/root/v4l2-ctl -c brightness=%i",newvalue);
-	int sok=system(buf);
+	system(buf);
 	
 	
 	return 0;
@@ -158,7 +157,7 @@ int liqcamera_setcontrast(int newvalue)
 	
 	char buf[255];
 	snprintf(buf,sizeof(buf),"/root/v4l2-ctl -c contrast=%i",newvalue);
-	int sok=system(buf);
+	system(buf);
 	
 	
 	return 0;
@@ -171,7 +170,7 @@ int liqcamera_setexposuretime(int newvalue)
 	
 	char buf[255];
 	snprintf(buf,sizeof(buf),"/root/v4l2-ctl -c exposure_time_us=%i",newvalue);
-	int sok=system(buf);
+	system(buf);
 	
 	
 	return 0;
@@ -183,7 +182,7 @@ int liqcamera_settorch(int newvalue)
 	
 	char buf[255];
 	snprintf(buf,sizeof(buf),"/root/v4l2-ctl -c torch_intensity=%i",newvalue);
-	int sok=system(buf);
+	system(buf);
 	
 	
 	return 0;
