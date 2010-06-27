@@ -32,7 +32,7 @@ extern "C" {
 
 #include "liqimage.h"
 #include "liqfont.h"
-inline void xsurface_drawstrip_colortest1(
+void xsurface_drawstrip_colortest1(
 	register unsigned int  linecount,
 	register unsigned int  charsperline,
 	register unsigned char *srcdataptr,
@@ -46,14 +46,14 @@ inline void xsurface_drawstrip_colortest1(
 	unsigned char col_v,
 	int dsx,int dsy
 	);
-inline void xsurface_drawstrip_or(
+void xsurface_drawstrip_or(
 	register unsigned int  linecount,
 	register unsigned int  charsperline,
 	register unsigned char *srcdataptr,
 	register unsigned char *dstdataptr,
 	register unsigned int  srclinejump,
 	register unsigned int  dstlinejump);
-inline void xsurface_drawstrip(
+void xsurface_drawstrip(
 	register unsigned int  linecount,
 	register unsigned int  charsperline,
 	register unsigned char *srcdataptr,
@@ -61,29 +61,29 @@ inline void xsurface_drawstrip(
 	register unsigned int  srclinejump,
 	register unsigned int  dstlinejump);
 
-inline void xsurface_drawglyph_grey(    liqimage *surface,liqfont *font,int x,int y,unsigned char glyph);
+void xsurface_drawglyph_grey(    liqimage *surface,liqfont *font,int x,int y,unsigned char glyph);
 
 
        int  xsurface_drawtext_grey(     liqimage *surface,liqfont *font,int xs,int ys,char *data);
        int  xsurface_drawtextn_grey(    liqimage *surface,liqfont *font,int xs,int ys,char *data,int datalen);
-inline void xsurface_drawclear_grey(    liqimage *surface,unsigned char grey);
-inline void xsurface_drawclear_yuv(     liqimage *surface,unsigned char grey,unsigned char u,unsigned char v);
-inline void xsurface_drawrect_yuv(      liqimage *surface,int x,int y,int w,int h, unsigned char grey,unsigned char u,unsigned char v);
-inline void xsurface_drawrect_grey(     liqimage *surface,int x,int y,int w,int h, unsigned char grey);
-inline void xsurface_drawrectwash_uv(   liqimage *surface,int x,int y,int w,int h, unsigned char u,unsigned char v);
-inline void xsurface_drawfadeoutrect_yuv(liqimage *surface,int x,int y,int w,int h, unsigned char grey,unsigned char u,unsigned char v,unsigned char spread);
+void xsurface_drawclear_grey(    liqimage *surface,unsigned char grey);
+void xsurface_drawclear_yuv(     liqimage *surface,unsigned char grey,unsigned char u,unsigned char v);
+void xsurface_drawrect_yuv(      liqimage *surface,int x,int y,int w,int h, unsigned char grey,unsigned char u,unsigned char v);
+void xsurface_drawrect_grey(     liqimage *surface,int x,int y,int w,int h, unsigned char grey);
+void xsurface_drawrectwash_uv(   liqimage *surface,int x,int y,int w,int h, unsigned char u,unsigned char v);
+void xsurface_drawfadeoutrect_yuv(liqimage *surface,int x,int y,int w,int h, unsigned char grey,unsigned char u,unsigned char v,unsigned char spread);
 
 
-inline void xsurface_drawpset_yuv(      liqimage *surface,int x,int y,char grey,char u,char v);
-inline void xsurface_drawpset_grey(     liqimage *surface,int x,int y,char grey);
-inline void xsurface_drawpget_yuv(      liqimage *surface,int x1, int y1, unsigned char *grey,unsigned char *u,unsigned char *v);
-inline void xsurface_drawline_yuv(      liqimage *surface,int x1, int y1, int x2, int y2, char grey,char u,char v);
-inline void xsurface_drawthickline_yuv( liqimage *surface,int x1, int y1, int x2, int y2,unsigned char thickness, char grey,char u,char v);
-inline void xsurface_drawline_grey(     liqimage *surface,int x1, int y1, int x2, int y2, char grey);
-inline void xsurface_drawline_greyinv(  liqimage *surface,int x1, int y1, int x2, int y2);
-inline void xsurface_drawcircle_grey(   liqimage *surface,int cx, int cy, int r,unsigned char grey);
+void xsurface_drawpset_yuv(      liqimage *surface,int x,int y,char grey,char u,char v);
+void xsurface_drawpset_grey(     liqimage *surface,int x,int y,char grey);
+void xsurface_drawpget_yuv(      liqimage *surface,int x1, int y1, unsigned char *grey,unsigned char *u,unsigned char *v);
+void xsurface_drawline_yuv(      liqimage *surface,int x1, int y1, int x2, int y2, char grey,char u,char v);
+void xsurface_drawthickline_yuv( liqimage *surface,int x1, int y1, int x2, int y2,unsigned char thickness, char grey,char u,char v);
+void xsurface_drawline_grey(     liqimage *surface,int x1, int y1, int x2, int y2, char grey);
+void xsurface_drawline_greyinv(  liqimage *surface,int x1, int y1, int x2, int y2);
+void xsurface_drawcircle_grey(   liqimage *surface,int cx, int cy, int r,unsigned char grey);
 
-inline void xsurface_drawimage_color(   liqimage *surface,liqimage *image,int x,int y);
+void xsurface_drawimage_color(   liqimage *surface,liqimage *image,int x,int y);
 
 void xsurface_drawzoomimage(
 

@@ -75,10 +75,10 @@ int    	liqcliprect_geth(liqcliprect *self);
 
 
 
-inline void liqcliprect_shrink(					liqcliprect *self,int sx,int sy,int ex,int ey);
-inline void liqcliprect_copy(					liqcliprect *self,liqcliprect *other);
+void liqcliprect_shrink(					liqcliprect *self,int sx,int sy,int ex,int ey);
+void liqcliprect_copy(					liqcliprect *self,liqcliprect *other);
 
-inline int  liqcliprect_isvalid(				liqcliprect *self);
+int  liqcliprect_isvalid(				liqcliprect *self);
 
 /*
 inline int liqcliprect_rectcheckinside(struct liqcliprect *self,int sx,int sy,int ex,int ey);
@@ -90,9 +90,9 @@ void 		liqcliprect_print(					liqcliprect *self,char *prefix);
 //################################################################## drawing functions
 //##################################################################
 
-inline void liqcliprect_drawclear(				liqcliprect *self,unsigned char grey,unsigned char u,unsigned char v);
+void liqcliprect_drawclear(				liqcliprect *self,unsigned char grey,unsigned char u,unsigned char v);
 void 		liqcliprect_drawpsetcolor(			liqcliprect *self,int x, int y, unsigned char grey,unsigned char u,unsigned char v);
-inline void liqcliprect_drawpgetcolor(      	liqcliprect *self,int x1, int y1, unsigned char *grey,unsigned char *u,unsigned char *v);
+void liqcliprect_drawpgetcolor(      	liqcliprect *self,int x1, int y1, unsigned char *grey,unsigned char *u,unsigned char *v);
 
 //##################################################################
 //################################################################## lines and boxes
@@ -118,7 +118,7 @@ void 		liqcliprect_drawboxfadeoutcolor(liqcliprect *self,int x,int y,int w,int h
 //################################################################## quick font tools
 //##################################################################
 
-inline void liqcliprect_drawglyph_grey(			liqcliprect *self,liqfont *font,int x,int y,unsigned char glyph);
+void liqcliprect_drawglyph_grey(			liqcliprect *self,liqfont *font,int x,int y,unsigned char glyph);
 int  		liqcliprect_drawtext(         		liqcliprect *self,liqfont *font,int xs,int ys,char *data);
 int  		liqcliprect_drawtextn(				liqcliprect *self,liqfont *font,int xs,int ys,char *data,int datalen);
 void 		liqcliprect_drawtextcentredon(		liqcliprect *self,liqfont *font,int cx,int cy,char *text);
@@ -131,7 +131,7 @@ void 		liqcliprect_drawtextinside(			liqcliprect *self,liqfont *font,int x,int y
 //##################################################################
 
 
-inline void liqcliprect_drawglyph_color(liqcliprect *self,liqfont *font,int x,int y,unsigned char glyph,unsigned char grey,unsigned char u,unsigned char v);
+void liqcliprect_drawglyph_color(liqcliprect *self,liqfont *font,int x,int y,unsigned char glyph,unsigned char grey,unsigned char u,unsigned char v);
 int 		liqcliprect_drawtext_color(liqcliprect *self,liqfont *font,int xs,int ys,char *data,unsigned char grey,unsigned char u,unsigned char v);
 int 		liqcliprect_drawtextn_color(liqcliprect *self,liqfont *font,int xs,int ys,char *data,int datalen,unsigned char grey,unsigned char u,unsigned char v);
 void 		liqcliprect_drawtextcentredon_color(liqcliprect *self,liqfont *font,int cx,int cy,char *text,unsigned char grey,unsigned char u,unsigned char v);
@@ -152,8 +152,8 @@ void 		liqcliprect_drawsketch(				liqcliprect *self,liqsketch *page,int l,int t,
 //##################################################################
 
 
-inline void liqcliprect_drawimagecolor(			liqcliprect *self,liqimage *image,int x,int y,int w,int h, int aspectlock);
-inline void liqcliprect_drawimageblendcolor(	liqcliprect *self,liqimage *image,int x,int y,int w,int h,char blend,int aspectlock);
+void liqcliprect_drawimagecolor(			liqcliprect *self,liqimage *image,int x,int y,int w,int h, int aspectlock);
+void liqcliprect_drawimageblendcolor(	liqcliprect *self,liqimage *image,int x,int y,int w,int h,char blend,int aspectlock);
 
 #ifdef __cplusplus
 }

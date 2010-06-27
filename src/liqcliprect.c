@@ -199,14 +199,14 @@ void liqcliprect_free(liqcliprect *self)
 //#########################################################################
 
 
-inline int liqcliprect_isvalid(liqcliprect *self)
+int liqcliprect_isvalid(liqcliprect *self)
 {
 	if(self->sx>=self->ex)return 0;
 	if(self->sy>=self->ey)return 0;
 	return 1;
 }
 
-inline void liqcliprect_shrink(liqcliprect *self,int sx,int sy,int ex,int ey)
+void liqcliprect_shrink(liqcliprect *self,int sx,int sy,int ex,int ey)
 {
 	// given a liqcliprect and another rectangle,
 	if(sx > self->sx) self->sx=sx;
@@ -216,7 +216,7 @@ inline void liqcliprect_shrink(liqcliprect *self,int sx,int sy,int ex,int ey)
 	if(self->ex<self->sx)self->ex=self->sx;
 	if(self->ey<self->sy)self->ey=self->sy;
 }
-inline void liqcliprect_copy(liqcliprect *self,liqcliprect *other)
+void liqcliprect_copy(liqcliprect *self,liqcliprect *other)
 {
 	self->sx=other->sx;
 	self->sy=other->sy;
@@ -283,7 +283,7 @@ int    	liqcliprect_geth(liqcliprect *self)
 
 
 
-inline void liqcliprect_drawclear(liqcliprect *self,unsigned char grey,unsigned char u,unsigned char v)
+void liqcliprect_drawclear(liqcliprect *self,unsigned char grey,unsigned char u,unsigned char v)
 {
 	// todo follow the clipregion rules tsk tsk
 	if(self->sx==0 && self->sy==0 && self->ex==(self->surface->width-1) && self->ey==(self->surface->height-1))
@@ -301,7 +301,7 @@ void 		liqcliprect_drawpsetcolor(			liqcliprect *self,int x, int y, unsigned cha
 }
 
 
-inline void liqcliprect_drawpgetcolor(      	liqcliprect *self,int x, int y, unsigned char *grey,unsigned char *u,unsigned char *v)
+void liqcliprect_drawpgetcolor(      	liqcliprect *self,int x, int y, unsigned char *grey,unsigned char *u,unsigned char *v)
 {
 	xsurface_drawpget_yuv(self->surface,x,y,grey,u,v);
 
@@ -594,7 +594,7 @@ int b=(y+h)-1;
 
 
 
-inline void liqcliprect_drawglyph_grey(liqcliprect *self,liqfont *font,int x,int y,unsigned char glyph)
+void liqcliprect_drawglyph_grey(liqcliprect *self,liqfont *font,int x,int y,unsigned char glyph)
 {
 liqfontglyph *g = liqfont_getglyph(font,glyph);
 	if(!g)return;
@@ -733,7 +733,7 @@ void liqcliprect_drawtextinside(liqcliprect *self,liqfont *font,int x,int y,int 
 //########################################################################
 
 
-inline void liqcliprect_drawglyph_color(liqcliprect *self,liqfont *font,int x,int y,unsigned char glyph,unsigned char grey,unsigned char u,unsigned char v)
+void liqcliprect_drawglyph_color(liqcliprect *self,liqfont *font,int x,int y,unsigned char glyph,unsigned char grey,unsigned char u,unsigned char v)
 {
 	if((grey==255) && (u==128) && (v==128)){ liqcliprect_drawglyph_grey(self,font,x,y,glyph); return; }
 
@@ -1506,7 +1506,7 @@ static float calcaspect(int captionw,int captionh,int availw,int availh)
 
 
 
-inline void liqcliprect_drawimagecolor(		liqcliprect *self,liqimage *image,int x,int y,int w,int h,int aspectlock)
+void liqcliprect_drawimagecolor(		liqcliprect *self,liqimage *image,int x,int y,int w,int h,int aspectlock)
 {
 
 	if(!w || !h) return;
@@ -1610,7 +1610,7 @@ int b=(y+h);
 
 
 
-inline void liqcliprect_drawimageblendcolor(		liqcliprect *self,liqimage *image,int x,int y,int w,int h,char blend,int aspectlock)
+void liqcliprect_drawimageblendcolor(		liqcliprect *self,liqimage *image,int x,int y,int w,int h,char blend,int aspectlock)
 {
 
 	// 20090408_002917 lcuk : same as drawimagecolor above, but for blended

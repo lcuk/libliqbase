@@ -24,11 +24,11 @@ extern "C" {
 //##################################################################
 // dimension isnt really a class, its just a span of Start..End and the handling of it
 //#####################################################################
-static inline void dimension_forceinbound(register int *s,register int *m,register int l,register int r);
+void dimension_forceinbound(register int *s,register int *m,register int l,register int r);
 //#####################################################################
-static inline int dimension_gapcalc(register int cs,register int ce,register int ds,register int de,int *gapres);
+int dimension_gapcalc(register int cs,register int ce,register int ds,register int de,int *gapres);
 //#####################################################################
-static inline int dimension_overlapcalc(register int cs,register int ce,register int ds,register int de,int *overlapres);
+int dimension_overlapcalc(register int cs,register int ce,register int ds,register int de,int *overlapres);
 //##################################################################
 //##################################################################
 //##################################################################
