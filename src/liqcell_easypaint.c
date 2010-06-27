@@ -13,6 +13,7 @@
 #include <ctype.h>
 #include <pthread.h>
 #include <sched.h>
+#include <math.h>
 
 
 
@@ -354,7 +355,7 @@ int liqcell_threadloadimage(liqcell *self)
 						liqapp_log("liqcell_easypaint: thread create fail %s :: %i",liqcell_getcaption(self),tres);
 						//liqcliprect_release(cr);
 						liqcell_release(self);
-						return;
+						return -1;
 					}
 				}
 	return 0;
@@ -696,7 +697,12 @@ void liqcell_easypaint(liqcell *self,liqcliprect *crorig,    int x,int y,    int
 }
 
 
-
+static int ishttp(char *filename)
+{
+	if(tolower(filename[0])=='h' && tolower(filename[1])=='t' && tolower(filename[2])=='t' && tolower(filename[3])=='p' && tolower(filename[4])==':')
+		return 1;
+	return 0;
+}
 
 void liqcell_easypaint_int(liqcell *self,liqcliprect *crorig,    int x,int y,    int w,int h)
 {
@@ -921,14 +927,6 @@ __tz_one("paintdone");
 	}
 __tz_one("backdone");
 		//liqcliprect_drawimagecolor(cr,camimage,x,y,w,h,0);
-
-	int ishttp(char *filename)
-	{
-		if(tolower(filename[0])=='h' && tolower(filename[1])=='t' && tolower(filename[2])=='t' && tolower(filename[3])=='p' && tolower(filename[4])==':')
-			return 1;
-		return 0;
-	}
-
 
 	if(!self->image)
 	{

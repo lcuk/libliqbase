@@ -49,5 +49,9 @@ char * 		liqapp_pref_setvalue(char *prefkey,char *prefvalue);
 char * 		liqapp_pref_setvalue_printf(char *prefkey,char *prefformat, ...);
 int 		liqapp_prefs_save();
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif
 

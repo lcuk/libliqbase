@@ -4,10 +4,12 @@
 #include <stdio.h>
 
 #include <memory.h>
+#include <math.h>
 
 #include "liqcliprect.h"
 #include "liq_xsurface.h"
 #include "liqapp.h"
+#include "liqapp_prefs.h"
 #include "liqcanvas.h"
 #include "liqimage.h"
 #include "liqsketch.h"

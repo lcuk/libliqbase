@@ -14,7 +14,7 @@
 
 //############################################################# 
 
-
+inline static unsigned char clip(int indat){ return (indat<0) ? 0 : ( (indat>255) ? 255 : indat) ;  }
 
 XImage *liqimage_convert_to_ximage(liqimage *self, Display *dis, int screen)
 {
@@ -60,7 +60,7 @@ XImage *liqimage_convert_to_ximage(liqimage *self, Display *dis, int screen)
     if(resdepth>=24)
     {
         liqapp_log("liqimage_convert_to_ximage converting yuv to rgb32");
-        u_int32_t *newBuf = malloc( 4 * reswidth * resheight );
+        u_int32_t *newBuf = (u_int32_t *)malloc( 4 * reswidth * resheight );
         for(y=0;y<self->height;y++)
         {
             for(x=0;x<self->width;x++)
@@ -73,7 +73,6 @@ XImage *liqimage_convert_to_ximage(liqimage *self, Display *dis, int screen)
                 // convert YUV -> RGB
                 //http://msdn.microsoft.com/en-us/library/ms893078.aspx
                 // yes, microsoft are useful :)
-                inline unsigned char clip(int indat){ return (indat<0) ? 0 : ( (indat>255) ? 255 : indat) ;  }
                 int           ic = (((int)iy)) - 16;
                 int           id = (((int)iu)) - 128;
                 int           ie = (((int)iv)) - 128;
@@ -100,7 +99,7 @@ XImage *liqimage_convert_to_ximage(liqimage *self, Display *dis, int screen)
     if(resdepth>=15)
     {
         liqapp_log("liqimage_convert_to_ximage converting yuv to rgb16");
-        u_int16_t *newBuf = malloc( 2 * reswidth * resheight );
+        u_int16_t *newBuf = (u_int16_t *)malloc( 2 * reswidth * resheight );
         for(y=0;y<self->height;y++)
         {
             for(x=0;x<self->width;x++)
@@ -114,7 +113,6 @@ XImage *liqimage_convert_to_ximage(liqimage *self, Display *dis, int screen)
                 // convert YUV -> RGB
                 //http://msdn.microsoft.com/en-us/library/ms893078.aspx
                 // yes, microsoft are useful :)
-                inline unsigned char clip(int indat){ return (indat<0) ? 0 : ( (indat>255) ? 255 : indat) ;  }
                 int           ic = (((int)iy)) - 16;
                 int           id = (((int)iu)) - 128;
                 int           ie = (((int)iv)) - 128;

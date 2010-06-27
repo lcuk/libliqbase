@@ -706,15 +706,6 @@ void liqsketch_titlechange(liqsketch *self,char *title)
 
 // '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-void          liqsketch_strokefirst(liqsketch *self)
-{
-	return self->strokefirst;
-}
-void          liqsketch_strokelast(liqsketch *self)
-{
-	return self->strokelast;
-}
-
 void          liqsketch_strokeremove(liqsketch *self,liqstroke *s)
 {
 	//

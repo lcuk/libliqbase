@@ -147,6 +147,15 @@ int liqcell_parse_liqbrain_filename(liqcell *self,char *filename)
 //}
 
 
+int outmore(int outused, char *outbuf, int amount)
+{
+	if(outused+amount<sizeof(outbuf))
+	{
+		outused+=amount;
+		return 1;
+	}
+	return 0;
+}
 
 
 /**
@@ -174,19 +183,10 @@ static void liqcell_parse_liqbrain_print2(liqcell *self,int s,char *inbuffer)
 	
 	char outbuf[512]={0};
 	int outused=0;
-	int outmore(int amount)
-	{
-		if(outused+amount<sizeof(outbuf))
-		{
-			outused+=amount;
-			return 1;
-		}
-		return 0;
-	}
-	
+		
 	if(s+off>0)
 	{
-		if(outmore(s+off))
+		if(outmore(outused, outbuf, s+off))
 		{
 			//memset( &outbuf[0], ' ', s+off);
 			
@@ -197,7 +197,7 @@ static void liqcell_parse_liqbrain_print2(liqcell *self,int s,char *inbuffer)
 	{
 		
 		
-		if(outmore(9))
+		if(outmore(outused, outbuf, 9))
 		{
 
 			if(strcasecmp(self->name,"fail")==0 )
@@ -214,14 +214,14 @@ static void liqcell_parse_liqbrain_print2(liqcell *self,int s,char *inbuffer)
 		
 		if(wid)
 		{
-			if(outmore(wid))
+			if(outmore(outused, outbuf, wid))
 			{
 				//memset( &outbuf[s+off+8], '*', wid);
 				memcpy( &outbuf[s+off+8], &inbuffer[s+off],   wid);
 			}
 		}
 		
-		if(outmore(5))
+		if(outmore(outused, outbuf, 5))
 		{
 			memcpy( &outbuf[s+off+8+wid], &(  "\e[0m"  ),   5);
 		}
@@ -715,12 +715,11 @@ liqcell *t = NULL;
 	{
 		// we want to also store the complete original text in the data property :)
 		
-		
 		// remove trailing whitespace from the buffer
 		char *infin = indat;
-		if(infin && infin > start)
+		if(infin && infin > (char *)start)
 		{
-			while(infin > start && ( infin[-1]==' ' || infin[-1]=='\t' || infin[-1]==10 || infin[-1]==13 ) )
+			while(infin > (char *)start && ( infin[-1]==' ' || infin[-1]=='\t' || infin[-1]==10 || infin[-1]==13 ) )
 			{
 				infin--;
 			}

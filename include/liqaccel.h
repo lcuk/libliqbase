@@ -35,5 +35,10 @@ int liqaccel_read(int *ax,int *ay,int *az);
 
 float liqaccel_getangle();	// use most recently read coords to orient self
 
+#ifdef __cplusplus
+}
+#endif
+
+
 #endif
 

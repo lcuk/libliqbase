@@ -449,7 +449,7 @@ liqcell *dllcache_runconstructorinner(char *classname)
 			else
 			{
 				// lets try and use whats available to us :)
-				constructor = dlsym( dllcacheitem->dll, symname);
+				constructor = (liqcell *(*)())dlsym( dllcacheitem->dll, symname);
 			}
 			if(constructor)
 			{
@@ -585,7 +585,7 @@ int idx=0;
 						//snprintf(symname,255,"%s_create",dllcacheitem->key);
 						
 						//################################################# get it!
-						dllcacheitem->constructor = dlsym( dllcacheitem->dll, symname);
+						dllcacheitem->constructor = (liqcell *(*)())dlsym( dllcacheitem->dll, symname);
 						
 						if(dllcacheitem->constructor) break;
 				}		

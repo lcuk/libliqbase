@@ -17,6 +17,7 @@
 #include "liqcell.h"
 #include "liqcell_easyrun.h"
 #include "liqcell_easyhandler.h"
+#include "liqcell_mk_star.h"
 
 
 //#####################################################################
@@ -127,7 +128,7 @@ liqcell *liqtimer_create()
 
 
 
-				pthread_t 		*tid = malloc(sizeof(pthread_t));
+				pthread_t 		*tid = (pthread_t *)malloc(sizeof(pthread_t));
 				if(!tid)
 				{
 					liqapp_log("liqtimer, cannot alloc thread");
@@ -173,7 +174,7 @@ static void liqcell_easyrun_internal(liqcell *dialog)
 	{
 		liqapp_errorandfail(-1,"canvas Init");
 		//closeall();
-		return -1;
+		return;
 	}
 		
 	liqcell_easyrun( dialog );
@@ -181,25 +182,4 @@ static void liqcell_easyrun_internal(liqcell *dialog)
 	liqcanvas_close();
 
 }
-
-int main (int argc, char* argv[])
-{
-	if(liqapp_init(   argc,argv ,"liqtimer" ,"0.0.1") != 0)
-	{
-		{ return liqapp_errorandfail(-1,"liqtimer liqapp_init failed"); }
-	}
-
-	liqcell *self = liqtimer_create();
-	liqcell_easyrun_internal(self);
-	liqcell_release(self);
-	liqapp_close();
-
-	return 0;
-}
-
-
-
-
-
-
 

@@ -170,7 +170,7 @@ static gboolean buffer_probe_callback( GstElement *image_sink, GstBuffer *buffer
 
 
 
-int liqcamera_start(int argCAMW,int argCAMH,int argCAMFPS,liqimage * argCAMdestimage,void (*argCAMUpdateCallback)(),void *argCAMtag )
+int liqcamera_start(int argCAMW,int argCAMH,int argCAMFPS,liqimage * argCAMdestimage,void (*argCAMUpdateCallback)(void*),void *argCAMtag )
 {
 	if(CAMpipeline)
 	{

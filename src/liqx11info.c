@@ -603,7 +603,7 @@ foo:
 	liqx11info_eventgetnext( myx11info, &xev );
 	
 	//http://linux.die.net/man/3/xanyevent
-const x11_seeevent=0;
+const int x11_seeevent=0;
 
 	int keylen=0;
 	if(x11_seeevent)liqapp_log("x11.NextEvent %i  dpy=%d window=%d root=%d subwindow=%d,   vis=%d foc=%d",

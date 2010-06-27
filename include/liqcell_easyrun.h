@@ -2,6 +2,11 @@
 #ifndef liqcell_EASYRUN_H
 #define liqcell_EASYRUN_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #include "liqbase.h"
 
 #include "liqcell.h"
@@ -125,6 +130,11 @@ typedef struct liqcellmouseeventargs
 
 liqcell * liqcell_easyrun_getactivecontrol();
 
+int liqcell_easyrun_mouseeventargs_multitouchprepare(liqcell *self, liqcellmouseeventargs *args,liqcell *context);
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif

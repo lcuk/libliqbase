@@ -59,7 +59,7 @@ int 					filebuf_open(struct filebuf *self,char *filename)
 
     if(liqapp_fileexists(filename)==0)
     {
-        liqapp_log(-1,"filebuf open error, file not found: %s",filename);
+        liqapp_log("filebuf open error, file not found: %s",filename);
         return -1;
     }		
 		
@@ -69,7 +69,7 @@ int 					filebuf_open(struct filebuf *self,char *filename)
 	fs = stat(self->filename, &filestatbuf);
 	if (fs == -1)
 	{
-        liqapp_log(-1,"filebuf open, get stats problem: %s",filename);
+        liqapp_log("filebuf open, get stats problem: %s",filename);
         return -1;
 	}
 	// allow whole length for mapping

@@ -569,7 +569,7 @@ int num_planes;
 	else
 		num_planes=3;
 
-int *picoffsets=malloc(sizeof(int)*num_planes);
+int *picoffsets=(int *)malloc(sizeof(int)*num_planes);
 	if(!picoffsets)
 	{
 		liqapp_log("image: page defined could not alloc offsets");
@@ -584,7 +584,7 @@ int *picoffsets=malloc(sizeof(int)*num_planes);
 	if(hasalpha)
 		picoffsets[3] = picoffsets[1] + ((w/2) * (h/2)) * 2;
 	
-int *picpitches=malloc(sizeof(int)*num_planes);
+int *picpitches=(int *)malloc(sizeof(int)*num_planes);
 
 	if(!picpitches)
 	{
@@ -604,7 +604,7 @@ int *picpitches=malloc(sizeof(int)*num_planes);
 	self->num_planes = num_planes;
 	self->offsets    = picoffsets;
 	self->pitches    = picpitches;
-	self->data       = malloc(self->data_size);
+	self->data       = (unsigned char *)malloc(self->data_size);
 	if(!self->data)
 	{
 		liqapp_log("image: page defined could not alloc plane data");
@@ -625,7 +625,7 @@ int *picpitches=malloc(sizeof(int)*num_planes);
 
 void liqimage_pagedefinefromXVImage(liqimage *self,void *XvImagePtr,int dpix,int dpiy)
 {
-XvImage *XvImage=XvImagePtr;
+    XvImage *img = (XvImage *)XvImagePtr;
 	//if(picbuff_ready) return;
 	
 	liqapp_log("liqimage pagedefinefromxv");
@@ -634,23 +634,23 @@ XvImage *XvImage=XvImagePtr;
 	
 	liqapp_log("liqimage pagedefinefromxv2");
 	
-int w=XvImage->width;
-int h=XvImage->height;
-int num_planes=XvImage->num_planes;
+int w=img->width;
+int h=img->height;
+int num_planes=img->num_planes;
 	if(num_planes>3)num_planes=3;
 	liqapp_log("liqimage pagedefinefromxv3 planes=%i  hmm=%i",num_planes,sizeof(int)*num_planes);
 
-int *picoffsets=malloc(sizeof(int)*num_planes);
+int *picoffsets=(int *)malloc(sizeof(int)*num_planes);
 	liqapp_log("liqimage pagedefinefromxv3.5");
-int *picpitches=malloc(sizeof(int)*num_planes);
+int *picpitches=(int *)malloc(sizeof(int)*num_planes);
 int i;
 
 	liqapp_log("liqimage pagedefinefromxv4");
 
 	for(i=0;i<num_planes;i++)
 	{	
-		picoffsets[i] = XvImage->offsets[i];
-		picpitches[i] = XvImage->pitches[i];
+		picoffsets[i] = img->offsets[i];
+		picpitches[i] = img->pitches[i];
 	}
 
 
@@ -659,11 +659,11 @@ int i;
 
 	self->width      = w;
 	self->height     = h;
-	self->data_size  = XvImage->data_size;
+	self->data_size  = img->data_size;
 	self->num_planes = num_planes;
 	self->offsets    = picoffsets;
 	self->pitches    = picpitches;
-	self->data       = (unsigned char *)XvImage->data;
+	self->data       = (unsigned char *)img->data;
 	self->XVImageSource = XvImagePtr;
 	self->dpix = dpix;
 	self->dpiy = dpiy;
@@ -815,7 +815,7 @@ int 							row_stride;
 	row_stride = cinfo.output_width * cinfo.output_components;
 	int x=0;
 	int y=0;
-	buffer = malloc( row_stride * sizeof(char) );		// allocate a line block
+	buffer = (unsigned char *)malloc( row_stride * sizeof(char) );		// allocate a line block
 	int i;
 	for (i = 0; i < cinfo.output_components; i++)
 	{
@@ -1196,7 +1196,7 @@ int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata,
 	liqapp_log("png: rowbytes=%i",rowbytes);
 	
 	
-	unsigned char * image_data = malloc(rowbytes * image.ht);
+	unsigned char * image_data = (unsigned char *)malloc(rowbytes * image.ht);
 		if(!image_data)
 		{
 			liqapp_log("png.image_data malloc fail");
@@ -1205,7 +1205,7 @@ int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata,
 			return -6;
 		}
 	
-	png_bytepp row_pointers = malloc(image.ht * sizeof(png_bytep));
+	png_bytepp row_pointers = (png_bytepp)malloc(image.ht * sizeof(png_bytep));
 		if(!row_pointers)
 		{
 			liqapp_log("png.row_pointers malloc fail");
@@ -1440,7 +1440,7 @@ int liqimage_pageloadpng_memstream(liqimage *self,char * filename,char *srcdata,
 
 
 
-
+inline static unsigned char clip(int indat){ return (indat<0) ? 0 : ( (indat>255) ? 255 : indat) ;  }
 
 int liqimage_pagesavepng(liqimage *self,char * filename)
 {
@@ -1509,7 +1509,7 @@ int liqimage_pagesavepng(liqimage *self,char * filename)
     png_byte **rowoffsets;
 	int x,y;
 	liqapp_log("png allocating rgb buffer");
-	char *rgbabuffer = malloc(png_bytesperpixel * self->width * self->height);		// alloc rgb buffer RGBA
+	char *rgbabuffer = (char *)malloc(png_bytesperpixel * self->width * self->height);		// alloc rgb buffer RGBA
     if (!rgbabuffer)
 	{
 		fclose(outf);
@@ -1530,7 +1530,6 @@ int liqimage_pagesavepng(liqimage *self,char * filename)
 			// convert YUV -> RGB
 			//http://msdn.microsoft.com/en-us/library/ms893078.aspx
 			// yes, microsoft are useful :)
-			inline unsigned char clip(int indat){ return (indat<0) ? 0 : ( (indat>255) ? 255 : indat) ;  }
 			int           ic = (((int)iy)) - 16;
 			int           id = (((int)iu)) - 128;
 			int           ie = (((int)iv)) - 128;
@@ -1554,7 +1553,7 @@ int liqimage_pagesavepng(liqimage *self,char * filename)
 	// ####################################### now get on with the hard work
 	liqapp_log("png allocating row buffer");
 
-    rowoffsets = malloc(sizeof(png_byte*) * self->height);
+    rowoffsets = (png_bytepp)malloc(sizeof(png_byte*) * self->height);
     if (!rowoffsets)
 	{
 		fclose(outf);

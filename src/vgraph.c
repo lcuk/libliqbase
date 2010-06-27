@@ -424,7 +424,7 @@ int		vgraph_drawgreycol(   	    	vgraph *self, int x, int y, int w,int h    )
 	//liqapp_log("draw.greycol.use %i,%i,%i,%i",x,y,w,h);
 
 	unsigned char *yuva = (unsigned char *)&self->pencolor;
-	liqcliprect_drawgreycol( vgraph_getcliprect(self),   x,y,   w,h,    yuva[0] );
+	liqcliprect_drawgreycol( vgraph_getcliprect(self),   x,y,   w,h);
 
 	return 0;    
 }

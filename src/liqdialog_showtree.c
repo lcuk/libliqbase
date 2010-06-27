@@ -185,7 +185,7 @@ static liqcell *deepviewitem(liqcell *node,int recdep)
 
 			//########################################## create the nobble
 			liqcell *nobble = liqcell_quickcreatevis("plusminus", "button", 0, 0, treeindent, fh);
-			liqcell_handleradd(   nobble,   "click",   deepviewitem_nobble_click);
+			liqcell_handleradd(   nobble,   "click",   (void *)deepviewitem_nobble_click);
 			if(recdep<20)
 			{
 				// already expanded..
@@ -250,7 +250,7 @@ static liqcell *deepviewitem(liqcell *node,int recdep)
 			//########################################## create the caption itself
 			liqcell *tl = liqcell_quickcreatevis(liqcell_getname(node), "label", 100, 0, (300-xl), fh);
 			liqcell_setfont(tl, liqfont_hold(font));
-			liqcell_handleradd(   tl,   "click",   deepviewitem_click);
+			liqcell_handleradd(   tl,   "click",   (void *)deepviewitem_click);
 			//liqcell_propsets(tl,	"textcolor", "rgb(0,0,0)"  );
 			
 			//liqcell_propsets(  self,"textcolor","rgb(255,255,255)" );
@@ -260,7 +260,7 @@ static liqcell *deepviewitem(liqcell *node,int recdep)
 
 			liqcell *tr = liqcell_quickcreatevis(liqcell_getcaption(node), "label", 400-xl, 0, 400, fh);
 			liqcell_setfont(tr, liqfont_hold(font));
-			liqcell_handleradd(   tr,   "click",   deepviewitem_click);			
+			liqcell_handleradd(   tr,   "click",   (void *)deepviewitem_click);			
 			liqcell_propsets(  tr,"textcolor","rgb(255,255,0)" );
 			liqcell_child_insert(head, tr);
 
@@ -351,7 +351,7 @@ static liqcell *deepview(liqcell *node,int recdep)
 	liqcell *self = liqcell_quickcreatewidget(node->name, "deepview", root->w, root->h);
 	if(self)
 	{
-		liqcell_handleradd(self, "mouse", liqcell_easyhandler_kinetic_mouse);
+		liqcell_handleradd(self, "mouse", (void *)liqcell_easyhandler_kinetic_mouse);
 		liqcell_child_append(self, root);
 	}
 	return self;
@@ -395,16 +395,7 @@ int liqdialog_showtree(char *key,char *title,char *description,liqcell *data)
 	//
 	
 	
-	
-	//######################################### prepare click event handler	
-	int toolitem_click(liqcell *self, liqcellclickeventargs *args,void *context)
-	{
-		return 0;
-	}
-	
-	
-	
-	//######################################### create the main instance
+		//######################################### create the main instance
 	liqcell *self = liqcell_quickcreatewidget("liqtreebrowse","form", 800,480);
 
 	if(self)
@@ -419,22 +410,7 @@ int liqdialog_showtree(char *key,char *title,char *description,liqcell *data)
 
 		//! create header
 	//	liqcell *thead = uititlebar_create("thead",title,description);
-	//	liqcell_child_append( self, thead    );
-		
-	/*
-		//! create toolbar
-		liqcell *tbar = uitoolbar_create("tools","tools",
-				uitoolitem_create( "back",   "back",       "/usr/share/liqbase/libliqbase/media/quickicons/back.png",              toolitem_click),
-				uitoolitem_create( "up",     "up",         "/usr/share/liqbase/libliqbase/media/quickicons/up.png",    toolitem_click),
-				uitoolitem_create( "add",    "add",        "/usr/share/liqbase/libliqbase/media/quickicons/add.png",              toolitem_click),
-				uitoolitem_create( "delete", "delete",     "/usr/share/liqbase/libliqbase/media/quickicons/gtk-remove.png",           toolitem_click),
-				uitoolitem_create( "search", "search",     "/usr/share/liqbase/libliqbase/media/quickicons/find.png",           toolitem_click),
-				uitoolitem_create( "close",  "close",      "/usr/share/liqbase/libliqbase/media/quickicons/gtk-close.png",    toolitem_click),
-				NULL);
-		liqcell_child_append( self, tbar     );
-	*/	
-		
-		
+	//	liqcell_child_append( self, thead    );	
 		
 		//! create body
 		liqcell *tbody = liqcell_quickcreatevis("tbody",   "grid",    0,0,   800, 480);// - thead->h );//- tbar->h );

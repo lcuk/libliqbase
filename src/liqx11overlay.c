@@ -23,6 +23,7 @@
 #include <X11/keysymdef.h>
 
 #include "liqbase.h"
+#include "liqapp_prefs.h"
 
 #include "liqx11overlay.h"
 
@@ -137,7 +138,7 @@ if(self->yuv_width==480 && self->yuv_height==800)
 
 
 	self->yuv_shminfo.shmid = shmget(IPC_PRIVATE, self->yuv_image->data_size, IPC_CREAT | 0777);
-	self->yuv_shminfo.shmaddr = self->yuv_image->data = shmat(self->yuv_shminfo.shmid, 0, 0);
+	self->yuv_shminfo.shmaddr = self->yuv_image->data = (char *)shmat(self->yuv_shminfo.shmid, 0, 0);
 	self->yuv_shminfo.readOnly = False;
 
 

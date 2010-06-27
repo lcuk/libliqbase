@@ -54,7 +54,7 @@ int           liqcanvas_nextevent_x11(LIQEVENT *ev,int *dirtyflagptr);
 
 
 
-//#include "liq_xsurface.h"			// include available workhorse functions
+#include "liq_xsurface.h"			// include available workhorse functions
 
 
 //todo: make this a class instance, we might end up having multiple canvases..

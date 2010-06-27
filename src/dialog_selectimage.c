@@ -348,7 +348,7 @@ liqcell *dialog_selectimage_create()
 	liqcell_propsets(  cmdselect, "bordercolor", "rgb(255,255,255)" );
 	liqcell_propseti(  cmdselect, "textalign",  2 );
 	liqcell_propseti(  cmdselect, "textaligny", 2 );
-	liqcell_handleradd_withcontext(cmdselect, "click", cmdselect_click, self );
+	liqcell_handleradd_withcontext(cmdselect, "click", (void*)cmdselect_click, self );
     //liqcell_setenabled(cmdselect,0);
 	liqcell_child_append(  self, cmdselect);
     
@@ -358,29 +358,24 @@ liqcell *dialog_selectimage_create()
 		liqcell_setcaption(search, "" );
 		liqcell_propsets(  search, "textcolor",   "rgb(255,255,255)" );
 		liqcell_propsets(  search, "backcolor",   "xrgb(100,140,100)" );
-		liqcell_handleradd_withcontext( search,    "click",           search_click,  self );
-		liqcell_handleradd_withcontext( search,    "captionchange",   search_change, self );
+		liqcell_handleradd_withcontext( search,    "click",           (void*)search_click,  self );
+		liqcell_handleradd_withcontext( search,    "captionchange",   (void*)search_change, self );
 		liqcell_setvisible(search,0);		// watch this!
 		liqcell_child_append( self, search );
 		
-		//liqcell_handleradd_withcontext(body,    "keypress",   dialog_selectimage_keypress,  self);
-		//liqcell_handleradd_withcontext(body,    "keyrelease", dialog_selectimage_keyrelease,self);
-		liqcell_handleradd_withcontext(self,    "keypress",   dialog_selectimage_keypress,  self);
-		liqcell_handleradd_withcontext(self,    "keyrelease", dialog_selectimage_keyrelease,self);
- 		liqcell_handleradd_withcontext(self,    "paint",      dialog_selectimage_paint,  	self);
+		liqcell_handleradd_withcontext(self,    "keypress",   (void*)dialog_selectimage_keypress,  self);
+		liqcell_handleradd_withcontext(self,    "keyrelease", (void*)dialog_selectimage_keyrelease,self);
+ 		liqcell_handleradd_withcontext(self,    "paint",      (void*)dialog_selectimage_paint,  	self);
         
     
     //liqcell_propsets(  self, "backcolor", "rgb(0,0,0)" );
-	liqcell_handleradd_withcontext(self, "refresh", dialog_selectimage_refresh ,self);
-	liqcell_handleradd_withcontext(self, "shown", dialog_selectimage_shown ,self);
-	liqcell_handleradd_withcontext(self, "resize", dialog_selectimage_resize ,self);
-	//liqcell_handleradd_withcontext(self, "keypress", dialog_selectimage_keypress,self );
-	//liqcell_handleradd_withcontext(self, "keyrelease", dialog_selectimage_keyrelease ,self);
-	liqcell_handleradd_withcontext(self, "mouse", dialog_selectimage_mouse,self );
-	liqcell_handleradd_withcontext(self, "click", dialog_selectimage_click ,self);
-	//liqcell_handleradd_withcontext(self, "paint", dialog_selectimage_paint ,self); // use only if required, heavyweight
-	liqcell_handleradd_withcontext(self, "dialog_open", dialog_selectimage_dialog_open ,self);
-	liqcell_handleradd_withcontext(self, "dialog_close", dialog_selectimage_dialog_close ,self);
+	liqcell_handleradd_withcontext(self, "refresh", (void*)dialog_selectimage_refresh ,self);
+	liqcell_handleradd_withcontext(self, "shown", (void*)dialog_selectimage_shown ,self);
+	liqcell_handleradd_withcontext(self, "resize", (void*)dialog_selectimage_resize ,self);
+	liqcell_handleradd_withcontext(self, "mouse", (void*)dialog_selectimage_mouse,self );
+	liqcell_handleradd_withcontext(self, "click", (void*)dialog_selectimage_click ,self);
+	liqcell_handleradd_withcontext(self, "dialog_open", (void*)dialog_selectimage_dialog_open ,self);
+	liqcell_handleradd_withcontext(self, "dialog_close", (void*)dialog_selectimage_dialog_close ,self);
 	return self;
 }
 

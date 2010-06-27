@@ -1,9 +1,13 @@
+#include <stdlib.h>
+#include <string.h>
 #include <time.h>			// req for sleep
 #include <sys/time.h>		// req for getticks
 
+#include "liqapp_prefs.h"
 #include "liqcell.h"
 #include "liqcell_prop.h"
 #include "liqcell_easyrun.h"
+#include "liqcell_easypaint.h"
 
 
 // /usr/share/icons/hicolor/40x40/hildon/qgn_stat_battery_full100.png
@@ -325,7 +329,7 @@ int post_to_liqbase_net(char *filename,char *datakey,int replyid)
 		
 		liqsketch_strokeremove(sketch,sketch->strokelast);
 
-		liqcell_settag(editor,1);
+		liqcell_settag(editor, (void*)1);
 		
 		liqcell_handlerrun(editor,"undo",NULL);
 
@@ -398,7 +402,7 @@ int post_to_liqbase_net(char *filename,char *datakey,int replyid)
 		
 		liqcell_setsketch(editor,NULL);
 		
-		liqcell_settag(editor,1);
+		liqcell_settag(editor, (void*)1);
 
 
 		liqcell_handlerrun(editor,"cleared",NULL);
@@ -448,8 +452,8 @@ int post_to_liqbase_net(char *filename,char *datakey,int replyid)
 					//s->pixelwidth =liqcell_getw(self);
 					//s->pixelheight=liqcell_geth(self);
 					
-					s->pixelwidth =liqcanvas_getwidth(self);
-					s->pixelheight=liqcanvas_getheight(self);
+					s->pixelwidth =liqcanvas_getwidth();
+					s->pixelheight=liqcanvas_getheight();
 					
 					s->dpix=225;	// damn, dont like using this here
 					s->dpiy=225;
@@ -518,7 +522,7 @@ int post_to_liqbase_net(char *filename,char *datakey,int replyid)
 			}
 		}
 		// 20090421_232509 lcuk : make sure we mark ourselves as dirty
-		liqcell_settag(self,1);
+		liqcell_settag(self, (void*)1);
 
 		return 1;
 	}
@@ -609,33 +613,33 @@ liqcell *liqsketchedit_create()
 
 		b = liqcell_quickcreatevis("undo","button",  800-180,20,   160,160 );
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
-		liqcell_handleradd(b,    "click",   liqsketchedit_undo_click);
+		liqcell_handleradd(b,    "click",   (void*)liqsketchedit_undo_click);
 		liqcell_propsets(  b,    "backcolor", "xrgb(100,0,100)" );
-		liqcell_handleradd(b,    "mouse",   liqsketchedit__cmdnull_mouse);
+		liqcell_handleradd(b,    "mouse",   (void*)liqsketchedit__cmdnull_mouse);
 		liqcell_child_insert( self, b );
 
 
 		b = liqcell_quickcreatevis("clear","button",  800-180,20,   160,160 );
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
-		liqcell_handleradd(b,    "click",   liqsketchedit_clear_click);
+		liqcell_handleradd(b,    "click",   (void*)liqsketchedit_clear_click);
 		liqcell_propsets(  b,    "backcolor", "xrgb(0,0,100)" );
-		liqcell_handleradd(b,    "mouse",   liqsketchedit__cmdnull_mouse);
+		liqcell_handleradd(b,    "mouse",   (void*)liqsketchedit__cmdnull_mouse);
 		liqcell_child_insert( self, b );
 	
 
 		b = liqcell_quickcreatevis("save","button",  800-180,200,   160,160 );
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
-		liqcell_handleradd(b,    "click",   liqsketchedit_save_click);
+		liqcell_handleradd(b,    "click",   (void*)liqsketchedit_save_click);
 		liqcell_propsets(  b,    "backcolor", "xrgb(0,100,0)" );
-		liqcell_handleradd(b,    "mouse",   liqsketchedit__cmdnull_mouse);
+		liqcell_handleradd(b,    "mouse",   (void*)liqsketchedit__cmdnull_mouse);
 		liqcell_child_insert( self, b );
 
 
 		b = liqcell_quickcreatevis("del","button",  800-180,200,   160,160 );
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
-		liqcell_handleradd(b,    "click",   liqsketchedit_del_click);
+		liqcell_handleradd(b,    "click",   (void*)liqsketchedit_del_click);
 		liqcell_propsets(  b,    "backcolor", "xrgb(100,0,0)" );
-		liqcell_handleradd(b,    "mouse",   liqsketchedit__cmdnull_mouse);
+		liqcell_handleradd(b,    "mouse",   (void*)liqsketchedit__cmdnull_mouse);
 		liqcell_child_insert( self, b );
 
 
@@ -654,13 +658,12 @@ liqcell *liqsketchedit_create()
 
 		liqsketchedit_resize(self,NULL, NULL);
 
-		//liqcell_handleradd_withcontext(self,    "keypress",   liqsketchedit_keypress,   self);
-        liqcell_handleradd_withcontext(self,    "shown",   liqsketchedit_shown,   self);
-		liqcell_handleradd_withcontext(self,    "dialog_open",   liqsketchedit_dialog_open,   self);
-		liqcell_handleradd_withcontext(self,    "dialog_close",   liqsketchedit_dialog_close,   self);
-		liqcell_handleradd_withcontext(self,    "mouse",   liqsketchedit_mouse,   self);
-		liqcell_handleradd_withcontext(self,    "resize",   liqsketchedit_resize,   self);
-		liqcell_handleradd_withcontext(self,    "paint",   liqsketchedit_paint,   self);
+        liqcell_handleradd_withcontext(self,    "shown",   (void*)liqsketchedit_shown,   self);
+		liqcell_handleradd_withcontext(self,    "dialog_open",   (void*)liqsketchedit_dialog_open,   self);
+		liqcell_handleradd_withcontext(self,    "dialog_close",   (void*)liqsketchedit_dialog_close,   self);
+		liqcell_handleradd_withcontext(self,    "mouse",   (void*)liqsketchedit_mouse,   self);
+		liqcell_handleradd_withcontext(self,    "resize",   (void*)liqsketchedit_resize,   self);
+		liqcell_handleradd_withcontext(self,    "paint",   (void*)liqsketchedit_paint,   self);
 		
 		
 	}

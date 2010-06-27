@@ -371,7 +371,7 @@ selch:	{ }
 				// 20090615_210659 lcuk : and me to explain why it was wrong ;) damn those +1 adjustments..
 				
 				int reqd = selstart  +  keylen  +  aftersellen + 1;
-				char *buff=malloc(reqd);
+				char *buff=(char *)malloc(reqd);
 				char *block=buff;
 				if(buff)
 				{
@@ -506,16 +506,16 @@ liqcell *textbox_create()
 		liqcell_propseti(  self,  "sellength", 0 );
 		liqcell_propseti(  self,  "cursorpos", 0 );
 			
-		liqcell_handleradd(self,    "mouse",      textbox_mouse);
-		liqcell_handleradd(self,    "keypress",   textbox_keypress);
-		liqcell_handleradd(self,    "keyrelease", textbox_keyrelease);
+		liqcell_handleradd(self,    "mouse",      (void*)textbox_mouse);
+		liqcell_handleradd(self,    "keypress",   (void*)textbox_keypress);
+		liqcell_handleradd(self,    "keyrelease", (void*)textbox_keyrelease);
 		
-		liqcell_handleradd(self,    "resize",   textbox_resize);
+		liqcell_handleradd(self,    "resize",   (void*)textbox_resize);
 	
 			
 		// add vkbd
 		liqcell *vkbd_command = liqcell_quickcreatevis("vkbd_command" , "commandbutton", 0, 0, 0, 0);
-		liqcell_handleradd_withcontext(vkbd_command, "click", keyboard_show_button_click, self);
+		liqcell_handleradd_withcontext(vkbd_command, "click", (void*)keyboard_show_button_click, self);
 		liqcell_setfont(vkbd_command, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (12), 0));
 		liqcell_setcaption(vkbd_command, "ABC");
 		liqcell_propsets(vkbd_command, "backcolor", CYAN);

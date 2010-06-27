@@ -514,7 +514,7 @@ int resr=-1;
 						int min=0;
 						int max=0;
 						int mid=0;
-						char *src;
+						unsigned char *src;
 						src=indat;
 						for(idx=0;idx<bitcount;idx++)
 						{
@@ -547,7 +547,7 @@ int resr=-1;
 						int mid=getmid(indat,bitcount,&min,&max);
 						
 						mid= min + (max-min) * 0.6;
-						char *src;
+						unsigned char *src;
 						src=indat;
 						for(idx=0;idx<bitcount;idx++)
 						{
@@ -570,20 +570,6 @@ int resr=-1;
 						}
 						return res;
 					}
-					int try(char *indat,int bitlength,char *kind)
-					{
-						int bitfield= tobinary(indat,bitlength);
-						return bitfield;
-						//int upc=upc_digitfrombitfield(bitfield);
-						//snprintf(indat,bitlength,"%d........",upc);
-						//indat[ bitlength-1 ]='.';
-						//while(strlen(indat)<bitlength){ indat[ strlen(indat)+1]='.'; }
-						
-
-						//return upc;// bitfield;
-						//app_log("%s = '%i'",kind,tobinary(indat,bitlength));
-					}
-
 
 
 
@@ -593,77 +579,46 @@ int resr=-1;
 //#####################################################################
 
 
-void hmm_removeme()
-{
-int dstw=5;
-int srcw=7;
-int x,y;
-float frac=(float)srcw/(float)dstw;
-	liqapp_log("float pixels each %3.3f (should ALWAYS be >=1.0)",frac);
-	
-float pxf=0.0;
-int   pxi=0;
-	
-// 142
-// 144
-// ish
-
-// 95
-
-	for(x=95;x<400;x++)
-	{
-		// for each X, find the multiplier required
-		int n;
-		for(n=1;n<100;n++)
-		{
-			int xn = x*n;
-			if(xn % 95 == 0)
-			{
-				liqapp_log("factor %3d/95 :: %3d rpt %3d == %3d/%3d",x,n,xn/95,xn,95*n );
-				break;
-			}
-		}
-		if(n==100) liqapp_log("factor %d/95 :: %3d == NOT FOUND", x,n );
-	}
-	
-	for(x=1;x<20;x++)
-	{
-		// for each X, find the multiplier required
-		int n;
-		for(n=1;n<100;n++)
-		{
-			int xn = x*n;
-			if(xn % 5 == 0)
-			{
-				liqapp_log("75factor %3d/5 :: %3d rpt %d == %3d/%3d", x,n,xn/5,xn,5*n );
-				break;
-			}
-		}
-		if(n==100) liqapp_log("75factor %d/95 :: %3d == NOT FOUND", x,n );
-	}
-	
-	
-	exit(0);
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 static int xadj=-20;
 static int xdir=1;
 
+int liqimage_get_white_strip(liqimage *self, unsigned char *src,int x,unsigned char midgrey,int ab)
+{
+
+	int ssx=x;
+	unsigned char sspy=0;
+
+	int sex=x;
+	unsigned char sepy=0;
+	
+//	int midgrey = ((int)mingrey + (int)maxgrey) / 2;
+
+	sspy = src[ssx];
+	if(sspy>midgrey)
+	{
+		for(sex=ssx+1;sex<self->width;sex++)
+		{
+			sepy = src[sex];
+			if(isnear(sspy,sepy,5) && sepy>midgrey) 
+			{
+				// they are close, continue
+			}
+			else
+			{
+				// not close - this span ends..
+				break;
+			}
+		}
+	}
+	//if(sex-ssx>8)	liqapp_log("%d x=%3d w=%3d py=%3d",ab,x,sex-ssx,sspy);
+	return sex-ssx;
+}
+
+static int tryb(unsigned char *indat,int bitlength,char *kind)
+{
+   int bitfield = tobinary(indat,bitlength);
+   return bitfield;
+}
 
 void liqimage_mark_barcode(liqimage *self)
 {
@@ -681,39 +636,6 @@ void liqimage_mark_barcode(liqimage *self)
 	if(ABS(xadj) >= 20){ xdir=-xdir; }  // xadj=-15;
 
 	
-	int liqimage_get_white_strip(unsigned char *src,int x,unsigned char midgrey,int ab)
-	{
-
-		int ssx=x;
-		unsigned char sspy=0;
-
-		int sex=x;
-		unsigned char sepy=0;
-		
-	//	int midgrey = ((int)mingrey + (int)maxgrey) / 2;
-
-		sspy = src[ssx];
-		if(sspy>midgrey)
-		{
-			for(sex=ssx+1;sex<self->width;sex++)
-			{
-				sepy = src[sex];
-				if(isnear(sspy,sepy,5) && sepy>midgrey) 
-				{
-					// they are close, continue
-				}
-				else
-				{
-					// not close - this span ends..
-					break;
-				}
-			}
-		}
-		//if(sex-ssx>8)	liqapp_log("%d x=%3d w=%3d py=%3d",ab,x,sex-ssx,sspy);
-		return sex-ssx;
-	}
-		
-		
 	int foundcount=0;	
 	
 	unsigned char py=0,pu=0,pv=0;
@@ -749,7 +671,7 @@ void liqimage_mark_barcode(liqimage *self)
 			// could optimize the hell out of this by removing the pget
 			// would be useful for more advanced algorithms
 			
-			int sc = liqimage_get_white_strip(src,x,midgrey,1);
+			int sc = liqimage_get_white_strip(self, src,x,midgrey,1);
 			if(sc>8)
 			{
 				
@@ -757,7 +679,7 @@ void liqimage_mark_barcode(liqimage *self)
 				int ec;
 				for(ex=x+sc+90;ex<self->width;ex++)
 				{
-					int ec=liqimage_get_white_strip(src,ex,midgrey,2);
+					int ec=liqimage_get_white_strip(self, src,ex,midgrey,2);
 					if(ec>8 && isnear(sc,ec,8))
 					{
 						// w00t!
@@ -786,29 +708,29 @@ void liqimage_mark_barcode(liqimage *self)
 						int codes[12];
 						
 						
-						cgl=       try (&buf[0 ], 3, "bl ");
+						cgl=       tryb(&buf[0 ], 3, "bl ");
 						
-						codes[0] = try (&buf[3 ], 7, "l  ");
-						codes[1] = try (&buf[10], 7, "l  ");
+						codes[0] = tryb(&buf[3 ], 7, "l  ");
+						codes[1] = tryb(&buf[10], 7, "l  ");
 						
-						codes[2] = try (&buf[17], 7, "l  ");
-						codes[3] = try (&buf[24], 7, "l  ");
+						codes[2] = tryb(&buf[17], 7, "l  ");
+						codes[3] = tryb(&buf[24], 7, "l  ");
 						
-						codes[4] = try (&buf[31], 7, "l  ");
-						codes[5] = try (&buf[38], 7, "l  ");
+						codes[4] = tryb(&buf[31], 7, "l  ");
+						codes[5] = tryb(&buf[38], 7, "l  ");
 						
-						cgc=       try (&buf[45], 5, "mid");
+						cgc=       tryb(&buf[45], 5, "mid");
 
-						codes[6] = try (&buf[50], 7, "r  ");
-						codes[7] = try (&buf[57], 7, "r  ");
+						codes[6] = tryb(&buf[50], 7, "r  ");
+						codes[7] = tryb(&buf[57], 7, "r  ");
 					
-						codes[8] = try (&buf[64], 7, "r  ");
-						codes[9] = try (&buf[71], 7, "r  ");
+						codes[8] = tryb(&buf[64], 7, "r  ");
+						codes[9] = tryb(&buf[71], 7, "r  ");
 						
-						codes[10] = try (&buf[78], 7,"r  ");
-						codes[11] = try (&buf[85], 7,"r  ");
+						codes[10] = tryb(&buf[78], 7,"r  ");
+						codes[11] = tryb(&buf[85], 7,"r  ");
 						
-						cgr =       try (&buf[92], 3,"br ");
+						cgr =       tryb(&buf[92], 3,"br ");
 						
 						
 						

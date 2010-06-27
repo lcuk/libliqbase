@@ -261,7 +261,7 @@ liqcell *dialog_selectcolor_create()
 	
 	//############################# colorcube1:colorcube
 	liqcell *colorcube1 = liqcell_quickcreatevis("colorcube1", "dialog_selectcolor_colorcube", 0, 90, 325, 320);
-	liqcell_handleradd_withcontext(colorcube1, "mouse", colorcube_mouse,self );
+	liqcell_handleradd_withcontext(colorcube1, "mouse", (void*)colorcube_mouse,self );
 	liqcell_child_append(  self, colorcube1);
 	
 	
@@ -297,7 +297,7 @@ liqcell *dialog_selectcolor_create()
 	
 	//############################# greycube1:greycube
 	liqcell *greycube1 = liqcell_quickcreatevis("greycube1", "dialog_selectcolor_greycube", 325, 90, 150, 320);
-	liqcell_handleradd_withcontext(greycube1, "mouse", greycube_mouse,self );
+	liqcell_handleradd_withcontext(greycube1, "mouse", (void*)greycube_mouse,self );
 	liqcell_child_append(  self, greycube1);
 	
 	
@@ -311,22 +311,19 @@ liqcell *dialog_selectcolor_create()
 	liqcell_propsets(  cmdaccept, "bordercolor", "rgb(255,255,255)" );
 	liqcell_propseti(  cmdaccept, "textalign", 2 );
 	liqcell_propseti(  cmdaccept, "textaligny", 2 );
-	liqcell_handleradd_withcontext(cmdaccept, "click", cmdaccept_click, self );
+	liqcell_handleradd_withcontext(cmdaccept, "click", (void*)cmdaccept_click, self );
 	liqcell_child_append(  self, cmdaccept);
 	
 
 	
 	liqcell_propsets(  self, "backcolor", "rgb(0,0,0)" );
-	liqcell_handleradd_withcontext(self, "refresh", dialog_selectcolor_refresh ,self);
-	liqcell_handleradd_withcontext(self, "shown", dialog_selectcolor_shown ,self);
-	liqcell_handleradd_withcontext(self, "resize", dialog_selectcolor_resize ,self);
-	//liqcell_handleradd_withcontext(self, "keypress", dialog_selectcolor_keypress,self );
-	//liqcell_handleradd_withcontext(self, "keyrelease", dialog_selectcolor_keyrelease ,self);
-	liqcell_handleradd_withcontext(self, "mouse", dialog_selectcolor_mouse,self );
-	liqcell_handleradd_withcontext(self, "click", dialog_selectcolor_click ,self);
-	//liqcell_handleradd_withcontext(self, "paint", dialog_selectcolor_paint ,self); // use only if required, heavyweight
-	liqcell_handleradd_withcontext(self, "dialog_open", dialog_selectcolor_dialog_open ,self);
-	liqcell_handleradd_withcontext(self, "dialog_close", dialog_selectcolor_dialog_close ,self);
+	liqcell_handleradd_withcontext(self, "refresh", (void*)dialog_selectcolor_refresh ,self);
+	liqcell_handleradd_withcontext(self, "shown", (void*)dialog_selectcolor_shown ,self);
+	liqcell_handleradd_withcontext(self, "resize", (void*)dialog_selectcolor_resize ,self);
+	liqcell_handleradd_withcontext(self, "mouse", (void*)dialog_selectcolor_mouse,self );
+	liqcell_handleradd_withcontext(self, "click", (void*)dialog_selectcolor_click ,self);
+	liqcell_handleradd_withcontext(self, "dialog_open", (void*)dialog_selectcolor_dialog_open ,self);
+	liqcell_handleradd_withcontext(self, "dialog_close", (void*)dialog_selectcolor_dialog_close ,self);
 	return self;
 }
 

@@ -65,6 +65,7 @@ int liqx11info_eventgetnext(liqx11info *myx11info,XEvent *event);
 
 int liqx11info_get_next_liqevent(liqx11info *myx11info,LIQEVENT *ev,int *dirtyflagptr);
 
+int liqx11info_minimize(liqx11info *myx11info);
 
 
 

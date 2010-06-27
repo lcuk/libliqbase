@@ -1,4 +1,6 @@
 // this file is part of liqbase by Gary Birkett
+
+#include <math.h>
 		
 #include "liqbase.h"
 #include "liqcell.h"
@@ -155,7 +157,7 @@ int liqcell_easyrun_mouseeventargs_multitouchprepare(liqcell *self, liqcellmouse
 										
 										// now, setup for userf2
 	
-										liqmultitouch_initrectfromliqpointstream(userf2 ,args->stroke->pointlast,         samplecount,liqcell_gettag(userf1));
+										liqmultitouch_initrectfromliqpointstream(userf2 ,args->stroke->pointlast,         samplecount, (liqpoint *)liqcell_gettag(userf1));
 										// make sure we double the offset 									
 										//liqcell_adjustpos(userf2, (liqcell_getcx(userf2)-liqcell_getcx(userf1))/2, (liqcell_getcy(userf2)-liqcell_getcy(userf1))/2  );
 										
@@ -196,7 +198,7 @@ int liqcell_easyrun_mouseeventargs_multitouchprepare(liqcell *self, liqcellmouse
 									// do not alter userf1 now, it is fixed and locked
 	
 	
-										liqmultitouch_initrectfromliqpointstream(userf2 ,args->stroke->pointlast,         samplecount,liqcell_gettag(userf1));
+										liqmultitouch_initrectfromliqpointstream(userf2 ,args->stroke->pointlast,         samplecount, (liqpoint *)liqcell_gettag(userf1));
 										
 										// make sure we double the offset 														
 										//liqcell_adjustpos(userf2, (liqcell_getcx(userf2)-liqcell_getcx(userf1))/2, (liqcell_getcy(userf2)-liqcell_getcy(userf1))/2  );

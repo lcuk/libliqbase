@@ -74,6 +74,35 @@
 
 
 
+inline unsigned int doblendy(int s,int t, int blend)
+{
+	//int s=*Source;
+	//int t=*Target;
+	//if(!s)s=128;
+	//if(!t)t=128;
+	//int a=*Src_alphachanneldoubleres;
+	//*Target++ = t+((s-t)*a)/256;
+	int r=  t+((s-t)*blend)/256;
+
+	//if(!r)r=1;
+	return r;//t+((s-t)*blend*a)/65536;
+
+}
+
+inline unsigned int doblenduv(int s,int t, int blend)
+{
+	//int s=*Source;
+	//int t=*Target;
+	if(!s)s=128;
+	if(!t)t=128;
+	//int a=*Src_alphachanneldoubleres;
+	//*Target++ = t+((s-t)*a)/256;
+	int r=  t+((s-t)*blend)/256;
+
+	if(!r)r=1;
+	return r;//t+((s-t)*blend*a)/65536;
+
+}
 
 inline void xsurface_drawstrip_colortest1(
 	register unsigned int  linecount,
@@ -117,41 +146,6 @@ inline void xsurface_drawstrip_colortest1(
 			unsigned char bright = *srcdataptr++;
 			if(bright)
 			{
-
-
-
-				inline unsigned int doblendy(int s,int t, int blend)
-				{
-					//int s=*Source;
-					//int t=*Target;
-					//if(!s)s=128;
-					//if(!t)t=128;
-					//int a=*Src_alphachanneldoubleres;
-					//*Target++ = t+((s-t)*a)/256;
-					int r=  t+((s-t)*blend)/256;
-
-					//if(!r)r=1;
-					return r;//t+((s-t)*blend*a)/65536;
-
-				}
-
-
-				inline unsigned int doblenduv(int s,int t, int blend)
-				{
-					//int s=*Source;
-					//int t=*Target;
-					if(!s)s=128;
-					if(!t)t=128;
-					//int a=*Src_alphachanneldoubleres;
-					//*Target++ = t+((s-t)*a)/256;
-					int r=  t+((s-t)*blend)/256;
-
-					if(!r)r=1;
-					return r;//t+((s-t)*blend*a)/65536;
-
-				}
-
-
 				// bright is how far from old to new we must travel.
 				// if bright==0 then we stay at old
 				// if bright==255 then we end up with a value of col_y

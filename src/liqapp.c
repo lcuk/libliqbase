@@ -60,7 +60,7 @@ void * liqapp_log_context=NULL;
 
 void liqapp_log_setforwarding( void *logfunction_voidpcontext_strtime_strmsg, void *contextdata )
 {
-    liqapp_log_forwarding = logfunction_voidpcontext_strtime_strmsg;
+    liqapp_log_forwarding = (int (*)(void*, char*, char*))logfunction_voidpcontext_strtime_strmsg;
     liqapp_log_context=contextdata;
 }
 
@@ -111,7 +111,7 @@ char *liqapp_gettitle()
 //#######################################################################
 
 	static const char *hardware_product_filename = "/proc/component_version";
-    static char *hardware_product[32]={0};
+    static char hardware_product[32]={0};
 	static int   hardware_product_ispowerful;
 	int hardware_product_read()
 	{
@@ -527,6 +527,21 @@ int liqapp_file_copy (char * from, char * to, int allowoverwrite)
 
 
 
+	
+static int trymakepath(char *path)
+{
+	if(!liqapp_pathexists(path))
+	{
+		int status;
+		status = mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+		if(status)
+		{
+			liqapp_log("liqapp error: could not mkdir '%s'",path);
+			return -1;			
+		}
+	}
+	return 0;
+}
 
 //#######################################################################
 //####################################################################### app init
@@ -668,23 +683,6 @@ int 		liqapp_init(int argc, char* argv[],char *title,char *version)
 
 	//####################################################### make sure our data folder exists
 
-	
-		int trymakepath(char *path)
-		{
-			if(!liqapp_pathexists(path))
-			{
-				int status;
-				status = mkdir(buf, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-				if(status)
-				{
-					liqapp_log("liqapp error: could not mkdir '%s'",path);
-					return -1;			
-				}
-			}
-			return 0;
-		}
-
-
 	snprintf(buf,FILENAME_MAX,"%s",app.userdatapath);
 	trymakepath(buf);
 
@@ -745,13 +743,6 @@ int 		liqapp_init(int argc, char* argv[],char *title,char *version)
 	liqapp_log("#############");
 	liqapp_log("app.username     =%s",app.username);
 	liqapp_log("#############");
-
-
-	// run tests :)
-	if(strcmp(app.title,"liqflow")==0)
-	{
-		liqcell_parse_liqbrain_test();
-	}
 	
 	liqcell_showfps =        1 == atoi(liqapp_pref_getvalue_def("showfps","0"));
 	liqcell_showdebugboxes = 1 == atoi(liqapp_pref_getvalue_def("showdebugboxes","0"));
@@ -1095,6 +1086,26 @@ char *stristr(const char *String, const char *Pattern)
 //		// invalid
 // }
 
+static int strncpy_onlydigits(char *res,char *indat,int size)
+{
+	int ch;
+	for(ch=0;ch<size;ch++)
+	{
+		if(isdigit(*indat))
+		{
+			*res++=*indat++;
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	// null terminate
+	*res++=0;
+	return 0;
+}
+
+
 
 		int liqapp_datestamp_to_date(char *datestamp,struct tm *timebuf)		// convert a liqbase datestamp "yyyymmdd_hhmmss" into a tm struct
 		{
@@ -1107,24 +1118,7 @@ char *stristr(const char *String, const char *Pattern)
 			char SS[3]="00";
 			
 			char *indat=datestamp;
-			int strncpy_onlydigits(char *res,char *indat,int size)
-			{
-				int ch;
-				for(ch=0;ch<size;ch++)
-				{
-					if(isdigit(*indat))
-					{
-						*res++=*indat++;
-					}
-					else
-					{
-						return -1;
-					}
-				}
-				// null terminate
-				*res++=0;
-				return 0;
-			}
+
 			//liqapp_log("has yr? '%s'",indat);
 			if( strncpy_onlydigits(yy,indat,4) == 0 )
 			{
@@ -1219,7 +1213,6 @@ char *stristr(const char *String, const char *Pattern)
 			return 0;
 
 		}
-			
 			
 		// similar code here
 		// http://www.velocityreviews.com/forums/t679803-time-issue-mktime-timet-tm.html

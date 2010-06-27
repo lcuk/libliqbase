@@ -40,7 +40,7 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <dirent.h>
-
+#include <pthread.h>
 
 #include "liqbase.h"
 
@@ -48,6 +48,8 @@
 #include "liqcell_prop.h"
 #include "liqcell_easyrun.h"
 #include "liqcell_easypaint.h"
+#include "liqapp_prefs.h"
+#include "liqaccel.h"
 
 #include "liqcell_historystore.h"
 
@@ -81,9 +83,8 @@ void liqapp_sleep_real(int millseconds)
 extern int liqcell_showdebugboxes;
 
 
-liqcell * liqcell_easyrun_currentdialog=NULL;;
-
-int liqcell_easyrun_activecontrol=NULL;
+liqcell * liqcell_easyrun_currentdialog=NULL;
+liqcell * liqcell_easyrun_activecontrol=NULL;
 int liqcell_easyrun_fingerpressed=0;
 
 
@@ -515,7 +516,7 @@ liqcell * toolclick(liqcell *vis)
 
 		b = liqcell_quickcreatevis("pic","button",  800-50,64+hh*0.8,   50,hh*0.2);
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
-		liqcell_handleradd_withcontext(b,    "click",   tool_pic_click, self);
+		liqcell_handleradd_withcontext(b,    "click",   (void *)tool_pic_click, self);
 		liqcell_propsets(  b,    "backcolor", "rgb(100,100,0)" );
 		liqcell_child_append( self, b );
 
@@ -729,6 +730,64 @@ int liqcell_easyrun_depth=0;
 int liqcell_easyrun_hide_tools = 0;
 int liqcell_easyrun_hide_back = 0;
 
+
+static int idle_lazyrun_shown(liqcell *start)
+{
+	if(start->kineticx || start->kineticy) return 1;
+	if(liqcell_getshown(start)==0)
+	{
+		// not yet shown!
+		liqcell_handlerrun(start,"shown",NULL);
+		liqcell_setshown(start,1);
+		return 1;
+	}
+	liqcell *c=liqcell_getlinkchild_visual(start);
+	while(c)
+	{
+		if(idle_lazyrun_shown(c)) return 1;
+		c=liqcell_getlinknext_visual(c);
+	}
+	c=liqcell_getcontent(start);
+	if(c) return idle_lazyrun_shown(c);
+	return 0;
+}
+
+static liqcliprect *easyrun_realtime_reshape(liqcell *self, vgraph *graph)
+{
+	if(canvas.fullscreen)
+		vgraph_setscaleaspectlock(graph,  1);
+	else
+		vgraph_setscaleaspectlock(graph,  0);
+	//vgraph_setscaleaspectlock(graph,  0);
+	
+	vgraph_setcliprect(graph, NULL );
+	vgraph_settarget(graph,   NULL  );
+	
+	vgraph_setcliprect(graph, liqcliprect_hold(liqcanvas_getcliprect()) );
+	vgraph_settarget(graph,   liqimage_hold(liqcanvas_getsurface())  );
+	vgraph_setwindow( graph,  (self)                  );
+	
+	
+	//targetsurface = liqcanvas_getsurface();
+	return vgraph_getcliprect(graph);
+}
+
+static int slidetowards(int valuenow,int target)
+{
+	if(valuenow==target) return 0;
+	int diff = target - valuenow;
+	if(ABS(diff)>1)
+	{
+		if(ABS(diff)>3)
+			return diff/3 ;
+		else
+			return (diff<0)?-1:1;
+	}
+	else
+		return diff;
+}
+
+
 /**
  * Main program event handler.
  * @param self The liqcell to run
@@ -796,51 +855,8 @@ liqcliprect *targetcr      = NULL;//liqcanvas_getcliprect();
 
 int idle_lazyrun_wanted = liqcell_propgeti(self,"idle_lazyrun_wanted",0);
 
-	int idle_lazyrun_shown(liqcell *start)
-	{
-		if(start->kineticx || start->kineticy) return 1;
-		if(liqcell_getshown(start)==0)
-		{
-			// not yet shown!
-			liqcell_handlerrun(start,"shown",NULL);
-			liqcell_setshown(start,1);
-			return 1;
-		}
-		liqcell *c=liqcell_getlinkchild_visual(start);
-		while(c)
-		{
-			if(idle_lazyrun_shown(c)) return 1;
-			c=liqcell_getlinknext_visual(c);
-		}
-		c=liqcell_getcontent(start);
-		if(c) return idle_lazyrun_shown(c);
-		return 0;
-	}
 
-
-
-	void easyrun_realtime_reshape()
-	{
-		if(canvas.fullscreen)
-			vgraph_setscaleaspectlock(graph,  1);
-		else
-			vgraph_setscaleaspectlock(graph,  0);
-		//vgraph_setscaleaspectlock(graph,  0);
-		
-		vgraph_setcliprect(graph, NULL );
-		vgraph_settarget(graph,   NULL  );
-		
-		vgraph_setcliprect(graph, liqcliprect_hold(liqcanvas_getcliprect()) );
-		vgraph_settarget(graph,   liqimage_hold(liqcanvas_getsurface())  );
-		vgraph_setwindow( graph,  (self)                  );
-		
-		
-		//targetsurface = liqcanvas_getsurface();
-		targetcr      = vgraph_getcliprect(graph);
-		
-	}
-
-	easyrun_realtime_reshape();
+	targetcr = easyrun_realtime_reshape(self, graph);
 
 
 
@@ -1609,7 +1625,7 @@ waitevent:
 
 									}
                                     
-                                    easyrun_realtime_reshape();
+                                    targetcr = easyrun_realtime_reshape(self, graph);
 								}
 							}
 						}
@@ -1672,7 +1688,7 @@ quickfin:
 			{
 				liqapp_log("event resize");
 				
-				easyrun_realtime_reshape();
+				targetcr = easyrun_realtime_reshape(self, graph);
 				
 				refreshinprogress=0;
 				wantwait=0;
@@ -1741,23 +1757,6 @@ quickfin:
 		
 		// todo make this a system config option
 		
-		//###########################################################
-		int slidetowards(int valuenow,int target)
-		{
-			if(valuenow==target) return 0;
-			int diff = target - valuenow;
-			if(ABS(diff)>1)
-			{
-				if(ABS(diff)>3)
-					return diff/3 ;
-				else
-					return (diff<0)?-1:1;
-			}
-			else
-				return diff;
-		}
-		
-		
 		if((fademode) && (refreshinprogress==0))
 		{
 			//liqapp_log("liqcell_easyrun fade in %i,%i",fadeatx,fadeaty);
@@ -1815,15 +1814,15 @@ quickfin:
 					//zoom_in_progress=0;
 					// run the zoom_app :)
 					
-					liqcell_propseti(zoom_app,"dialog_zoomed",1);
+					liqcell_propseti((liqcell *)zoom_app,"dialog_zoomed",1);
 
-						liqcell_easyrun( zoom_app );
+						liqcell_easyrun( (liqcell *)zoom_app );
 					
-					liqcell_propremovei(zoom_app,"dialog_zoomed");
+					liqcell_propremovei((liqcell *)zoom_app,"dialog_zoomed");
                     
                     liqcanvas_settitle( liqcell_getcaption(self) );
                     
-                    easyrun_realtime_reshape();
+                    targetcr = easyrun_realtime_reshape(self, graph);
                     
                     // Mon Sep 07 22:13:27 2009 lcuk : was not releasing... tsk tsk
 // i bet this is where the bug is coming from.....
@@ -2089,24 +2088,6 @@ moar:
 #endif
 
 
-
-
-	static const char *cpufreq_filename = "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq";
-	//static const char *cpufreq_filename = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq";
-	int cpufreq_read(int *freq)
-	{
-		FILE *fd;
-		int rs;
-		*freq=0;
-		fd = fopen(cpufreq_filename, "r");
-		if(fd==NULL){ liqapp_log("cpufreq, cannot open for reading"); return -1;}	
-		rs=fscanf((FILE*) fd,"%i",freq);	
-		fclose(fd);	
-		if(rs != 1){ liqapp_log("cpufreq, cannot read information"); return -2;}
-	}
-
-
-
 			//liqapp_log("render adding framecount");		
 // 20090520_014021 lcuk : show frame information
 
@@ -2123,8 +2104,6 @@ if(liqcell_showfps)
 				char *cap=liqcell_getcaption(self);
 				if(!cap || !*cap) cap="[nameless]";
 				char buff[255];
-				int cpufreq=0;
-				//cpufreq_read(&cpufreq);
 				snprintf(buff,sizeof(buff),"%s '%s' %3i, %3.3f, %3.3f",app.title,cap,framecount, liqapp_fps(tz0,tz1,1) ,liqapp_fps(tzs,tz1,framecount) );
 			//	liqapp_log(buff);
 				int hh=liqfont_textheight(infofont);

@@ -243,21 +243,21 @@ liqcell *liqlist_create()
 	//liqcell_setfont(	backplane, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (12), 0) );
 	//liqcell_propsets(  backplane, "textcolor", "rgb(0,0,0)" );
 	//liqcell_propsets(  backplane, "backcolor", "rgb(64,64,64)" );
-    liqcell_handleradd_withcontext(backplane,    "mouse",   liqcell_easyhandler_kinetic_mouse,self);
+    liqcell_handleradd_withcontext(backplane,    "mouse",   (void *)liqcell_easyhandler_kinetic_mouse,self);
 	liqcell_child_append(  self, backplane);
     
 	//liqcell_propsets(  self, "backcolor", "rgb(0,0,0)" );
    // liqcell_propsets(  self, "bordercolor", "rgb(255,255,255)" );
-	liqcell_handleradd_withcontext(self, "refresh", liqlist_refresh ,self);
-	liqcell_handleradd_withcontext(self, "shown", liqlist_shown ,self);
-	liqcell_handleradd_withcontext(self, "resize", liqlist_resize ,self);
-	liqcell_handleradd_withcontext(self, "keypress", liqlist_keypress,self );
-	liqcell_handleradd_withcontext(self, "keyrelease", liqlist_keyrelease ,self);
-	liqcell_handleradd_withcontext(self, "mouse", liqlist_mouse,self );
-	liqcell_handleradd_withcontext(self, "click", liqlist_click ,self);
+	liqcell_handleradd_withcontext(self, "refresh", (void *)liqlist_refresh ,self);
+	liqcell_handleradd_withcontext(self, "shown", (void *)liqlist_shown ,self);
+	liqcell_handleradd_withcontext(self, "resize", (void *)liqlist_resize ,self);
+	liqcell_handleradd_withcontext(self, "keypress", (void *)liqlist_keypress,self );
+	liqcell_handleradd_withcontext(self, "keyrelease", (void *)liqlist_keyrelease ,self);
+	liqcell_handleradd_withcontext(self, "mouse", (void *)liqlist_mouse,self );
+	liqcell_handleradd_withcontext(self, "click", (void *)liqlist_click ,self);
 	//liqcell_handleradd_withcontext(self, "paint", liqlist_paint ,self); // use only if required, heavyweight
-	liqcell_handleradd_withcontext(self, "dialog_open", liqlist_dialog_open ,self);
-	liqcell_handleradd_withcontext(self, "dialog_close", liqlist_dialog_close ,self);
+	liqcell_handleradd_withcontext(self, "dialog_open", (void *)liqlist_dialog_open ,self);
+	liqcell_handleradd_withcontext(self, "dialog_close", (void *)liqlist_dialog_close ,self);
 	return self;
 }
 

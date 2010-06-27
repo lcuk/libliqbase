@@ -24,6 +24,7 @@
 
 #include <time.h>			// req for sleep
 #include <sys/time.h>		// req for getticks
+#include <stdlib.h>
 
 #include "liqcell.h"
 #include "liqcell_prop.h"
@@ -127,7 +128,7 @@ static int enter_click(liqcell *self,liqcelleventargs *args, liqcell *keyboard)
 	char *caption = liqcell_getcaption(local_textbox);
 	
 	// set remote textbox caption to the caption of the local textbox
-	liqcell *textbox = liqcell_getdata(keyboard);
+	liqcell *textbox = (liqcell *)liqcell_getdata(keyboard);
 	liqcell_setcaption(textbox, caption);
 	
 	// get out of here!
@@ -202,14 +203,14 @@ liqcell *liqkeyboard_create()
 	//liqcell_propsets(liqkeyboard, "backcolor", "rgb(0,128,128)");
 	liqcell_child_append(self, liqkeyboard);
 
-	liqcell_handleradd_withcontext(liqkeyboard, "keypress", liqkeyboard_keypress, self);
-	liqcell_handleradd_withcontext(liqkeyboard, "keyrelease", liqkeyboard_keyrelease, self);
+	liqcell_handleradd_withcontext(liqkeyboard, "keypress", (void*)liqkeyboard_keypress, self);
+	liqcell_handleradd_withcontext(liqkeyboard, "keyrelease", (void*)liqkeyboard_keyrelease, self);
 	
 	// backspaces
 	liqcell *buttondel = liqcell_quickcreatevis("buttondel", "commandbutton", 700, 240, 100, 120);
 	liqcell_setfont(	buttondel, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (12), 0) );
 	liqcell_setcaption(buttondel, "< BACK" );
-	liqcell_handleradd_withcontext(buttondel, "click", buttondel_click, self );
+	liqcell_handleradd_withcontext(buttondel, "click", (void*)buttondel_click, self );
 	liqcell_propseti(     buttondel,"textalign", 2 );
 	liqcell_propseti(     buttondel,"textaligny",2 );
 	liqcell_child_append(  self, buttondel);
@@ -219,7 +220,7 @@ liqcell *liqkeyboard_create()
 	liqcell_setcaption(enter, "ENTER" );
 	liqcell_setfont(enter, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (12), 0) );
 	liqcell_propsets(enter, "backcolor", "rgb(rgb(0,100,0))");
-	liqcell_handleradd_withcontext(enter, "click", enter_click, self);
+	liqcell_handleradd_withcontext(enter, "click", (void*)enter_click, self);
 	liqcell_propseti(enter,"textalign", 2 );
 	liqcell_propseti(enter,"textaligny",2 );
 	liqcell_child_append(self, enter);
@@ -230,6 +231,69 @@ liqcell *liqkeyboard_create()
 //######################################################################
 //######################################################################
 //######################################################################
+static liqcell *keyrowstart(liqcell *keyboard, char *title)
+{
+	return mkframe(keyboard,title,700,240/5);
+}
+
+static liqcell *keystd(liqcell *keyboard, liqcell *keyrow, int keysize,char *keycode,char *normal,char *caps)
+{
+	float sizes[9] = { 1.0,      1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 6.0, 20.0};
+	// width/15
+	if(keysize<0 || keysize>7) keysize=0;
+	int w=(int)   ((float)(700/14) * sizes[keysize]);
+	liqcell *key;
+	
+	int keycodenumeric=1;
+	if(*keycode)
+	{
+		keycodenumeric=atoi(keycode);
+	}
+
+	if(keycodenumeric==0)
+	{
+		key = mkkey(keyrow,keycode,w,240/5);
+		liqcell_setcaption(key,normal);
+		
+		liqcell_propsets(  key, "backcolor", "rgb(100,150,100)" );
+
+		//liqcell_propsets(     key,"fontname", "/usr/share/fonts/nokia/nosnb.ttf" );
+		//liqcell_propseti(     key,"fontsize", 24 );
+		//liqcell_propsets(     key,"backcolor", "rgb(100,100,150)" );
+		//liqcell_propseti(     key,"textalign", 2 );
+		//liqcell_propseti(     key,"textaligny",2 );
+
+		//key->style=NULL;
+	}
+	else
+	{
+		key = mkkey(keyrow,normal,w,240/5);
+		//key->style=stylekeycap;
+		//key->handlermouse=key_mouse;
+
+		liqcell_propseti(     key,"textalign",1);
+		liqcell_propsets(     key,"fontname", "/usr/share/fonts/nokia/nosnb.ttf" );
+		liqcell_propseti(     key,"fontsize", 32 );
+		liqcell_propsets(     key,"textcolor", "rgb(255,255,255)" );
+		liqcell_propsets(     key,"backcolor", "rgb(100,150,100)" );
+		liqcell_propseti(     key,"textalign", 2 );
+		liqcell_propseti(     key,"textaligny",2 );
+		
+		liqcell_propsets(  key, "backcolor", "rgb(100,150,100)" );
+		
+		//liqcell_handleradd_withcontext(   key,"mouse", key_mouse, keyboard );
+		liqcell_handleradd_withcontext(   key,"click", (void *)key_click, keyboard );
+		liqcell_settag(       key,(void*)keycodenumeric);
+
+	}
+	return key;
+
+}
+
+static void keyrowend(liqcell *keyrow)
+{
+	liqcell_child_arrange_autoflow(keyrow);
+}
 
 liqcell *build_vkbd()
 {
@@ -238,155 +302,77 @@ liqcell *build_vkbd()
 	//static liqcell *keyboard=NULL;
 	liqcell *keyrow=NULL;
 	
-	void keyrowstart(char *title)
-	{
-		keyrow = mkframe(keyboard,title,700,240/5);
-		//keyrow->handlermouse=key_mouse;
-
-
-	}
-	
-	liqcell *keystd(int keysize,char *keycode,char *normal,char *caps)
-	{
-		float sizes[9] = { 1.0,      1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 6.0, 20.0};
-		// width/15
-		if(keysize<0 || keysize>7) keysize=0;
-		int w=(int)   ((float)(700/14) * sizes[keysize]);
-		liqcell *key;
-		
-		int keycodenumeric=1;
-		if(*keycode)
-		{
-			keycodenumeric=atoi(keycode);
-		}
-
-		if(keycodenumeric==0)
-		{
-			key = mkkey(keyrow,keycode,w,240/5);
-			liqcell_setcaption(key,normal);
-			
-			liqcell_propsets(  key, "backcolor", "rgb(100,150,100)" );
-
-			//liqcell_propsets(     key,"fontname", "/usr/share/fonts/nokia/nosnb.ttf" );
-			//liqcell_propseti(     key,"fontsize", 24 );
-			//liqcell_propsets(     key,"backcolor", "rgb(100,100,150)" );
-			//liqcell_propseti(     key,"textalign", 2 );
-			//liqcell_propseti(     key,"textaligny",2 );
-
-			//key->style=NULL;
-		}
-		else
-		{
-			key = mkkey(keyrow,normal,w,240/5);
-			//key->style=stylekeycap;
-			//key->handlermouse=key_mouse;
-
-			liqcell_propseti(     key,"textalign",1);
-			liqcell_propsets(     key,"fontname", "/usr/share/fonts/nokia/nosnb.ttf" );
-			liqcell_propseti(     key,"fontsize", 32 );
-			liqcell_propsets(     key,"textcolor", "rgb(255,255,255)" );
-			liqcell_propsets(     key,"backcolor", "rgb(100,150,100)" );
-			liqcell_propseti(     key,"textalign", 2 );
-			liqcell_propseti(     key,"textaligny",2 );
-			
-			liqcell_propsets(  key, "backcolor", "rgb(100,150,100)" );
-			
-			//liqcell_handleradd_withcontext(   key,"mouse", key_mouse, keyboard );
-			liqcell_handleradd_withcontext(   key,"click", key_click, keyboard );
-			liqcell_settag(       key,(void*)keycodenumeric);
-
-		}
-		return key;
-
-	}
-	void keyrowend()
-	{
-		//liqcell_child_arrange_easyrow(keyrow);
-		liqcell_child_arrange_autoflow(keyrow);
-		keyrow=NULL;
-	}
-
-
-
-	keyrowstart("num");
+	keyrow = keyrowstart(keyboard, "num");
 //		keystd(1,"ESC","","");
-		keystd(1,"",   "`" ,"¬");
-		keystd(1,"",   "1" ,"!");
-		keystd(1,"",   "2" ,"\"");
-		keystd(1,"",   "3" ,"£");
-		keystd(1,"",   "4" ,"$");
-		keystd(1,"",   "5" ,"%");
-		keystd(1,"",   "6" ,"^");
-		keystd(1,"",   "7" ,"&");
-		keystd(1,"",   "8" ,"*");
-		keystd(1,"",   "9" ,"(");
-		keystd(1,"",   "0" ,")");
-		keystd(1,"",   "-" ,"_");
-		keystd(1,"",   "=" ,"+");
-		//keystd(2,"BSP","","");
-	keyrowend();
+		keystd(keyboard, keyrow, 1,"",   "`" ,"¬");
+		keystd(keyboard, keyrow, 1,"",   "1" ,"!");
+		keystd(keyboard, keyrow, 1,"",   "2" ,"\"");
+		keystd(keyboard, keyrow, 1,"",   "3" ,"£");
+		keystd(keyboard, keyrow, 1,"",   "4" ,"$");
+		keystd(keyboard, keyrow, 1,"",   "5" ,"%");
+		keystd(keyboard, keyrow, 1,"",   "6" ,"^");
+		keystd(keyboard, keyrow, 1,"",   "7" ,"&");
+		keystd(keyboard, keyrow, 1,"",   "8" ,"*");
+		keystd(keyboard, keyrow, 1,"",   "9" ,"(");
+		keystd(keyboard, keyrow, 1,"",   "0" ,")");
+		keystd(keyboard, keyrow, 1,"",   "-" ,"_");
+		keystd(keyboard, keyrow, 1,"",   "=" ,"+");
+	keyrowend(keyrow);
 
-	keyrowstart("qwerty");
-		keystd(3,"","\t","");
-		keystd(1,"",   "q" ,"Q");
-		keystd(1,"",   "w" ,"W");
-		keystd(1,"",   "e" ,"E");
-		keystd(1,"",   "r" ,"R");
-		keystd(1,"",   "t" ,"T");
-		keystd(1,"",   "y" ,"Y");
-		keystd(1,"",   "u" ,"U");
-		keystd(1,"",   "i" ,"I");
-		keystd(1,"",   "o" ,"O");
-		keystd(1,"",   "p" ,"P");
-		keystd(1,"",   "[" ,"{");
-		keystd(1,"",   "]" ,"}");
+	keyrow = keyrowstart(keyboard, "qwerty");
+		keystd(keyboard, keyrow, 3,"","\t","");
+		keystd(keyboard, keyrow, 1,"",   "q" ,"Q");
+		keystd(keyboard, keyrow, 1,"",   "w" ,"W");
+		keystd(keyboard, keyrow, 1,"",   "e" ,"E");
+		keystd(keyboard, keyrow, 1,"",   "r" ,"R");
+		keystd(keyboard, keyrow, 1,"",   "t" ,"T");
+		keystd(keyboard, keyrow, 1,"",   "y" ,"Y");
+		keystd(keyboard, keyrow, 1,"",   "u" ,"U");
+		keystd(keyboard, keyrow, 1,"",   "i" ,"I");
+		keystd(keyboard, keyrow, 1,"",   "o" ,"O");
+		keystd(keyboard, keyrow, 1,"",   "p" ,"P");
+		keystd(keyboard, keyrow, 1,"",   "[" ,"{");
+		keystd(keyboard, keyrow, 1,"",   "]" ,"}");
+	keyrowend(keyrow);
+
+	keyrow = keyrowstart(keyboard, "asdf");
+		keystd(keyboard, keyrow, 4,"CLK","","");
+		keystd(keyboard, keyrow, 1,"",   "a" ,"A");
+		keystd(keyboard, keyrow, 1,"",   "s" ,"S");
+		keystd(keyboard, keyrow, 1,"",   "d" ,"D");
+		keystd(keyboard, keyrow, 1,"",   "f" ,"F");
+		keystd(keyboard, keyrow, 1,"",   "g" ,"G");
+		keystd(keyboard, keyrow, 1,"",   "h" ,"H");
+		keystd(keyboard, keyrow, 1,"",   "j" ,"J");
+		keystd(keyboard, keyrow, 1,"",   "k" ,"K");
+		keystd(keyboard, keyrow, 1,"",   "l" ,"L");
+		keystd(keyboard, keyrow, 1,"",   ";" ,":");
+		keystd(keyboard, keyrow, 1,"",   "'" ,"@");
+		keystd(keyboard, keyrow, 1,"",   "#" ,"~");
 		//keystd(2,"CR","","");
-	keyrowend();
+	keyrowend(keyrow);
 
-	keyrowstart("asdf");
-		keystd(4,"CLK","","");
-		keystd(1,"",   "a" ,"A");
-		keystd(1,"",   "s" ,"S");
-		keystd(1,"",   "d" ,"D");
-		keystd(1,"",   "f" ,"F");
-		keystd(1,"",   "g" ,"G");
-		keystd(1,"",   "h" ,"H");
-		keystd(1,"",   "j" ,"J");
-		keystd(1,"",   "k" ,"K");
-		keystd(1,"",   "l" ,"L");
-		keystd(1,"",   ";" ,":");
-		keystd(1,"",   "'" ,"@");
-		keystd(1,"",   "#" ,"~");
-		//keystd(2,"CR","","");
-	keyrowend();
+	keyrow = keyrowstart(keyboard, "zxcv");
+		keystd(keyboard, keyrow, 5,"SHL","","");
+		keystd(keyboard, keyrow, 1,"",   "z" ,"Z");
+		keystd(keyboard, keyrow, 1,"",   "x" ,"X");
+		keystd(keyboard, keyrow, 1,"",   "c" ,"C");
+		keystd(keyboard, keyrow, 1,"",   "v" ,"V");
+		keystd(keyboard, keyrow, 1,"",   "b" ,"B");
+		keystd(keyboard, keyrow, 1,"",   "n" ,"N");
+		keystd(keyboard, keyrow, 1,"",   "m" ,"M");
+		keystd(keyboard, keyrow, 1,"",   "," ,"<");
+		keystd(keyboard, keyrow, 1,"",   "." ,">");
+		keystd(keyboard, keyrow, 1,"",   "/" ,"?");
+		keystd(keyboard, keyrow, 1,"",   "@" ,"@");
+	keyrowend(keyrow);
 
-	keyrowstart("zxcv");
-		keystd(5,"SHL","","");
-		//keystd(1,"",   "\\","|");
-		keystd(1,"",   "z" ,"Z");
-		keystd(1,"",   "x" ,"X");
-		keystd(1,"",   "c" ,"C");
-		keystd(1,"",   "v" ,"V");
-		keystd(1,"",   "b" ,"B");
-		keystd(1,"",   "n" ,"N");
-		keystd(1,"",   "m" ,"M");
-		keystd(1,"",   "," ,"<");
-		keystd(1,"",   "." ,">");
-		keystd(1,"",   "/" ,"?");
-		keystd(1,"",   "@" ,"@");
-		//keystd(6,"SHR","","");
-	keyrowend();
-
-	keyrowstart("bottom");
-		keystd(3,"CTL","","");
-		keystd(3,"WN1","","");
-		keystd(3,"ALT","","");
-		keystd(7,""," ","");
-		//keystd(3,"ALG","","");
-		//keystd(3,"WN2","","");
-		//keystd(3,"CNT","","");
-		//keystd(3,"CTR","","");
-	keyrowend();
+	keyrow = keyrowstart(keyboard, "bottom");
+		keystd(keyboard, keyrow, 3,"CTL","","");
+		keystd(keyboard, keyrow, 3,"WN1","","");
+		keystd(keyboard, keyrow, 3,"ALT","","");
+		keystd(keyboard, keyrow, 7,""," ","");
+	keyrowend(keyrow);
 
 
 	//liqcell_child_arrange_easycol(keyboard);

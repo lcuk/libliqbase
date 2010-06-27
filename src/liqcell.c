@@ -38,7 +38,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-
+#include <pthread.h>
 
 #include <time.h>			// req for sleep
 #include <sys/time.h>		// req for getticks
@@ -148,7 +148,7 @@ void liqcell_free(liqcell *self)
     if( self->classname && (strcmp(self->classname,"liqtimer")==0) )
     {
         // cheat to close down the thread!
-        pthread_t 		*tid = liqcell_getdata(self);
+        pthread_t 		*tid = (pthread_t *)liqcell_getdata(self);
         if(tid)
         {
             // only live once...
@@ -1963,7 +1963,7 @@ int liqcell_iskind(liqcell *self,int cellkind)
  */
 void liqcell_print(liqcell *self,char *title,int recdep)
 {
-	char *indent = malloc(recdep+1);
+	char *indent = (char *)malloc(recdep+1);
 	if(!indent) return;
 	int i;
 	for(i=0;i<recdep;i++)
@@ -2133,7 +2133,7 @@ int liqcell_handlerrun(liqcell *self,char *handlername,void *args)
 					// found it!
 					//liqapp_log("ok %s:%s %i",c->name,c->classname,(int)c->data);
 					void *context = liqcell_gettag(c);
-					event_handler = c->data;
+					event_handler = (int (*)(liqcell*, void*, void*))c->data;
 					if(event_handler)
 					{
 						
@@ -2353,15 +2353,15 @@ void liqcell_test()
 
 
 	liqcell *f1 = liqcell_child_insert(root,liqcell_quickcreatenameclass("f1","frame"));
-		liqcell_child_insert(f1,liqcell_new("a","f2"));
-		liqcell_child_insert(f1,liqcell_new("b","f2"));
-		liqcell_child_insert(f1,liqcell_new("c","f2"));
+		liqcell_child_insert(f1,liqcell_new());
+		liqcell_child_insert(f1,liqcell_new());
+		liqcell_child_insert(f1,liqcell_new());
 
 
 	liqcell *f2 = liqcell_child_insert(root,liqcell_quickcreatenameclass("f2","frame"));
-		liqcell_child_insert(f1,liqcell_new("m","f3"));
-		liqcell_child_insert(f1,liqcell_new("n","f3"));
-		liqcell_child_insert(f1,liqcell_new("o","f3"));
+		liqcell_child_insert(f1,liqcell_new());
+		liqcell_child_insert(f1,liqcell_new());
+		liqcell_child_insert(f1,liqcell_new());
 
 
 	liqcell *f3 = liqcell_child_insert(root,liqcell_quickcreatenameclass("f3","button"));

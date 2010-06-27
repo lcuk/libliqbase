@@ -125,16 +125,10 @@ liqcell *dialog_selectcolor_colorcube_create()
 	//liqcell_propsets(  image1, "bordercolor", "rgb(255,255,255)" );
 	//liqcell_child_append(  self, image1);
 	//liqcell_propsets(  self, "backcolor", "rgb(235,233,237)" );
-	liqcell_handleradd_withcontext(self, "refresh", dialog_selectcolor_colorcube_refresh ,self);
-	liqcell_handleradd_withcontext(self, "shown", dialog_selectcolor_colorcube_shown ,self);
-	liqcell_handleradd_withcontext(self, "resize", dialog_selectcolor_colorcube_resize ,self);
-	//liqcell_handleradd_withcontext(self, "keypress", dialog_selectcolor_colorcube_keypress,self );
-	//liqcell_handleradd_withcontext(self, "keyrelease", dialog_selectcolor_colorcube_keyrelease ,self);
-	//liqcell_handleradd_withcontext(self, "mouse", dialog_selectcolor_colorcube_mouse,self );
-	//liqcell_handleradd_withcontext(self, "click", dialog_selectcolor_colorcube_click ,self);
-	liqcell_handleradd_withcontext(self, "paint", dialog_selectcolor_colorcube_paint ,self); // use only if required, heavyweight
-	//liqcell_handleradd_withcontext(self, "dialog_open", dialog_selectcolor_colorcube_dialog_open ,self);
-	//liqcell_handleradd_withcontext(self, "dialog_close", dialog_selectcolor_colorcube_dialog_close ,self);
+	liqcell_handleradd_withcontext(self, "refresh", (void*)dialog_selectcolor_colorcube_refresh ,self);
+	liqcell_handleradd_withcontext(self, "shown", (void*)dialog_selectcolor_colorcube_shown ,self);
+	liqcell_handleradd_withcontext(self, "resize", (void*)dialog_selectcolor_colorcube_resize ,self);
+	liqcell_handleradd_withcontext(self, "paint", (void*)dialog_selectcolor_colorcube_paint ,self); // use only if required, heavyweight
 	return self;
 }
 

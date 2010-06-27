@@ -177,7 +177,7 @@ char * liqapp_pref_setvalue(char *prefkey,char *prefvalue)
 	liqcell *p=liqcell_child_lookup(prefsroot,prefkey);
 	if(p)
 	{
-		char *x=liqcell_getdata(p); if(x)free(x);
+		char *x=(char *)liqcell_getdata(p); if(x)free(x);
 		liqcell_setdata(p,prefvalue);
 		return prefvalue;
 	}
@@ -189,7 +189,7 @@ char * liqapp_pref_getvalue_def(char *prefkey,char *defaultifmissing)
 	liqcell *p=liqcell_child_lookup(prefsroot,prefkey);
 	if(p)
 	{
-		return liqcell_getdata(p);
+		return (char *)liqcell_getdata(p);
 	}
 	else
 	{
@@ -203,7 +203,7 @@ char * liqapp_pref_getvalue(char *prefkey)
 	liqcell *p=liqcell_child_lookup(prefsroot,prefkey);
 	if(p)
 	{
-		return liqcell_getdata(p);
+		return (char *)liqcell_getdata(p);
 	}
 	return NULL;
 }

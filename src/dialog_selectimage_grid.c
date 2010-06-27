@@ -306,7 +306,7 @@ static int liqcell_scan_folder_for_images(liqcell *self,char *path)
 						//liqcell_propsets(c,"imagelargefilename",fn);
 						liqcell_setcaption(c,fn);
 						
-						liqcell_handleradd(c,    "click",         dialog_selectimage_grid_item_click);
+						liqcell_handleradd(c,    "click",         (void*)dialog_selectimage_grid_item_click);
 						liqcell_child_insertsortedbyname( body, c, 0 );
 
 					}
@@ -481,7 +481,7 @@ liqcell *dialog_selectimage_grid_create()
 
 	if(self)
 	{
-		liqcell_handleradd_withcontext(self, "layout", dialog_selectimage_grid_layout ,self);
+		liqcell_handleradd_withcontext(self, "layout", (void*)dialog_selectimage_grid_layout ,self);
 
 		liqcell *body = liqcell_quickcreatevis("body","frame",0 ,0,   self->w,self->h);
 		liqcell_child_insert( self, body );
@@ -517,7 +517,7 @@ liqcell *dialog_selectimage_grid_create()
 		liqcell_handlerrun(self,"layout",NULL);
 		
 		
-		liqcell_handleradd_withcontext(self, "resize", dialog_selectimage_grid_resize ,self);
+		liqcell_handleradd_withcontext(self, "resize", (void*)dialog_selectimage_grid_resize ,self);
 		
 
 		int cnt=0;
@@ -528,10 +528,10 @@ liqcell *dialog_selectimage_grid_create()
 		c=liqcell_getlinkchild_visual(body);
         if(c)liqcell_setselected(c,1);
 
-		liqcell_handleradd(body,    "mouse",   liqcell_easyhandler_kinetic_mouse );
+		liqcell_handleradd(body,    "mouse",   (void*)liqcell_easyhandler_kinetic_mouse );
 
 
-        liqcell_handleradd(self,    "filter",   dialog_selectimage_grid_filter);
+        liqcell_handleradd(self,    "filter",   (void*)dialog_selectimage_grid_filter);
 
 	}
 	

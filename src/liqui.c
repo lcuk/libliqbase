@@ -262,7 +262,7 @@ liqcell *uitxtmsgbox_create(char *caption,char *datadefault)
 			liqcell_propsets(  data,  "textcolor", "rgb(0,0,0)" );
 			liqcell_propseti(  data,  "wordwrap", 1 );
 			liqcell_propseti(  data,  "maxlength",  140 );
-			liqcell_handleradd_withcontext(data, "captionchange", uitxtmsgbox_captionchange ,self);
+			liqcell_handleradd_withcontext(data, "captionchange", (void*)uitxtmsgbox_captionchange ,self);
 
 			liqcell_setcaption(data,  datadefault );
 		liqcell_child_insert( self, data );
@@ -409,7 +409,7 @@ liqcell *uienumbox_create(char *caption,char *datadefault,char *choices)
 				liqcell_propseti(     node,"textalign",2);
 				liqcell_propseti(     node,"textaligny",2);
 				liqcell_setcaption(node,  onechoice );
-				liqcell_handleradd_withcontext(node, "click", uienumbox_node_click, self );
+				liqcell_handleradd_withcontext(node, "click", (void*)uienumbox_node_click, self );
 				liqcell_child_append( data, node );
 				
 				onechoice = strtok(NULL, ";");
@@ -474,7 +474,7 @@ liqcell *uipicturebox_create(char *caption,char *datadefaultimagefilename)
 			liqcell_setimage(  data,  liqimage_cache_getfile( datadefaultimagefilename ,0,0,0) );
 			
 			
-		liqcell_handleradd_withcontext(data, "click", uipicturebox_click, self );
+		liqcell_handleradd_withcontext(data, "click", (void*)uipicturebox_click, self );
 
 
 		liqcell_child_insert( self, data );
@@ -530,7 +530,7 @@ liqcell *uicolorbox_create(char *caption,char *datadefault)
 			liqcell_propsets(  data,  "backcolor", datadefault );
 			
 			
-		liqcell_handleradd_withcontext(data, "click", uicolorbox_click, self );
+		liqcell_handleradd_withcontext(data, "click", (void*)uicolorbox_click, self );
 
 
 		liqcell_child_insert( self, data );
@@ -604,7 +604,7 @@ liqcell *liqui_create()
 			
 			body->h += 60 + 10;	// make sure it can extend enough to fit the accept button
 			
-			liqcell_handleradd(body,    "mouse",   liqcell_easyhandler_kinetic_mouse);
+			liqcell_handleradd(body,    "mouse",   (void*)liqcell_easyhandler_kinetic_mouse);
 			
 		
 		liqcell_child_append( self, body );
@@ -619,7 +619,7 @@ liqcell *liqui_create()
 		liqcell_propsets(  cmdaccept, "bordercolor", "rgb(255,255,255)" );
 		liqcell_propseti(  cmdaccept, "textalign", 2 );
 		liqcell_propseti(  cmdaccept, "textaligny", 2 );
-		liqcell_handleradd_withcontext(cmdaccept, "click", liqui_cmdaccept_click, self );
+		liqcell_handleradd_withcontext(cmdaccept, "click", (void*)liqui_cmdaccept_click, self );
 		liqcell_child_append(  self, cmdaccept);
 		
 		

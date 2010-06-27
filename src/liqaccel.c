@@ -30,7 +30,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <dirent.h>
-
+#include <math.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <stdio.h>

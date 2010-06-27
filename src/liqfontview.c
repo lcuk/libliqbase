@@ -65,7 +65,7 @@ liqfontglyph * liqfontglyph_alloc(int glyphindex,int width,int height)
 		// wtf?
 		return NULL;
 	}
-	char *buf = calloc(width*height,1);
+	char *buf = (char *)calloc(width*height,1);
 	if(!buf)
 	{
 		liqapp_warnandcontinue(-1, "define glyph malloc failed" );
@@ -206,7 +206,7 @@ void liqfontview_close(liqfontview *self)
 	if(self->ftface)
 	{
 		////liqapp_log("Closing TTF Font");
-	    FT_Done_Face( self->ftface );
+	    FT_Done_Face( (FT_FaceRec *)self->ftface );
 	}
 	ftlib_close();
 }

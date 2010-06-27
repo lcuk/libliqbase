@@ -11,7 +11,7 @@ void liqcell_easypaint(liqcell *self,liqcliprect *cr,    int x,int y,    int w,i
 
 int liqcell_threadloadimage(liqcell *self);		// start the thread running loading am image
 
-
+unsigned int decodecolor(char *source,unsigned char *ry,unsigned char *ru,unsigned char *rv,unsigned char *ra,unsigned char *rc);
 
 
 // liqcell_propseti(  self ,  "imagefloat", "yes" );

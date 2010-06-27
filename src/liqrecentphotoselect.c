@@ -19,6 +19,7 @@
 #include "liqcell_easyrun.h"
 #include "liqcell_easyhandler.h"
 #include "liqcell_arrange.h"
+#include "liqcell_easypaint.h"
 
 
 static int monitor_run(liqcell *context);
@@ -247,7 +248,7 @@ int autothumb_getthumb(liqcell *self,char *bigfilename)
 					// different!  reload mighty image
 					liqcell_propsets(self,"imagefilename",myimgnamebig);
 					//liqcell_propremoves(self,"imagefilenamebig");
-					liqcell_threadloadimage(self,myimgnamebig);
+					liqcell_threadloadimage(self);
 				}				
 			}
 		}
@@ -455,12 +456,12 @@ static int liqrecentphotoselect_item_add(liqcell *self,char *filenamebuffer)
 						liqcell_propseti(c,"lockaspect",1);
 						liqcell_propsets(c,"imagefilename",filenamebuffer);
 						
-						liqcell_handleradd(c,    "shown",         liqrecentphotoselect_item_shown);
-						liqcell_handleradd(c,    "click",         liqrecentphotoselect_item_click);
-						liqcell_handleradd(c,    "imageloaded",   liqrecentphotoselect_item_imageloaded);
+						liqcell_handleradd(c,    "shown",         (void *)liqrecentphotoselect_item_shown);
+						liqcell_handleradd(c,    "click",         (void *)liqrecentphotoselect_item_click);
+						liqcell_handleradd(c,    "imageloaded",   (void *)liqrecentphotoselect_item_imageloaded);
 
-						liqcell_handleradd_withcontext(c, "dialog_open", liqrecentphotoselect_item_dialog_open ,self);
-						liqcell_handleradd_withcontext(c, "dialog_close", liqrecentphotoselect_item_dialog_close ,self);
+						liqcell_handleradd_withcontext(c, "dialog_open", (void *)liqrecentphotoselect_item_dialog_open ,self);
+						liqcell_handleradd_withcontext(c, "dialog_close", (void *)liqrecentphotoselect_item_dialog_close ,self);
 
 
 						liqcell_child_insertsortedbyname( body, c,0);
@@ -654,11 +655,11 @@ static int liqcell_scan_folder_for_images(liqcell *self,char *path)
 						liqcell_propseti(c,"lockaspect",1);
 						liqcell_propsets(c,"imagefilename",fn);
 						//liqcell_handleradd(c,    "mouse",   widget_mouse);
-						liqcell_handleradd(c,    "shown",         liqrecentphotoselect_item_shown);
-						liqcell_handleradd(c,    "click",         liqrecentphotoselect_item_click);
-						liqcell_handleradd(c,    "imageloaded",   liqrecentphotoselect_item_imageloaded);
-						liqcell_handleradd_withcontext(c, "dialog_open", liqrecentphotoselect_item_dialog_open ,self);
-						liqcell_handleradd_withcontext(c, "dialog_close", liqrecentphotoselect_item_dialog_close ,self);
+						liqcell_handleradd(c,    "shown",         (void *)liqrecentphotoselect_item_shown);
+						liqcell_handleradd(c,    "click",         (void *)liqrecentphotoselect_item_click);
+						liqcell_handleradd(c,    "imageloaded",   (void *)liqrecentphotoselect_item_imageloaded);
+						liqcell_handleradd_withcontext(c, "dialog_open", (void *)liqrecentphotoselect_item_dialog_open ,self);
+						liqcell_handleradd_withcontext(c, "dialog_close", (void *)liqrecentphotoselect_item_dialog_close ,self);
                         
                         
                         //if(liqcell_child_countvisible(body)==0) liqcell_setselected(c,1);
@@ -849,7 +850,7 @@ liqcell *liqrecentphotoselect_create()
 	//	liqcell_propseti(self,"idle_lazyrun_wanted",1);			 // :)
 	//	liqcell_propseti(self,"multitouch_test_range",5);
 	
-	liqcell_handleradd_withcontext(self, "layout", liqrecentphotoselect_layout ,self);
+	liqcell_handleradd_withcontext(self, "layout", (void *)liqrecentphotoselect_layout ,self);
 
 /*
 		//############################# title:titlebar
@@ -946,7 +947,7 @@ liqcell *liqrecentphotoselect_create()
 		c=liqcell_getlinkchild_visual(body);
         if(c)liqcell_setselected(c,1);
 
-		liqcell_handleradd(body,    "mouse",   liqcell_easyhandler_kinetic_mouse );
+		liqcell_handleradd(body,    "mouse",   (void *)liqcell_easyhandler_kinetic_mouse );
 		
 		
 		//liqcell_handleradd(self,    "click",   float_click);
@@ -964,7 +965,7 @@ liqcell *liqrecentphotoselect_create()
 //#endif		
  */
 
-        liqcell_handleradd(self,    "filter",   liqrecentphotoselect_filter);
+        liqcell_handleradd(self,    "filter",   (void *)liqrecentphotoselect_filter);
 
 	}
 	
