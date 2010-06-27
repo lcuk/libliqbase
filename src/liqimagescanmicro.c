@@ -11,6 +11,9 @@
 
 #include "liq_xsurface.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 static void liqimage_mark(liqimage *self);
 
@@ -206,4 +209,7 @@ void liqimage_mark_barcode(liqimage *self)
     liqapp_log("barcode complete");
 }
 
+#ifdef __cplusplus
+}
+#endif
 

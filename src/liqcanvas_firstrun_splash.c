@@ -42,6 +42,9 @@
 #include "liqcell_easypaint.h"
 #include "vgraph.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 //########################################################################
@@ -212,3 +215,8 @@ waitevent:
 	liqapp_log("liqcanvas_firstrun_splash complete %i",result);
 	return result;
 }
+
+#ifdef __cplusplus
+}
+#endif
+

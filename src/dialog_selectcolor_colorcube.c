@@ -7,6 +7,10 @@
 #include "liqcell_easyhandler.h"
 #include "vgraph.h"
 		
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 		
 //#####################################################################
 //#####################################################################
@@ -131,4 +135,8 @@ liqcell *dialog_selectcolor_colorcube_create()
 	liqcell_handleradd_withcontext(self, "paint", (void*)dialog_selectcolor_colorcube_paint ,self); // use only if required, heavyweight
 	return self;
 }
+
+#ifdef __cplusplus
+}
+#endif
 

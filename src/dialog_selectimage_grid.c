@@ -22,7 +22,9 @@
 #include  <dlfcn.h>
 #include <elf.h>
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define TRUE -1
 
@@ -537,4 +539,8 @@ liqcell *dialog_selectimage_grid_create()
 	
 	return self;
 }
+
+#ifdef __cplusplus
+}
+#endif
 

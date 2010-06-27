@@ -26,7 +26,9 @@
 #include <curl/curl.h>
 
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 
@@ -670,3 +672,8 @@ liqcell *liqsketchedit_create()
 	return self;
 
 }
+
+#ifdef __cplusplus
+}
+#endif
+

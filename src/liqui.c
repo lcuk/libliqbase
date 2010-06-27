@@ -37,6 +37,9 @@
 // this should not be here
 //char *text_temp_paste = NULL;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //#####################################################################
 //#####################################################################
@@ -628,3 +631,8 @@ liqcell *liqui_create()
 
 	return self;
 }
+
+#ifdef __cplusplus
+}
+#endif
+

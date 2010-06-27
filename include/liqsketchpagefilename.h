@@ -24,6 +24,9 @@
 #ifndef LIQSKETCHPAGEFILENAME_H
 #define LIQSKETCHPAGEFILENAME_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // horrid core function, my apologies
 
@@ -41,6 +44,10 @@ struct pagefilename
 
 int 		  pagefilename_breakapart(struct pagefilename *self,char *filename);
 char 		  *pagefilename_rebuild(struct pagefilename *self,char *bufferresultfilename,int buffermax);
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif

@@ -11,6 +11,10 @@
 
 #include "liq_xsurface.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 const int grain=3;
 
 
@@ -763,4 +767,7 @@ nextline:
   //  liqapp_log("barcode complete");
 }
 
+#ifdef __cplusplus
+}
+#endif
 

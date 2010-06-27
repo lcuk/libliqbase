@@ -42,6 +42,10 @@
 #include "liqcliprect.h"
 //#include "liqcanvas_xv.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 
 int liqcanvas_firstrun_splash();
@@ -55,7 +59,6 @@ int           liqcanvas_nextevent_x11(LIQEVENT *ev,int *dirtyflagptr);
 
 
 #include "liq_xsurface.h"			// include available workhorse functions
-
 
 //todo: make this a class instance, we might end up having multiple canvases..
 liqcanvas canvas={0,0};
@@ -453,23 +456,7 @@ int liqcanvas_minimize()
 //##########################################################################
 //##########################################################################
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#ifdef __cplusplus
+}
+#endif
 

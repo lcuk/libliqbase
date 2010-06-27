@@ -1,5 +1,7 @@
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 //# this is a standard filter operation
@@ -212,4 +214,7 @@ static int liqcell_filter_run(liqcell *c,char *searchterm)
         
         
         
-    
+#ifdef __cplusplus
+}
+#endif
+

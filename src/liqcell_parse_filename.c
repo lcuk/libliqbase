@@ -17,7 +17,9 @@
 #include "liqcell.h"
 #include "liqcell_prop.h"
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 liqcell * liqcell_parse_filename(char *filename)
@@ -198,4 +200,8 @@ liqcell * liqcell_parse_filename(char *filename)
 		
 	return self;
 }
+
+#ifdef __cplusplus
+}
+#endif
 

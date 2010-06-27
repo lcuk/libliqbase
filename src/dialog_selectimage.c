@@ -6,7 +6,9 @@
 #include "liqcell_easyrun.h"
 #include "liqcell_easyhandler.h"
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
     // todo, move this into the lib at earliest opportunity
     // Tue Oct 20 15:44:27 2009 lcuk : done
@@ -378,4 +380,8 @@ liqcell *dialog_selectimage_create()
 	liqcell_handleradd_withcontext(self, "dialog_close", (void*)dialog_selectimage_dialog_close ,self);
 	return self;
 }
+
+#ifdef __cplusplus
+}
+#endif
 

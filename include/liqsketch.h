@@ -20,13 +20,12 @@
  * Header for basic sketch
  *
  */
-
-
-
-
 #ifndef LIQSKETCH_H
 #define LIQSKETCH_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "liqimage.h"
 
@@ -200,10 +199,14 @@ int 		  liqsketch_filesave(liqsketch *self,char *filename);
 int 		  liqsketch_fileload(liqsketch *self,char *filename);
 int           liqsketch_fileload_memstream(liqsketch *self,char *filename,char *srcdata, int srcsize);
 
-void          liqsketch_boundwholearea();
+void          liqsketch_boundwholearea(liqsketch *self);
 
 void 		  liqsketch_coordchange_scr_to_page(liqsketch *self,int scrx,int scry,int scrw,int scrh, int scrdpix,int scrdpiy,int *rx,int *ry);
 void 		  liqsketch_islandcalcall(liqsketch *self);		// identify the islands within this page :)
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif

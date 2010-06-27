@@ -26,6 +26,9 @@
 #include "liqcanvas.h"
 #include "liqcliprect.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 void liqimage_mark_barcode(liqimage *self);
@@ -1734,8 +1737,7 @@ int liqimage_pagesavepng(liqimage *self,char * filename)
   //442         }
 
 	
-	
-	
-	
-
+#ifdef __cplusplus
+}
+#endif
 

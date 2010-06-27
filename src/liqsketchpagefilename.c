@@ -25,7 +25,9 @@
 
 #include "liqsketchpagefilename.h"
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 
@@ -310,3 +312,8 @@ int pagefilename_test(char *filename)
 	}
 	//return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif
+

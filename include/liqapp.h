@@ -27,16 +27,15 @@
 #ifndef liqapp_H
 #define liqapp_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdio.h>
 #include <dirent.h>
 
 #include <time.h>			// req for sleep
 #include <sys/time.h>		// req for getticks
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //#######################################################
 

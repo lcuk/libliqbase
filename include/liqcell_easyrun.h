@@ -136,5 +136,4 @@ int liqcell_easyrun_mouseeventargs_multitouchprepare(liqcell *self, liqcellmouse
 }
 #endif
 
-
 #endif

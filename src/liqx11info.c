@@ -8,6 +8,9 @@
 
 #include "liqx11overlay.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //############################################################# keyboard bits
 
@@ -1301,12 +1304,7 @@ const int x11_seeevent=0;
 
 }
 
-
-
-
-
-
-
-
-
+#ifdef __cplusplus
+}
+#endif
 

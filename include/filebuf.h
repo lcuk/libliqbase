@@ -26,7 +26,9 @@
 #ifndef FILEBUF_H
 #define FILEBUF_H
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 
@@ -49,7 +51,9 @@ int 					filebuf_open(struct filebuf *self,char *filename);
 
 int						filebuf_close(struct filebuf *self);
 
-
+#ifdef __cplusplus
+}
+#endif
 
 
 

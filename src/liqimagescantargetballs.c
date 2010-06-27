@@ -11,6 +11,9 @@
 
 #include "liq_xsurface.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define ABS(x) (((x)<0) ? (-(x)) : (x) )
 
@@ -270,4 +273,7 @@ void liqimage_mark_barcode(liqimage *self)
     liqapp_log("barcode complete");
 }
 
+#ifdef __cplusplus
+}
+#endif
 

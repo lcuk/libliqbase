@@ -1,6 +1,9 @@
 #ifndef VGRAPH_H
 #define VGRAPH_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 // virtual graphics and drawing
@@ -104,5 +107,9 @@ int		vgraph_drawgreycol(   	    	vgraph *self, int x, int y, int w,int h    );
 
 
 int		vgraph_pget(       				vgraph *self, int x, int y, unsigned char *grey,unsigned char *u,unsigned char *v);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

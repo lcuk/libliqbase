@@ -34,7 +34,7 @@ extern "C" {
 #include "liqimage.h"
 
 
-int liqcamera_start(int argCAMW,int argCAMH,int argCAMFPS,liqimage * argCAMdestimage,void (*argCAMUpdateCallback)(),void *argCAMtag );
+int liqcamera_start(int argCAMW,int argCAMH,int argCAMFPS,liqimage * argCAMdestimage,void (*argCAMUpdateCallback)(void*),void *argCAMtag );
 void liqcamera_stop();
 
 liqimage * liqcamera_getimage(); // return the current image of this camera, if NULL camera is switched off

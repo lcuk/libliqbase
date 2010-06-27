@@ -2,6 +2,10 @@
 #ifndef liqcell_EASYPAINT_H
 #define liqcell_EASYPAINT_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "liqbase.h"
 #include "liqcell.h"
 
@@ -13,7 +17,8 @@ int liqcell_threadloadimage(liqcell *self);		// start the thread running loading
 
 unsigned int decodecolor(char *source,unsigned char *ry,unsigned char *ru,unsigned char *rv,unsigned char *ra,unsigned char *rc);
 
-
-// liqcell_propseti(  self ,  "imagefloat", "yes" );
+#ifdef __cplusplus
+}
+#endif
 
 #endif

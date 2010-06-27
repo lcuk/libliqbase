@@ -1,4 +1,6 @@
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //###############################################################################
 //############################################################################### Group
@@ -51,4 +53,8 @@ liqcell *mkgroup(char *key,liqcell *first,...)
 	va_end(arg);
 	return self;
 }
+
+#ifdef __cplusplus
+}
+#endif
 

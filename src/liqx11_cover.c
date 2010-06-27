@@ -8,6 +8,10 @@
 #include "liqx11info.h"
 #include "liqx11overlay.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // YUV overlay to RGB Conversion function
 // to be used as a cover screen when disabling the overlay
 // MASSIVE thanks to <KotCzarny> and <AStorm> for getting me started :)
@@ -159,4 +163,8 @@ XImage *liqimage_convert_to_ximage(liqimage *self, Display *dis, int screen)
 
 	return res;
 }	
+
+#ifdef __cplusplus
+}
+#endif
 

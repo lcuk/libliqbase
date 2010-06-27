@@ -2,7 +2,9 @@
 #ifndef liqcell_ARRANGE_H
 #define liqcell_ARRANGE_H 1
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 
@@ -46,7 +48,8 @@ int liqcell_child_arrange_easytile(liqcell *self);
 int liqcell_child_arrange_easyrow(liqcell *self);
 int liqcell_child_arrange_easycol(liqcell *self);
 
-
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif

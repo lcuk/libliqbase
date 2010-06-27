@@ -35,7 +35,9 @@
 #include "liqapp.h"
 #include "liqfont.h"
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 
@@ -492,46 +494,7 @@ nocopy:
 	return g;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#ifdef __cplusplus
+}
+#endif
 

@@ -1,6 +1,9 @@
 #ifndef liqcell_MK_STAR_H
 #define liqcell_MK_STAR_H 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * @file	liqcell_mk_star.h
@@ -112,9 +115,8 @@ liqcell *mkgroup(char *key,liqcell *first,...);
  *
  */
 
-
-
-
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif

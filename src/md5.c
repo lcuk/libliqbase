@@ -37,6 +37,10 @@
 
 #include "md5.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Little-endian byte-swapping routines.  Note that these do not
    depend on the size of datatypes such as cvs_uint32, nor do they require
    us to detect the endianness of the machine we are running on.  It
@@ -311,3 +315,8 @@ main (int argc, char **argv)
 	return 0;
 }
 #endif /* TEST */
+
+#ifdef __cplusplus
+}
+#endif
+

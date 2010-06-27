@@ -44,6 +44,9 @@
 #include "liqcell.h"
 #include "liqcell_dllcache.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // for now, only use this function
 
@@ -659,3 +662,8 @@ int           dllcache_getused()
 	}	
 	return dllcache_used;	
 }
+
+#ifdef __cplusplus
+}
+#endif
+

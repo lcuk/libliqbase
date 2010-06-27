@@ -48,6 +48,10 @@
 #include "liqapp_prefs.h"
 #include "liqapp_hildon.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 static int ocnt=0;
 static int oax=0;
 static int oay=0;
@@ -113,3 +117,8 @@ float liqaccel_getangle()
 	return oangle;
 	
 }
+
+#ifdef __cplusplus
+}
+#endif
+

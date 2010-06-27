@@ -1,7 +1,9 @@
 #ifndef LIQX11INFO_H
 #define LIQX11INFO_H
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -67,7 +69,8 @@ int liqx11info_get_next_liqevent(liqx11info *myx11info,LIQEVENT *ev,int *dirtyfl
 
 int liqx11info_minimize(liqx11info *myx11info);
 
-
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif

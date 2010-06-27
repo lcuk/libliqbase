@@ -65,7 +65,9 @@
 #include "liqfont.h"
 
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //########################################################################
 //######################################################################## quick blitter
@@ -2650,3 +2652,8 @@ unsigned int ph=surface->height;
 //unsigned int vo = uo + (uo >> 2);
 	xsurface_interalcircle(cx,cy,r,grey, (char *)&surface->data[surface->offsets[0]], pw,ph);
 }
+
+#ifdef __cplusplus
+}
+#endif
+

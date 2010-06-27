@@ -7,7 +7,10 @@
 #include "liqcell_prop.h"
 #include "liqcell_easyrun.h"
 #include "liqcell_easyhandler.h"
-		
+
+#ifdef __cplusplus
+extern "C" {
+#endif		
 		
 //#####################################################################
 //#####################################################################
@@ -242,3 +245,7 @@ int liqcell_easyrun_mouseeventargs_multitouchprepare(liqcell *self, liqcellmouse
 	return 0;
 }
 		
+#ifdef __cplusplus
+}
+#endif
+

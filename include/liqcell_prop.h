@@ -1,6 +1,10 @@
 #ifndef liqcell_PROP_H
 #define liqcell_PROP_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <unistd.h>
 #include <stdarg.h>
 //#include "liqcell.h"
@@ -26,5 +30,8 @@ int liqcell_propremoves(liqcell *self,char *name);
 int liqcell_propremovei(liqcell *self,char *name);
 int liqcell_propremovep(liqcell *self,char *name);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -36,6 +36,10 @@
 
 #include "liqapp.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //######################################################## cpu
 
 
@@ -159,4 +163,8 @@ int cpufreq_governor_changeto(char *newgovernor)
     if(ri!=0){ liqapp_log("cpufreq, cannot change the governor\n"); return -2; }
     return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif
 

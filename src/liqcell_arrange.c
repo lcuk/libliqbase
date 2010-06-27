@@ -26,6 +26,9 @@
 #include "liqcell.h"
 #include "liqcell_prop.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define ABS(X) ((X)<0 ? -(X) : (X))
 #define SGN(X) ((X)<0 ? -(1) : (1))
@@ -811,3 +814,8 @@ int liqcell_child_arrange_easycol(liqcell *self)
 	liqcell_setsize(self, rowmaxw, allmaxh);
 	return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif
+

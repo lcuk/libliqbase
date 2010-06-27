@@ -36,7 +36,9 @@
 
 #include "filebuf.h"
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //##########################################################################	
 //##########################################################################	filebuf class.  quick and dirty way to load a named file
@@ -125,4 +127,8 @@ int						filebuf_close(struct filebuf *self)
 	self->filelength=0;
 	return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif
 

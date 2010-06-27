@@ -12,6 +12,9 @@
 
 #include "filebuf.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // walk a string and produce a set of spans matching the input
 
@@ -1718,23 +1721,7 @@ int liqcell_parse_html_filename(liqcell *self,char *filename)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#ifdef __cplusplus
+}
+#endif
 

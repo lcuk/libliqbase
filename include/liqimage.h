@@ -23,6 +23,9 @@
 #ifndef LIQIMAGE_H
 #define LIQIMAGE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct liqimage 	// you might recognise this as deriving from the XVImage structure :)
 {
@@ -120,9 +123,8 @@ int liqimage_find_thumbnail_for(char *resultbuffer,int resultsize,char *bigimage
 
 int liqimage_rotate(liqimage *self,liqimage *original,int angle);
 
-
-
-
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif

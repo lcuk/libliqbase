@@ -26,6 +26,10 @@
 #include "liqcell.h"
 #include "liqcell_prop.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void liqcell_child_selectall(liqcell *self)
 {
 	liqcell *c;
@@ -63,4 +67,7 @@ void liqcell_child_selectinv(liqcell *self)
 }
 
 
+#ifdef __cplusplus
+}
+#endif
 

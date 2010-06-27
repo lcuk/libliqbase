@@ -5,7 +5,12 @@
 #include "liqcell_prop.h"
 #include "liqcell_easyrun.h"
 #include "liqcell_easyhandler.h"
-		
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //#####################################################################
 //#####################################################################
 //##################################################################### dialog_selectcolor_greycube :: by gary birkett
@@ -128,4 +133,8 @@ liqcell *dialog_selectcolor_greycube_create()
 	liqcell_handleradd_withcontext(self, "paint", (void*)dialog_selectcolor_greycube_paint ,self); // use only if required, heavyweight
 	return self;
 }
+
+#ifdef __cplusplus
+}
+#endif
 

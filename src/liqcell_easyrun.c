@@ -55,7 +55,9 @@
 
 #include "vgraph.h"
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //extern liqcell *universe;
 
@@ -2192,3 +2194,8 @@ if(liqcell_showfps)
 	
 	return result;
 }
+
+#ifdef __cplusplus
+}
+#endif
+

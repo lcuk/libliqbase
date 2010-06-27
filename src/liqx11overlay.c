@@ -28,6 +28,9 @@
 #include "liqx11overlay.h"
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //#############################################################
 extern int 			XShmQueryExtension(Display*);
@@ -393,3 +396,8 @@ unsigned int nv = 0x00000000;
 	}
 	return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif
+

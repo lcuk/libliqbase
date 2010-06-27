@@ -8,6 +8,10 @@
 #include <pthread.h>
 #include <sched.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 static pthread_mutex_t image_push_lock = PTHREAD_MUTEX_INITIALIZER;
 
 
@@ -317,4 +321,7 @@ void liqcamera_stop()
 	// todo: find out if i need an anti-"get_init(..)" call here?...
 }
 
+#ifdef __cplusplus
+}
+#endif
 

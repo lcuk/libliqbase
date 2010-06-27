@@ -31,6 +31,9 @@
 
 #include "liqcell_mk_star.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //###############################################################################
 //############################################################################### meta_*
@@ -153,7 +156,7 @@ liqcell *mkgroup(char *key,liqcell *first,...)
 	return self;
 }
 
-
-
-
+#ifdef __cplusplus
+}
+#endif
 

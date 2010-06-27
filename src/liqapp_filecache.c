@@ -17,7 +17,9 @@
 #include <sys/time.h>		// req for getticks
 #include "liqapp.h"
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //###################### not used yet, its still directly inside liqcell_easypaint
 
@@ -132,3 +134,8 @@ int liqapp_url_wget(char *url,char *resultfilename,int resultbufsize)
 			
 			return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif
+

@@ -26,6 +26,9 @@
 #ifndef LIQCELL_HISTORYSTORE_H
 #define LIQCELL_HISTORYSTORE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "liqbase.h"
 #include "liqcell.h"
@@ -33,7 +36,9 @@
 int liqcell_historystore_historythumb_getfilename(char *buffer,int buffersize,char *classname);
 int liqcell_historystore_historythumb(liqcell *self);
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

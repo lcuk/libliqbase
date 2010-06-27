@@ -30,6 +30,10 @@
 #include "liqcell_prop.h"
 #include "liqcell_easyrun.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 liqcell *build_vkbd();
 
 
@@ -379,3 +383,8 @@ liqcell *build_vkbd()
 	liqcell_child_arrange_autoflow(keyboard);
 	return keyboard;
 }
+
+#ifdef __cplusplus
+}
+#endif
+

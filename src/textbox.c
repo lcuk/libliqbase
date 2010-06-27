@@ -48,7 +48,9 @@ char *liqclip=NULL;
 #define  CYAN     "rgb(0,175,175)"
 #define  MAGENTA  "rgb(255,0,255)"
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 	static int textbox_mouse(liqcell *self, liqcellmouseeventargs *args,void *context)
@@ -530,3 +532,8 @@ liqcell *textbox_create()
 	}
 	return self;
 }
+
+#ifdef __cplusplus
+}
+#endif
+

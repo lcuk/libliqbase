@@ -9,13 +9,15 @@
 #include <errno.h>
 #include <dirent.h>
 
-
-
 #include "liqcell.h"
 #include "liqcell_easyrun.h"
 #include "liqcell_easyhandler.h"
 #include "liqbase.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 	int 	liqcell_easyhandler_content_zoom_click(liqcell *self, liqcellclickeventargs *args,liqcell *context)
     {
@@ -221,11 +223,7 @@
 		return 1;
 	}
 
+#ifdef __cplusplus
+}
+#endif
 
-
-
-
-
-
-
-		

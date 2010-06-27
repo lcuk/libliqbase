@@ -28,6 +28,10 @@
 #include "liqcell_prop.h"
 #include "liqcell_easyrun.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //liqfont *easyinfofont;
 
 // for the vgraph
@@ -1941,3 +1945,8 @@ int i=0;
 #endif
 
 }
+
+#ifdef __cplusplus
+}
+#endif
+

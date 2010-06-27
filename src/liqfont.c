@@ -35,6 +35,9 @@
 #include "liqapp.h"
 #include "liqfont.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 //####################################################################
@@ -531,3 +534,8 @@ int liqfont_setview(liqfont *self,float scalew,float scaleh)
 	return 0;
 
 }
+
+#ifdef __cplusplus
+}
+#endif
+

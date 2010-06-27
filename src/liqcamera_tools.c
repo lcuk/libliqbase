@@ -35,7 +35,9 @@
 #include <math.h>
 #include <sys/klog.h>
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 
@@ -228,3 +230,8 @@ int liqcamera_settorch(int newvalue)
 	close(fd);
 	return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif
+

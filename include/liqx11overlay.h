@@ -1,7 +1,9 @@
 #ifndef LIQX11OVERLAY_H
 #define LIQX11OVERLAY_H
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -58,11 +60,8 @@ int liqx11overlay_close(liqx11overlay *self);
 int liqx11overlay_refreshdisplay(liqx11overlay *self);
 int liqx11overlay_drawcolorcube(liqx11overlay *self,int x,int y,char grey);
 
-
-
-
-
-
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif

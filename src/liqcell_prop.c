@@ -37,6 +37,10 @@
 
 #include "liqcell.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Remove a string prop
  * @param self The liqcell to remove the prop from
@@ -257,4 +261,7 @@ char *liqcell_propsets_printf(liqcell *self,char *name,char *format, ...)
 	return res;
 }
 
+#ifdef __cplusplus
+}
+#endif
 

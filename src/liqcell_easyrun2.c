@@ -46,7 +46,9 @@
 #include "liqcell_easypaint.h"
 #include "vgraph.h"
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //extern liqcell *universe;
 
@@ -1035,3 +1037,8 @@ moar:
 	liqcell_easyrun_depth--;
 	return result;
 }
+
+#ifdef __cplusplus
+}
+#endif
+

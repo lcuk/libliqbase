@@ -50,6 +50,9 @@
 #include "liqcell.h"
 #include "liqcell_prop.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 char*  liqcell_local_lookup_getname(liqcell *self,char *name)
 {
@@ -2378,3 +2381,8 @@ void liqcell_test()
 	// should i dictate a test is required for every class?
 	// seems logical..
 }
+
+#ifdef __cplusplus
+}
+#endif
+

@@ -16,6 +16,10 @@
 #include <X11/extensions/Xvlib.h>
 #include <X11/extensions/XShm.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef USE_OSSO
 #include <libosso.h>
 osso_context_t *osso_context;
@@ -75,6 +79,7 @@ int liqapp_hildon_close()
 	return 0;
 }
 
-
-
+#ifdef __cplusplus
+}
+#endif
 

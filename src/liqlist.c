@@ -37,6 +37,10 @@
 #include "liqcell_prop.h"
 #include "liqcell_easyrun.h"
 #include "liqcell_easyhandler.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 		
 int liqlist_clear(liqcell *liqlist)
 {
@@ -260,4 +264,8 @@ liqcell *liqlist_create()
 	liqcell_handleradd_withcontext(self, "dialog_close", (void *)liqlist_dialog_close ,self);
 	return self;
 }
+
+#ifdef __cplusplus
+}
+#endif
 

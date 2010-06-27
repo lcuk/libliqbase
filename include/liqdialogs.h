@@ -2,6 +2,10 @@
 #ifndef LIQDIALOGS_H
 #define LIQDIALOGS_H 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "liqcell.h"
 #include "liqcell_prop.h"
 #include "liqcell_easyrun.h"
@@ -61,6 +65,9 @@ int liqdialog_showtree(char *key,char *title,char *description,liqcell *data);
 
 //int liqdialog_askcolor(char *key,char *title,char *result,int resultlen);	// returns 1 if accepted, 0 if cancelled
 
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif

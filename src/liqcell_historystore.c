@@ -44,7 +44,9 @@
 #include "liqcell_easypaint.h"
 #include "vgraph.h"
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 			
@@ -132,4 +134,7 @@ int liqcell_historystore_historythumb(liqcell *self)
 	
 }
 
+#ifdef __cplusplus
+}
+#endif
 

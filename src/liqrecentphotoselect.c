@@ -21,6 +21,9 @@
 #include "liqcell_arrange.h"
 #include "liqcell_easypaint.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 static int monitor_run(liqcell *context);
 
@@ -1160,3 +1163,8 @@ static int monitor_run(liqcell *context)
 
    return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif
+

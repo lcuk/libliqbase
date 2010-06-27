@@ -12,7 +12,9 @@
 #include "liqcell_mk_star.h"
 #include "liqcell_easyhandler.h"
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 
@@ -445,3 +447,8 @@ int liqdialog_showtree(char *key,char *title,char *description,liqcell *data)
 
 	return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif
+

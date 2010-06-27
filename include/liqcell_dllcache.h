@@ -2,6 +2,10 @@
 #ifndef liqcell_DLLCACHE_H
 #define liqcell_DLLCACHE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "liqbase.h"
 #include "liqcell.h"
 
@@ -57,5 +61,8 @@ dllcacheitem *dllcache_getbase();
 int           dllcache_getsize();
 int           dllcache_getused();
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

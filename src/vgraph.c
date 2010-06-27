@@ -18,7 +18,9 @@
 #include "liqcliprect.h"
 #include "liqcell.h"
 	
-	
+#ifdef __cplusplus
+extern "C" {
+#endif	
 	
 	
 
@@ -710,3 +712,8 @@ int		vgraph_pget(      vgraph *self, int x, int y,unsigned char *grey,unsigned c
 	liqcliprect_drawpgetcolor( vgraph_getcliprect(self),   x,y,       grey,u,v );
 	return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif
+

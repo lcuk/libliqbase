@@ -174,23 +174,8 @@ float         liqcanvas_getscalew();
 float         liqcanvas_getscaleh();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif

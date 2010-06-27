@@ -19,6 +19,9 @@
 #include "liqcell_easyhandler.h"
 #include "liqcell_mk_star.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //#####################################################################
 //#####################################################################
@@ -182,4 +185,8 @@ static void liqcell_easyrun_internal(liqcell *dialog)
 	liqcanvas_close();
 
 }
+
+#ifdef __cplusplus
+}
+#endif
 

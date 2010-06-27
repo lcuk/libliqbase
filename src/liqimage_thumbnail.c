@@ -20,6 +20,10 @@
 #include  <dlfcn.h>
 #include <elf.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define TRUE -1
 
 
@@ -89,4 +93,8 @@ int liqimage_find_thumbnail_for(char *resultbuffer,int resultsize,char *bigimage
 	return -3;
 
 }
+
+#ifdef __cplusplus
+}
+#endif
 

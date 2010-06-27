@@ -3,6 +3,10 @@
 #ifndef liqcell_EASYHANDLER_H
 #define liqcell_EASYHANDLER_H 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "liqcell.h"
 #include "liqcell_prop.h"
 #include "liqcell_easyrun.h"
@@ -13,6 +17,9 @@
 	int 	liqcell_easyhandler_kinetic_mouse(liqcell *self, liqcellmouseeventargs *args,liqcell *context);
 
 	int 	liqcell_easyhandler_content_zoom_click(liqcell *self, liqcellclickeventargs *args,liqcell *context);
-	
+
+#ifdef __cplusplus
+}
+#endif	
 
 #endif

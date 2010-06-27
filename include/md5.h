@@ -7,6 +7,10 @@
 #ifndef MD5_H
 #define MD5_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Add prototype support.  */
 #ifndef PROTO
 #if defined (USE_PROTOTYPES) ? USE_PROTOTYPES : defined (__STDC__)
@@ -36,5 +40,9 @@ void cvs_MD5Update PROTO ((struct cvs_MD5Context *context,
 void cvs_MD5Final PROTO ((unsigned char digest[16],
 			  struct cvs_MD5Context *context));
 void cvs_MD5Transform PROTO ((cvs_uint32 buf[4], const unsigned char in[64]));
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* !MD5_H */

@@ -36,6 +36,10 @@
 #include "liqcanvas.h"
 #include "liqsketch.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //#include "liqdoc.h"
 
 //#########################################################################
@@ -1254,3 +1258,8 @@ liqimage *liqsketch_getbackgroundimage(liqsketch *self)
 {
 	return self->backgroundimage;
 }
+
+#ifdef __cplusplus
+}
+#endif
+

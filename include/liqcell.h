@@ -10,6 +10,10 @@
 //#include "liqcell_easyrun.h"
 //#include "liqcell_prop.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //###################################################
 // set with command line --showdebugboxes
 // shows frames and information and logs lots of output
@@ -337,14 +341,10 @@ int 	liqcell_child_arrange_nooverlap(liqcell *self,liqcell *currentselection);
 int 	liqcell_child_arrange_makegrid(liqcell *self,int viscolcount,int visrowcount);
 
 
-
-
-
-
-
 //######################################################################### special handlers
 
-
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif

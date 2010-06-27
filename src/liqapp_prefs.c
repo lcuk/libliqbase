@@ -16,6 +16,9 @@
 
 #include "liqcell.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 liqcell *prefsroot=NULL;
 
@@ -258,4 +261,8 @@ int liqapp_prefs_save()
 	
 	return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif
 

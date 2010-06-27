@@ -48,6 +48,10 @@
 #include "liqapp_prefs.h"
 #include "liqapp_hildon.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 liqcell *liqapp_logbase=NULL;
 
 liqapp app={0};
@@ -1217,3 +1221,8 @@ static int strncpy_onlydigits(char *res,char *indat,int size)
 		// similar code here
 		// http://www.velocityreviews.com/forums/t679803-time-issue-mktime-timet-tm.html
 		// found after trying to find problem
+		
+#ifdef __cplusplus
+}
+#endif
+

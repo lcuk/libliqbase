@@ -15,6 +15,10 @@
 #include "liqsketch.h"
 #include "liqaccel.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //############################################### costable
 #define PI 3.14159265358979323846f
 
@@ -1756,3 +1760,8 @@ int b=(y+h);
 */
 
 }
+
+#ifdef __cplusplus
+}
+#endif
+
