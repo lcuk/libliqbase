@@ -17,7 +17,6 @@
 #include "liqcell.h"
 #include "liqcell_easyrun.h"
 #include "liqcell_easyhandler.h"
-#include "liqcell_mk_star.h"
 
 #ifdef __cplusplus
 extern "C" {
