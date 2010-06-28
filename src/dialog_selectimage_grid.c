@@ -461,6 +461,8 @@ static int dialog_selectimage_grid_layout(liqcell *self,liqcelleventargs *args, 
 		liqcell_setrect( body, 0, 0, liqcell_getw(self),liqcell_geth(self) );
 		
 		liqcell_child_arrange_makegrid(body,5,3);
+		
+		liqapp_log("dialog_selectimage_grid_layout %d photos",liqcell_child_countvisible(body));
 
 	return 0;
 }
