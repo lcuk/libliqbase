@@ -1146,6 +1146,7 @@ const int x11_seeevent=0;
 				case 69:
 				case 76:
 				case 77:
+				case 99:
 						if(x11_seeevent)liqapp_log("x11.event.XShmCompletionEvent");
 						//isbusyrendering=0;
 						ev->type = LIQEVENT_TYPE_REFRESHED;
