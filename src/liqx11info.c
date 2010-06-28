@@ -202,8 +202,10 @@ int liqx11info_init(liqx11info *myx11info, int pixelwidth,int pixelheight,int fu
 
 
 XvPortID  xvport_num = x11_get_first_xvport(myx11info->mydisplay);
-int       xvoverlaycolorkey=-1;
 
+#ifdef USE_MAEMO
+int       xvoverlaycolorkey=-1;
+	// This code barfs on the desktop for me (Robin), nvidia drivers.. so make it Maemo-only.
         Atom xv_colorkey = XInternAtom(myx11info->mydisplay, "XV_COLORKEY", 0);
         XvGetPortAttribute(myx11info->mydisplay, xvport_num, xv_colorkey, &xvoverlaycolorkey);
 		
@@ -223,7 +225,7 @@ int       xvautopaintcolorkey=-1;
 	xvautopaintcolorkey=1;
 	XvSetPortAttribute(myx11info->mydisplay, xvport_num, XInternAtom(myx11info->mydisplay, "XV_AUTOPAINT_COLORKEY", True), xvautopaintcolorkey );
 	
-
+#endif
 
 	//################################################# 
 	
@@ -237,9 +239,12 @@ int       xvautopaintcolorkey=-1;
 		mybackground  = BlackPixel(myx11info->mydisplay, myx11info->myscreen);
 		myforeground  = WhitePixel(myx11info->mydisplay, myx11info->myscreen);
 		
+#ifdef USE_MAEMO
+		// See above. We don't use xvoverlaycolorkey off Maemo.
 		liqapp_log("colors Back=%d fore=%d key=%d",mybackground,myforeground,xvoverlaycolorkey);
 		
 		mybackground = xvoverlaycolorkey;
+#endif
 
 
 	
