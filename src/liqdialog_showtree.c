@@ -9,7 +9,6 @@
 #include "liqcell_prop.h"
 #include "liqcell_easyrun.h"
 #include "liqcell_easypaint.h"
-#include "liqcell_mk_star.h"
 #include "liqcell_easyhandler.h"
 
 #ifdef __cplusplus
