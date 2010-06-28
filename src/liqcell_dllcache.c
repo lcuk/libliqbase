@@ -512,7 +512,7 @@ int idx=0;
 
 
 
-	char *dot=strchr(classname,'.');
+	const char *dot=strchr(classname,'.');
 	if(dot)
 	{
 		//

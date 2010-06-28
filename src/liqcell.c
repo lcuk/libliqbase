@@ -1647,7 +1647,7 @@ liqcell* liqcell_child_lookup_simple(liqcell *self, const char *name)
 liqcell* liqcell_child_lookup(liqcell *self, const char *name)
 {
 	// find a named child
-	char *dot=strchr(name,'.');
+	const char *dot=strchr(name,'.');
 	if(dot)
 	{
 		//liqapp_log("dot1 %s",dot);
