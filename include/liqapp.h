@@ -78,7 +78,7 @@ void        liqapp_log_setforwarding( void *logfunction_voidpcontext_strtime_str
 
 char *		liqapp_gettitle();
 
-char *      liqapp_hardware_product_get();
+const char *liqapp_hardware_product_get();
 int         liqapp_hardware_product_ispowerful_get();
 
 float 		liqapp_fps(unsigned long ts,unsigned long te,unsigned long framecount);

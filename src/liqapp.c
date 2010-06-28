@@ -151,20 +151,18 @@ char *liqapp_gettitle()
         return 0;
 	}
 
-/**
- * hardware_product_read return the "product" field from /proc/component_version
- * @return string containing product field "RX-44" etc
- */
-
-
-	char * liqapp_hardware_product_get()
+    /**
+     * hardware_product_read return the "product" field from /proc/component_version
+     * @return string containing product field "RX-44" etc
+     */
+    const char *liqapp_hardware_product_get()
     {
         if(hardware_product[0]==0)
         {
 			hardware_product_ispowerful = 0;
 			
             if( hardware_product_read() != 0 )
-				return NULL;
+				return "";
 			
 			// quick check for devices we know require limiting
 			
