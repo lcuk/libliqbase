@@ -10,6 +10,9 @@
 #include "liqcell_easypaint.h"
 
 
+// 20100628_0325 lcuk : removing the cover so that liqpostcard works - liqsketch will end up in its own project soon
+
+
 // /usr/share/icons/hicolor/40x40/hildon/qgn_stat_battery_full100.png
 // /usr/share/icons/hicolor/40x40/hildon/qgn_stat_battery_full75.png
 // /usr/share/icons/hicolor/40x40/hildon/qgn_stat_battery_full50.png
@@ -247,7 +250,7 @@ int post_to_liqbase_net(const char *filename, const char *datakey,int replyid)
         {
             // no parent..
             // make sure we show the cover
-            liqcell_setvisible(cover,1);
+            liqcell_setvisible(cover,0);
         }
         else
         {
@@ -290,7 +293,7 @@ int post_to_liqbase_net(const char *filename, const char *datakey,int replyid)
         {
             // no parent..
             // make sure we show the cover
-            liqcell_setvisible(cover,1);
+            liqcell_setvisible(cover,0);
         }
         else
         {
