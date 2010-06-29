@@ -365,6 +365,11 @@ liqcell *dialog_selectimage_create()
 	liqcell_handleradd_withcontext(self, "click", (void*)dialog_selectimage_click ,self);
 	liqcell_handleradd_withcontext(self, "dialog_open", (void*)dialog_selectimage_dialog_open ,self);
 	liqcell_handleradd_withcontext(self, "dialog_close", (void*)dialog_selectimage_dialog_close ,self);
+	
+	
+	// allow the image thumbnails to be lazyloaded :)  (test for burchr)
+	liqcell_propseti(self,"idle_lazyrun_wanted",1);
+	
 	return self;
 }
 

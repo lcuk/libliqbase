@@ -682,8 +682,14 @@ static int idle_lazyrun_shown(liqcell *start)
 	if(liqcell_getshown(start)==0)
 	{
 		// not yet shown!
+		//liqapp_log("idle_lazyrun_shown showing: '%s' (%d,%d)",start->name,start->x,start->y);
 		liqcell_handlerrun(start,"shown",NULL);
 		liqcell_setshown(start,1);
+		// also do some trickery for the image :)
+		if( liqcell_getimage(start)==NULL && liqcell_propgets(start,"imagefilename",NULL) != NULL)
+		{
+			liqcell_threadloadimage(start);
+		}
 		return 1;
 	}
 	liqcell *c=liqcell_getlinkchild_visual(start);
