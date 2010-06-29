@@ -228,10 +228,11 @@ int liqx11overlay_close(liqx11overlay *self)
 int liqx11overlay_show(liqx11overlay *self)
 {
     //return 0;    
-	liqapp_log("x11overlay show begin");
 	
 	if(self->yuv_shminfo_attached) return 0;
-	
+
+	liqapp_log("x11overlay show begin");
+
 	//liqapp_sleep(500);
 	
 	liqapp_log("x11overlay showing");

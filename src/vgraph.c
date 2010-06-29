@@ -139,6 +139,16 @@ static float calcaspect(int captionw,int captionh,int availw,int availh)
 }
 
 
+static void vgraph_font_setscale(vgraph *self)
+{
+	float a,b;
+	a=(float)self->scalew/(float)self->windoww;
+	b=(float)self->scaleh/(float)self->windowh;
+	//liqapp_log("vgraph_font_setscale   a= %3.3f b=%3.3f  scale %d,%d  win %d,%d",a,b,self->scalew,self->scaleh, self->windoww,self->windowh);
+	if(self->font) liqfont_setview(self->font,a,b);
+}
+
+
 static void vgraph_recalc(vgraph *self)
 {
 	// recalculate required settings to sit window neatly within target
@@ -163,6 +173,8 @@ static void vgraph_recalc(vgraph *self)
 			self->scaley = self->targety;
 			
 		}
+		
+		vgraph_font_setscale(self);
 	/*	
 		// 20090621_193038 lcuk : no need for all this anymore :)
 		
@@ -334,7 +346,11 @@ int		vgraph_setfont(        vgraph *self, liqfont *font)			//  char *fontname, i
 		self->font=NULL;
 	}
 	
-	if(font)  self->font = liqfont_hold(font);
+	if(font)
+	{
+		self->font = liqfont_hold(font);
+		vgraph_font_setscale(self);
+	}
 	return 0;
 }
 
@@ -674,19 +690,70 @@ int		vgraph_drawcell(      vgraph *self, int x, int y, int w,int h , liqcell *ce
 {
 	//liqapp_log("draw.cell.in  %i,%i,%i,%i   %s",x,y,w,h,cell->name);
 	
-	x = self->scalex + (x * self->scalew / self->windoww);
-	y = self->scaley + (y * self->scaleh / self->windowh);
-	w = (w * self->scalew / self->windoww);
-	h = (h * self->scaleh / self->windowh);
 	
 		
 	//liqapp_log("draw.cell.use %i,%i,%i,%i",x,y,w,h);
 	
+	if( (cell->h > cell->w) && (x==0 && y==0) )
+	{
+		// autorotate...
+		// testing potential autorotation patch
+		// this will only work on root level display elements
+		// its very hackish and example based
+		
+		//liqapp_log("vgraph_drawcell autorot strt xy(%d,%d),wh(%d,%d) %s",x,y,w,h,cell->name);
+		static liqimage *img = NULL;
+		if(img)
+		{
+			if(img->width == liqcanvas_getheight() && img->height == liqcanvas_getwidth())
+			{
+				// ok to keep cached
+			}
+			else
+			{
+				// renew
+				liqimage_release(img);
+				img=NULL;
+			}
+		}
+		if(img==NULL)
+		{
+			//liqapp_log("vgraph_drawcell autorot alloc");
+			img = liqimage_newatsize(liqcanvas_getheight(), liqcanvas_getwidth(),0);
+		}
+		liqcliprect *cr = liqcliprect_newfromimage(img);
+		//liqcliprect_drawtext(cr,doc->displayfont,0,y,dline->linedata);
+		//xsurface_drawrectwash_uv(img,0,0,480,800,128,128);
+		
+		//liqapp_log("vgraph_drawcell autorot run  xy(%d,%d),wh(%d,%d) %s",x,y,w,h,cell->name);
+		//y = self->scalex + (y * self->scalew / self->windoww);
+		//x = self->scaley + (x * self->scaleh / self->windowh);
+		//h = (h * self->scalew / self->windoww);
+		//w = (w * self->scaleh / self->windowh);
+		
+		liqcliprect_drawclear(cr,0,128,128);
+		liqcell_easypaint(cell,cr,x,y,w,h);
+		liqimage_rotate( liqcanvas_getsurface(), img, 90 );
+		liqcliprect_release(cr);
+		
+		//liqapp_log("vgraph_drawcell autorot done xy(%d,%d),wh(%d,%d) %s",x,y,w,h,cell->name);
+	}
+	else
+	{
+
+		x = self->scalex + (x * self->scalew / self->windoww);
+		y = self->scaley + (y * self->scaleh / self->windowh);
+		w = (w * self->scalew / self->windoww);
+		h = (h * self->scaleh / self->windowh);
+			
+		liqcell_easypaint(cell,vgraph_getcliprect(self),x,y,w,h);
+	}
 	
 	
-	liqcell_easypaint(cell,vgraph_getcliprect(self),x,y,w,h);
 	
-	
+
+	//liqapp_log("draw.cell.out  %i,%i,%i,%i   %s",x,y,w,h,cell->name);
+		
 	return 0;
 }
 

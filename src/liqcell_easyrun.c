@@ -1254,6 +1254,7 @@ waitevent:
 
 				vgraph_convert_target2window(graph ,mx,my,  &wx,&wy);
 				//liqapp_log("mouse scrn (%i,%i)   cell (%i,%i)",mx,my,  wx,wy);
+				
 
 				hotx=0;
 				hoty=0;
