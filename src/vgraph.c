@@ -89,8 +89,23 @@ liqcliprect *vgraph_getcliprect(      vgraph *self)
 
 void    vgraph_convert_target2window(vgraph *self, int tx,int ty,  int *wx, int *wy)
 {
+	
+	
+	
 	if(self->targetw && self->targeth && self->windoww && self->windowh)
 	{
+		if(self->windowh > self->windoww)
+		{
+			// auto portrait mode ..
+			*wx = ((self->targeth-1) - (ty - self->targety)) * self->windoww / self->targeth;
+			*wy = (                    (tx - self->targetx)) * self->windowh / self->targetw;
+			
+			//liqapp_log("convert from (%3d,%3d)",tx,ty);
+			//liqapp_log("convert to   (%3d,%3d)",*wx,*wy);
+			return;
+		}
+		
+		
 		int x = ((tx - self->scalex) * self->windoww / self->scalew);
 		int y = ((ty - self->scaley) * self->windowh / self->scaleh);
 		*wx=x;
@@ -175,6 +190,46 @@ static void vgraph_recalc(vgraph *self)
 		}
 		
 		vgraph_font_setscale(self);
+
+
+	/*
+#ifdef HASWINDOW
+if(self->window)
+{
+		liqapp_log("scale.WIN %s xy(%d,%d),wh(%d,%d)",self->window->name,
+													  self->window->x,
+													  self->window->y,
+													  self->window->w,
+													  self->window->h);
+}
+#endif
+		liqapp_log("scale.win %i,%i",self->windoww,self->windowh);
+		liqapp_log("scale.tar %i,%i",self->targetw,self->targeth);
+		liqapp_log("scale.sxy %i,%i",self->scalex,self->scaley);
+		liqapp_log("scale.swh %i,%i",self->scalew,self->scaleh);
+
+
+		new batch of tests :)
+		
+		// designed for landscape
+			02:03:10 [lcuk] scale.WIN liqbook xy(0,0),wh(800,480)
+			02:03:10 [lcuk] scale.win 800,480
+			02:03:10 [lcuk] scale.tar 800,480
+			02:03:10 [lcuk] scale.sxy 0,0
+			02:03:10 [lcuk] scale.swh 800,480
+
+		// designed for portrait
+			02:03:12 [lcuk] scale.WIN liqbookreader xy(0,0),wh(480,800)
+			02:03:12 [lcuk] scale.win 480,800
+			02:03:12 [lcuk] scale.tar 800,480
+			02:03:12 [lcuk] scale.sxy 256,0
+			02:03:12 [lcuk] scale.swh 288,480
+			
+		// i need to recognise portrait and return mouse coordinate conversion for them
+		
+
+
+
 	/*	
 		// 20090621_193038 lcuk : no need for all this anymore :)
 		
@@ -282,6 +337,7 @@ int		vgraph_setwindow(   vgraph *self, liqcell *window )// int xs,int ys,    int
 {
 	if(window)
 	{
+		//self->window = liqcell_hold(window);
 		self->windowx=window->x;
 		self->windowy=window->y;
 		self->windoww=window->w;
@@ -289,6 +345,8 @@ int		vgraph_setwindow(   vgraph *self, liqcell *window )// int xs,int ys,    int
 	}
 	else
 	{
+		//if(self->window) liqcell_release(self->window);
+		//self->window = NULL;
 		self->windowx=0;
 		self->windowy=0;
 		self->windoww=0;
@@ -301,6 +359,9 @@ int		vgraph_setwindow(   vgraph *self, liqcell *window )// int xs,int ys,    int
 
 int		vgraph_setwindow_coord(     		vgraph *self, int x,int y,    int w,int h )
 {
+	//if(self->window) liqcell_release(self->window);
+	//self->window = NULL;
+		
 	self->windowx=x;
 	self->windowy=y;
 	self->windoww=w;
