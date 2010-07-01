@@ -5,6 +5,8 @@
 
 #include "liqcell.h"
 #include "liqcell_easypaint.h"
+#include "liqaccel.h"
+#include "liqapp_prefs.h"
 #include "vgraph.h"
 
 // virtual graphics and drawing
@@ -92,9 +94,20 @@ void    vgraph_convert_target2window(vgraph *self, int tx,int ty,  int *wx, int 
 	
 	
 	
+	
 	if(self->targetw && self->targeth && self->windoww && self->windowh)
 	{
-		if(self->windowh > self->windoww)
+		int isportrait=(self->windowh > self->windoww);
+		// try the auto rotate stretch mode doofer :)
+		// it works, but transitions are now goosed
+		// due to the only 0==0 mode change this is currently using
+		//if(self->targetx==0 && self->targety==0)
+		{
+		//	if(liqapp_pref_checkexists("forcerotation"))
+				isportrait=1;
+		}
+		
+		if((isportrait))
 		{
 			// auto portrait mode ..
 			*wx = ((self->targeth-1) - (ty - self->targety)) * self->windoww / self->targeth;
@@ -230,7 +243,7 @@ if(self->window)
 
 
 
-	/*	
+		
 		// 20090621_193038 lcuk : no need for all this anymore :)
 		
 		liqapp_log("scale.win %i,%i",self->windoww,self->windowh);
@@ -752,11 +765,37 @@ int		vgraph_drawcell(      vgraph *self, int x, int y, int w,int h , liqcell *ce
 	//liqapp_log("draw.cell.in  %i,%i,%i,%i   %s",x,y,w,h,cell->name);
 	
 	
-		
+int aax=0;
+int aay=0;
+int aaz=0;
+
 	//liqapp_log("draw.cell.use %i,%i,%i,%i",x,y,w,h);
 	
 	if( (cell->h > cell->w) && (x==0 && y==0) )
 	{
+		
+		//if( (dirty==0) && (refreshinprogress==0) && (mouseargs.mcnt==0) && (liqcell_propgeti(self,"autorotate",0)==1) )// liqapp_pref_checkexists("autorotate") )
+		{
+		//	liqaccel_read(&aax,&aay,&aaz);	
+		}
+		
+	}
+	
+	int isportrait = (cell->h > cell->w);
+	
+	//if((x==0 && y==0))
+	{
+		// force portrait hack still works?
+		// kindof, think more..
+		//if(liqapp_pref_checkexists("forcerotation"))
+			isportrait=1;
+	}
+	//else
+	{
+	//	isportrait=0;
+	}
+	if( isportrait  )// && (aax < -200 ) )
+	{		
 		// autorotate...
 		// testing potential autorotation patch
 		// this will only work on root level display elements
@@ -793,7 +832,10 @@ int		vgraph_drawcell(      vgraph *self, int x, int y, int w,int h , liqcell *ce
 		//w = (w * self->scaleh / self->windowh);
 		
 		liqcliprect_drawclear(cr,0,128,128);
-		liqcell_easypaint(cell,cr,x,y,w,h);
+		if(h>w)
+			liqcell_easypaint(cell,cr,x,y,w,h);
+		else
+			liqcell_easypaint(cell,cr,x,y,h,w);
 		liqimage_rotate( liqcanvas_getsurface(), img, 90 );
 		liqcliprect_release(cr);
 		
