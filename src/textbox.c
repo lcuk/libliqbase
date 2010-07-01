@@ -514,8 +514,9 @@ liqcell *textbox_create()
 		liqcell_propseti(vkbd_command, "textaligny", 2);
 		liqcell_propseti(vkbd_command, "lockaspect", 1);
 		
-		liqcell_setvisible(vkbd_command,0);		// Wed Aug 19 19:08:20 2009 lcuk : proper way would be checking for no keyboard..
-		
+		liqcell_setvisible(vkbd_command,1);		// Wed Aug 19 19:08:20 2009 lcuk : proper way would be checking for no keyboard..
+		// 20100702: lcuk: reenabled by default for portrait test.
+		// thank you zack :)
 		liqcell_child_insert(self, vkbd_command);
 	}
 	return self;
