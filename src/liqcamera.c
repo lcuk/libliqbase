@@ -304,21 +304,34 @@ liqimage * liqcamera_getimage()
 
 void liqcamera_stop()
 {
-	if(CAMpipeline)
+	liqapp_log("liqcamera_stop first");
+	if(!CAMpipeline)
 	{
+		liqapp_log("liqcamera_stop no pipe");
 		// camera pipeline not in use..
 		return;
-	}	
-	liqimage_release(CAMdestimage);
+	}
+	liqapp_log("liqcamera_stop stopping");
+
+	gst_element_set_state(CAMpipeline,GST_STATE_NULL);
+	liqapp_log("liqcamera_stop unrefing");
+
+	gst_object_unref(GST_OBJECT(CAMpipeline));
+	liqapp_log("liqcamera_stop clearing vars");
+
 	CAMW=0;
 	CAMH=0;
 	CAMFPS=0;
 	CAMdestimage=NULL;
 	CAMUpdateCallback=NULL;
-	gst_element_set_state(CAMpipeline,GST_STATE_NULL);
-	gst_object_unref(GST_OBJECT(CAMpipeline));
 	CAMpipeline=NULL;
+	liqapp_log("liqcamera_stop releasing destimage");
+
+	liqimage_release(CAMdestimage);
 	// todo: find out if i need an anti-"get_init(..)" call here?...
+	
+	liqapp_log("liqcamera_stop done.");
+
 }
 
 #ifdef __cplusplus

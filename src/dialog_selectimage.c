@@ -164,6 +164,20 @@ static int dialog_selectimage_resize(liqcell *self,liqcelleventargs *args, liqce
 	liqcell_setrect_autoscale( title, 0,0, 800,56, sx,sy);
 	return 0;
 }
+/**	
+ * dialog_selectimage.cmdcamera clicked
+ */	
+static int cmdcamera_click(liqcell *self,liqcelleventargs *args, liqcell *dialog_selectimage)
+{
+    // bring up camera ui :D
+
+	liqcell *dialog = liqcell_quickcreatevis("cameraui", "liqcam", 0,0, -1,-1);
+	liqcell_easyrun(dialog);
+	liqcell_release(dialog);
+	liqcell_handlerrun(dialog_selectimage,"refresh",NULL);
+
+	return 0;
+}
 
 /**	
  * dialog_selectimage.cmdselect clicked
@@ -328,6 +342,20 @@ liqcell *dialog_selectimage_create()
 	//############################# dialog_selectimage_grid1:liqrecentphotos
 	liqcell *dialog_selectimage_grid1 = liqcell_quickcreatevis("dialog_selectimage_grid1", "dialog_selectimage_grid", 0, 58, 800, 420);
 	liqcell_child_append(  self, dialog_selectimage_grid1);
+    //############################# cmdcamera:commandbutton
+	liqcell *cmdcamera = liqcell_quickcreatevis("cmdcamera", "commandbutton", 500, 0, 200, 56);
+	liqcell_setfont(	cmdcamera, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (29), 0) );
+	liqcell_setcaption(cmdcamera, "camera" );
+	liqcell_propsets(  cmdcamera, "textcolor", "rgb(255,255,255)" );
+	liqcell_propsets(  cmdcamera, "backcolor", "xrgb(0,0,64)" );
+	liqcell_propsets(  cmdcamera, "bordercolor", "rgb(255,255,255)" );
+	liqcell_propseti(  cmdcamera, "textalign",  2 );
+	liqcell_propseti(  cmdcamera, "textaligny", 2 );
+	liqcell_handleradd_withcontext(cmdcamera, "click", (void*)cmdcamera_click, self );
+    //liqcell_setenabled(cmdcamera,0);
+	liqcell_child_append(  self, cmdcamera);
+    	
+	
     //############################# cmdselect:commandbutton
 	liqcell *cmdselect = liqcell_quickcreatevis("cmdselect", "commandbutton", 580, 420, 210, 60);
 	liqcell_setfont(	cmdselect, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (29), 0) );

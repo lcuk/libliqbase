@@ -447,7 +447,7 @@ int liqfont_textheight(liqfont *self)
 int liqfont_setview(liqfont *self,float scalew,float scaleh)
 {
 	
-	liqapp_log("viewscale %3.3f,%3.3f",scalew,scaleh);
+	//liqapp_log("viewscale %3.3f,%3.3f",scalew,scaleh);
 
 	//if(scalew<1)
 	//{
@@ -456,7 +456,7 @@ int liqfont_setview(liqfont *self,float scalew,float scaleh)
 	//	else
 	//		scalew=1;
 	//}
-	float fac=(scalew+scaleh)/2;
+	float fac=((scalew+scaleh)/2);
 	scalew=fac;
 	scaleh=fac;
 	

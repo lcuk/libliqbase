@@ -417,7 +417,8 @@ int liqcell_child_arrange_makegrid_internal(liqcell *self,int viscolcount,int vi
 	liqcell *c;
 	
 	// invert this for portrait
-	{ int t=viscolcount; viscolcount=visrowcount; visrowcount=t; }
+	
+	if(viscolcount > visrowcount) { int t=viscolcount; viscolcount=visrowcount; visrowcount=t; }
 	
 	if(viscolcount<=0)
 	{
