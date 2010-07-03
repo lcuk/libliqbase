@@ -424,13 +424,20 @@ static int textbox_keyrelease(liqcell *self, liqcellkeyeventargs *args)
 
 static int keyboard_show_button_click(liqcell *self,liqcellclickeventargs *args, liqcell *textbox)
 {
+	if(	liqcell_propgeti(textbox,"vkbd_button_allowed",  1  ) == 0 ) return 1;
+	
 	liqcell *vkbd = liqcell_quickcreatevis("vkbd", "liqkeyboard", 0, 0, -1, -1);
 	liqcell *vkbd_textbox = liqcell_child_lookup(vkbd, "liqkeyboard_textbox");
+	
+	
 	
 	if(vkbd)
 	{
 		// 20090814_203451 lcuk : make sure the * follow into the vkb :)
 		liqcell_propseti(vkbd_textbox,"textispassword",  liqcell_propgeti(textbox,"textispassword",0)  );
+		
+		// disable usage as a default
+		liqcell_propseti(vkbd_textbox,"vkbd_button_allowed",  0  );
 		
 		char *caption = liqcell_getcaption(textbox);
 		liqcell_setcaption(vkbd_textbox, caption);
@@ -502,21 +509,31 @@ liqcell *textbox_create()
 		
 		liqcell_handleradd(self,    "resize",   (void*)textbox_resize);
 	
-			
+		// portrait mode, make the textbox click go here as well
+		liqcell_handleradd_withcontext(self, "click", (void*)keyboard_show_button_click, self);
+		// this is potentially wrong, but its worth to see
+
+		
 		// add vkbd
 		liqcell *vkbd_command = liqcell_quickcreatevis("vkbd_command" , "commandbutton", 0, 0, 0, 0);
 		liqcell_handleradd_withcontext(vkbd_command, "click", (void*)keyboard_show_button_click, self);
-		liqcell_setfont(vkbd_command, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (12), 0));
-		liqcell_setcaption(vkbd_command, "ABC");
+		//liqcell_setfont(vkbd_command, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (12), 0));
+		//liqcell_setcaption(vkbd_command, "ABC");
 		liqcell_propsets(vkbd_command, "backcolor", CYAN);
 		liqcell_propsets(vkbd_command, "textcolor", BLACK);
 		liqcell_propseti(vkbd_command, "textalign", 2);
 		liqcell_propseti(vkbd_command, "textaligny", 2);
 		liqcell_propseti(vkbd_command, "lockaspect", 1);
-		
-		liqcell_setvisible(vkbd_command,1);		// Wed Aug 19 19:08:20 2009 lcuk : proper way would be checking for no keyboard..
+				
+		liqcell_setvisible(vkbd_command,0);		// Wed Aug 19 19:08:20 2009 lcuk : proper way would be checking for no keyboard..
 		// 20100702: lcuk: reenabled by default for portrait test.
 		// thank you zack :)
+		
+		// actually, removing button, but retaining action :)
+		
+		liqcell_propseti(self,"vkbd_button_allowed",  1  );
+
+		
 		liqcell_child_insert(self, vkbd_command);
 	}
 	return self;
