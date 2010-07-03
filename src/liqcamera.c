@@ -107,46 +107,63 @@ unsigned char *ddv= dv+(CAMW/2)-1;
 	//	liqapp_sleep(50);
 
 int CAMWd2=CAMW/2;
+int CAMHd2=CAMH/2;
+
+// landscape portrait difference here
+if(0)
+{
+	// landscape first
+	//(disable this during portrait test)
 	do
 	{
-	//	if(!CAMdestimage) return -1;
-		
-		
-	//	if(ux==0){ liqapp_log("line %i",uy); }
-		
+		// read data for 2 source pixels
 		unsigned long p= *UYVY++;
 		// Primary Grey channel
 		*dy++ = (p & (255<<8 )) >> 8;
 		*dy++ = (p & (255<<24)) >> 24;
-		
 		if(!(uy & 1))
 		{
 			// even lines only, 1/2 resolution
 			*du++ = mute((p & (255<<16)) >> 16);
 			*dv++ = mute((p & (255    )));
 		}
-	
-
-/*
- 		// switching this around ..
-		
-		*ddy-- = (p & (255<<8 )) >> 8;
-		*ddy-- = (p & (255<<24)) >> 24;
-		
-		if(!(uy & 1))
-		{
-			// even lines only, 1/2 resolution
-			*ddu-- = mute((p & (255<<16)) >> 16);
-			*ddv-- = mute((p & (255    )));
-		}
-		
-*/
-		
 		ux+=2;
 		if(ux>=CAMW){ ux=0;uy++;   ddy=dy+(CAMW*(uy+1))-1; ddu=du+(CAMWd2*((uy>>1)+1))-1; ddv=dv+(CAMWd2*((uy>>1)+1))-1;        }
 		if(uy>=CAMH) break;
 	}
 	while(--zl);
+}
+else
+{
+	// portrait
+	do
+	{
+		
+		// read data for 2 source pixels
+		unsigned long p= *UYVY++;
+		
+	//	liqapp_log("cam %d,%d, %ld",ux,uy,p);
+		
+		// Primary Grey channels to 2 adjacent greys
+		dy[ ((CAMH-1)-(ux  ) ) * CAMdestimage->pitches[0] + uy ] = (p & (255<<8 )) >> 8;
+		dy[ ((CAMH-1)-(ux+1) ) * CAMdestimage->pitches[0] + uy ] = (p & (255<<24)) >> 24;
+		if(!(ux & 1))
+		{
+			// even lines only, 1/2 resolution
+			du[ ((CAMHd2-1)-((ux>>1)+1) ) * CAMdestimage->pitches[1] + (uy>>1) ] = mute((p & (255<<16)) >> 16);
+			du[ ((CAMHd2-1)-((ux>>1)+1) ) * CAMdestimage->pitches[2] + (uy>>1) ] = mute((p & (255    )));
+		}
+		ux+=2;
+		// portrait mode, the camera itself was opened with (rows of CAMH) * CAMW instead of the other way round
+		if(ux>=CAMH){ ux=0;uy++;       }
+		if(uy>=CAMW) break;
+	}
+	while(--zl);	
+}
+	
+	
+	
+	
     
   //  liqimage_mark_barcode(CAMdestimage);
 	
@@ -241,6 +258,7 @@ int liqcamera_start(int argCAMW,int argCAMH,int argCAMFPS,liqimage * argCAMdesti
 	// this conversion slows the camera down
 	// 
     //snprintf(capstr,sizeof(capstr),"video/x-raw-yuv,format=(fourcc)UYVY,width=%i,height=%i,framerate=[1/%i,%i/1]",CAMW,CAMH,CAMFPS,CAMFPS);
+    //snprintf(capstr,sizeof(capstr),"video/x-raw-yuv,format=(fourcc)UYVY,width=%i,height=%i",CAMW,CAMH);
     snprintf(capstr,sizeof(capstr),"video/x-raw-yuv,format=(fourcc)UYVY,width=%i,height=%i",CAMW,CAMH);
 
     //caps = gst_caps_from_string("video/x-raw-yuv,format=(fourcc)UYVY,width=320,height=240,framerate=[1/25,25/1]");
