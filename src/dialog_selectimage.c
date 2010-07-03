@@ -119,6 +119,22 @@ static int dialog_selectimage_dialog_close(liqcell *self,liqcelleventargs *args,
  */	
 static int dialog_selectimage_shown(liqcell *self,liqcelleventargs *args, liqcell *context)
 {
+	// make sure we advance the multiselect stuff
+	liqcell *dialog_selectimage_grid1 = liqcell_child_lookup(self, "dialog_selectimage_grid1");
+	liqcell *cmdall = liqcell_child_lookup(self, "cmdall");
+	liqcell *cmdnone = liqcell_child_lookup(self, "cmdnone");
+	liqcell *cmdinv = liqcell_child_lookup(self, "cmdinv");
+	
+	int ismultiselect = liqcell_propgeti(self,"multiselect",0);
+	
+	liqcell_setvisible(cmdall,ismultiselect);
+	liqcell_setvisible(cmdinv,ismultiselect);
+	liqcell_setvisible(cmdnone,ismultiselect);
+	
+	liqcell_propseti( dialog_selectimage_grid1,"multiselect",ismultiselect);
+	
+	
+	
 	return 0;
 }
 /**	
