@@ -343,26 +343,17 @@ static void savethumb(liqcell *cell)
 	liqapp_ensurecleanusername(cellname);
 	
 	liqapp_log("...creating image %s",cellname);
-	liqimage *img = liqimage_newatsize(canvas.pixelwidth,canvas.pixelheight,0);
-	
+	//liqimage *img = liqimage_newatsize(canvas.pixelwidth,canvas.pixelheight,0);
+	liqimage *img = liqimage_newatsize(canvas.pixelheight,canvas.pixelwidth,0);
 	liqapp_log("...creating cliprect");
-	
 	liqcliprect *cr = liqcliprect_newfromimage(img);
-	
 	liqapp_log("...painting cell %s",cellname);
-	liqcell_easypaint(cell,cr,0,0,canvas.pixelwidth,canvas.pixelheight);
-	
+	liqcell_easypaint(cell,cr,0,0,canvas.pixelheight,canvas.pixelwidth);
 	liqapp_log("...building filename");
-
 				char 		fmtnow[255];
 	 			liqapp_formatnow(fmtnow,255,"yyyymmdd_hhmmss");
 				char buf[FILENAME_MAX+1];
 				snprintf(buf,FILENAME_MAX,"%s/sketches/liq.%s.%s.scr.png",app.userdatapath,fmtnow,cellname  );
-
-
-
-
-	
 	liqapp_log("...saving image as '%s'",buf);
 
 				liqimage_pagesavepng(img,buf);
