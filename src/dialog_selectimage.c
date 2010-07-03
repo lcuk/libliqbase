@@ -11,11 +11,19 @@ extern "C" {
 #endif
 
 
-
+	int dialog_selectimage_grid_getfirstphoto_filename(liqcell *self,char *buffer,int bufferlen);
+	int dialog_selectimage_grid_getselectedphoto_filename(liqcell *self,char *buffer,int bufferlen);
 	int dialog_selectimage_grid_selectall(liqcell *self);
 	int dialog_selectimage_grid_selectnone(liqcell *self);
 	int dialog_selectimage_grid_selectinv(liqcell *self);
-	
+
+
+	int dialog_selectimage_getfirstphoto_filename(liqcell *self,char *buffer,int bufferlen)
+    {
+		liqcell *dialog_selectimage_grid1 = liqcell_child_lookup(self, "dialog_selectimage_grid1");
+		
+		return dialog_selectimage_grid_getfirstphoto_filename(dialog_selectimage_grid1,buffer,bufferlen);
+	}
 	
 
 
@@ -225,7 +233,7 @@ static int cmdselect_click(liqcell *self,liqcelleventargs *args, liqcell *dialog
             char selfn[FILENAME_MAX]={0};
             dialog_selectimage_grid_getselectedphoto_filename(dialog_selectimage_grid1,selfn,sizeof(selfn) );
 
-            //liqapp_log("selimg a %s",selfn);
+            liqapp_log("selimg a %s",selfn);
             
             //char *selfn=liqcell_propgets(  oneedit, "imagefilenameselected",NULL );
             
