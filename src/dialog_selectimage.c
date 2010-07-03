@@ -10,6 +10,15 @@
 extern "C" {
 #endif
 
+
+
+	int dialog_selectimage_grid_selectall(liqcell *self);
+	int dialog_selectimage_grid_selectnone(liqcell *self);
+	int dialog_selectimage_grid_selectinv(liqcell *self);
+	
+	
+
+
     // todo, move this into the lib at earliest opportunity
     // Tue Oct 20 15:44:27 2009 lcuk : done
     
@@ -158,8 +167,15 @@ static int dialog_selectimage_resize(liqcell *self,liqcelleventargs *args, liqce
 	
 	liqcell *cmdselect = liqcell_child_lookup(self, "cmdselect");
 	liqcell *dialog_selectimage_grid1 = liqcell_child_lookup(self, "dialog_selectimage_grid1");
+
+	liqcell *cmdall = liqcell_child_lookup(self, "cmdall");
+	liqcell *cmdnone = liqcell_child_lookup(self, "cmdnone");
+	liqcell *cmdinv = liqcell_child_lookup(self, "cmdinv");
 	liqcell *title = liqcell_child_lookup(self, "title");
-	liqcell_setrect_autoscale( cmdselect, 580,420, 220,60, sx,sy);
+	liqcell_setrect_autoscale( cmdselect, 580,420, 100,60, sx,sy);
+	liqcell_setrect_autoscale( cmdall,  470,420, 100,60, sx,sy);
+	liqcell_setrect_autoscale( cmdnone, 370,420, 100,60, sx,sy);
+	liqcell_setrect_autoscale( cmdinv, 270,420, 220,60, sx,sy);
 	liqcell_setrect_autoscale( dialog_selectimage_grid1, 0,58, 800,420, sx,sy);
 	liqcell_setrect_autoscale( title, 0,0, 800,56, sx,sy);
 	return 0;
@@ -207,7 +223,37 @@ static int cmdselect_click(liqcell *self,liqcelleventargs *args, liqcell *dialog
     liqcell_setvisible(dialog_selectimage,0);
 	return 0;
 }
-    
+
+
+/**	
+ * dialog_selectimage.cmdall clicked
+ */	
+static int cmdall_click(liqcell *self,liqcellclickeventargs *args, liqcell *dialog_selectimage)
+{
+    liqcell *dialog_selectimage_grid1 = liqcell_child_lookup(dialog_selectimage, "dialog_selectimage_grid1");
+	dialog_selectimage_grid_selectall(dialog_selectimage_grid1);
+	return 0;
+}
+/**	
+ * dialog_selectimage.cmdnone clicked
+ */	
+static int cmdnone_click(liqcell *self,liqcellclickeventargs *args, liqcell *dialog_selectimage)
+{
+    liqcell *dialog_selectimage_grid1 = liqcell_child_lookup(dialog_selectimage, "dialog_selectimage_grid1");
+	dialog_selectimage_grid_selectnone(dialog_selectimage_grid1);
+	return 0;
+}
+
+/**	
+ * dialog_selectimage.cmdinv clicked
+ */	
+static int cmdinv_click(liqcell *self,liqcellclickeventargs *args, liqcell *dialog_selectimage)
+{
+    liqcell *dialog_selectimage_grid1 = liqcell_child_lookup(dialog_selectimage, "dialog_selectimage_grid1");
+	dialog_selectimage_grid_selectinv(dialog_selectimage_grid1);
+	return 0;
+}
+
 //#####################################################################
 //#####################################################################
 //#####################################################################
@@ -341,6 +387,7 @@ liqcell *dialog_selectimage_create()
 	liqcell_child_append(  self, title);
 	//############################# dialog_selectimage_grid1:liqrecentphotos
 	liqcell *dialog_selectimage_grid1 = liqcell_quickcreatevis("dialog_selectimage_grid1", "dialog_selectimage_grid", 0, 58, 800, 420);
+	liqcell_propseti(  dialog_selectimage_grid1, "multiselect", 1 );
 	liqcell_child_append(  self, dialog_selectimage_grid1);
     //############################# cmdcamera:commandbutton
 	liqcell *cmdcamera = liqcell_quickcreatevis("cmdcamera", "commandbutton", 500, 0, 200, 56);
@@ -355,6 +402,48 @@ liqcell *dialog_selectimage_create()
     //liqcell_setenabled(cmdcamera,0);
 	liqcell_child_append(  self, cmdcamera);
     	
+
+
+
+	//############################# cmdall:label
+	liqcell *cmdall = liqcell_quickcreatevis("cmdall", "label", 470, 420,100,60);
+	liqcell_setfont(	cmdall, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (29), 0) );
+	liqcell_setcaption(cmdall, "all" );
+	liqcell_propsets(  cmdall, "textcolor", "rgb(255,255,255)" );
+	liqcell_propsets(  cmdall, "backcolor", "xrgb(0,64,64)" );
+	liqcell_propsets(  cmdall, "bordercolor", "rgb(255,255,255)" );
+	liqcell_propseti(  cmdall, "textalign", 2 );
+	liqcell_propseti(  cmdall, "textaligny", 2 );
+	liqcell_handleradd_withcontext(cmdall, "click", (void*)cmdall_click, self );
+	liqcell_child_append(  self, cmdall);
+	//############################# cmdnone:label
+	liqcell *cmdnone = liqcell_quickcreatevis("cmdnone", "label", 370, 420,100,60);
+	liqcell_setfont(	cmdnone, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (29), 0) );
+	liqcell_setcaption(cmdnone, "none" );
+	liqcell_propsets(  cmdnone, "textcolor", "rgb(255,255,255)" );
+	liqcell_propsets(  cmdnone, "backcolor", "xrgb(0,64,64)" );
+	liqcell_propsets(  cmdnone, "bordercolor", "rgb(255,255,255)" );
+	liqcell_propseti(  cmdnone, "textalign", 2 );
+	liqcell_propseti(  cmdnone, "textaligny", 2 );
+	liqcell_handleradd_withcontext(cmdnone, "click", (void*)cmdnone_click, self );
+	liqcell_child_append(  self, cmdnone);
+	//############################# cmdinv:label
+	liqcell *cmdinv = liqcell_quickcreatevis("cmdinv", "label", 270, 420,100,60);
+	liqcell_setfont(	cmdinv, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (29), 0) );
+	liqcell_setcaption(cmdinv, "inv" );
+	liqcell_propsets(  cmdinv, "textcolor", "rgb(255,255,255)" );
+	liqcell_propsets(  cmdinv, "backcolor", "xrgb(0,64,64)" );
+	liqcell_propsets(  cmdinv, "bordercolor", "rgb(255,255,255)" );
+	liqcell_propseti(  cmdinv, "textalign", 2 );
+	liqcell_propseti(  cmdinv, "textaligny", 2 );
+	liqcell_handleradd_withcontext(cmdinv, "click", (void*)cmdinv_click, self );
+	liqcell_child_append(  self, cmdinv);
+	
+	
+		
+	
+	
+	
 	
     //############################# cmdselect:commandbutton
 	liqcell *cmdselect = liqcell_quickcreatevis("cmdselect", "commandbutton", 580, 420, 210, 60);

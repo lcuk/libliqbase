@@ -66,7 +66,17 @@ void liqcell_child_selectinv(liqcell *self)
 	}
 }
 
-
+void liqcell_child_selectfirst(liqcell *self)
+{
+	liqcell_child_selectnone(self);
+	liqcell *c;
+	c=liqcell_getlinkchild_visual(self);
+	if(c)
+	{
+		liqcell_setselected(c,1);
+		//c=liqcell_getlinknext_visual(c);
+	}
+}
 #ifdef __cplusplus
 }
 #endif

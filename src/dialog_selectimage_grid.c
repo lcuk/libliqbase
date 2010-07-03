@@ -154,9 +154,36 @@ int liqimage_find_thumbnail_for(char *resultbuffer,int resultsize,char *bigimage
 
 
 
-
-
+	int dialog_selectimage_grid_selectall(liqcell *self)
+	{
+		
+		liqcell *body= liqcell_child_lookup(self, "body");
+		
+		int ismultiselect = liqcell_propgeti(self,"multiselect",0);
+		if(!ismultiselect)
+		{
+			liqcell_child_selectfirst(body);
+		}
+		else
+		{
+			liqcell_child_selectall(body);
+		}
+		return 0;
+	}
+		
+	int dialog_selectimage_grid_selectnone(liqcell *self)
+	{
+		liqcell *body= liqcell_child_lookup(self, "body");
+		liqcell_child_selectnone(body);
+		return 0;
+	}
 	
+	int dialog_selectimage_grid_selectinv(liqcell *self)
+	{
+		liqcell *body= liqcell_child_lookup(self, "body");
+		liqcell_child_selectinv(body);
+		return 0;
+	}	
 //#####################################################################
 //#####################################################################
 //##################################################################### dialog_selectimage_grid :: by gary birkett 
@@ -186,17 +213,31 @@ int liqimage_find_thumbnail_for(char *resultbuffer,int resultsize,char *bigimage
 	//########################################################################## latest, click event
 	//##########################################################################
 
-	static int dialog_selectimage_grid_item_click(liqcell *self, liqcellclickeventargs *args, void *context)
+	static int dialog_selectimage_grid_item_click(liqcell *self, liqcellclickeventargs *args, liqcell *dialog_selectimage_grid)
 	{
-        liqcell *p=liqcell_getlinkparent(self);
-		// unselect existing
-        liqcell *c=liqcell_getlinkchild_visual(p);
-        while(c)
-        {
-            if(liqcell_getselected(c)) liqcell_setselected(c,0);
-            c=liqcell_getlinknext_visual(c);
-        }
-        liqcell_setselected(self,1);
+		
+		liqcell *body= liqcell_child_lookup(dialog_selectimage_grid, "body");
+		
+		int ismultiselect = liqcell_propgeti(dialog_selectimage_grid,"multiselect",0);
+		
+		if(!ismultiselect)
+		{
+			liqcell *p=liqcell_getlinkparent(self);
+			// unselect existing
+			liqcell_child_selectnone(p);
+			liqcell_setselected(self,1);
+		}
+		else
+		{
+			if(liqcell_getselected(self))
+			{
+				liqcell_setselected(self,0);
+			}
+			else
+			{
+				liqcell_setselected(self,1);
+			}			
+		}
         return 1;
 	}
 
@@ -306,7 +347,7 @@ static int liqcell_scan_folder_for_images(liqcell *self,char *path)
 						//liqcell_propsets(c,"imagelargefilename",fn);
 						liqcell_setcaption(c,fn);
 						
-						liqcell_handleradd(c,    "click",         (void*)dialog_selectimage_grid_item_click);
+						liqcell_handleradd_withcontext(c,    "click",         (void*)dialog_selectimage_grid_item_click,self);
 						liqcell_child_insertsortedbyname( body, c, 0 );
 
 					}

@@ -56,6 +56,9 @@ static pthread_mutex_t image_push_lock = PTHREAD_MUTEX_INITIALIZER;
 
 #include "liqapp.h"
 #include "liqcamera.h"
+#include "liq_xsurface.h"			// include available workhorse functions
+
+
 
 void liqimage_mark_barcode(liqimage *self);
 
@@ -142,21 +145,25 @@ else
 		// read data for 2 source pixels
 		unsigned long p= *UYVY++;
 		
-	//	liqapp_log("cam %d,%d, %ld",ux,uy,p);
+	//	liqapp_log("cam %3d,%3d, %08lx",ux,uy,p);
 		
 		// Primary Grey channels to 2 adjacent greys
-		dy[ ((CAMH-1)-(ux  ) ) * CAMdestimage->pitches[0] + uy ] = (p & (255<<8 )) >> 8;
-		dy[ ((CAMH-1)-(ux+1) ) * CAMdestimage->pitches[0] + uy ] = (p & (255<<24)) >> 24;
-		if(!(ux & 1))
+		dy[ ( (ux  ) ) * CAMdestimage->pitches[0] + ( (CAMH-1)-(uy  ) ) ] = (p & (255<<8 )) >>  8;
+		dy[ ( (ux+1) ) * CAMdestimage->pitches[0] + ( (CAMH-1)-(uy  ) ) ] = (p & (255<<24)) >> 24;
+		if(!(uy & 1))
 		{
 			// even lines only, 1/2 resolution
-			du[ ((CAMHd2-1)-((ux>>1)+1) ) * CAMdestimage->pitches[1] + (uy>>1) ] = mute((p & (255<<16)) >> 16);
-			du[ ((CAMHd2-1)-((ux>>1)+1) ) * CAMdestimage->pitches[2] + (uy>>1) ] = mute((p & (255    )));
+	//		du[ ((CAMHd2-1)-((ux>>1)+1) ) * CAMdestimage->pitches[1] + (uy>>1) ] = mute((p & (255<<16)) >> 16);
+	//		dv[ ((CAMHd2-1)-((ux>>1)+1) ) * CAMdestimage->pitches[2] + (uy>>1) ] = mute((p & (255    ))      );
+
+
+			du[ ((ux>>1)) * CAMdestimage->pitches[1] + ((CAMHd2-1)-(uy>>1)) ] = mute((p & (255<<16)) >> 16);
+			dv[ ((ux>>1)) * CAMdestimage->pitches[2] + ((CAMHd2-1)-(uy>>1)) ] = mute((p & (255    ))      );
 		}
 		ux+=2;
 		// portrait mode, the camera itself was opened with (rows of CAMH) * CAMW instead of the other way round
-		if(ux>=CAMH){ ux=0;uy++;       }
-		if(uy>=CAMW) break;
+		if(ux>=CAMH){ ux=0;uy++;     UYVY+=(CAMW-CAMH)>>1;   UYVY=(unsigned long *)&data[ (CAMW * 2) * uy ]; }
+		if(uy>=CAMH) break;
 	}
 	while(--zl);	
 }
@@ -208,6 +215,7 @@ int liqcamera_start(int argCAMW,int argCAMH,int argCAMFPS,liqimage * argCAMdesti
 	CAMH=argCAMH;
 	CAMFPS=argCAMFPS;
 	CAMdestimage= liqimage_hold(  argCAMdestimage );
+	xsurface_drawclear_yuv(CAMdestimage,0,128,128);
 	CAMUpdateCallback=argCAMUpdateCallback;
 	
 	liqapp_log("liqcamera: gst_init");

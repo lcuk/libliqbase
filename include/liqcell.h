@@ -260,6 +260,7 @@ int 	liqcell_getselected(liqcell *self);
 void    liqcell_child_selectall(liqcell *self);                 // allow bulk selection
 void    liqcell_child_selectnone(liqcell *self);
 void    liqcell_child_selectinv(liqcell *self);
+void    liqcell_child_selectfirst(liqcell *self);
 
 void 	liqcell_setdirty(liqcell *self,int dirty);				// set the dirty flag :)  this cascades through parents as well
 int    	liqcell_getdirty(liqcell *self);
