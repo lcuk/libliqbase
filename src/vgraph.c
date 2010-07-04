@@ -106,6 +106,8 @@ void    vgraph_convert_target2window(vgraph *self, int tx,int ty,  int *wx, int 
 		//	if(liqapp_pref_checkexists("forcerotation"))
 				isportrait=1;
 		}
+		//ROTATEPATCHPOINT set isportrait as required
+		isportrait=0;
 		
 		if((isportrait))
 		{
@@ -794,6 +796,9 @@ int aaz=0;
 	{
 	//	isportrait=0;
 	}
+	//ROTATEPATCHPOINT set is portrait as required
+	isportrait=0;
+	
 	if( isportrait  )// && (aax < -200 ) )
 	{		
 		// autorotate...

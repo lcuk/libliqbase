@@ -1404,8 +1404,9 @@ waitevent:
 
 							if( (omsx<64) && ((canvas.pixelheight-omsy)<64) && (omex<64) && ((canvas.pixelheight-omey)<64) && (liqcell_easyrun_hide_back==0)  )
 #else
-							//if( ((canvas.pixelwidth-omsx)<80) && (omsy<56) && ((canvas.pixelwidth-omex)<80) && (omey<56) && (liqcell_easyrun_hide_back==0) )
-							if( ((canvas.pixelwidth-omsx)<80) && (canvas.pixelheight-omsy<56) && ((canvas.pixelwidth-omex)<80) && (canvas.pixelheight-omey<56) && (liqcell_easyrun_hide_back==0) )
+							//ROTATEPATCHPOINT replace with commented out block
+							if( ((canvas.pixelwidth-omsx)<80) && (omsy<56) && ((canvas.pixelwidth-omex)<80) && (omey<56) && (liqcell_easyrun_hide_back==0) )
+							//if( ((canvas.pixelwidth-omsx)<80) && (canvas.pixelheight-omsy<56) && ((canvas.pixelwidth-omex)<80) && (canvas.pixelheight-omey<56) && (liqcell_easyrun_hide_back==0) )
 
 #endif
 							{
@@ -1997,16 +1998,17 @@ moar:
 				
 				//liqapp_log("infoback %i,%i",infoback->width,infoback->height);
 				
-				//if(liqcell_easyrun_depth==1)
-				//	liqcliprect_drawimagecolor(targetcr, infoclose, liqcliprect_getw(targetcr)-80,0 ,80,56, 1);
-				//else		
-				//	liqcliprect_drawimagecolor(targetcr, infoback , liqcliprect_getw(targetcr)-80,0 ,80,56, 1);
-
-
+				//ROTATEPATCHPOINT - switch this if with the next commented out variation
 				if(liqcell_easyrun_depth==1)
-					liqcliprect_drawimagecolor(targetcr, infoclose, liqcliprect_getw(targetcr)-80,liqcliprect_geth(targetcr)-56 ,80,56, 1);
+					liqcliprect_drawimagecolor(targetcr, infoclose, liqcliprect_getw(targetcr)-80,0 ,80,56, 1);
 				else		
-					liqcliprect_drawimagecolor(targetcr, infoback , liqcliprect_getw(targetcr)-80,liqcliprect_geth(targetcr)-56 ,80,56, 1);
+					liqcliprect_drawimagecolor(targetcr, infoback , liqcliprect_getw(targetcr)-80,0 ,80,56, 1);
+
+
+				//if(liqcell_easyrun_depth==1)
+				//	liqcliprect_drawimagecolor(targetcr, infoclose, liqcliprect_getw(targetcr)-80,liqcliprect_geth(targetcr)-56 ,80,56, 1);
+				//else		
+				//	liqcliprect_drawimagecolor(targetcr, infoback , liqcliprect_getw(targetcr)-80,liqcliprect_geth(targetcr)-56 ,80,56, 1);
 
 			}
             

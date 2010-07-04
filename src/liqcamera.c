@@ -113,7 +113,8 @@ int CAMWd2=CAMW/2;
 int CAMHd2=CAMH/2;
 
 // landscape portrait difference here
-if(0)
+//ROTATEPATCHPOINT
+if(1)
 {
 	// landscape first
 	//(disable this during portrait test)
