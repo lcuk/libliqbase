@@ -99,7 +99,7 @@ void    vgraph_convert_target2window(vgraph *self, int tx,int ty,  int *wx, int 
 	{
 
 		//ROTATEPATCHPOINT set isportrait as required
-		int isportrait = (self->windowh > self->windoww) && ((self->targetx==0 && self->targety==0));
+		int isportrait = (self->windowh > self->windoww) && ((self->targetx==0 && self->targety==0)) && (canvas.rotation_angle==0);
 		
 		if((isportrait))
 		{
@@ -762,7 +762,7 @@ int		vgraph_drawcell(      vgraph *self, int x, int y, int w,int h , liqcell *ce
 	
 
 	//ROTATEPATCHPOINT set is portrait as required
-	int isportrait = (cell->h > cell->w) && ((x==0 && y==0));
+	int isportrait = (cell->h > cell->w) && ((x==0 && y==0)) && (canvas.rotation_angle==0);
 		
 	if( isportrait  )// && (aax < -200 ) )
 	{		
