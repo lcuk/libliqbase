@@ -160,8 +160,10 @@ if(self->yuv_width==480 && self->yuv_height==800)
 	// rotpatch : assign the surface to the unrotated surface, OR construct a duplicate
 	canvas.surface = canvas.rotation_native_surface;
 
-
-	if( liqapp_pref_checkexists("forcerotation") )
+	canvas.rotation_angle=0;
+	
+	if( atoi(liqapp_pref_getvalue("forcerotation"))==1)
+//	if(0)
 	{
 		liqapp_log("x11overlay forcing rotation FROM wh %d,%d",self->yuv_height, self->yuv_width);
 		// rotpatch : force everything to be rotated..

@@ -55,6 +55,7 @@ static pthread_mutex_t image_push_lock = PTHREAD_MUTEX_INITIALIZER;
 */
 
 #include "liqapp.h"
+#include "liqcanvas.h"
 #include "liqcamera.h"
 #include "liq_xsurface.h"			// include available workhorse functions
 
@@ -114,7 +115,7 @@ int CAMHd2=CAMH/2;
 
 // landscape portrait difference here
 //ROTATEPATCHPOINT
-if(1)
+if(canvas.rotation_angle==0)
 {
 	// landscape first
 	//(disable this during portrait test)

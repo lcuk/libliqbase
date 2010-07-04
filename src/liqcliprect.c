@@ -397,7 +397,9 @@ void		liqcliprect_drawthicklinecolor(		liqcliprect *self,int x1, int y1,int x2, 
 
 void liqcliprect_drawboxlinecolor(liqcliprect *self,int x,int y,int w,int h,unsigned char grey,unsigned char u,unsigned char v)
 {
-	// do not use yet, its not ready
+	
+	if(x&1){x--;w++; }
+	if((x+w)&1){ w++; }
 int r=x+w-1;
 int b=y+h-1;
 		liqcliprect_drawlinerowcolor(self,x,y,  r,y,grey,u,v);

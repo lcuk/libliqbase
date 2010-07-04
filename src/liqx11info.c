@@ -3,6 +3,7 @@
 
 
 #include "liqbase.h"
+#include "liqapp_prefs.h"
 
 #include "liqx11info.h"
 
@@ -1070,12 +1071,8 @@ const int x11_seeevent=0;
 							}
 						}
 					}
-					//liqapp_log("keypre out mymod=%i prev=%i",liqx11_modifier,liqx11_modifierprev);
-					
-	
-					
-					
-					
+					liqapp_log("keypre out mymod=%i prev=%i",liqx11_modifier,liqx11_modifierprev);
+
 
 					
 					
@@ -1100,7 +1097,34 @@ const int x11_seeevent=0;
 					liqapp_log("xNextEvent keypress %i, %i",ev->key.keycode,((XKeyEvent*)&xev)->state);
 			
 			
-			
+					
+	
+						if( (ev->type == LIQEVENT_TYPE_KEY) && (ev->state==LIQEVENT_STATE_PRESS) && (ev->key.keycode==114) && (((XKeyEvent*)&xev)->state==4) )	//CTRL+r
+						{					
+					
+							//if( liqapp_pref_checkexists("forcerotation") )
+							//if(0)
+							{
+								if( atoi(liqapp_pref_getvalue("forcerotation"))==1)
+								{
+									liqapp_pref_setvalue("forcerotation","0");
+									liqapp_prefs_save();
+								}
+								else
+								{
+									liqapp_pref_setvalue("forcerotation","1");
+									liqapp_prefs_save();						
+								}
+							}
+							// now, close the overlay..
+							liqx11overlay_close(myx11info->myoverlay);
+							myx11info->myoverlay = NULL;							
+							liqx11info_overlay_bring_online(myx11info);
+							
+							// force us to reevaluate outside :)
+							ev->type = LIQEVENT_TYPE_RESIZE;
+
+						}
 			
 						// right in the core i can save a screen when i press the [Fullscreen] key
 						if( (ev->type == LIQEVENT_TYPE_KEY) && (ev->state==LIQEVENT_STATE_PRESS) && (ev->key.keycode==65475) )	//FullScreen

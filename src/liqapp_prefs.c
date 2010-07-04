@@ -210,7 +210,7 @@ char * liqapp_pref_getvalue(const char *prefkey)
 	{
 		return (char *)liqcell_getdata(p);
 	}
-	return NULL;
+	return "";
 }
 
 liqcell *liqapp_pref_getitem(const char *prefkey)
