@@ -104,7 +104,14 @@ static int liqimage_cache_clean_unused(int maxremove)
 //####################################################################
 //####################################################################
 
-
+int liqimage_getwidth(liqimage *self)
+{
+	return self->width;
+}
+int liqimage_getheight(liqimage *self)
+{
+	return self->height;
+}
 
 
 liqimage *liqimage_cache_lookuponly(const char *filename,int maxw,int maxh,int allowalpha)

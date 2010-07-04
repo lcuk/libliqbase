@@ -87,7 +87,8 @@ int 		liqimage_pagesavepng(liqimage *self, const char * filename);
 
 liqimage *  liqimage_getthumbnail(          liqimage *original,int maxw,int maxh);
 
-
+int 		liqimage_getwidth(				liqimage *self);
+int 		liqimage_getheight(				liqimage *self);
 
 //#########################################################################
 //#########################################################################

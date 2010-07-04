@@ -144,18 +144,43 @@ if(self->yuv_width==480 && self->yuv_height==800)
 	self->yuv_shminfo.shmaddr = self->yuv_image->data = (char *)shmat(self->yuv_shminfo.shmid, 0, 0);
 	self->yuv_shminfo.readOnly = False;
 
-
-
+	
 	//################################################# setup the surface and liqcliprect
-	liqapp_log("x11overlay creating canvas.surface");
-	canvas.surface=liqimage_new();
-	if (!canvas.surface) 
+	// rotpatch : replace the initial surface definition with the one for the unrotated surface
+	liqapp_log("x11overlay creating canvas.rotation_native_surface wh %d,%d",self->yuv_width, self->yuv_height);
+	canvas.rotation_native_surface=liqimage_new();
+	if (!canvas.rotation_native_surface) 
 	{
 		{ liqapp_errorandfail(-1,"canvas liqimage_create failed"); }
 		return -1;
 	}
-	liqimage_pagedefinefromXVImage(canvas.surface,self->yuv_image,canvas.dpix,canvas.dpiy);
+	liqimage_pagedefinefromXVImage(canvas.rotation_native_surface , self->yuv_image,canvas.dpix,canvas.dpiy);
 
+	
+	// rotpatch : assign the surface to the unrotated surface, OR construct a duplicate
+	canvas.surface = canvas.rotation_native_surface;
+
+
+	if( liqapp_pref_checkexists("forcerotation") )
+	{
+		liqapp_log("x11overlay forcing rotation FROM wh %d,%d",self->yuv_height, self->yuv_width);
+		// rotpatch : force everything to be rotated..
+		canvas.rotation_angle=90;
+		self->yuv_width  = attrsheight;
+		self->yuv_height = attrswidth;
+		attrswidth=self->yuv_width;
+		attrsheight=self->yuv_height;
+		
+		liqapp_log("x11overlay forcing rotation  TO  wh %d,%d",self->yuv_height, self->yuv_width);
+		
+		canvas.surface = liqimage_newatsize(self->yuv_width,self->yuv_height,0);
+		if (!canvas.surface) 
+		{
+			{ liqapp_errorandfail(-1,"canvas liqimage_create failed to create rotation backbuffer"); }
+			return -1;
+		}	
+	}
+	
 
 
 
@@ -194,9 +219,30 @@ int liqx11overlay_close(liqx11overlay *self)
 	if(canvas.cr){ liqcliprect_release(canvas.cr);   canvas.cr=NULL; }
 
 
+	if(canvas.surface == canvas.rotation_native_surface)
+	{
+		liqapp_log("x11overlay surface == rotation_native_surface");
+		canvas.surface = NULL;
+	}
+	else
+	{
+		// HACK - restore the original w/h hope this works..
+		canvas.pixelwidth  = self->yuv_height;
+		canvas.pixelheight = self->yuv_width;		
+	}
 
-	if(canvas.surface){ liqimage_release(canvas.surface); canvas.surface=NULL; }
-	
+	if(canvas.rotation_native_surface)
+	{
+		liqapp_log("x11overlay freeing rotation_native_surface");
+		liqimage_release(canvas.rotation_native_surface);
+		canvas.rotation_native_surface=NULL;
+	}
+	if(canvas.surface)
+	{
+		liqapp_log("x11overlay freeing surface");
+		liqimage_release(canvas.surface);
+		canvas.surface=NULL;
+	}	
 	
 	
 
@@ -221,6 +267,7 @@ int liqx11overlay_close(liqx11overlay *self)
 
 	return 0;
 }
+
 
 
 

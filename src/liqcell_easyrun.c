@@ -696,7 +696,9 @@ static int idle_lazyrun_shown(liqcell *start)
 
 static liqcliprect *easyrun_realtime_reshape(liqcell *self, vgraph *graph)
 {
-	if(canvas.fullscreen)
+	// if we are set to autorotate, stretch!
+	
+	if(canvas.fullscreen && (canvas.rotation_angle==0 || liqapp_pref_checkexists("forcerotationaspect") ))
 		vgraph_setscaleaspectlock(graph,  1);
 	else
 		vgraph_setscaleaspectlock(graph,  0);
@@ -746,6 +748,9 @@ int liqcell_easyrun(liqcell *self)
 		liqapp_log("liqcell easyrun cannot continue, cell size must be >0");
 		return -1;
 	}
+	
+	// setup an auto rotation flag 
+	int autorotate = self->h > self->w;
 	
 	
 	if(liqcell_easyrunstack_used >= liqcell_easyrunstack_total)
@@ -1239,7 +1244,7 @@ waitevent:
 				// get hold of actual coordinates...
 				int mx=ev.mouse.x;
 				int my=ev.mouse.y;
-			//	liqapp_log("event mouse scrn (%i,%i)",mx,my);
+				liqapp_log("event mouse scrn (%i,%i)",mx,my);
 			
 				mx -= fadeatx;	// let this have its position adjusted
 				my -= fadeaty;
@@ -1250,7 +1255,7 @@ waitevent:
 				wy=0;
 
 				vgraph_convert_target2window(graph ,mx,my,  &wx,&wy);
-				//liqapp_log("mouse scrn (%i,%i)   cell (%i,%i)",mx,my,  wx,wy);
+				liqapp_log("mouse scrn (%i,%i)   cell (%i,%i)",mx,my,  wx,wy);
 				
 
 				hotx=0;

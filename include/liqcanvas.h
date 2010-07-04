@@ -62,7 +62,10 @@ typedef struct
 	
 	int framecount;			// hold number of frames :)
 	
-	unsigned int expansion[15];
+	liqimage *rotation_native_surface;		// buffer to hold the surface that is not rotated 
+	int rotation_angle;						// if set to != 0 then the ->surface is actually a backbuffer
+	
+	unsigned int expansion[13];
 	
 } liqcanvas;
 

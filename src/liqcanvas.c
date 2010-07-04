@@ -192,6 +192,8 @@ int liqcanvas_init_inner(int pixelwidth,int pixelheight,int fullscreen)
 		
 	}
 	
+	liqapp_log("liqcanvas_init_inner start wh %d,%d",pixelwidth,pixelheight);
+	
 	canvas.x11info =(void*)&x11infobase;
 	
 	
@@ -214,6 +216,8 @@ int liqcanvas_init_inner(int pixelwidth,int pixelheight,int fullscreen)
 		
 		
 	}
+	
+	canvas.rotation_angle=0;
 	
 
 	canvas.keepalivealarmtime=10000;
@@ -256,7 +260,8 @@ int liqcanvas_init_inner(int pixelwidth,int pixelheight,int fullscreen)
 	//#################################################
 	
 	liqapp_log("Canvas.dpi %i,%i",canvas.dpix,canvas.dpiy);
-	
+	liqapp_log("liqcanvas_init_inner -  canvas.  wh %d,%d   surface wh %d,%d rotnat wh %d,%d",canvas.pixelwidth,canvas.pixelheight,  canvas.rotation_native_surface->width,canvas.rotation_native_surface->height,  canvas.surface->width,canvas.surface->height );
+	liqapp_log("liqcanvas_init_inner complete wh %d,%d",canvas.pixelwidth,canvas.pixelheight);
 
 	return 0;
 }
@@ -278,6 +283,9 @@ int liqcanvas_init(int pixelwidth,int pixelheight,int fullscreen)
 		return -1;
 		
 	}
+	
+	liqapp_log("liqcanvas_init start wh %d,%d",pixelwidth,pixelheight);
+	
 	if(liqcanvas_init_inner(pixelwidth,pixelheight,fullscreen)!=0)
 	{
 		{ liqapp_errorandfail(-1,"canvas liqx11info_init failed"); }
@@ -324,6 +332,7 @@ int liqcanvas_init(int pixelwidth,int pixelheight,int fullscreen)
 		// opened again!
 		// 20090511_023909 lcuk : user hopefully wont have problems now :)
 	}
+	liqapp_log("liqcanvas_init complete wh %d,%d",canvas.pixelwidth,canvas.pixelheight);
 	return 0;
 		
 

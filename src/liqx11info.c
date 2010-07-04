@@ -462,6 +462,14 @@ int liqx11info_refreshdisplay(liqx11info *myx11info)
     }
  */
 
+
+	if((canvas.surface) && (canvas.surface != canvas.rotation_native_surface) )
+	{
+		//liqapp_log("liqx11info_refreshdisplay rotating!");
+		
+		liqimage_rotate( canvas.rotation_native_surface, canvas.surface, 90 );
+	}
+
 	if(cover_image)
 	{
 		liqapp_log("liqx11info_refreshdisplay2");
@@ -477,6 +485,38 @@ int liqx11info_refreshdisplay(liqx11info *myx11info)
 }
 
 
+// x11
+
+static int x11_event_mouse_coord_convert(liqx11info *myx11info,XEvent *xev)
+{
+	// internal function used by the core x11 handler
+	// to rotate and reorient/scale the data coming from system
+	// into what we need internally.
+int xres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->width;
+int yres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->height;
+
+
+	//if(x11_seeevent)liqapp_log("x11.event.motionnot.OR xy %d,%d   can wh %d,%d",xev.xmotion.x,xev.xmotion.y,  canvas.pixelwidth,canvas.pixelheight);
+	if(canvas.rotation_angle==90)
+	{
+		if(canvas.fullscreen)
+		{
+			xev->xmotion.x= xev->xmotion.x * canvas.rotation_native_surface->width  / xres;
+			xev->xmotion.y= xev->xmotion.y * canvas.rotation_native_surface->height / yres;							}
+			//if(x11_seeevent)liqapp_log("x11.event.motionnot.md xy %d,%d   can wh %d,%d",xev.xmotion.x,xev.xmotion.y,  canvas.pixelwidth,canvas.pixelheight);
+			
+		{ int t=xev->xmotion.x; xev->xmotion.x=canvas.rotation_native_surface->height-1-xev->xmotion.y; xev->xmotion.y=t; }
+	}
+	else
+	{
+		if(canvas.fullscreen)
+		{
+						xev->xmotion.x= xev->xmotion.x * canvas.pixelwidth  / xres;
+						xev->xmotion.y= xev->xmotion.y * canvas.pixelheight / yres;
+		}
+	}
+	return 0;
+}
 
 
 
@@ -1210,18 +1250,14 @@ const int x11_seeevent=0;
 						//#endif
 								liqx11info_overlay_bring_online(myx11info);
 						
-								int xres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->width;
-								int yres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->height;
+								//int xres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->width;
+								//int yres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->height;
 							
 						
 								
 								myx11info->myispressedflag=1;
+								x11_event_mouse_coord_convert( myx11info,&xev );
 								
-                if(canvas.fullscreen)
-                {
-								xev.xmotion.x= xev.xmotion.x * canvas.pixelwidth  / xres;
-								xev.xmotion.y= xev.xmotion.y * canvas.pixelheight / yres;
-                }			
 								//liqapp_log("buttonpress  %i,%i",xev.xmotion.x,xev.xmotion.y);
 								//liqapp_log("ButtonPress");
 								ev->type = LIQEVENT_TYPE_MOUSE;
@@ -1240,17 +1276,14 @@ const int x11_seeevent=0;
 						//#ifndef USE_MAEMO
 						//		if(!myx11info->myinnotifyflag) goto foo;
 						//#endif
-								int xres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->width;
-								int yres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->height;
+								//int xres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->width;
+								//int yres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->height;
 								
                                 
                 //                int qx=xev.xmotion.x;
                 //                int qy=xev.xmotion.y;
-                if(canvas.fullscreen)
-                {
-								xev.xmotion.x= xev.xmotion.x * canvas.pixelwidth  / xres;
-								xev.xmotion.y= xev.xmotion.y * canvas.pixelheight / yres;
-                }		 
+								x11_event_mouse_coord_convert( myx11info,&xev );
+				
 				//				liqapp_log("motion %i,%i (q %i,%i) (can %i,%i)",xev.xmotion.x,xev.xmotion.y,qx,qy,canvas.pixelwidth,canvas.pixelheight);
 								ev->type = LIQEVENT_TYPE_MOUSE;
 								ev->mouse.state = LIQEVENT_STATE_MOVE;
@@ -1266,16 +1299,12 @@ const int x11_seeevent=0;
 						//#endif
 								liqx11info_overlay_bring_online(myx11info);
 						
-								int xres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->width;
-								int yres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->height;
+								//int xres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->width;
+								//int yres   = ScreenOfDisplay (myx11info->mydisplay, DefaultScreen(myx11info->mydisplay))->height;
 								
 								myx11info->myispressedflag=0;
-								
-                if(canvas.fullscreen)
-                {
-								xev.xmotion.x= xev.xmotion.x * canvas.pixelwidth  / xres;
-								xev.xmotion.y= xev.xmotion.y * canvas.pixelheight / yres;
-                }		 
+
+								x11_event_mouse_coord_convert( myx11info,&xev );
 								//liqapp_log("release %i,%i",xev.xmotion.x,xev.xmotion.y);
 						
 								//liqapp_log("ButtonRelease");
