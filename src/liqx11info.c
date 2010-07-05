@@ -52,7 +52,7 @@ void cover_image_rebuild(liqx11info *myx11info)
 
 	cover_image_release(myx11info);
 	
-	cover_image = liqimage_convert_to_ximage( liqcanvas_getsurface(),  myx11info->mydisplay , myx11info->myscreen);
+	cover_image = liqimage_convert_to_ximage( canvas.rotation_native_surface,  myx11info->mydisplay , myx11info->myscreen);
 	
 }
 	
@@ -62,7 +62,8 @@ void cover_image_blit(liqx11info *myx11info)
 	if(cover_image)
 	{
 		liqapp_log("blit cover");
-		XPutImage (myx11info->mydisplay, myx11info->mywindow, myx11info->mygc, cover_image, 0, 0, 0, 0, liqcanvas_getwidth(), liqcanvas_getheight() );
+		liqimage *img = canvas.rotation_native_surface;
+		XPutImage (myx11info->mydisplay, myx11info->mywindow, myx11info->mygc, cover_image, 0, 0, 0, 0, liqimage_getwidth(img), liqimage_getheight(img) );
 		XFlush (myx11info->mydisplay);
 	}
 	
