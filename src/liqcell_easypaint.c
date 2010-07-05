@@ -707,7 +707,7 @@ void liqcell_easypaint_int(liqcell *self,liqcliprect *crorig,    int x,int y,   
 {
 
 
-	//liqapp_log("#################################### liqcell easypaint (%i,%i) :: %s   xy(%i,%i)-wh(%i,%i)  cr==can.cr ? %i",self->w,self->h,self->name,x,y,w,h,crorig==liqcanvas_getcliprect());
+	//liqapp_log("#################################### liqcell easypaint (%i,%i) :: %s   xy(%i,%i)-wh(%i,%i)  cap('%d')",self->w,self->h,self->name,x,y,w,h,liqcell_getcaption(self));
 	
 	
 

@@ -1191,6 +1191,9 @@ void xsurface_drawzoomblendimage(
 	if(dix+diw<0)return;
 	if(dix>=dmw)return;
 
+	if(dih<2)return;		// there is a problem rendering into something the cliprect has let through 1px h
+	if(diw<2)return;		// curious that its spotted now, this code gets a thorough hammering
+
 	unsigned char *alphachannel = NULL;
 
 
@@ -1268,6 +1271,8 @@ void xsurface_drawzoomblendimage(
 	// eliminate greys (they might have had alpha)
 	if(srcimage->num_planes<3) return;
 
+	//liqapp_log("mid1draw..");
+
 	_blend_raw(
 								&srcimage->data[srcimage->offsets[1]],
 								smw,smh,
@@ -1282,7 +1287,7 @@ void xsurface_drawzoomblendimage(
 								alphachannel,
 								blend
 							  );
-
+	//liqapp_log("mid2draw..");
 	_blend_raw(
 								&srcimage->data[srcimage->offsets[2]],
 								smw,smh,
@@ -1298,7 +1303,7 @@ void xsurface_drawzoomblendimage(
 								blend
 							  );
 
-
+	//liqapp_log("finidraw..");
 
 }
 
