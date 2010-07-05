@@ -52,14 +52,26 @@
 extern "C" {
 #endif
 
+
+#define ABS(X) ((X)<0?-(X):(X))
+
+
+
 static int ocnt=0;
 static int oax=0;
 static int oay=0;
 static int oaz=0;
 
 static float oangle=0;
+
+static int accel_fat=0;
 	
 static const char *accel_filename = "/sys/class/i2c-adapter/i2c-3/3-001d/coord";
+
+int liqaccel_getfat()
+{
+	return accel_fat;
+}
 
 int liqaccel_read(int *ax,int *ay,int *az)
 {
@@ -70,6 +82,12 @@ int liqaccel_read(int *ax,int *ay,int *az)
 	rs=fscanf((FILE*) fd,"%i %i %i",ax,ay,az);	
 	fclose(fd);	
 	if(rs != 3){ liqapp_log("liqaccel, cannot read information"); return -2;}
+	
+	if(canvas.rotation_angle!=0)
+	{
+		// reorient the accelerons
+		int t=*ax; *ax=-*ay;  *ay=t;
+	}
 	
 	// patch to allow smoothing to be configurable
 	const char *prefsmooth = liqapp_pref_getvalue_def("liqaccel_usesmoothing","yes");
@@ -82,7 +100,24 @@ int liqaccel_read(int *ax,int *ay,int *az)
 		*ax=oax+(bx-oax)*0.1;
 		*ay=oay+(by-oay)*0.1;
 		*az=oaz+(bz-oaz)*0.1;
+
+
 	}
+	
+	if(ocnt>0)
+	{
+		int dx = *ax-oax;
+		int dy = *ay-oay;
+		int dz = *az-oaz;
+		int fat = ABS(dx)+ABS(dy)+ABS(dz);
+		if(accel_fat>0)
+		{
+			accel_fat = accel_fat * 0.8;
+		}
+		if(accel_fat<0)accel_fat=0;
+		accel_fat += fat;
+	}
+
 	oax=*ax;
 	oay=*ay;
 	oaz=*az;
