@@ -343,12 +343,23 @@ static void savethumb(liqcell *cell)
 	liqapp_ensurecleanusername(cellname);
 	
 	liqapp_log("...creating image %s",cellname);
-	//liqimage *img = liqimage_newatsize(canvas.pixelwidth,canvas.pixelheight,0);
-	liqimage *img = liqimage_newatsize(canvas.pixelheight,canvas.pixelwidth,0);
+	
+	// grab total live image?.. cant remember why i didnt do this normally?
+	//liqimage *img = canvas.rotation_native_surface;
+	liqimage *img = canvas.surface;
+	
+	//if(canvas.rotation_angle==0)
+	//	img = liqimage_newatsize(canvas.pixelwidth,canvas.pixelheight,0);
+	//else
+	//	img = liqimage_newatsize(canvas.pixelheight,canvas.pixelwidth,0);
+	
 	liqapp_log("...creating cliprect");
 	liqcliprect *cr = liqcliprect_newfromimage(img);
 	liqapp_log("...painting cell %s",cellname);
-	liqcell_easypaint(cell,cr,0,0,canvas.pixelheight,canvas.pixelwidth);
+	//if(canvas.rotation_angle==0)
+	//	liqcell_easypaint(cell,cr,0,0,canvas.pixelwidth,canvas.pixelheight);
+	//else
+	//	liqcell_easypaint(cell,cr,0,0,canvas.pixelheight,canvas.pixelwidth);
 	liqapp_log("...building filename");
 				char 		fmtnow[255];
 	 			liqapp_formatnow(fmtnow,255,"yyyymmdd_hhmmss");
@@ -381,8 +392,8 @@ static void savethumb(liqcell *cell)
 	liqapp_log("...releasing cr");
 	liqcliprect_release(cr);
 	
-	liqapp_log("...releasing image");
-	liqimage_release(img);
+	//liqapp_log("...releasing image");
+	//liqimage_release(img);
 	
 	liqapp_log("...done");
 	

@@ -92,7 +92,7 @@ int liqcanvas_takepicture()
 							if(!imgfrom)
 							{
 								// camera not on, we are doing desktop
-								imgfrom = canvas.surface;
+								imgfrom = canvas.rotation_native_surface;//canvas.surface;
 							}
 							if(imgfrom)
 							{
