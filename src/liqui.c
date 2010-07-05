@@ -64,7 +64,10 @@ liqcell *uititlebar_create(const char *key, const char *title, const char *descr
 		liqcell_propsets(  self,  "backcolor", "rgb(0,0,0)" );
 		
 		//texturestrip_blu.jpg
-		liqcell_setimage(  self,  liqimage_cache_getfile( "/usr/share/liqbase/libliqbase/media/texturestrip_dark.jpg",0,0,0) );
+		//liqcell_setimage(  self,  liqimage_cache_getfile( "/usr/share/liqbase/libliqbase/media/texturestrip_dark.jpg",0,0,0) );
+		//liqcell_propgeti(self,"lockaspect",0);
+		liqcell_propsets(  self,  "backcolor", "xrgb(0,0,64)" );
+	
 		
 		liqcell_child_append( self, liqcell_quickcreatevis("app_icon",   "icon",    5   ,10  ,    90, 80 )    );
 		liqcell_child_append( self, liqcell_quickcreatevis("app_title",  "label",   100 ,0  ,   700, 55 )    );
