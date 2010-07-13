@@ -344,7 +344,7 @@ static int liqcell_scan_folder_for_images(liqcell *self,char *path)
 						liqcell *c = liqcell_quickcreatevis(pickey,   "picture",   1,1,1,1    );
 						liqcell_propseti(c,"lockaspect",1);
 						liqcell_propsets(c,"imagefilename",imagethumb);
-						//liqcell_propsets(c,"imagelargefilename",fn);
+						liqcell_propsets(c,"imagelargefilename",fn);
 						liqcell_setcaption(c,fn);
 						
 						liqcell_handleradd_withcontext(c,    "click",         (void*)dialog_selectimage_grid_item_click,self);
@@ -419,7 +419,7 @@ static int liqcell_scan_folder_for_images(liqcell *self,char *path)
 				{
 					
 					char *key = c->name;
-                    char *ifn = liqcell_propgets(c,"imagefilename",NULL);
+                    char *ifn = liqcell_propgets(c,"imagelargefilename",NULL);
                     if(ifn && *ifn)key=ifn;
 
 

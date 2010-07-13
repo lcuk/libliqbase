@@ -78,7 +78,10 @@ typedef struct liqpointrange
 } liqpointrange;
 void          liqpointrange_start(liqpointrange *self,liqpoint *p);
 void          liqpointrange_extendrubberband(liqpointrange *self,liqpoint *p);
+void          liqpointrange_start_xyz(liqpointrange *self,int px,int py,int pz);
+void          liqpointrange_extendrubberband_xyz(liqpointrange *self,int px,int py,int pz);
 
+int           liqpointrange_isconnected(liqpointrange *self,liqpointrange *b);
 //##################################################################
 typedef struct liqstroke 
 {

@@ -174,7 +174,7 @@ else
 	
 	
     
-  //  liqimage_mark_barcode(CAMdestimage);
+    liqimage_mark_barcode(CAMdestimage);
 	
 	// tell our host that we updated (up to him what he does with the info)
 	if(CAMUpdateCallback)
@@ -247,6 +247,10 @@ int liqcamera_start(int argCAMW,int argCAMH,int argCAMFPS,liqimage * argCAMdesti
     //#include <gst/gstv4l2camdriver.h>
     //g_object_set(G_OBJECT(camera_src), "driver-name", "omap3cam", NULL);
     //gst_photography_set_autofocus(GST_PHOTOGRAPHY(camera_src), TRUE);
+	
+	// use face camera :)
+	// do this once bullseye is reliably detecting again
+	g_object_set(G_OBJECT(camera_src), "device", "/dev/video1", NULL);
     
  /*
   player = gst_element_factory_make ("playbin", "player");

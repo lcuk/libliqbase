@@ -154,8 +154,6 @@ void liqpointrange_extendrubberband(liqpointrange *self,liqpoint *p)
 	if(self->zf < p->z)self->zf = p->z;
 	if(self->zb > p->z)self->zb = p->z;
 }
-
-
 int liqpointrange_isconnected(liqpointrange *self,liqpointrange *b)
 {
 	
@@ -164,6 +162,27 @@ int liqpointrange_isconnected(liqpointrange *self,liqpointrange *b)
 	if(self->yt > b->yb)return 0;
 	if(self->yb < b->yt)return 0;
 	return 1;
+}
+
+
+
+void          liqpointrange_start_xyz(liqpointrange *self,int px,int py,int pz)
+{
+	self->xl = px;
+	self->xr = px;
+	self->yt = py;
+	self->yb = py;
+	self->zf = pz;
+	self->zb = pz;
+}
+void          liqpointrange_extendrubberband_xyz(liqpointrange *self,int px,int py,int pz)
+{
+	if(self->xl > px)self->xl = px;
+	if(self->xr < px)self->xr = px;
+	if(self->yt > py)self->yt = py;
+	if(self->yb < py)self->yb = py;
+	if(self->zf < pz)self->zf = pz;
+	if(self->zb > pz)self->zb = pz;
 }
 
 

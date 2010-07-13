@@ -459,8 +459,13 @@ int post_to_liqbase_net(const char *filename, const char *datakey,int replyid)
 					//s->pixelwidth =liqcell_getw(self);
 					//s->pixelheight=liqcell_geth(self);
 					
-					s->pixelwidth =liqcanvas_getwidth();
-					s->pixelheight=liqcanvas_getheight();
+					
+					//s->pixelwidth =liqcanvas_getwidth();
+					//s->pixelheight=liqcanvas_getheight();
+					liqimage *img = canvas.surface;				// this might be different to the answers liqcanvas_getwidth() returns
+					s->pixelwidth =liqimage_getwidth(img);		// this isnt best solution, todo review again
+					s->pixelheight=liqimage_getheight(img);		// 
+					
 					
 					s->dpix=225;	// damn, dont like using this here
 					s->dpiy=225;
