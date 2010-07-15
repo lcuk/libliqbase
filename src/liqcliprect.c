@@ -10,6 +10,7 @@
 #include "liq_xsurface.h"
 #include "liqapp.h"
 #include "liqapp_prefs.h"
+#include "liqcell_easypaint.h"
 #include "liqcanvas.h"
 #include "liqimage.h"
 #include "liqsketch.h"
@@ -1421,6 +1422,12 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 
 
 
+int		liqcliprect_drawcell(      liqcliprect *self, liqcell *cell,   int x, int y, int w,int h       )
+{
+
+	liqcell_easypaint(cell,self,x,y,w,h);
+	return 0;
+}
 
 
 

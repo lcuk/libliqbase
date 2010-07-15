@@ -171,7 +171,7 @@ typedef struct liqsketch
 	liqimage *	  		backgroundimage;
 	struct liqsketch *	backgroundsketch;
 	
-	int                 angle;					// render rotation angle to use
+	float               angle;					// render rotation angle to use
 
 	
 	//struct liqcell *		extratokens;			// a set of tokens which did not match the normal defs, loaded and saved with the file			

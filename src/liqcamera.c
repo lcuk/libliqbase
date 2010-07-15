@@ -71,7 +71,7 @@ liqimage *	CAMdestimage=NULL;
 void *      CAMtag;
 void 		(*CAMUpdateCallback)(void *);
 
-
+int         CAM_isface=0;
 /*
 static inline char mute(char pix)
 {
@@ -123,16 +123,32 @@ if(canvas.rotation_angle==0)
 	{
 		// read data for 2 source pixels
 		unsigned long p= *UYVY++;
-		// Primary Grey channel
-		*dy++ = (p & (255<<8 )) >> 8;
-		*dy++ = (p & (255<<24)) >> 24;
-		if(!(uy & 1))
+		if(CAM_isface==0)
 		{
-			// even lines only, 1/2 resolution
-			*du++ = mute((p & (255<<16)) >> 16);
-			*dv++ = mute((p & (255    )));
+			// Primary Grey channel
+			*dy++ = (p & (255<<8 )) >> 8;
+			*dy++ = (p & (255<<24)) >> 24;
+			if(!(uy & 1))
+			{
+				// even lines only, 1/2 resolution
+				*du++ = mute((p & (255<<16)) >> 16);
+				*dv++ = mute((p & (255    )));
+			}
+			ux+=2;
 		}
-		ux+=2;
+		else
+		{
+			*ddy-- = (p & (255<<8 )) >> 8;
+			*ddy-- = (p & (255<<24)) >> 24;
+			
+			if(!(uy & 1))
+			{
+				// even lines only, 1/2 resolution
+				*ddu-- = mute((p & (255<<16)) >> 16);
+				*ddv-- = mute((p & (255    )));
+			}
+			ux+=2;
+		}
 		if(ux>=CAMW){ ux=0;uy++;   ddy=dy+(CAMW*(uy+1))-1; ddu=du+(CAMWd2*((uy>>1)+1))-1; ddv=dv+(CAMWd2*((uy>>1)+1))-1;        }
 		if(uy>=CAMH) break;
 	}
@@ -251,7 +267,7 @@ int liqcamera_start(int argCAMW,int argCAMH,int argCAMFPS,liqimage * argCAMdesti
 	// use face camera :)
 	// do this once bullseye is reliably detecting again
 	g_object_set(G_OBJECT(camera_src), "device", "/dev/video1", NULL);
-    
+    CAM_isface = 1;
  /*
   player = gst_element_factory_make ("playbin", "player");
   g_assert (player);
