@@ -7,6 +7,7 @@
 #include <stdarg.h>
 
 #include "liqbase.h"
+#include "liqsketch.h"
 //#include "liqcell_easyrun.h"
 //#include "liqcell_prop.h"
 

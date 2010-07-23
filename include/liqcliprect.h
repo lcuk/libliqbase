@@ -21,7 +21,10 @@
  *
  */
 
-
+#include "liqcell.h"
+#include "liqfont.h"
+#include "liqsketch.h"
+#include "liqimage.h"
 
 #ifndef LIQCLIPRECT_H
 #define LIQCLIPRECT_H
@@ -31,10 +34,6 @@ extern "C" {
 #endif
 
 
-#include "liqfont.h"
-#include "liqsketch.h"
-#include "liqimage.h"
-#include "liqcell.h"
 
 typedef struct liqcliprect
 {
@@ -147,9 +146,7 @@ void 		liqcliprect_drawtextinside_color(liqcliprect *self,liqfont *font,int x,in
 
 void 		liqcliprect_drawsketch(				liqcliprect *self,liqsketch *page,int l,int t,int w,int h,int drawmode);	// 0=preview, 1=latest point only, 2=fully detailed
 
-
-int		liqcliprect_drawcell(      liqcliprect *self, liqcell *cell,   int x, int y, int w,int h       );
-
+int		    liqcliprect_drawcell(      liqcliprect *self, liqcell *cell,   int x, int y, int w,int h       );
 //##################################################################
 //################################################################## images
 //##################################################################

@@ -27,12 +27,13 @@ int hotspot_hity = 0;
 int hotspot_hitsize = 0;
 int hotspot_hitangledeg = 0;
 
+int hotspot_hitshowmarking = 1;
 
 
 #define MIN(x,y) (((x) < (y)) ? (x) : (y))
 #define MAX(x,y) (((x) > (y)) ? (x) : (y))
-#define ABS(x) (((x) >= 0) ? (x) : (-(x)))
-#define SGN(x) (((x) >= 0) ? 1 : -1)
+//#define ABS(x) (((x) >= 0) ? (x) : (-(x)))
+//#define SGN(x) (((x) >= 0) ? 1 : -1)
 
 //#####################################################################
 
@@ -56,7 +57,7 @@ static inline int isnear(int test,int centre,int range)
 
 //#####################################################################
 
-int getmid(unsigned const char *indat,int bitcount,unsigned char *outmin,unsigned char *outmax)
+static int getmid(unsigned const char *indat,int bitcount,unsigned char *outmin,unsigned char *outmax)
 {
 	// scan a range of bytes from indat, return the range and midpoint
 	int idx;
@@ -92,7 +93,7 @@ int getmid(unsigned const char *indat,int bitcount,unsigned char *outmin,unsigne
 
 
 
-int liqimage_get_next_strip(liqimage *self, unsigned char *src,int x,unsigned char midgrey)
+static int liqimage_get_next_strip(liqimage *self, unsigned char *src,int x,unsigned char midgrey)
 {
 	// walk along the src data whilst it stays in one style
 
@@ -139,11 +140,11 @@ struct hotspot
 	int island;
 };
 #define hotspots_max 256
-struct hotspot hotspots[hotspots_max]={{0}};
-int hotspots_used=0;
-int hotspots_islands_used=0;
+static struct hotspot hotspots[hotspots_max]={{0}};
+static int hotspots_used=0;
+static int hotspots_islands_used=0;
 
-int hotspot_island_merge(int hotspot_id)
+static int hotspot_island_merge(int hotspot_id)
 {
 	// find out which hotspots are to be combined together to form islands
 	int other;
@@ -177,7 +178,7 @@ int hotspot_island_merge(int hotspot_id)
 	}
 }
 
-int hotspot_add(int x,int y,int w)
+static int hotspot_add(int x,int y,int w)
 {
 	if(hotspots_used>=hotspots_max) return -1;
 	hotspots[hotspots_used].t = y;
@@ -199,7 +200,7 @@ int hotspot_add(int x,int y,int w)
 
 //#####################################################################
 
-void liqimage_mark_barcode(liqimage *self)
+int liqimagescan_hotspot_detect(liqimage *self)
 {
     
    // liqapp_log("barcode starting");
@@ -212,46 +213,6 @@ void liqimage_mark_barcode(liqimage *self)
 	}
 	liqfont_setview(infofont, 1,1 );
 
-	static liqsketch *infosketch=NULL;
-	if(!infosketch)
-	{
-		infosketch = liqsketch_newfromfile("/usr/share/liqbase/media/flowx.sketch");
-	}
-
-	static liqcell *infoback=NULL;
-	if(!infoback)
-	{
-		
-		
-
-
-		infoback = liqcell_quickcreatevis("test",NULL,0,0, liqimage_getwidth(self)*3,liqimage_getheight(self)*3);
-		int i=0;
-		//for(i=0;i<9;i++)
-		//{
-		//	liqcell *t = liqcell_quickcreatevis("test",NULL,0,0, liqimage_getwidth(self),liqimage_getheight(self));
-		//	liqcell_setsketch(t,infosketch);
-		//	liqcell_child_insert(infoback,t);
-		//}
-		
-
-			char buf[1024] = "ciroclock,tagcloud,liqcontrolpanel,liqrecentsketches,liqrecentusers,liqaccelview,liqbook";
-			char *tok = strtok(buf, ",");
-			while (tok)
-			{
-				liqcell *t = liqcell_quickcreatevis("test",NULL,0,0, liqimage_getwidth(self),liqimage_getheight(self));
-
-				liqcell_setcontent( t, liqcell_quickcreatevis("test",tok,0,0, -1,-1) );
-
-				//liqcell_setsketch(t,infosketch);
-
-				liqcell_child_insert(infoback,t);
-
-				tok = strtok(NULL, ",");
-				if(i++>=9)break;
-			}		
-		liqcell_child_arrange_makegrid(infoback,3,3);
-	}
 		
 
 
@@ -469,51 +430,55 @@ int blobs_used=0;
 						if( isnear(nmd,mpd*2,nmr) )
 						{
 							// WOOOOOOOOOOT
+							
+							if(hotspot_hitshowmarking)
+							{
 
-							xsurface_drawline_grey(self,  blobs[n].x,blobs[n].y, blobs[m].x,blobs[m].y, 128  );
-							xsurface_drawline_grey(self,  blobs[n].x,blobs[n].y, blobs[p].x,blobs[p].y, 128  );
-							xsurface_drawline_grey(self,  blobs[m].x,blobs[m].y, blobs[p].x,blobs[p].y, 128  );
-							
-							xsurface_drawrectwash_uv(   self,blobs[n].x-4,blobs[n].y-8, 16,16, (n) % 4, (n+3) % 8);
-							xsurface_drawrectwash_uv(   self,blobs[m].x-4,blobs[m].y-6, 12,12, (n) % 4, (n+3) % 8);
-							xsurface_drawrectwash_uv(   self,blobs[p].x-4,blobs[p].y-6, 12,12, (n) % 4, (n+3) % 8);
-														
-							
-							int newhotspot_hitx = ( blobs[n].x + blobs[m].x + blobs[p].x ) / 3;
-							int newhotspot_hity = ( blobs[n].y + blobs[m].y + blobs[p].y ) / 3;
-							int newhotspot_hitsize = mpd;		// size is the size of the back line we have detected
-							float dx = blobs[n].x - newhotspot_hitx;
-							float dy = blobs[n].y - newhotspot_hity;
-							int newhotspot_hitangledeg = atan2( dx,-dy  )*180.0/3.141592654;
-							
-							#define smoothfactor 0.4
-							hotspot_hitx += ((float)(newhotspot_hitx - hotspot_hitx) * smoothfactor);
-							hotspot_hity += ((float)(newhotspot_hity - hotspot_hity) * smoothfactor);
-							hotspot_hitsize += ((float)(newhotspot_hitsize - hotspot_hitsize) * smoothfactor);
-							hotspot_hitangledeg += ((float)(newhotspot_hitangledeg - hotspot_hitangledeg) * smoothfactor * 2);
-							
-							
-							infosketch->angle = ((float)hotspot_hitangledeg) *  3.141592654 / 180.0;
-							
-							
-							xsurface_drawline_grey(self,  hotspot_hitx,hotspot_hity, blobs[n].x,blobs[n].y, 255  );
-
+								xsurface_drawline_grey(self,  blobs[n].x,blobs[n].y, blobs[m].x,blobs[m].y, 128  );
+								xsurface_drawline_grey(self,  blobs[n].x,blobs[n].y, blobs[p].x,blobs[p].y, 128  );
+								xsurface_drawline_grey(self,  blobs[m].x,blobs[m].y, blobs[p].x,blobs[p].y, 128  );
+								
+								xsurface_drawrectwash_uv(   self,blobs[n].x-4,blobs[n].y-8, 16,16, (n) % 4, (n+3) % 8);
+								xsurface_drawrectwash_uv(   self,blobs[m].x-4,blobs[m].y-6, 12,12, (n) % 4, (n+3) % 8);
+								xsurface_drawrectwash_uv(   self,blobs[p].x-4,blobs[p].y-6, 12,12, (n) % 4, (n+3) % 8);
+															
+								
+								int newhotspot_hitx = ( blobs[n].x + blobs[m].x + blobs[p].x ) / 3;
+								int newhotspot_hity = ( blobs[n].y + blobs[m].y + blobs[p].y ) / 3;
+								int newhotspot_hitsize = mpd;		// size is the size of the back line we have detected
+								float dx = blobs[n].x - newhotspot_hitx;
+								float dy = blobs[n].y - newhotspot_hity;
+								int newhotspot_hitangledeg = atan2( dx,-dy  )*180.0/3.141592654;
+								
+								#define smoothfactor 0.4
+								hotspot_hitx += ((float)(newhotspot_hitx - hotspot_hitx) * smoothfactor);
+								hotspot_hity += ((float)(newhotspot_hity - hotspot_hity) * smoothfactor);
+								hotspot_hitsize += ((float)(newhotspot_hitsize - hotspot_hitsize) * smoothfactor);
+								hotspot_hitangledeg += ((float)(newhotspot_hitangledeg - hotspot_hitangledeg) * smoothfactor * 2);
+								
+								
+							//	infosketch->angle = ((float)hotspot_hitangledeg) *  3.141592654 / 180.0;
+								
+								
+								xsurface_drawline_grey(self,  hotspot_hitx,hotspot_hity, blobs[n].x,blobs[n].y, 255  );
 	
-
-							char buf[128];
-							snprintf(buf,sizeof(buf),"xy(%3d,%3d) s(%3d) a(%3d) f(%3.3f)",hotspot_hitx,hotspot_hity,
-									                                                      hotspot_hitsize,
-																						  hotspot_hitangledeg,
-																						  infosketch->angle);
-							
-							int hh=liqfont_textheight(infofont);
-							int ww=liqfont_textwidth( infofont,buf);
-							xsurface_drawtext_grey(self,infofont, hotspot_hitx-ww/2,hotspot_hity-hh/2,buf);
-							
+		
+	
+								char buf[128];
+								snprintf(buf,sizeof(buf),"xy(%3d,%3d) s(%3d) a(%3d)",hotspot_hitx,hotspot_hity,
+																							  hotspot_hitsize,
+																							  hotspot_hitangledeg
+																							  );
+								
+								int hh=liqfont_textheight(infofont);
+								int ww=liqfont_textwidth( infofont,buf);
+								xsurface_drawtext_grey(self,infofont, hotspot_hitx-ww/2,hotspot_hity-hh/2,buf);
+							}
+								
 							//liqapp_log("%s",buf);
 							
 
-							
+							return 0;
 							
 							goto done;
 							
@@ -531,35 +496,6 @@ int blobs_used=0;
 	}
 	
 done:
-
-	if(hotspot_hitsize>0)
-	{
-		
-		
-		float x = -((270.0 - (float)hotspot_hitx) / 140.0 * 640.0);
-		float y = -((170.0 - (float)hotspot_hity) / 120.0 * 480.0);
-		float w = (float)(liqimage_getwidth(self)) * (float)hotspot_hitsize / 20.0;
-		float h = (float)(liqimage_getheight(self)) * (float)hotspot_hitsize / 20.0;		
-		
-		//float x = (float)(hotspot_hitx);// / (float)liqimage_getwidth(self);
-		//float y = (float)(hotspot_hity);// / (float)liqimage_getheight(self);
-		//float w = (float)(liqimage_getwidth(self)) * (float)hotspot_hitsize / 20.0;
-		//float h = (float)(liqimage_getheight(self)) * (float)hotspot_hitsize / 20.0;
-		
-		liqcliprect *infocr = liqcliprect_newfromimage(self);
-		
-		liqapp_log(" xy(%3d,%3d) s(%3d)    -> xy(%3.3f,%3.3f) wh(%3.3f,%3.3f)",hotspot_hitx,hotspot_hity,hotspot_hitsize, x,y,w,h );
-		
-	//	infosketch->angle = ((float)hotspot_hitangledeg) *  3.141592654 / 180.0;
-		
-	//	x-=160;
-	//	y-=120;
-		
-		liqcliprect_drawcell(infocr,infoback,x  ,y  ,liqcell_getw(infoback),liqcell_geth(infoback));
-		
-		
-		liqcliprect_release(infocr);
-	}
 	
 	if(0)
 	{
@@ -568,6 +504,8 @@ done:
 
 	//	exit(0);
    // liqapp_log("barcode complete %d  :: used %d :: hs_used %d :: blobs used %d",foundcount,usedcount,hotspots_used,blobs_used);
+
+	return -1;
 }
 
 #ifdef __cplusplus
