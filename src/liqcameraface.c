@@ -25,7 +25,7 @@ extern "C" {
 #include "liq_xsurface.h"			// include available workhorse functions
 
 static pthread_mutex_t image_push_lock = PTHREAD_MUTEX_INITIALIZER;
-
+//static int xxxx=0;
 
 GstElement *CAMFACEpipeline=NULL;
 int 		CAMFACEW=0;
@@ -43,7 +43,15 @@ static int image_push(char *data)
 	if(!CAMFACEdestimage) return -1;
 	// todo: ensure n800 camera flip is handled, need to read the sensor bit and organise accordingly
 	// todo: ensure mirroring option is accounted for
-	pthread_mutex_lock(&image_push_lock);
+
+	//liqapp_sleep(100);
+	
+	int rc=pthread_mutex_lock(&image_push_lock);
+	
+	//xxxx++;
+	
+	
+	//liqapp_log("rc=%d xxxx=%d",rc,xxxx);
 
 
 		
@@ -140,7 +148,11 @@ static int image_push(char *data)
 	// tell our host that we updated (up to him what he does with the info)
 	if(CAMFACEUpdateCallback)
 		(*CAMFACEUpdateCallback)(CAMFACEtag);
+		
+	//xxxx--;
 	pthread_mutex_unlock(&image_push_lock);
+	
+
 	return 0;
 }
 

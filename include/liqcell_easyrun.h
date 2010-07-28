@@ -132,6 +132,11 @@ liqcell * liqcell_easyrun_getactivecontrol();
 
 int liqcell_easyrun_mouseeventargs_multitouchprepare(liqcell *self, liqcellmouseeventargs *args,liqcell *context);
 
+extern int liqcell_easyrun_cursor_on_screen;
+extern int liqcell_easyrun_cursorflashcount;
+extern int liqcell_easyrun_fingerpressed;
+
+
 #ifdef __cplusplus
 }
 #endif

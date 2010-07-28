@@ -203,15 +203,15 @@ static int hotspot_add(int x,int y,int w)
 int liqimagescan_hotspot_detect(liqimage *self)
 {
     
-   // liqapp_log("barcode starting");
+ //   liqapp_log("barcode starting");
 
 
 	static liqfont *infofont=NULL;
 	if(!infofont)
 	{
 		infofont = liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", 10, 0);
+		liqfont_setview(infofont, 1,1 );
 	}
-	liqfont_setview(infofont, 1,1 );
 
 		
 
@@ -258,7 +258,7 @@ int liqimagescan_hotspot_detect(liqimage *self)
 		
 
 			//midgrey=(min+max)/2;
-			midgrey=min+(max-min)*0.4;
+			midgrey=min+(max-min)*0.2;
 			//liqapp_log("grey %3d, %3d,%3d,%3d",y,min,max,midgrey);
 		}
 		//##################################### find variance within line
@@ -268,13 +268,13 @@ int liqimagescan_hotspot_detect(liqimage *self)
 		{
 			// sc will always be 1..n - a single pixel is a strip also
 			int sc = liqimage_get_next_strip(self, src,x,midgrey);
-			if(src[x]>midgrey && sc>2)
+			if(src[x]>midgrey && sc>2 && sc < 40)
 			{
 				// .. bright strip
 				
 				hotspot_add(x,y,sc);
 				
-				//while(sc--) { src[x++]=255; }
+				//while(sc--) { src[x++]=0; }
 				x+=sc;
 				foundcount++;
 				
@@ -282,7 +282,7 @@ int liqimagescan_hotspot_detect(liqimage *self)
 			else
 			{
 				// .. dark strip
-				//while(sc--) { src[x++]=0; }
+				//while(sc--) { src[x++]=128; }
 				x+=sc;
 			}
 		}
@@ -340,7 +340,7 @@ int blobs_used=0;
 			
 			//if( (ir-il)>3 && isnear(ib-it,ir-il,5))
 			{
-				//xsurface_drawrectwash_uv(   self,il,it, ir-il+1, ib-it+1, (hotspots[a].island) % 4, (hotspots[a].island+3) % 8);
+				xsurface_drawrectwash_uv(   self,il,it, ir-il+1, ib-it+1, (hotspots[a].island) % 4, (hotspots[a].island+3) % 8);
 				//usedcount++;
 			}
 		}
@@ -381,7 +381,7 @@ int blobs_used=0;
 	}
 
 
-	if(blobs_used<5)	
+	if(blobs_used<20)	
 	{
 		// this seems simpler to do and logical to calculate
 		// tho for many dots it will be slow (hence the limit on blob count!)
@@ -441,7 +441,7 @@ int blobs_used=0;
 								xsurface_drawrectwash_uv(   self,blobs[n].x-4,blobs[n].y-8, 16,16, (n) % 4, (n+3) % 8);
 								xsurface_drawrectwash_uv(   self,blobs[m].x-4,blobs[m].y-6, 12,12, (n) % 4, (n+3) % 8);
 								xsurface_drawrectwash_uv(   self,blobs[p].x-4,blobs[p].y-6, 12,12, (n) % 4, (n+3) % 8);
-															
+							}						
 								
 								int newhotspot_hitx = ( blobs[n].x + blobs[m].x + blobs[p].x ) / 3;
 								int newhotspot_hity = ( blobs[n].y + blobs[m].y + blobs[p].y ) / 3;
@@ -450,7 +450,7 @@ int blobs_used=0;
 								float dy = blobs[n].y - newhotspot_hity;
 								int newhotspot_hitangledeg = atan2( dx,-dy  )*180.0/3.141592654;
 								
-								#define smoothfactor 0.4
+								#define smoothfactor 0.5
 								hotspot_hitx += ((float)(newhotspot_hitx - hotspot_hitx) * smoothfactor);
 								hotspot_hity += ((float)(newhotspot_hity - hotspot_hity) * smoothfactor);
 								hotspot_hitsize += ((float)(newhotspot_hitsize - hotspot_hitsize) * smoothfactor);
@@ -459,7 +459,8 @@ int blobs_used=0;
 								
 							//	infosketch->angle = ((float)hotspot_hitangledeg) *  3.141592654 / 180.0;
 								
-								
+							if(hotspot_hitshowmarking)
+							{	
 								xsurface_drawline_grey(self,  hotspot_hitx,hotspot_hity, blobs[n].x,blobs[n].y, 255  );
 	
 		
@@ -478,7 +479,7 @@ int blobs_used=0;
 							//liqapp_log("%s",buf);
 							
 
-							return 0;
+							//return 0;
 							
 							goto done;
 							
@@ -503,7 +504,7 @@ done:
 	}
 
 	//	exit(0);
-   // liqapp_log("barcode complete %d  :: used %d :: hs_used %d :: blobs used %d",foundcount,usedcount,hotspots_used,blobs_used);
+  //  liqapp_log("barcode complete %d  :: used %d :: hs_used %d :: blobs used %d",foundcount,usedcount,hotspots_used,blobs_used);
 
 	return -1;
 }

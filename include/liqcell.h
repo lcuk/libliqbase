@@ -1,8 +1,4 @@
 
-
-#ifndef liqcell_H
-#define liqcell_H
-
 #include <unistd.h>
 #include <stdarg.h>
 
@@ -10,6 +6,11 @@
 #include "liqsketch.h"
 //#include "liqcell_easyrun.h"
 //#include "liqcell_prop.h"
+
+
+#ifndef liqcell_H
+#define liqcell_H
+
 
 #ifdef __cplusplus
 extern "C" {

@@ -193,7 +193,9 @@ static void liqcellmouseeventargs_stroke_start(liqcellmouseeventargs *self,int m
 	self->multiy=0;
 	self->multiw=0;
 	self->multih=0;
-
+	
+	self->ox=0;
+	self->oy=0;
 
 	liqstroke_clear(self->stroke);
 	liqstroke_start(self->stroke,mx,my,mz,mt);
@@ -218,6 +220,9 @@ static void liqcellmouseeventargs_stroke_extend(liqcellmouseeventargs *self,int 
 	self->mey=my;
 	self->mez=mz;
 	self->met=mt;
+
+	self->ox=0;
+	self->oy=0;
 
 	liqstroke_extend(self->stroke,mx,my,mz,mt);
 
@@ -910,6 +915,12 @@ int fadeaty = 0;
 float fadeupto = 0.0;
 
 
+
+int slidemode = 0;		// slide is set to 0 == not moving, -1 == moving to previous, 1 == moving to next
+int slideuptox = 0;
+int slidestartx = 0;
+
+
 	
 	if( (liqcell_propgeti(self,"dialog_zoomed",0))  || (liqcell_easyrunstack_used==0))
 	{
@@ -1466,7 +1477,9 @@ waitevent:
 // even for more than simple widgets
 
 
-
+							mouseargs.ox=0;
+							mouseargs.oy=0;
+	
 
 				if(hot)// && hot==mouseargs.hit)
 				{
@@ -1498,6 +1511,7 @@ waitevent:
 							liqcell *ohit=vhit;
 							while(ohit && ohit!=self)
 							{
+								//liqapp_log("huh easyrun (%d,%d) += (%d,%d) '%s'",ox,oy,ohit->x,ohit->y,ohit->name);
 								ox+=ohit->x;
 								oy+=ohit->y;
 								ohit=liqcell_getlinkparent(ohit);
@@ -1508,7 +1522,7 @@ waitevent:
 							
 							
 							liqcell_easyrun_mouseeventargs_multitouchprepare(vhit,&mouseargs,NULL);
-
+							
 							if( liqcell_handlerrun(vhit,"mouse",&mouseargs) )
 							{
 								// handled it \o/
@@ -1518,6 +1532,10 @@ waitevent:
 									// sleep
 								}
 							}
+						}
+						else
+						{
+							// NO mouse event handler - we should now try to slide..
 						}
 					}
 
@@ -1583,6 +1601,60 @@ waitevent:
 								}
 							}
 						}
+
+
+
+
+
+						else
+						{
+							// NO click event handler
+							// this is essentially a free hit
+							// if i
+							int dx = mouseargs.stroke->pointlast->x - mouseargs.stroke->pointfirst->x;
+							int dy = mouseargs.stroke->pointlast->y - mouseargs.stroke->pointfirst->y;
+							int ar=0;
+							liqapp_log("ARGMOUSE xy(%d,%d)",dx,dy);
+							if(ABS(dx)>ABS(dy) ) // && ((ABS(dx)/4) > ABS(dy)))
+							{
+								
+								liqapp_log("ARGMOUSE2 xy(%d,%d)",dx,dy);
+								
+								liqcell *adj;
+								if(dx<0)
+								{
+									adj = liqcell_getlinkprev_visual(self);
+								}
+								else
+								{
+									adj = liqcell_getlinknext_visual(self);
+								}
+								if(adj)
+								{
+									liqapp_log("ARGMOUSE 2 xy(%d,%d) '%s'",dx,dy,adj->name);
+									// swap self
+									liqcell *orig=self;
+									if(liqcell_getselected(orig))
+									{
+										liqcell_setselected(self,0);
+										liqcell_setselected(adj,1);
+										
+									}
+									liqcell_ensurevisible_centred(adj);
+									self=adj;
+									dirty=1;
+									//targetcr = easyrun_realtime_reshape(self, graph);
+									
+								}
+							}
+							
+						}
+
+
+
+
+
+
 					}
 
 				}

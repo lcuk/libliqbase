@@ -41,7 +41,8 @@ void cover_image_release(liqx11info *myx11info)
 
 	if(cover_image)
 	{
-		XFree(cover_image);
+		XDestroyImage(cover_image);
+		//XFree(cover_image);
 		cover_image=NULL;
 	}
 	
