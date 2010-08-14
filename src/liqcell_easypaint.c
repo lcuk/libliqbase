@@ -899,7 +899,8 @@ __tz_one("paintdone");
                 {
                     if(!easypaint_backgrain_image)
                     {
-                         easypaint_backgrain_image=liqimage_newfromfile("/usr/share/liqbase/libliqbase/media/backgrain.png",0,0,0);
+						// try allowing with alpha..
+                         easypaint_backgrain_image=liqimage_newfromfile("/usr/share/liqbase/libliqbase/media/backgrain.png",0,0,1);
                     }
                     if(easypaint_backgrain_image)
                     {

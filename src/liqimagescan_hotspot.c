@@ -20,7 +20,9 @@
 extern "C" {
 #endif
 
-
+unsigned char hotspot_matchu     = 77;			// filter to green
+unsigned char hotspot_matchv     = 100;
+unsigned char hotspot_matchrange = 24;
 
 int hotspot_hitx = 0;
 int hotspot_hity = 0;
@@ -232,6 +234,38 @@ int liqimagescan_hotspot_detect(liqimage *self)
 	// operate quickly and do not interupt user
 	
 	
+	// try something
+	{
+		int ww = self->width/2;
+		int hh = self->height/2;
+		unsigned short *datay = (unsigned short *)&self->data[self->offsets[0]];
+		unsigned char  *datau = (unsigned char  *)&self->data[self->offsets[1]];
+		unsigned char  *datav = (unsigned char  *)&self->data[self->offsets[2]];
+		int x,y;
+		for(x=0;x<ww;x++)
+		{
+			for(y=0;y<hh;y++)
+			{
+				if( isnear(datau[y*ww+x],hotspot_matchu,hotspot_matchrange) &&  isnear(datav[y*ww+x],hotspot_matchv,hotspot_matchrange))
+				{
+					// ok, good data, keep it..
+				}
+				else
+				{
+					// bad data, clear it..  (requires a quad of 4 pixels clearing..)
+					datay[((y*2)  )*ww+x]=0;
+					datay[((y*2)+1)*ww+x]=0;
+					datau[(y      )*ww+x]=128;
+					datav[(y      )*ww+x]=128;
+				}
+			}
+		}
+	}
+	
+	
+	
+	
+	
 	int foundcount=0;
 	int usedcount=0;
 	
@@ -271,12 +305,20 @@ int liqimagescan_hotspot_detect(liqimage *self)
 			if(src[x]>midgrey && sc>2 && sc < 40)
 			{
 				// .. bright strip
-				
-				hotspot_add(x,y,sc);
-				
-				//while(sc--) { src[x++]=0; }
-				x+=sc;
-				foundcount++;
+				unsigned char cy=0,cu=0,cv=0;
+				xsurface_drawpget_yuv(self,x+(sc/2),y,&cy,&cu,&cv);
+				//if(cu<128 && cv>128)
+				{
+					// colored hotspot
+					hotspot_add(x,y,sc);
+					//while(sc--) { src[x++]=0; }
+					x+=sc;
+					foundcount++;
+				}
+				//else
+				{
+				//	x+=sc;
+				}
 				
 			}
 			else
@@ -339,6 +381,7 @@ int blobs_used=0;
 
 			
 			//if( (ir-il)>3 && isnear(ib-it,ir-il,5))
+		//	if(hotspot_hitshowmarking)				
 			{
 				xsurface_drawrectwash_uv(   self,il,it, ir-il+1, ib-it+1, (hotspots[a].island) % 4, (hotspots[a].island+3) % 8);
 				//usedcount++;
@@ -450,7 +493,7 @@ int blobs_used=0;
 								float dy = blobs[n].y - newhotspot_hity;
 								int newhotspot_hitangledeg = atan2( dx,-dy  )*180.0/3.141592654;
 								
-								#define smoothfactor 0.5
+								#define smoothfactor 0.25
 								hotspot_hitx += ((float)(newhotspot_hitx - hotspot_hitx) * smoothfactor);
 								hotspot_hity += ((float)(newhotspot_hity - hotspot_hity) * smoothfactor);
 								hotspot_hitsize += ((float)(newhotspot_hitsize - hotspot_hitsize) * smoothfactor);
