@@ -119,7 +119,8 @@ char *liqapp_gettitle()
 	static int   hardware_product_ispowerful;
 	int hardware_product_read()
 	{
-        hardware_product[0]=0;
+        hardware_product[0]=' ';		// we call through this function exactly once
+        hardware_product[1]=0;			// if it fails, there is no need to repeat in this case.
 		FILE *fd;
 		int rs;
 		fd = fopen(hardware_product_filename, "r");

@@ -6,12 +6,17 @@ LD          = g++
 OPT_FLAGS   =  -O3 
  
 
-USE_OSSO = 1
 USE_GST = 1
 
 
-LIBRARIES   =  libpng12 sqlite3
+UNAMEISARM := $(shell uname -m | grep arm)
 
+ifeq ($(UNAMEISARM),arm)
+	USE_OSSO = 1
+endif
+
+
+LIBRARIES   =  libpng12
 
 ifdef USE_OSSO
 	LIBRARIES += libosso
@@ -20,8 +25,11 @@ ifdef USE_GST
 	LIBRARIES += gstreamer-0.10 
 endif
 
-
-CFLAGS      = -DUSE_MAEMO -fPIC -Wall `freetype-config --cflags` `pkg-config --cflags  $(LIBRARIES)` -I../include 
+MAEMO  = 
+ifdef USE_OSSO
+	MAEMO = -DUSE_MAEMO
+endif
+CFLAGS      = $(MAEMO) -fPIC -Wall `freetype-config --cflags` `pkg-config --cflags  $(LIBRARIES)` -I../include 
 LDFLAGS     = -lX11 -lXext -lXv -lm -lcurl `freetype-config --libs` -ljpeg -lpthread `pkg-config --libs $(LIBRARIES)`
 RM          = /bin/rm -f
 

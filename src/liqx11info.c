@@ -1284,7 +1284,7 @@ const int x11_seeevent=0;
 								myx11info->myispressedflag=1;
 								x11_event_mouse_coord_convert( myx11info,&xev );
 								
-								//liqapp_log("buttonpress  %i,%i",xev.xmotion.x,xev.xmotion.y);
+								liqapp_log("buttonpress  %i,%i",xev.xmotion.x,xev.xmotion.y);
 								//liqapp_log("ButtonPress");
 								ev->type = LIQEVENT_TYPE_MOUSE;
 								ev->mouse.state = LIQEVENT_STATE_PRESS;
@@ -1310,7 +1310,7 @@ const int x11_seeevent=0;
                 //                int qy=xev.xmotion.y;
 								x11_event_mouse_coord_convert( myx11info,&xev );
 				
-				//				liqapp_log("motion %i,%i (q %i,%i) (can %i,%i)",xev.xmotion.x,xev.xmotion.y,qx,qy,canvas.pixelwidth,canvas.pixelheight);
+								liqapp_log("motion %i,%i (can %i,%i)",xev.xmotion.x,xev.xmotion.y,canvas.pixelwidth,canvas.pixelheight);
 								ev->type = LIQEVENT_TYPE_MOUSE;
 								ev->mouse.state = LIQEVENT_STATE_MOVE;
 								ev->mouse.x = ((xev.xmotion.x));// *800)/canvas.pixelwidth;
@@ -1331,7 +1331,7 @@ const int x11_seeevent=0;
 								myx11info->myispressedflag=0;
 
 								x11_event_mouse_coord_convert( myx11info,&xev );
-								//liqapp_log("release %i,%i",xev.xmotion.x,xev.xmotion.y);
+								liqapp_log("release %i,%i",xev.xmotion.x,xev.xmotion.y);
 						
 								//liqapp_log("ButtonRelease");
 								ev->type = LIQEVENT_TYPE_MOUSE;
