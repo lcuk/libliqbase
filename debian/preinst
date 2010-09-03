@@ -1,0 +1,43 @@
+#!/bin/sh
+# preinst script for libliqbase
+#
+# see: dh_installdeb(1)
+
+
+################################### micro optifier for all liqbase apps
+# this script utilises components from maemo-optify-boottime
+# it will append /usr/share/liqbase to the options and run optify
+# this way, ALL liqbase applications will be optified from this point onwards
+#
+optifyoptionspath="/etc/maemo-optify-auto-opt.conf"
+optifyrunscript="/usr/sbin/maemo-optify-auto-opt.sh"
+src="/usr/share/liqbase"  
+
+if [ -e "$optifyoptionspath" ] && [ -e "$optifyrunscript" ]; then
+  # config and runscript are available!
+  if [ -z "`grep $src $optifyoptionspath`" ]
+    # there is NO mention of "/usr/share/liqbase" within the config
+    # add it..
+    echo "$src" >> $optifyoptionspath
+  fi
+  if [ ! -e /targets/links/scratchbox.config ]; then
+    # now, if we are NOT in scratchbox
+    # lets pre-prepare and actually do the optification
+    if [ ! -e "$src" ] && [ ! -L "$src" ] ]
+      # src does not exist
+      # src is not a symlink
+      # lets just make an empty folder for it
+      mkdir --parent "$src"
+    fi
+    /usr/sbin/maemo-optify-auto-opt.sh
+  fi
+fi
+
+
+exit 0
+
+
+
+	
+
+
