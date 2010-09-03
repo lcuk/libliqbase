@@ -15,7 +15,7 @@ src="/usr/share/liqbase"
 
 if [ -e "$optifyoptionspath" ] && [ -e "$optifyrunscript" ]; then
   # config and runscript are available!
-  if [ -z "`grep $src $optifyoptionspath`" ]
+  if [ -z "`grep $src $optifyoptionspath`" ]; then
     # there is NO mention of "/usr/share/liqbase" within the config
     # add it..
     echo "$src" >> $optifyoptionspath
@@ -23,7 +23,7 @@ if [ -e "$optifyoptionspath" ] && [ -e "$optifyrunscript" ]; then
   if [ ! -e /targets/links/scratchbox.config ]; then
     # now, if we are NOT in scratchbox
     # lets pre-prepare and actually do the optification
-    if [ ! -e "$src" ] && [ ! -L "$src" ] ]
+    if [ ! -e "$src" ] && [ ! -L "$src" ]; then
       # src does not exist
       # src is not a symlink
       # lets just make an empty folder for it
