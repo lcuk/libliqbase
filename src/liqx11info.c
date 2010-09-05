@@ -50,7 +50,11 @@ void cover_image_release(liqx11info *myx11info)
 	
 void cover_image_rebuild(liqx11info *myx11info)
 {
-
+	// if we have been passed in as livewp mode
+	// then bail here, we do not need backing image
+	if(liqapp_getopt_exist("livewp"))
+		return;
+		
 	cover_image_release(myx11info);
 	
 	cover_image = liqimage_convert_to_ximage( canvas.rotation_native_surface,  myx11info->mydisplay , myx11info->myscreen);

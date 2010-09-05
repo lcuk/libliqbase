@@ -1,8 +1,22 @@
+libliqbase (0.3.61) unstable; urgency=low
+
+  * lots of fixes, especially
+  * green flash removal
+  * rotation patch
+  * x86 support
+  * optification done at library level effecting all apps
+  * multitouch availability improvements
+  * added dialogs for color and image
+  * added facecamera support and invar
+  * added rotation support for sketches
+
+ -- Gary Birkett <liquid@gmail.com>  4 September 2010 00:41:03 +0200
+
 libliqbase (0.3.60) unstable; urgency=low
 
   * numerous stability updates
 
- -- Gary Birkett <liquid@gmail.com>  22 January 2009 00:41:03 +0200
+ -- Gary Birkett <liquid@gmail.com>  22 January 2010 00:41:03 +0200
 
 libliqbase (0.3.58) unstable; urgency=low
 

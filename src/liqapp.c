@@ -288,7 +288,7 @@ int liqapp_getopt_find(char *optname)
 		for(opt=1;opt<app.argc;opt++)
 		{	
 			char *label=app.argv[opt];
-			if( label[0] == '-'   &&   (strcmp( &label[1] , optname )==0) )
+			if( label[0] == '-'   &&  label[1] == '-' && (strcmp( &label[2] , optname )==0) )
 			{
 				return opt;
 			}
