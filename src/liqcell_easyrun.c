@@ -1400,7 +1400,7 @@ waitevent:
 
 
 
-							if( ((omsx)<80) && (omsy<56) && ((omex)<80) && (omey<56) )
+							if( ((omsx)<80) && (omsy<56) && ((omex)<80) && (omey<56) ) && ( liqcell_easyrun_hide_back==0) )
 							{
 								if(ev.mouse.pressure!=0)
 								{
