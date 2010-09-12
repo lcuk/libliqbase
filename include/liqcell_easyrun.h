@@ -135,6 +135,7 @@ int liqcell_easyrun_mouseeventargs_multitouchprepare(liqcell *self, liqcellmouse
 extern int liqcell_easyrun_cursor_on_screen;
 extern int liqcell_easyrun_cursorflashcount;
 extern int liqcell_easyrun_fingerpressed;
+extern int liqcell_easyrun_autorotating;
 
 
 #ifdef __cplusplus

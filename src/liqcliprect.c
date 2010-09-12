@@ -10,6 +10,7 @@
 #include "liq_xsurface.h"
 #include "liqapp.h"
 #include "liqapp_prefs.h"
+#include "liqcell_easyrun.h"
 #include "liqcell_easypaint.h"
 #include "liqcanvas.h"
 #include "liqimage.h"
@@ -953,7 +954,7 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 	}
 	else
 	{
-		if(liqapp_pref_checkexists("autorotate"))
+		if(liqcell_easyrun_autorotating)
 			angle = page->angle + liqaccel_getangle();
 		else
 			angle = page->angle;

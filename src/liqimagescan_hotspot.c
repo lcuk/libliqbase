@@ -20,9 +20,12 @@
 extern "C" {
 #endif
 
-unsigned char hotspot_matchu     = 77;			// filter to green
-unsigned char hotspot_matchv     = 100;
-unsigned char hotspot_matchrange = 24;
+unsigned char hotspot_matchu     = 68;			// filter to green
+unsigned char hotspot_matchv     = 104;
+unsigned char hotspot_matchrange = 36;
+
+
+
 
 int hotspot_hitx = 0;
 int hotspot_hity = 0;
@@ -249,6 +252,11 @@ int liqimagescan_hotspot_detect(liqimage *self)
 				if( isnear(datau[y*ww+x],hotspot_matchu,hotspot_matchrange) &&  isnear(datav[y*ww+x],hotspot_matchv,hotspot_matchrange))
 				{
 					// ok, good data, keep it..
+
+					datay[((y*2)  )*ww+x]=65535;
+					datay[((y*2)+1)*ww+x]=65535;
+					datau[(y      )*ww+x]=hotspot_matchu;
+					datav[(y      )*ww+x]=hotspot_matchv;
 				}
 				else
 				{
@@ -383,7 +391,7 @@ int blobs_used=0;
 			//if( (ir-il)>3 && isnear(ib-it,ir-il,5))
 		//	if(hotspot_hitshowmarking)				
 			{
-				xsurface_drawrectwash_uv(   self,il,it, ir-il+1, ib-it+1, (hotspots[a].island) % 4, (hotspots[a].island+3) % 8);
+	//			xsurface_drawrectwash_uv(   self,il,it, ir-il+1, ib-it+1, (hotspots[a].island) % 4, (hotspots[a].island+3) % 8);
 				//usedcount++;
 			}
 		}

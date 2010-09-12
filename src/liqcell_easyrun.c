@@ -89,6 +89,8 @@ liqcell * liqcell_easyrun_currentdialog=NULL;
 liqcell * liqcell_easyrun_activecontrol=NULL;
 int liqcell_easyrun_fingerpressed=0;
 
+int liqcell_easyrun_autorotating=0;				// new flag to indicate we should be autorotating
+
 
 //########################################################################
 //########################################################################
@@ -798,7 +800,9 @@ int liqcell_easyrun(liqcell *self)
     liqcanvas_settitle( liqcell_getcaption(self) );
 	
 	
-	
+    if(liqcell_propgeti(self,"autorotate",0)==1)
+		liqcell_easyrun_autorotating++;
+    
 	
 	// what i should do is resize the contents to match the frame
 	// - actually, that may happen more than once per session
@@ -1927,7 +1931,7 @@ moar:
 		 // because by putting it here messes up normal stuff and thats not desired
 		 // put it back again (31/12)
 		 // changed it yet again to be a specific, per dialog flag
-		if( (dirty==0) && (refreshinprogress==0) && (mouseargs.mcnt==0) && (liqcell_propgeti(self,"autorotate",0)==1) )// liqapp_pref_checkexists("autorotate") )
+		if( (dirty==0) && (refreshinprogress==0) && (mouseargs.mcnt==0) && (liqcell_easyrun_autorotating) )// liqapp_pref_checkexists("autorotate") )
 		{
 			int aax=0;
 			int aay=0;
@@ -2220,7 +2224,8 @@ if(liqcell_showfps)
 	
 	liqcell_historystore_historythumb(self);			// lol!
 
-    
+    if(liqcell_propgeti(self,"autorotate",0)==1)
+		liqcell_easyrun_autorotating--;
     
 	
 	return result;
