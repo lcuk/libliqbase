@@ -1,7 +1,14 @@
 
-// liqcameraface : main camera interface
+// liqcamera : main camera interface
 // slightly cleaned up and duplicated also in liqcameraface
 // these should really be instances of the same class :$
+
+
+// ./v4l2-ctl --set-ctrl=indicator_intensity=1
+// this turns on the red light.
+// wood grain is visible.
+// it is very very blurry
+// perhaps an ultra low resolution merge :)
 
 #ifdef __cplusplus
 extern "C" {
