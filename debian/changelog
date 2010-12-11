@@ -1,3 +1,9 @@
+libliqbase (0.3.63) unstable; urgency=low
+
+  * removing liqcamera_tools, no real need to be there yet, will reinstert later.
+
+ -- Gary Birkett <liquid@gmail.com>  Sat, 11 Dec 2010 00:09:10 +0000
+
 libliqbase (0.3.62) unstable; urgency=low
 
   * preinst was not being included for auto optify
