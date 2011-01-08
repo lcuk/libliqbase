@@ -1011,14 +1011,14 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 //	int fy = ((float)tmy / ry);
 
 
-
+/*
 	liqapp_log("sk.want o(%i,%i) m(%i,%i) drawmode=%d",l,t,w,h,drawmode);
 	liqapp_log("sk.from o(%i,%i) m(%i,%i)",fox,foy,fmx,fmy);
 	liqapp_log("sk.to   o(%i,%i) m(%i,%i)",tox,toy,tmx,tmy);
 	liqapp_log("sk.ax   %f,%f,%f",ax,ay,ar);
 	liqapp_log("sk.r    %i,%i",rx,ry);
 
-	
+*/	
 
 	//================================ push altered aspect result into tmxy
 
@@ -1277,7 +1277,7 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 					unsigned char sv=	    (char)(128 + f * (fv-128)) ;
 					
 					
-					if(p2->linknext==NULL) liqapp_log("sk.line xy(%d,%d)-xy(%d,%d)",lsx,lsy,lex,ley);
+					//if(p2->linknext==NULL) liqapp_log("sk.line xy(%d,%d)-xy(%d,%d)",lsx,lsy,lex,ley);
 					
 					
 					liqcliprect_drawlinecolor(self,lsx,lsy,lex,ley,  sy,su,sv);
