@@ -914,6 +914,8 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 	if(l>=self->ex) return;
 	if(t>=self->ey) return;
 	if(w<2 || h<2) return;		// dont be silly :)
+	
+	if(drawmode==5)drawmode=8;
 
 	// no point in displaying the entire blank frame to the user,
 	// so we specify only the used rectangle within the page
@@ -1008,12 +1010,16 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 //	int fx = ((float)tmx / rx);
 //	int fy = ((float)tmy / ry);
 
-/*	liqapp_log("from %i,%i",fmx,fmy);
-	liqapp_log("to   %i,%i",tmx,tmy);
-	liqapp_log("ax   %f,%f,%f",ax,ay,ar);
-	liqapp_log("r    %f,%f",rx,ry);
-	liqapp_log("f    %i,%i",fx,fy);
-*/
+
+
+	liqapp_log("sk.want o(%i,%i) m(%i,%i) drawmode=%d",l,t,w,h,drawmode);
+	liqapp_log("sk.from o(%i,%i) m(%i,%i)",fox,foy,fmx,fmy);
+	liqapp_log("sk.to   o(%i,%i) m(%i,%i)",tox,toy,tmx,tmy);
+	liqapp_log("sk.ax   %f,%f,%f",ax,ay,ar);
+	liqapp_log("sk.r    %i,%i",rx,ry);
+
+	
+
 	//================================ push altered aspect result into tmxy
 
 	// this silly little reduction causes problems with live drawing..
@@ -1024,7 +1030,7 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 		ry=(float)ry*0.9;
 	}
 
-	if(!(drawmode & 4))
+	if((drawmode & 4)==0)
 	{
 
 		if(rx<tmx) tox+=(tmx-rx)/2;
@@ -1032,7 +1038,13 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 
 		tmx = rx;
 		tmy = ry;
+		liqapp_log("eep");
 	}
+	
+	
+
+	
+	
 	// automatic quality reduction skip factor (high divisor==higher quality)
 	//int rpt=(fmap2/tmap2)/4;// /4;
 
@@ -1264,6 +1276,8 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 					unsigned char su=	    (char)(128 + f * (fu-128)) ;
 					unsigned char sv=	    (char)(128 + f * (fv-128)) ;
 					
+					
+					if(p2->linknext==NULL) liqapp_log("sk.line xy(%d,%d)-xy(%d,%d)",lsx,lsy,lex,ley);
 					
 					
 					liqcliprect_drawlinecolor(self,lsx,lsy,lex,ley,  sy,su,sv);

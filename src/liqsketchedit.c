@@ -466,6 +466,8 @@ int post_to_liqbase_net(const char *filename, const char *datakey,int replyid)
 					s->pixelwidth =liqimage_getwidth(img);		// this isnt best solution, todo review again
 					s->pixelheight=liqimage_getheight(img);		// 
 					
+					s->pixelwidth =liqcell_getw(self);		// this isnt best solution, todo review again
+					s->pixelheight=liqcell_geth(self);		// 
 					
 					s->dpix=225;	// damn, dont like using this here
 					s->dpiy=225;
@@ -476,7 +478,7 @@ int post_to_liqbase_net(const char *filename, const char *datakey,int replyid)
 		// this was only to see high intensity quickly
 		//args->mez/=2;
 		
-		//liqapp_log("sss me %i,%i   o %i,%i   ss %i,%i",args->mex,args->mey,    args->ox,args->oy,   args->mex-args->ox,args->mey-args->oy);
+		liqapp_log("sss me %i,%i   o %i,%i   ss %i,%i",args->mex,args->mey,    args->ox,args->oy,   args->mex-args->ox,args->mey-args->oy);
 
 		if(args->mcnt==1)
 		{
@@ -675,7 +677,8 @@ liqcell *liqsketchedit_create()
 
 
 
-
+		//liqcell_propsets(  self,    "backcolor", "rgb(100,0,0)" );
+		//liqcell_propsets(  self,    "bordercolor", "rgb(0,255,0)" );
 
 		liqsketchedit_resize(self,NULL, NULL);
 
