@@ -1144,6 +1144,7 @@ waitevent:
 			if( (ev.type == LIQEVENT_TYPE_KEY) && (ev.state==LIQEVENT_STATE_PRESS) && (ev.key.keycode==65307) )	//ESC
 			{
 				liqapp_log("Escape Pressed, Cancelling");
+				savethumb( self );
 				//running=0;
 				if(fadestartx || fadestarty)
 				{	fademode=-1;  fadeatx=0; fadeaty=0; }
@@ -2036,7 +2037,7 @@ moar:
 
 			
 			vgraph_drawcell(graph,x,y,w,h,self);
-			
+		
 			//liqapp_log("render adding nav items");
 			static liqimage *infoback=NULL;
 			static liqimage *infoclose=NULL;

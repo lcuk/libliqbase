@@ -925,6 +925,11 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 
 	int fox;
 	int foy;
+	
+	
+	
+	 unsigned long tw0 = liqapp_GetTicks();
+	 int twc=0;
 
 
 	// From
@@ -1017,8 +1022,8 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 	liqapp_log("sk.to   o(%i,%i) m(%i,%i)",tox,toy,tmx,tmy);
 	liqapp_log("sk.ax   %f,%f,%f",ax,ay,ar);
 	liqapp_log("sk.r    %i,%i",rx,ry);
-
-*/	
+*/
+	
 
 	//================================ push altered aspect result into tmxy
 
@@ -1038,11 +1043,21 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 
 		tmx = rx;
 		tmy = ry;
-		liqapp_log("eep");
+	//	liqapp_log("eep");
 	}
 	
 	
 
+					//if(liqapp_showdebugboxes)
+					if(page->islandcount==0)
+					{
+						//REALLY slow
+						// this should be done when modified
+						
+						// calc once per sketch drawing rather than per point in each stroke!
+						liqsketch_islandcalcall(page);
+						
+					}
 	
 	
 	// automatic quality reduction skip factor (high divisor==higher quality)
@@ -1080,11 +1095,27 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 	
 	
 	// Sun Aug 23 12:41:07 2009 lcuk : fuckit, try full res always and see
+
+	
 	if(liqapp_hardware_product_ispowerful_get() && (angle==0))
 		rpt=1;
-
 	rpt=0;
 	
+	// adjusting again, something is wrong on ideapad rendering
+	// its odd
+	
+	
+	rpt=1;
+	
+	
+	// 20110112 lcuk  setting to as used in classic liqbase.
+	//gb:18oct2008:set this too high, reverting
+	//int rpt=((int)((float)(fmap2/tmap2)/(adx*ady))) >>3;// try this at high res, doubt it will work
+	rpt=(fmap2/tmap2)/8;
+	
+	
+	
+	rpt=1;
 
 	switch(page->backgroundstyle)
 	{
@@ -1172,6 +1203,9 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 	liqstroke *stroke=page->strokefirst;
 	while(stroke)
 	{
+		
+		twc++;
+		
 		liqstroke_hold(stroke);
 		if(stroke->pointcount>=2)
 		{
@@ -1243,6 +1277,20 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 				while(p2)
 				{
 
+
+/*
+					unsigned long tw1 = liqapp_GetTicks();
+
+
+
+					liqapp_log("sk %lu t=%lu c=%i,  spc=%i xy(%d, %d)",(unsigned long)page,  (tw1-tw0),twc,    stroke->pointcount ,
+
+						p2->x,
+						p2->y
+						);
+*/
+
+
 					p2x=p2->x;   // rotate now..
 					p2y=p2->y;
 
@@ -1276,13 +1324,46 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 					unsigned char su=	    (char)(128 + f * (fu-128)) ;
 					unsigned char sv=	    (char)(128 + f * (fv-128)) ;
 					
+					//
+					//if(liqapp_showdebugboxes)
+					if(0)
+					{
+						//REALLY slow
+						// this should be done when modified
+						//liqsketch_islandcalcall(page);
+						
+						float angle = stroke->islandnumber * 45;  // 45 degrees per island
+						float iu = 1 + 128 + 254 * sin( angle / PI);
+						float iv = 1 + 128 + 254 *-cos( angle / PI);
+						
+						sy=128;
+						su = iu;
+						sv = iv;
+						
+						//liqapp_log("col %d :: %3.3f, iuv(%3.3f, %3.3f) (suv(%d, %d)",  stroke->islandnumber, angle, iu,iv, su,sv);
+					}
+					
 					
 					//if(p2->linknext==NULL) liqapp_log("sk.line xy(%d,%d)-xy(%d,%d)",lsx,lsy,lex,ley);
 					
+				//	lex=lsx+2;
+				//	ley=lsy+2;
+				
+				
+				if((lsx==lex) && (lsy==ley))
+				{
 					
+				}
+				else
+				{
+
 					liqcliprect_drawlinecolor(self,lsx,lsy,lex,ley,  sy,su,sv);
 					if(isselected) liqcliprect_drawlinecolor(self,lsx+1,lsy+1,lex+1,ley+1,    sy,su,sv);
+				}
+		
 					
+					//liqcliprect_drawpsetcolor(			liqcliprect *self,int x, int y, unsigned char grey,unsigned char u,unsigned char v)
+					//liqcliprect_drawpsetcolor(self,lsx,lsy, 128,40,200);
 					
 					//liqcliprect_drawthicklinecolor(self,lsx,lsy,lex,ley, 5, sy,su,sv);
 					//if(isselected) liqcliprect_drawthicklinecolor(self,lsx+1,lsy+1,lex+1,ley+1, 5,   sy,su,sv);
@@ -1419,10 +1500,32 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 			// add other stroke types here :)
 
 
+/*
+
+	unsigned long tw1 = liqapp_GetTicks();
 
 
 
+	liqapp_log("sk %lu t=%lu c=%i,  spc=%i (xl %d, yt %d)-(xr %d, yb %d)",(unsigned long)page,  (tw1-tw0),twc,    stroke->pointcount ,
+			   
+			   stroke->boundingbox.xl,
+			   stroke->boundingbox.yt,
+			   stroke->boundingbox.xr,
+			   stroke->boundingbox.yb
+			   
+			   );
 
+
+
+	
+	if( (tw1-tw0) > 20 )
+	{
+	//	liqsketch_filesave(page, "/home/lcuk/eeek.sketch"  );
+	}
+	
+	tw0=tw1;
+
+*/
 
 
 			// supposing we actually said this stroke was a BOX/Circle/Polygon/Triangle/Tile etc
@@ -1432,6 +1535,9 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 		liqstroke_release(stroke);
 		stroke=stroke->linknext;
 	}
+	
+	
+	
 }
 
 

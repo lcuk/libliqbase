@@ -2537,18 +2537,19 @@ unsigned int pw=surface->width;
 	unsigned int vo = surface->offsets[2];//uo + (uo >> 2);
 // if changing to aa, just take the grey for now, the uv variation fails
     // 20090708_203046 lcuk : try this once again
+	
+	//xsurface_interalline_aa(surface,x1,y1,   x2,y2,grey, (char *)&surface->data[surface->offsets[0]], pw,2);
 	xsurface_interalline_noaa(surface,x1,y1,   x2,y2,grey, (char *)&surface->data[surface->offsets[0]], pw);
-	//xsurface_interalline_noaa(surface,x1,y1,   x2,y2,grey, (char *)&surface->data[surface->offsets[0]], pw);
 	x1>>=1;
 	y1>>=1;
 	x2>>=1;
 	y2>>=1;
 	pw>>=1;
-	//xsurface_interalline_noaa(surface,x1,y1,   x2,y2,u   ,(char *)&surface->data[uo], pw);
-	//xsurface_interalline_noaa(surface,x1,y1,   x2,y2,v   ,(char *)&surface->data[vo], pw);
-
 	xsurface_interalline_noaa(surface,x1,y1,   x2,y2,u   ,(char *)&surface->data[uo], pw);
 	xsurface_interalline_noaa(surface,x1,y1,   x2,y2,v   ,(char *)&surface->data[vo], pw);
+
+	//xsurface_interalline_aa(surface,x1,y1,   x2,y2,u   ,(char *)&surface->data[uo], pw,2);
+	//xsurface_interalline_aa(surface,x1,y1,   x2,y2,v   ,(char *)&surface->data[vo], pw,2);
 }
 
 

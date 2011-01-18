@@ -23,6 +23,7 @@
 
 
 
+#define isconnectedbuffer (32)
 
 
 #include <stdlib.h>
@@ -154,13 +155,16 @@ void liqpointrange_extendrubberband(liqpointrange *self,liqpoint *p)
 	if(self->zf < p->z)self->zf = p->z;
 	if(self->zb > p->z)self->zb = p->z;
 }
+
+
+
 int liqpointrange_isconnected(liqpointrange *self,liqpointrange *b)
 {
 	
-	if(self->xl > b->xr)return 0;
-	if(self->xr < b->xl)return 0;
-	if(self->yt > b->yb)return 0;
-	if(self->yb < b->yt)return 0;
+	if(self->xl > b->xr + isconnectedbuffer/2)return 0;
+	if(self->xr < b->xl - isconnectedbuffer/2)return 0;
+	if(self->yt > b->yb + isconnectedbuffer/2)return 0;
+	if(self->yb < b->yt - isconnectedbuffer/2)return 0;
 	return 1;
 }
 
@@ -479,9 +483,10 @@ int liqstroke_isconnected(liqstroke *self,liqstroke *o)
 
 			int dy=p->y-q->y;
 			int dy2=dy*dy;
-			if(dx2+dy2<64)
+			//if(dx2+dy2<64)
+			if(dx2+dy2<(isconnectedbuffer*isconnectedbuffer))
 			{
-				if(sqrt(dx2+dy2)<8)
+				if(sqrt(dx2+dy2)<(isconnectedbuffer))
 				{
 					// ! we are connected
 					return 1;
@@ -862,7 +867,9 @@ void liqsketch_islandcalcall(liqsketch *self)
 	liqstroke *o = self->strokefirst;
 	while(o)
 	{
+		//liqapp_log("isl str start xy(%d,%d)",o->boundingbox.xl,o->boundingbox.yt);
 		liqsketch_islandcalcone(self,o);
+		//liqapp_log("isl str fin   xy(%d,%d) %d",o->boundingbox.xl,o->boundingbox.yt,o->islandnumber);
 		o=o->linknext;
 	}
 		

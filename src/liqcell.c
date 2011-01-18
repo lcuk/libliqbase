@@ -1802,6 +1802,29 @@ liqcell*  liqcell_global_lookup_nameclass(liqcell *self, const char *name, const
 //	return NULL;
 //}
 
+
+#define piece_create liqcell_new
+/*
+static int piece_mouse(liqcell *self, void *args,liqcell *context)
+{
+	liqapp_log("piece_mouse %s",self->name); 
+	return 0;
+}
+static liqcell *piece_create()
+{
+// a cell is needed
+	//liqapp_log("piece_create running"); 
+	liqcell *self = liqcell_new();
+	if(!self) {liqapp_log("liqcell error not create 'piece'"); return NULL;  } 
+	liqcell_propsets(  self, "backcolor", "xrgb(64,64,64)" );
+	liqcell_handleradd_withcontext(self, "click", (void *)piece_mouse,self );
+	//liqapp_log("piece_create returning");
+	return self;
+	
+}
+ */	
+		
+
 /**
  * Create new liqcell, set visible and other attributes (widget)
  * @param name The name of the new liqcell
@@ -1812,13 +1835,14 @@ liqcell*  liqcell_global_lookup_nameclass(liqcell *self, const char *name, const
  */
 liqcell*  liqcell_quickcreatewidget(const char *name, const char *classname,int innerw,int innerh)
 {
-	liqcell *self = liqcell_new();
+	liqcell *self = piece_create();// 20101227 lcuk : try using this instead of liqcell_new();
 	if(classname && *classname)
 	{
 		if( (strcmp(classname,"form")==0) )
 		{
 			// Sat Aug 29 23:54:16 2009 lcuk : stupid thing, i gave everything as a form initially
 			classname=name;
+
 		}
 	}
 	liqcell_setname(self,name);
@@ -1855,7 +1879,7 @@ liqcell*  liqcell_quickcreatevis(const char *name, const char *classname,int x,i
 	}
 	if(!self)
 	{
-		self = liqcell_new();
+		self = piece_create();// 20101227 lcuk : try using this instead of self = liqcell_new();
 		self->kind |= cellkind_visual;
 		self->visible=1;
 		liqcell_setclassname(self,classname);

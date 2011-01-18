@@ -676,7 +676,7 @@ liqcell *liqsketchedit_create()
 		//liqcell_setvisible(b,0);
 
 
-
+		//liqcell_propsets(  self,    "backcolor", "rgb(100,0,0)" );
 		//liqcell_propsets(  self,    "backcolor", "rgb(100,0,0)" );
 		//liqcell_propsets(  self,    "bordercolor", "rgb(0,255,0)" );
 
