@@ -297,9 +297,13 @@ int liqcanvas_init(int pixelwidth,int pixelheight,int fullscreen)
 		// opened
 	
 	int firstrun=1;
+	
+	
+	//liqapp_log("canvas test liq: '%s' %i %i", liqapp_hardware_product_get()   ,  strcasecmp("RX-51", liqapp_hardware_product_get() ) , strcasecmp("RX-51", "hello RX-51 bye")   );
 
 
 	if( strcasecmp("RX-51", liqapp_hardware_product_get() ) ==0 ) firstrun=0;
+	if( strcasecmp(" ", liqapp_hardware_product_get() ) ==0 )     firstrun=0;
 
 	if(firstrun)
 	{
