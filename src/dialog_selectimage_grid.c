@@ -552,8 +552,8 @@ liqcell *dialog_selectimage_grid_create()
 			liqcell_scan_folder_for_images(self,buf);
 			
 			
-										snprintf(buf,sizeof(buf),"%s",app.homepath);
-			liqcell_scan_folder_for_images(self,buf);
+		//								snprintf(buf,sizeof(buf),"%s",app.homepath);
+		//	liqcell_scan_folder_for_images(self,buf);
 				
 
 	
