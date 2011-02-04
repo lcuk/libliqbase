@@ -23,6 +23,9 @@
 
 
 
+
+
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
@@ -33,7 +36,56 @@
 #include <stdarg.h>
 
 #include "liqapp.h"
+#include "liqapp_prefs.h"
 #include "liqfont.h"
+
+//###############################################################
+//###############################################################
+//###############################################################
+//###############################################################
+#include "liqsketchfont.h"
+
+liqsketchfont *liqsketchfont_me = NULL;
+
+
+void liqsketchfont_me_prepare()
+{
+	if(liqsketchfont_me)return;
+
+
+//	int liqcell_showsketchfont =        1 == atoi(liqapp_pref_getvalue_def("showsketchfont","1"));
+//	if(!liqcell_showsketchfont) return;
+	
+	liqsketchfont_me = liqsketchfont_new();
+	liqsketchfont_configure(liqsketchfont_me,canvas.dpix,canvas.dpiy);
+	
+
+if(liqapp_fileexists("/home/user/.liqbase/generalfont.liqsketchfont"))
+	liqsketchfont_fileload(liqsketchfont_me,"/home/user/.liqbase/generalfont.liqsketchfont");
+else
+	liqsketchfont_fileload(liqsketchfont_me,"/usr/share/liqbase/liqbook/media/liquid@gmail.com.liqsketchfont");
+	
+	return;
+}
+liqsketch * liqsketchfont_me_getglyph(int glyphindex)
+{
+	liqsketchfont_me_prepare();
+	if(!liqsketchfont_me)return NULL;
+	liqsketch *s = liqsketchfont_me->glyphs[glyphindex];
+	if(s)
+	{
+		
+		liqapp_log("liqsketchfont found glyph! %d wh(%d,%d), swh(%d,%d)",glyphindex, liqsketchfont_me->glyphwidths[glyphindex],liqsketchfont_me->maxh, s->pixelwidth,s->pixelheight );
+		return liqsketchfont_me->glyphs[glyphindex];
+	}
+	return NULL;
+
+}
+//###############################################################
+//###############################################################
+//###############################################################
+//###############################################################
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -84,6 +136,7 @@ liqfontglyph * liqfontglyph_alloc(int glyphindex,int width,int height)
 		g->glyphdata = buf;
 		g->glyphw = width;
 		g->glyphh = height;
+		g->sketchlink = NULL;
 	}
 	return g;
 }
@@ -357,6 +410,26 @@ liqfontglyph    *g=NULL;
 		return g;
 	}
 	// no g yet, so load and allocate it :)
+	
+	//
+	liqsketch * sketchlink = liqsketchfont_me_getglyph(glyphindex);
+	if(sketchlink)
+	{
+		int sw = sketchlink->pixelwidth;
+		int sh = sketchlink->pixelheight;
+		if(sw<60)sw=sw + (60-sw)/2;	// half way to 50 from where we are
+		
+		int fw = sw * self->pixelheight / sh;
+		int fh = self->pixelheight;
+
+		liqapp_log("sketchfont ahoy! %d fwh(%d,%d)  swh(%d,%d)",glyphindex, fw,fh,  sw,sh);
+
+		g = liqfontglyph_alloc(glyphindex,fw,fh);
+		if(!g)return NULL;
+		g->sketchlink=liqsketch_hold(sketchlink);
+		self->glyphbuffer[glyphindex] = g;
+		return g;
+	}
 
 
 FT_Error    fterr;

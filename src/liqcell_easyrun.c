@@ -1271,7 +1271,7 @@ waitevent:
 				// get hold of actual coordinates...
 				int mx=ev.mouse.x;
 				int my=ev.mouse.y;
-				liqapp_log("event mouse scrn (%i,%i)",mx,my);
+			//	liqapp_log("event mouse scrn (%i,%i)",mx,my);
 			
 				mx -= fadeatx;	// let this have its position adjusted
 				my -= fadeaty;
@@ -1282,7 +1282,7 @@ waitevent:
 				wy=0;
 
 				vgraph_convert_target2window(graph ,mx,my,  &wx,&wy);
-				liqapp_log("mouse scrn (%i,%i)   cell (%i,%i)",mx,my,  wx,wy);
+			//	liqapp_log("mouse scrn (%i,%i)   cell (%i,%i)",mx,my,  wx,wy);
 				
 
 				hotx=0;

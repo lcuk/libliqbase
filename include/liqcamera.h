@@ -44,6 +44,7 @@ liqimage * liqcamera_getimage(); // return the current image of this camera, if 
 int liqcamera_settorch(int newvalue);
 int liqcamera_setfocus(int newvalue);
 
+
 #ifdef __cplusplus
 }
 #endif

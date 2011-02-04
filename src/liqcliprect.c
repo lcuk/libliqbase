@@ -602,9 +602,17 @@ void liqcliprect_drawglyph_grey(liqcliprect *self,liqfont *font,int x,int y,unsi
 {
 liqfontglyph *g = liqfont_getglyph(font,glyph);
 	if(!g)return;
+	
 	//if(font->glyphdata[glyph]==NULL) return;
 	int gw  =g->glyphw; // font->glyphwidths[glyph];
 	int gh  =g->glyphh; // font->glyphheights[glyph];
+
+	if(g->sketchlink){	//liqapp_log("glyph ahoy: %d,  wh(%d,%d),   swh(%d,%d)",glyph,gw,gh, g->sketchlink->pixelwidth,g->sketchlink->pixelheight);
+	
+						liqcliprect_drawsketch(self,g->sketchlink, x,y,gw,gh,2); return;  }
+
+
+	//liqapp_log("nnnnn ahoy: %d,  wh(%d,%d)",glyph,gw,gh);
 
 	int gtw = gw;
 	int sw  = self->surface->width;
@@ -746,6 +754,8 @@ liqfontglyph *g = liqfont_getglyph(font,glyph);
 	//if(font->glyphdata[glyph]==NULL) return;
 	int gw  =g->glyphw; // font->glyphwidths[glyph];
 	int gh  =g->glyphh; // font->glyphheights[glyph];
+	
+//	if(g->sketchlink){  liqcliprect_drawsketch(self,g->sketchlink, x,y,gw,gh,0); return;  }
 
 
 	int gtw = gw;
@@ -1115,7 +1125,7 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 	
 	
 	
-	rpt=1;
+	rpt=0;
 
 	switch(page->backgroundstyle)
 	{

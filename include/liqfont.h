@@ -29,6 +29,8 @@
 extern "C" {
 #endif
 
+#include "liqsketch.h"
+
 typedef struct 
 {
 	//int 			refcount;
@@ -37,6 +39,7 @@ typedef struct
 	int				glyphh;
 	int				glyphbaseline;		//
 	char           *glyphdata;			// allocate any used
+	liqsketch      *sketchlink;
 } liqfontglyph;
 
 liqfontglyph * liqfontglyph_alloc(int glyphindex,int width,int height);
