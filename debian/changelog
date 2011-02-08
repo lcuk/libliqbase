@@ -1,3 +1,9 @@
+libliqbase (0.3.66) unstable; urgency=low
+
+  * at fosdem, cured autobuilder bug.
+  
+ -- Gary Birkett <liquid@gmail.com>  Sat, 5 Feb 2011 00:09:10 +0000
+ 
 libliqbase (0.3.65) unstable; urgency=low
 
   * revived branch for using sketches as fonts, prototype only at this time.

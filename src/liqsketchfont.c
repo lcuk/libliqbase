@@ -39,8 +39,8 @@
 #include <ctype.h>
 
 
-#include <liqbase/liqbase.h>
-#include <liqbase/filebuf.h>
+#include "liqbase.h"
+#include "filebuf.h"
 #include "liqdoc.h"
 
 
