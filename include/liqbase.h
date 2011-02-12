@@ -30,6 +30,7 @@
 #include "liqcanvas.h"
 #include "liqimage.h"
 #include "liqfont.h"
+#include "liqsketchfont.h"
 #include "liqsketch.h"
 #include "liqsketchpagefilename.h"
 #include "liqcliprect.h"

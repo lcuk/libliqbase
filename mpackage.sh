@@ -6,8 +6,8 @@
 chmod +x debian/rules
 dpkg-buildpackage -rfakeroot -i -I.git
 # for updating from scratchbox to my personal device
-scp ../libliqbase1_0.3.66_armel.deb root@10.0.0.8:/root
-ssh root@10.0.0.8 "dpkg -i libliqbase1_0.3.66_armel.deb"
+scp ../libliqbase1_0.3.67_armel.deb root@10.0.0.8:/root
+ssh root@10.0.0.8 "dpkg -i libliqbase1_0.3.67_armel.deb"
 
 
 

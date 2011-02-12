@@ -1,3 +1,9 @@
+libliqbase (0.3.67) unstable; urgency=low
+
+  * more sketchfont testing.
+  
+ -- Gary Birkett <liquid@gmail.com>  Sat, 12 Feb 2011 00:09:10 +0000
+
 libliqbase (0.3.66) unstable; urgency=low
 
   * at fosdem, cured autobuilder bug.

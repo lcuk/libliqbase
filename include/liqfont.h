@@ -32,7 +32,7 @@ extern "C" {
 #endif
 
 
-struct liqsketchfont;
+typedef struct liqsketchfont liqsketchfont;
 
 typedef struct 
 {
