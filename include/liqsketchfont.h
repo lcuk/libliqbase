@@ -1,4 +1,7 @@
 
+
+
+
 #ifndef LIQSKETCHFONT_H
 #define LIQSKETCHFONT_H
 
@@ -6,11 +9,11 @@
 extern "C" {
 #endif
 
-
 #include "liqapp.h"
 #include "liqcanvas.h"
 #include "liqcliprect.h"
 #include "liqsketch.h"
+
 
 
 
@@ -38,7 +41,8 @@ typedef struct liqsketchfont
 }
 	liqsketchfont;
 	
-	
+
+liqsketchfont * liqsketchfont_cache_find(const char *ident);
 	
 
 int liqsketchfont_configure(liqsketchfont *self,int dpix,int dpiy);

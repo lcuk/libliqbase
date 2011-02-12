@@ -46,6 +46,102 @@
 
 #include "liqsketchfont.h"
 
+
+static struct
+{
+	char *key;
+	liqsketchfont *data;	
+}
+			cachestack[64];
+static int  cachemax=64-1;
+static int  cacheused=0;
+
+
+liqsketchfont * liqsketchfont_cache_find(const char *ident)
+{
+	//
+	liqsketchfont *self=NULL;
+	char cachekey[256];
+	int f;
+
+
+	snprintf(cachekey,256,"%s",ident);
+	liqapp_log( "sketchfont cache seeking %s", cachekey );
+	if(cacheused>=cachemax)
+	{
+			// all font slots actively in use
+			// error in app or just very varied
+	        liqapp_log( "sketchfont cache full %s", cachekey );
+			return NULL;
+	}
+	//for(f=0;f<cacheused;f++)
+	for(f=cacheused-1;f>=0;f--)
+	{
+		if(strcmp(cachestack[f].key,cachekey)==0)
+		{
+			// no differences..
+			liqapp_log( "sketchfont cache matched %s %i", cachekey ,cachestack[f].data->usagecount);
+			self = cachestack[f].data;
+			//self->usagecount++;
+			liqsketchfont_hold(self);
+			return self;
+		}
+		// whilst I am searching, perhaps I should be moving 0 rated items to the bottom of the stack
+	}
+		//liqapp_log("not found %s", cachekey );
+	// not yet in the cache
+	liqapp_log( "sketchfont cache creating %s", cachekey );
+
+
+
+	char filename[128];
+	snprintf(filename,128,"/usr/share/liqbase/liqbook/media/%s.liqsketchfont",ident);
+
+	if( ! liqapp_fileexists(filename))
+	{
+		
+		if(liqapp_fileexists("/home/user/.liqbase/generalfont.liqsketchfont"))
+			snprintf(filename,128,"/home/user/.liqbase/generalfont.liqsketchfont");
+		else
+			snprintf(filename,128,"/usr/share/liqbase/liqbook/media/liquid@gmail.com.liqsketchfont");
+
+	}
+	if( ! liqapp_fileexists(filename))
+	{
+		// no assoc font
+        liqapp_log( "sketchfont cache couldn't find %s", cachekey );
+		return NULL;
+	}
+	
+	
+	self = liqsketchfont_new();
+	if(!self)
+	{
+        liqapp_log( "sketchfont cache couldn't create %s", cachekey );
+		return NULL;		
+	}
+	liqsketchfont_configure(self,canvas.dpix,canvas.dpiy);
+	liqsketchfont_fileload(self,filename);
+
+	// simply add our own lock onto this sketchfont handle :)
+	
+	liqsketchfont_hold(self);
+	
+	//self->usagecount=1;
+
+	liqapp_log( "sketchfont cache inserting %s", cachekey );
+
+	f=cacheused;
+	cachestack[f].key  = strdup(cachekey);
+	cachestack[f].data = self;
+	cacheused++;
+	liqapp_log( "sketchfont cache completed %s", cachekey );
+	return self;
+}
+
+
+
+
 //#######################################################################
 //#######################################################################
 //#######################################################################
@@ -106,6 +202,26 @@ int liqsketchfont_filesave(liqsketchfont *self,char *filename)
 											fprintf(fd,"dpi:%i,%i\n",self->dpix,self->dpiy);
 	
 	int idx;
+	int miny=9999;
+	for(idx=0;idx<256;idx++)
+	{
+		if(self->glyphs[idx])
+		{
+			liqsketch *pg=self->glyphs[idx];
+			liqstroke *s = pg->strokefirst;
+			while(s)
+			{
+				liqpoint *p=s->pointfirst;
+				while(p)
+				{
+					if(p->y<miny)miny=p->y;
+					p=p->linknext;
+				}
+				s=s->linknext;
+			}
+		}
+	}
+
 	for(idx=0;idx<256;idx++)
 	{
 		if(self->glyphs[idx])
@@ -125,7 +241,7 @@ int liqsketchfont_filesave(liqsketchfont *self,char *filename)
 				while(p)
 				{
 					//
-											fprintf(fd,"   pt:%i,%i,%i\n",p->x,p->y,p->z);
+											fprintf(fd,"   pt:%i,%i,%i\n",p->x,p->y-miny,p->z);
 					p=p->linknext;
 				}
 				s=s->linknext;

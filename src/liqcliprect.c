@@ -755,7 +755,9 @@ liqfontglyph *g = liqfont_getglyph(font,glyph);
 	int gw  =g->glyphw; // font->glyphwidths[glyph];
 	int gh  =g->glyphh; // font->glyphheights[glyph];
 	
-//	if(g->sketchlink){  liqcliprect_drawsketch(self,g->sketchlink, x,y,gw,gh,0); return;  }
+	if(g->sketchlink){	//liqapp_log("glyph ahoy: %d,  wh(%d,%d),   swh(%d,%d)",glyph,gw,gh, g->sketchlink->pixelwidth,g->sketchlink->pixelheight);
+	
+						liqcliprect_drawsketch(self,g->sketchlink, x,y,gw,gh,2); return;  }
 
 
 	int gtw = gw;

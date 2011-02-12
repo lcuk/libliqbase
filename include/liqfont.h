@@ -21,6 +21,8 @@
  *
  */
 
+#include "liqsketch.h"
+#include "liqsketchfont.h"
 
 #ifndef liqfont_H
 #define liqfont_H
@@ -29,7 +31,8 @@
 extern "C" {
 #endif
 
-#include "liqsketch.h"
+
+struct liqsketchfont;
 
 typedef struct 
 {
@@ -96,6 +99,7 @@ struct liqfont
 	liqfontview *   viewcache[32];		// each available rendered view
 	int             viewcacheused;
 	liqfontview *   viewcachecurrent;	// current actual set in stone view of this font :)	
+	liqsketchfont * sketchfont;			// sketch font related to this item
 };
 
 // use the cache functions for speed :)

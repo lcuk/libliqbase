@@ -45,6 +45,9 @@
 //###############################################################
 #include "liqsketchfont.h"
 
+
+
+/*
 liqsketchfont *liqsketchfont_me = NULL;
 
 
@@ -81,6 +84,8 @@ liqsketch * liqsketchfont_me_getglyph(int glyphindex)
 	return NULL;
 
 }
+
+ */
 //###############################################################
 //###############################################################
 //###############################################################
@@ -287,6 +292,24 @@ liqfontview * liqfontview_newfromscale(liqfont *font,float scalew,float scaleh)
 
 
 
+	liqsketch * sketchlink = NULL;
+	if(self->font->sketchfont)
+	{
+		liqsketchfont *sketchfont = self->font->sketchfont;
+
+		
+		self->pixelheight = self->font->size * scaleh * 1.2;
+
+		return self;
+	}
+
+
+
+
+
+
+
+
 
 
 
@@ -307,9 +330,11 @@ FT_Error    fterr;
 	
 
 	//liqapp_log("TTF Font opening face %s, %i:",name,size);
+	char *fn = self->font->filename;
 	
+	if(!liqapp_fileexists(fn)) fn="/usr/share/fonts/nokia/nosnb.ttf";
 
-    fterr = FT_New_Face( ftlib, self->font->filename, 0, (FT_Face*)&self->ftface );
+    fterr = FT_New_Face( ftlib, fn, 0, (FT_Face*)&self->ftface );
 
     if ( fterr == FT_Err_Cannot_Open_Stream )
 	{
@@ -412,23 +437,42 @@ liqfontglyph    *g=NULL;
 	// no g yet, so load and allocate it :)
 	
 	//
-	liqsketch * sketchlink = liqsketchfont_me_getglyph(glyphindex);
-	if(sketchlink)
+	//liqsketch * sketchlink = liqsketchfont_me_getglyph(glyphindex);
+	
+	
+	liqsketch * sketchlink = NULL;
+	if(self->font->sketchfont)
 	{
-		int sw = sketchlink->pixelwidth;
-		int sh = sketchlink->pixelheight;
-		if(sw<60)sw=sw + (60-sw)/2;	// half way to 50 from where we are
-		
-		int fw = sw * self->pixelheight / sh;
-		int fh = self->pixelheight;
-
-		liqapp_log("sketchfont ahoy! %d fwh(%d,%d)  swh(%d,%d)",glyphindex, fw,fh,  sw,sh);
-
-		g = liqfontglyph_alloc(glyphindex,fw,fh);
-		if(!g)return NULL;
-		g->sketchlink=liqsketch_hold(sketchlink);
-		self->glyphbuffer[glyphindex] = g;
-		return g;
+		liqsketchfont *sketchfont = self->font->sketchfont;
+		sketchlink = sketchfont->glyphs[glyphindex];
+		//if(!sketchlink) return NULL;
+	
+	
+		if(sketchlink)
+		{
+			int sw = sketchlink->pixelwidth;
+			int sh = sketchlink->pixelheight;
+			if(sw<60)sw=sw + (60-sw)/2;	// half way to 50 from where we are
+			
+			int fw = sw * self->pixelheight / sh;
+			int fh = self->pixelheight;
+	
+		//	liqapp_log("sketchfont ahoy! %d fwh(%d,%d)  swh(%d,%d)",glyphindex, fw,fh,  sw,sh);
+	
+			g = liqfontglyph_alloc(glyphindex,fw,fh);
+			if(!g)return NULL;
+			g->sketchlink=liqsketch_hold(sketchlink);
+			self->glyphbuffer[glyphindex] = g;
+			return g;
+		}
+		else
+		{
+			g = liqfontglyph_alloc(glyphindex,sketchfont->avgw * self->pixelheight / sketchfont->maxh ,self->pixelheight);
+			if(!g)return NULL;
+			g->sketchlink=liqsketch_hold(sketchlink);
+			self->glyphbuffer[glyphindex] = g;
+			return g;
+		}
 	}
 
 

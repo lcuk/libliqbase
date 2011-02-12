@@ -32,8 +32,11 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "liqapp.h"
 #include "liqfont.h"
+#include "liqbase.h"
+#include "liqapp.h"
+
+#include "liqsketchfont.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -117,11 +120,10 @@ liqfont *liqfont_cache_getttf(const char *name,int size,int rotation)
 	liqfont *self=NULL;
 	char cachekey[256];
 	int f;
-	if(!liqapp_fileexists(name))
-	{
-		name =  "/usr/share/fonts/truetype/freefont/FreeSans.ttf";
-	}
-
+//	if(!liqapp_fileexists(name))
+//	{
+//		name =  "/usr/share/fonts/truetype/freefont/FreeSans.ttf";
+//	}
 
 	snprintf(cachekey,256,"FONT:%s,%i,%i",name,size,rotation);
 	//liqapp_log( "TTF cache seeking %s", cachekey );
@@ -336,6 +338,7 @@ void liqfont_release(liqfont *self)
 	if(!self) return;
 	self->usagecount--;
 	if(!self->usagecount) liqfont_free(self);
+	
 }
 
 
@@ -379,6 +382,8 @@ void liqfont_close(liqfont *self)
 			liqfontview_release(v);
 		}
 	}
+	if(self->sketchfont){  liqsketchfont_release(self->sketchfont); self->sketchfont=NULL; }
+	
 }
 
 liqfont * liqfont_newfromfilettf(const char *name,int size,int rotation)
@@ -402,6 +407,8 @@ liqfont * liqfont_newfromfilettf(const char *name,int size,int rotation)
 	self->size = size;
 	self->rotation = rotation;
 	memset((char *)self->viewcache,0,sizeof(self->viewcache));
+	
+	self->sketchfont = liqsketchfont_cache_find(name);
 	self->viewcacheused=0;
 	self->viewcachecurrent=NULL;
 	liqfont_setview(self,1,1);	

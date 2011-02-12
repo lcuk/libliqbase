@@ -4,6 +4,8 @@
 
 #include "liqbase.h"
 #include "liqsketch.h"
+#include "liqfont.h"
+
 //#include "liqcell_easyrun.h"
 //#include "liqcell_prop.h"
 
