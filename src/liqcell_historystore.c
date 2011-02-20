@@ -76,9 +76,44 @@ int liqcell_historystore_historythumb(liqcell *self)
 
 	if(liqapp_fileexists(buf))
 	{
-		// ok, there is a file already existing, no point in regenerting right now
-		// tho in future it would be better storing a live  thumb, its just a bit worrysome with my drive
-		return 0;
+		// ok, there is a file already existing, no point in regenerating right now
+		// tho' in future it would be better storing a live thumb, its just a bit worrysome with my drive
+		// compromise: going to store new file if its been ~1 minute. :)
+		char   filedatestamp[64];
+		char   nowdatestamp[64];
+
+		//##################################################### get the file datestamp
+		{
+			struct stat     statbuf;
+			if(stat(buf, &statbuf) == -1)
+			{
+				liqapp_log("liqcell_historystore_historythumb stat failed: '%s'",buf);
+				return -1;
+			}
+				
+			struct tm     *pictm;
+			pictm = localtime(&statbuf.st_mtime);
+		
+			strftime(filedatestamp,sizeof(filedatestamp), "%Y%m%d_%H%M",pictm);
+		}
+		//##################################################### get the system datestamp
+		{
+			time_t     now;
+			struct tm  *ts;
+		
+			time(&now);
+			ts = localtime(&now);
+			strftime(nowdatestamp, sizeof(nowdatestamp), "%Y%m%d_%H%M", ts);
+		}
+		
+		liqapp_log("liqcell_historystore_historythumb test: %s : %s (%d) '%s'",filedatestamp,nowdatestamp,strcmp(filedatestamp,nowdatestamp),buf    );
+		
+		//##################################################### compare
+		if( strcmp(filedatestamp,nowdatestamp)==0 )
+		{
+			return 0;
+		}
+
 	}
     
     liqcell_hold(self);

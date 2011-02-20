@@ -2065,6 +2065,18 @@ moar:
                 
 			}
 
+
+		// find out if orientation flipped.
+		if(liqcell_handlerfind(self,"layout"))
+		{
+			if( canvas.pixelwidth != liqcell_getw(self) )
+			{
+				// something changed, a glitch in the matrix.
+				liqcell_handlerrun(self,"layout",NULL);		
+			}
+		}
+
+
 #ifdef LIQBASE_WALLMOUNT
 
 			if(infoback && infoclose &&     (liqcell_easyrun_hide_back==0)    )

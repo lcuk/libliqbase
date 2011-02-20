@@ -609,6 +609,16 @@ liqfontglyph *g = liqfont_getglyph(font,glyph);
 
 	if(g->sketchlink){	//liqapp_log("glyph ahoy: %d,  wh(%d,%d),   swh(%d,%d)",glyph,gw,gh, g->sketchlink->pixelwidth,g->sketchlink->pixelheight);
 	
+						{
+							liqstroke *s=g->sketchlink->strokefirst;
+							while(s)
+							{
+								s->pen_y=255;
+								s->pen_u=128;
+								s->pen_v=128;
+								s=s->linknext;
+							}
+						}
 						liqcliprect_drawsketch(self,g->sketchlink, x,y,gw,gh,2); return;  }
 
 
@@ -756,7 +766,16 @@ liqfontglyph *g = liqfont_getglyph(font,glyph);
 	int gh  =g->glyphh; // font->glyphheights[glyph];
 	
 	if(g->sketchlink){	//liqapp_log("glyph ahoy: %d,  wh(%d,%d),   swh(%d,%d)",glyph,gw,gh, g->sketchlink->pixelwidth,g->sketchlink->pixelheight);
-	
+						{
+							liqstroke *s=g->sketchlink->strokefirst;
+							while(s)
+							{
+								s->pen_y=grey;
+								s->pen_u=u;
+								s->pen_v=v;
+								s=s->linknext;
+							}
+						}	
 						liqcliprect_drawsketch(self,g->sketchlink, x,y,gw,gh,2); return;  }
 
 

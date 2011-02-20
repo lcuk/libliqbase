@@ -160,7 +160,7 @@ liqimage *liqimage_cache_getfile(const char *filename,int maxw,int maxh,int allo
 	char cachekey[256];
 	int f;
 	snprintf(cachekey,256,"image:%s,%i,%i,%i",filename,maxw,maxh,allowalpha);
-	//liqapp_log( "image cache seeking %s", cachekey );
+	liqapp_log( "image cache seeking %s", cachekey );
 	if(cacheused>=cachemax)
 	{
 		//liqapp_log( "image cache cleaning %s", cachekey );
@@ -179,7 +179,7 @@ liqimage *liqimage_cache_getfile(const char *filename,int maxw,int maxh,int allo
 		if(strcmp(cachestack[f].key,cachekey)==0)
 		{
 			// no differences..
-			//liqapp_log( "image cache matched %s %i", cachekey ,cachestack[f].data->usagecount);
+			liqapp_log( "image cache matched %s %i", cachekey ,cachestack[f].data->usagecount);
 			self = cachestack[f].data;
 			//self->usagecount++;
 			liqimage_hold(self);
@@ -214,7 +214,7 @@ liqimage *liqimage_cache_getfile(const char *filename,int maxw,int maxh,int allo
 	
 	//self->usagecount=1;
 
-	//liqapp_log( "TTF cache inserting %s", cachekey );
+	liqapp_log( "image cache inserting %s", cachekey );
 	
 	
 	// todo:  fix the bug here when threaded loading occuring
@@ -229,7 +229,7 @@ liqimage *liqimage_cache_getfile(const char *filename,int maxw,int maxh,int allo
 	
 	pthread_mutex_unlock(&cachestack_lock);
 
-	////liqapp_log( "TTF cache completed %s", cachekey );
+	liqapp_log( "image cache completed %s", cachekey );
 	return self;
 }
 

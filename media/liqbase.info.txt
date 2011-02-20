@@ -1,0 +1,116 @@
+Liqbase Info.
+
+Liqbase changes everything.  It's a ground up rethink of how Touch UIs should work.
+
+It is faster than paper.
+
+I like to draw and sketch things which make me smile.
+I try to build things in Liqbase to bring those sketches to life.
+It is a playground for all my ideas.
+
+##### Motivation
+
+Ever since I was a boy, I have been fascinated with touch screens, from using a light pen on the ZX Spectrum through my Amiga and onwards into Windows until finally diving into Maemo Linux and implementing and coalescing the ideas within what became Liqbase.
+I wanted design to account for touching.
+I have written and drawn my ideas of in-numerous notepads and wished all along to bring them to life and touch them.
+There are hundreds of similar simpler projects written in every language I ever learn to program inside of!
+
+Combined with a dedication and desire to optimize and make the best of things to hand Liqbase ends up behaving like the computer I always dreamt of.
+It is quick, simple and personal.
+
+##### Licensing
+
+Liqbase Playground and my applications are licensed under version 2 of the GPL.
+The Liqbase library is currently licensed as GPL v2, whilst under discussion to be re-licensed as LGPL v2.
+These are Open Source licenses which encourage participation and teamwork.
+
+##### I vs We
+
+I can do some things, but we can do so much more.
+
+##### Contributors
+
+List of contributors who have assisted with this Open Source Liqbase implementation.
+
+These people have offered input in numerous areas of Liqbase.
+Usually in the form of advice and discussions then I plough in and try to code it.
+My code is poor and I do not have enough fingers, therefore implementations are usually streamlined and bare bones.
+These are mainly linked to discussions about implementation specifics on topics I know nothing about.
+
+Kot         c low levelness, Linux tutoring, x86 consideration
+Seb         tag cloud
+Zack        textbox bugfixes, mon
+W00t        c++guard, fixes and cleanup
+Qwerty      install and hildon
+Simon       gst cam,detection talks
+Stskeeps    late night chats, irc
+Lbt         git help, advice
+Sampo       dedication and strength
+Johnx       late night chats
+Daniels     xvideo mode which liqbase uses
+Jaffa       bright buttons prototype
+Spyro       mic, optimising buddy
+Kath        sheep, confidence
+Tammy       supercoder :)
+Rm_you      brightness, advice
+Jott        advice, rotated thinking
+Kees        debian package advice
+Jeremiah    debian package advice
+Qole        cheerleader
+X-fade      builder help
+Andre       bugzilla help
+Texrat      grassroots community strength
+Wazd        art critique!
+Robot101    url link history, team building
+Adele       UX advice, cats
+Sanna       UX and trying hard :)
+Timeless    its vs it's and language and mxr
+Vlad        live bg support for liqflow!
+Ciroip      clock
+Alban       alban art
+Ryan        web layout
+Javispedro  packaging and many idle chats
+Timsamoff   chats and meegon
+Jussi       driving to hospital
+Quim        devices and conf
+Danielw     running mate
+Timoph      importance of testing
+Frals       mms, walking through a non trivial app with me :)
+Valario     chats
+vgrade      doc formatting
+AlterEgo    qml/widget considerations
+Dawn        devices and conf
+Amy         devices and conf
+Digia       rocket icon and layouts
+Forum Nokia UX advice
+WK          OneDotZero linkup!
+OneDotZero  OneDotZero of course!
+Karsten     OneDotZero
+Tracy       lover, mother of kids etc, helps me with clear English
+Luke        tester #1 style
+Jacob       tester #2 tictactoe
+Richard     many things, his bowl polishing story
+Craig       movember motivator
+Leigh       music sheets are for guidance only
+Barry       ed, fractint, the stone soup group, beard advice :)
+
+
+As well as a load of other people from Maemo and MeeGo. :)
+I have spoken with literally hundreds of people and discussed how things could be achieved.
+If I have omitted your name from this list, please get in contact.
+
+Different widgets in Liqbase have been inspired based on drawing a sketch whilst talking to someone.
+For instance, the clock widget was first drawn when talking with ciroip.
+This clock still retains his name to this day even though he has never actively touched Liqbase code.
+
+##### Core ideas
+
+Whilst there have been many contributors to different parts of Liqbase, the driving force behind it has been my love for sketching and fluid motion.
+The cell and sketches have been implemented by myself in numerous languages.
+It is like birdsong to me; when I think of code, I know those sorts of items will not be far behind.
+
+Gary Birkett,
+Smile Architect.
+
+
+

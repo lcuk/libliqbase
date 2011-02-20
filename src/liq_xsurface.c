@@ -615,6 +615,21 @@ void xsurface_drawimage_color(liqimage *surface,liqimage *image,int x,int y)
 //####################################################################################### ScaleLine variations Std
 //#######################################################################################
 
+// testing InstaBlur to see how it effects rendering if it is inlined
+// make it fast for normal, make it a general option.
+#define InstaBlurInternal(NumPixels,s,Source)\
+		if(NumPixels>1)\
+		{\
+			unsigned char b4[4]={0,0,0,0};\
+			long *bp = (long *)b4;\
+			long *sp = (long *)(Source-2);\
+			*bp = *sp;\
+			s = ( ((int)b4[0]) + ((int)b4[1]) + ((int)b4[2]) + ((int)b4[3]) ) / 4;\
+		}\
+		
+
+#define InstaBlur(NumPixels,s,Source)\
+			// InstaBlurInternal(NumPixels,s,Source)
 
 void ScaleLine_grey_slow(unsigned char *Target, unsigned char *Source, int SrcWidth, int TgtWidth,int TgtDrawStartOffset, int TgtDrawPixelCount)
 {
@@ -626,7 +641,12 @@ void ScaleLine_grey_slow(unsigned char *Target, unsigned char *Source, int SrcWi
   {
     if(NumPixels>=TgtDrawStartOffset)
 	{
-		*Target++ = *Source;
+		int s=*Source;
+		InstaBlur(NumPixels,s,Source)
+		*Target++ = s;
+		
+		
+		//*Target++ = *Source;
 	}
 	else
 	{
@@ -662,31 +682,12 @@ void ScaleLine_grey(unsigned char *Target, unsigned char *Source, int SrcWidth, 
   {
     if(NumPixels>=TgtDrawStartOffset)
 	{
-		*Target++ = *Source;
-	/*	switch(tbufused)
-		{
-			case 0:
-				tbuf=(unsigned int)*Source;
-				tbufused++;
-				break;
-			case 1:
-				tbuf=(tbuf<<8) | *Source;
-				tbufused++;
-				break;
-			case 2:
-				tbuf=(tbuf<<8) | *Source;
-				tbufused++;
-				break;
-			case 3:
-
-				tbuf=(tbuf<<8) | *Source;
-
-				*(unsigned int*)Target = tbuf;
-				Target+=4;
-				tbufused=0;
-				break;
-		}*/
-
+		int s=*Source;
+		InstaBlur(NumPixels,s,Source)
+		*Target++ = s;
+		
+		
+		//*Target++ = *Source;
 	}
 	else
 	{
@@ -701,26 +702,6 @@ void ScaleLine_grey(unsigned char *Target, unsigned char *Source, int SrcWidth, 
       Source++;
     }
   }
-	/*	switch(tbufused)
-		{
-			case 0:
-				// nothing to do
-				break;
-			case 1:
-				*Target++ = tbuf;
-				break;
-			case 2:
-				*(unsigned short*)Target = (unsigned short)tbuf;
-				Target+=2;
-				break;
-			case 3:
-				*Target++ = (tbuf>>16);
-
-				*(unsigned short*)Target = (unsigned short)tbuf;
-				Target+=2;
-				break;
-
-		}*/
 }
 
 
@@ -737,30 +718,13 @@ void ScaleLine_uv(unsigned char *Target,unsigned  char *Source, int SrcWidth, in
   {
     if(NumPixels>=TgtDrawStartOffset)
 	{
-		*Target++ = *Source;
-		/*switch(tbufused)
-		{
-			case 0:
-				tbuf=(unsigned int)*Source;
-				tbufused++;
-				break;
-			case 1:
-				tbuf=(tbuf<<8) | *Source;
-				tbufused++;
-				break;
-			case 2:
-				tbuf=(tbuf<<8) | *Source;
-				tbufused++;
-				break;
-			case 3:
 
-				tbuf=(tbuf<<8) | *Source;
-
-				*(unsigned int*)Target = tbuf;
-				Target+=4;
-				tbufused=0;
-				break;
-		}*/
+		int s=*Source;
+		InstaBlur(NumPixels,s,Source)
+		*Target++ = s;
+		
+		
+		//*Target++ = *Source;
 	}
 	else
 	{
@@ -775,26 +739,6 @@ void ScaleLine_uv(unsigned char *Target,unsigned  char *Source, int SrcWidth, in
       Source++;
     }
   }
-	/*	switch(tbufused)
-		{
-			case 0:
-				// nothing to do
-				break;
-			case 1:
-				*Target++ = tbuf;
-				break;
-			case 2:
-				*(unsigned short*)Target = (unsigned short)tbuf;
-				Target+=2;
-				break;
-			case 3:
-				*Target++ = (tbuf>>16);
-
-				*(unsigned short*)Target = (unsigned short)tbuf;
-				Target+=2;
-				break;
-
-		}*/
 }
 
 //#######################################################################################
@@ -817,6 +761,8 @@ void ScaleLine_alphablend_grey(unsigned char *Target, unsigned char *Source, int
 		int s=*Source;
 		int t=*Target;
 		int a=*Src_alphachannelfullres;
+		
+		InstaBlur(NumPixels,s,Source)
 		//*Target++ = t+((s-t)*a)/256;
 		*Target++ = t+(((s-t)*blend*a)  >>16);// /65536;
 	}
@@ -854,9 +800,12 @@ void ScaleLine_alphablend_uv(unsigned char *Target, unsigned char *Source, int S
 		// alpha blending from an actual alpha channel
 		int s=*Source;
 		int t=*Target;
+
+		int a=*Src_alphachanneldoubleres;
+
+		InstaBlur(NumPixels,s,Source)
 		if(!s)s=128;
 		if(!t)t=128;
-		int a=*Src_alphachanneldoubleres;
 		//*Target++ = t+((s-t)*a)/256;
 		int r=  t+( ((s-t)*blend*a)  >>16) ;//  /65536;
 		if(!r)r=1;
@@ -904,6 +853,9 @@ void ScaleLine_blend_grey(unsigned char *Target, unsigned char *Source, int SrcW
 		// simple blending
 		int s=*Source;
 		int t=*Target;
+
+		InstaBlur(NumPixels,s,Source)
+
 		*Target++ = (t+((s-t)*blend)/256);
 
 		// blend blending from an actual blend channel
@@ -943,6 +895,8 @@ void ScaleLine_blend_uv(unsigned char *Target, unsigned char *Source, int SrcWid
 		// do some blend blending :)
 		int s=*Source;
 		int t=*Target;
+
+		InstaBlur(NumPixels,s,Source)
 		if(!s)s=128;
 		if(!t)t=128;
 

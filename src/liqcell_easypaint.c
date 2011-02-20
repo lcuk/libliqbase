@@ -43,7 +43,7 @@ extern "C" {
 
 int liqcell_showdebugboxes=0;
 int liqcell_showfps=0;
-
+int liqcell_liqfloat_drunkenmode=0;
 
 
 liqimage *easypaint_isloading_image = NULL;
@@ -1011,10 +1011,17 @@ __tz_one("imageprep");
 
 		
 		char *fstr=liqcell_propgets(self,"imagefloat",NULL);
+		// LOL! drunken mode
+		// really, doing this makes the UI totally amazingly swimmingly dizzyfying it's unreal
+		// do not enable this unless at student partys or workmates desks
+		if(liqcell_liqfloat_drunkenmode)
+			if( (!fstr) || (*fstr==0) ){ fstr="0"; }
+		
 		if(fstr && *fstr)
 
+
 		{
-		//	liqapp_log("imagefloat: start '%s' %i,%i",self->name,w,h);
+			//liqapp_log("imagefloat: start '%s' %i,%i, '%s'",self->name,w,h,fstr);
 			
 			{
 
@@ -1029,13 +1036,13 @@ __tz_one("imageprep");
 				
 				
 				
-				liqcell_propsets_printf(self,"imagefloat","%f,%f,%f,%f",secs+0.1,0,0,0);
+				liqcell_propsets_printf(self,"imagefloat","%f",secs+0.1);
 				
 				
 				
 
 				
-				unsigned int rndofname = *(unsigned int *)self->name;
+				unsigned int rndofname = *(unsigned short *)self->name;
 				
 				secs+=rndofname;
 
@@ -1066,7 +1073,7 @@ __tz_one("imageprep");
 		
 		
 
-				//liqapp_log("imagefloat: '%s' orig  %4i,%4i - %4i,%4i     into     %4i,%4i - %4i,%4i",self->name,x,y,w,h,  xx,yy,rw,rh );
+				//liqapp_log("imagefloat: '%s' orig  %4i,%4i - %4i,%4i     into     %4i,%4i - %4i,%4i s=%f",self->name,x,y,w,h,  xx,yy,rw,rh , secs );
 
 
 				if(liqcell_propgeti(self,"lockaspect",1)==1)
