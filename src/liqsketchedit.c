@@ -232,7 +232,8 @@ int post_to_liqbase_net(const char *filename, const char *datakey,int replyid)
 
 		liqcell_propsets(self,"sketchfilenamelast",filenamebuffer);
 		
-		post_to_liqbase_net(filenamebuffer,key,0);
+		// removing, the sync module will do this better.
+		//post_to_liqbase_net(filenamebuffer,key,0);
 		
 		liqcell_settag(self,0);
 		
@@ -344,37 +345,6 @@ int post_to_liqbase_net(const char *filename, const char *datakey,int replyid)
 		return 1;
 	}
 
-
-
-	static int liqsketchedit_clear_click(liqcell *self, liqcellclickeventargs *args, void *context)
-	{
-		liqcell *editor = liqcell_getlinkparent(self);
-
-		liqsketch *sketch = liqcell_getsketch(editor);
-		if(!sketch)
-		{
-			return 0;
-		}
-
-		liqsketch_clear(sketch);
-
-        
-		char *fn=liqcell_propgets(editor,"sketcheditfilename",NULL);        // fixed name bug would not reload, thanks javispedro
-		if(fn)
-		{
-			// 20090421_233231 lcuk : save it now with the special assigned name
-			liqsketch_fileload(sketch, fn );
-
-			return 1;
-		}
-		
-		liqcell_handlerrun(editor,"cleared",NULL);
-		
-		liqcell_settag(editor,0);
-
-		return 1;
-	}
-
 	static int liqsketchedit_del_click(liqcell *self, liqcellclickeventargs *args, void *context)
 	{
 		
@@ -416,6 +386,44 @@ int post_to_liqbase_net(const char *filename, const char *datakey,int replyid)
 		
 		return 1;
 	}
+
+	static int liqsketchedit_clear_click(liqcell *self, liqcellclickeventargs *args, void *context)
+	{
+		liqcell *editor = liqcell_getlinkparent(self);
+
+		liqsketch *sketch = liqcell_getsketch(editor);
+		if(!sketch)
+		{
+			return 0;
+		}
+
+		if(sketch->strokecount==0)
+		{
+			// delete instead
+			liqsketchedit_del_click(self,args,context);
+			return 1;
+		}
+
+		liqsketch_clear(sketch);
+
+        
+		char *fn=liqcell_propgets(editor,"sketcheditfilename",NULL);        // fixed name bug would not reload, thanks javispedro
+		if(fn)
+		{
+			// 20090421_233231 lcuk : save it now with the special assigned name
+			liqsketch_fileload(sketch, fn );
+
+			return 1;
+		}
+		
+		liqcell_handlerrun(editor,"cleared",NULL);
+		
+		liqcell_settag(editor,0);
+
+		return 1;
+	}
+
+
 
 	static int liqsketchedit_save_click(liqcell *self, liqcellclickeventargs *args, void *context)
 	{
@@ -567,10 +575,10 @@ static int liqsketchedit_resize(liqcell *self, liqcelleventargs *args, void *con
 */
 	// rotation patch test
 	liqcell_setrect(cover,  0,  0,            ww*1.0,hh*1.0);
-	liqcell_setrect(undo,  ww*0.0,  hh*0.9,   ww*0.3,hh*0.1);
-	liqcell_setrect(clear, ww*0.3,  hh*0.9,   ww*0.3,hh*0.1);
-	liqcell_setrect(save , ww*0.6,  hh*0.9,   ww*0.3,hh*0.1);
-	liqcell_setrect(del ,  ww*0.9,  hh*0.9,   ww*0.1,hh*0.1);
+	liqcell_setrect(undo,  ww*0.000,  hh*0.9,   ww*0.333,hh*0.1);
+	liqcell_setrect(clear, ww*0.333,  hh*0.9,   ww*0.333,hh*0.1);
+	liqcell_setrect(save , ww*0.666,  hh*0.9,   ww*0.333,hh*0.1);
+	//liqcell_setrect(del ,  ww*0.9,  hh*0.9,   ww*0.1,hh*0.1);
 	liqcell_setrect(notes ,  ww*0.25,  hh*1,   ww*0.5,hh*0.1);
 		
 	return 0;
@@ -664,6 +672,7 @@ liqcell *liqsketchedit_create()
 		liqcell_propsets(  b,    "backcolor", "xrgb(100,0,0)" );
 		liqcell_handleradd(b,    "mouse",   (void*)liqsketchedit__cmdnull_mouse);
 		liqcell_child_insert( self, b );
+		liqcell_setvisible(b,0);
 
 
 		b = liqcell_quickcreatevis("notes","textbox",  200,480,   480,80 );
