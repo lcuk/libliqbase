@@ -376,10 +376,9 @@ static void savethumb(liqcell *cell)
 
 				liqimage_pagesavepng(img,buf);
                 
-                
-                void post_to_liqbase_net(const char *filename, const char *datakey);
-                
-                post_to_liqbase_net(buf,"screenshot");
+             // sync will do this better
+             //   void post_to_liqbase_net(const char *filename, const char *datakey);
+             //  post_to_liqbase_net(buf,"screenshot");
 
 
 //01:49:32 png writing png

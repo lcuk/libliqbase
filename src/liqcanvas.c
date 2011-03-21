@@ -283,7 +283,14 @@ int liqcanvas_init(int pixelwidth,int pixelheight,int fullscreen)
 		return -1;
 		
 	}
-	
+	int dw=0;
+	int dh=0;
+	if(fullscreen)
+	{
+		liqx11info_get_default_screen_dimensions(&dw,&dh);
+		pixelwidth = dw;
+		pixelheight = dh;
+	}
 	liqapp_log("liqcanvas_init start wh %d,%d",pixelwidth,pixelheight);
 	
 	if(liqcanvas_init_inner(pixelwidth,pixelheight,fullscreen)!=0)

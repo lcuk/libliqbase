@@ -148,6 +148,18 @@ int liqx11info_regrab_focus(liqx11info *myx11info)
 
 
 	
+int liqx11info_get_default_screen_dimensions(int *pixelwidth,int *pixelheight)
+{
+	Display *		mydisplay;
+	int 			myscreen;
+
+	mydisplay     = XOpenDisplay("");
+	myscreen      = DefaultScreen(mydisplay);
+	*pixelwidth = DisplayWidth(mydisplay,myscreen);
+    *pixelheight = DisplayHeight(mydisplay,myscreen);
+	XCloseDisplay(mydisplay);
+	return 0;
+}
 
 //############################################################# 
 

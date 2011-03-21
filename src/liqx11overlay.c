@@ -382,7 +382,7 @@ int liqx11overlay_refreshdisplay(liqx11overlay *self)
 			0, 0, self->yuv_image->width, self->yuv_image->height,
 			0, 0, _w, _h, True);//False);//True);
 		// set the true flag :)
-	//	XSync(self->dpy,False);
+		XSync(self->dpy,False);
 
 		
 	}
