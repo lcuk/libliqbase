@@ -587,7 +587,7 @@ static int liqcell_kineticboiloff(liqcell *self)
 //
 }
 
-void liqcell_check_for_driedup(liqcell *self)
+void liqcell_check_for_driedup(liqcell *self,char *reason)
 {
 	if( !self->paintlastframenumber ) return;	// never painted
 	
@@ -595,7 +595,7 @@ void liqcell_check_for_driedup(liqcell *self)
 	
 	// its been painted a while ago, and its now offscreen
 	// tell the cell its going offscreen
-	liqapp_log("dried up '%s'",self->name);
+	liqapp_log("dried up '%s' (add handler for 'driedup' to free content) :: '%s'",self->name,reason);
 	self->paintlastframenumber=0;
 	liqcell_handlerrun(self,"driedup",NULL);
 	
@@ -608,19 +608,19 @@ void liqcell_easypaintkkk(liqcell *self,liqcliprect *crorig,    int x,int y,    
 	if(w<1 || h<1)
 	{
 		//liqapp_log("size0 bail!");
-		liqcell_check_for_driedup(self);
+		liqcell_check_for_driedup(self,"size0 bail");
 		return;
 	}
 	if(self->w==0 || self->h==0)
 	{
 		//liqapp_log("box0 bail!");
-		liqcell_check_for_driedup(self);
+		liqcell_check_for_driedup(self,"box0 bail");
 		return;
 	}
 	if(!self->visible)
 	{
 		//liqapp_log("vis bail!");
-		liqcell_check_for_driedup(self);
+		liqcell_check_for_driedup(self,"vis bail");
 		return;
 	}
 	// shit this is at wrong location, theres many reasons to bailout which this does not handle
@@ -638,7 +638,7 @@ void liqcell_easypaintkkk(liqcell *self,liqcliprect *crorig,    int x,int y,    
 	if(!liqcliprect_isvalid(crvis))
 	{
 		//liqapp_log("cr bail!");
-		liqcell_check_for_driedup(self);
+		liqcell_check_for_driedup(self,"cr bail");
 		liqcliprect_release(crvis);
 		return;
 	}
@@ -727,30 +727,6 @@ long tzused=0;
 __tz_one("start");
 
 
-
-
-//char cy,cu,cv;
-/*
-
-	if(w<1 || h<1)
-	{
-		//liqapp_log("size0 bail!");
-		liqcell_check_for_driedup(self);
-		return;
-	}
-	if(self->w==0 || self->h==0)
-	{
-		//liqapp_log("box0 bail!");
-		liqcell_check_for_driedup(self);
-		return;
-	}
-	if(!self->visible)
-	{
-		//liqapp_log("vis bail!");
-		liqcell_check_for_driedup(self);
-		return;
-	}
-*/	
 	//liqapp_log("easypaint 0");
 	
 __tz_one("sizeok");
@@ -767,7 +743,9 @@ __tz_one("clipgot");
 	if(!liqcliprect_isvalid(cr))
 	{
 		//liqapp_log("cr bail!");
-		liqcell_check_for_driedup(self);
+		//char buf[1024];
+		//snprintf(buf,sizeof(buf),"cr bail new(sxy(%d,%d) exy(%d,%d))   orig(sxy(%d,%d) exy(%d,%d)) frame(sxy(%d,%d) exy(%d,%d))",  cr->sx,cr->sy,   cr->ex,cr->ey,   crorig->sx,crorig->sy,   crorig->ex,crorig->ey,    x,y,x+w,y+h);
+		liqcell_check_for_driedup(self,"cr bail");
 		liqcliprect_release(cr);
 		return;
 	}
@@ -1115,7 +1093,7 @@ __tz_one("imagedone");
 	liqcell *content = liqcell_getcontent(self);
 	if(content)
 	{
-		//liqapp_log("content1 = %s",content->name);
+		//liqapp_log("content1 = %s  xy(%d,%d) wh(%d,%d)",content->name,x,y,w,h);
 		// 20090414_012212 lcuk : allow for content which is not visible to be added but make sure we dont render it
 		if(liqcell_getvisible(content))
 		{
@@ -1611,12 +1589,40 @@ __tz_one("fontdone");
 			int sh = self->h;
 
 			// 20090412_174750 lcuk : adjusted again because overflows were still occuring, this only effects the factors and shouldnt have a visual effect at all
-			while(ww>16000){  ww>>=1; sw>>=1; }
-			while(hh>16000){  hh>>=1; sh>>=1; }
+		//	while(ww>16000){  ww>>=1; sw>>=1; }
+		//	while(hh>16000){  hh>>=1; sh>>=1; }
+		//	liqcell_easypaint(c,cr,x+c->x* ww/sw,y+c->y* hh/sh,c->w * ww /sw ,c->h * hh / sh);
 
+
+
+
+
+			// 20110530 lcuk trying again for 2008 missing
+/*
+			{
+				while( ((ww>1) && (sw>1) && (hh>1) && (sh>1)) && ((ww>8191) || (hh>8191) || (sw>8191) || (sh>8191)) )
+				{  
+					liqapp_log("spiralA wh(%d,%d)  swh(%d,%d) '%s'",ww,hh,  sw,sh,self->name);
+					ww>>=1; sw>>=1;  hh>>=1; sh>>=1; 
+					liqapp_log("spiralB wh(%d,%d)  swh(%d,%d) '%s'",ww,hh,  sw,sh,self->name);
+				}
+				typedef long long UL;
+				UL ax = ((UL)x) + ((UL)((UL)c->x) * ((UL)ww)) / ((UL)sw);
+				UL ay = ((UL)y) + ((UL)((UL)c->y) * ((UL)hh)) / ((UL)sh);
+				UL aw =           ((UL)((UL)c->w) * ((UL)ww)) / ((UL)sw);
+				UL ah =           ((UL)((UL)c->h) * ((UL)hh)) / ((UL)sh);
+				liqapp_log("spiralC a( xy(%d,%d) wh(%d,%d)) '%s'",ax,ay,aw,ah,self->name);
+				liqcell_easypaint(c,cr,ax,ay,aw,ah);
+			}
+*/
+
+
+			// 20110530 lcuk simplify again
+			while(ww>8191){  ww>>=1; sw>>=1; }
+			while(hh>8191){  hh>>=1; sh>>=1; }
 			liqcell_easypaint(c,cr,x+c->x* ww/sw,y+c->y* hh/sh,c->w * ww /sw ,c->h * hh / sh);
+			
 
-			//liqcell_easypaint(c,cr,x+c->x* w/self->w,y+c->y* h/self->h,c->w * w /self->w ,c->h * h / self->h);
 
 		}
 		//c=liqcell_getlinkprev(c);
@@ -1827,9 +1833,11 @@ __tz_one("presseddone");
 
 					int ww=liqfont_textwidth (infofont,info);
 					int hh=liqfont_textheight(infofont);
-					int ys=y+(h-hh)/2;
+					//int ys=y+(h-hh)/2;
 
-					liqcliprect_drawtextinside_color( cr, infofont,  x,ys,    ww,hh, info,0, 255,128,128);
+					int ys=y+(h-hh);
+					//liqcliprect_drawrect_color( cr, x,ys,    ww,hh, 255,128,128);
+					liqcliprect_drawtextinside_color( cr, infofont,  x+w-ww,ys,    ww,hh, info,0, 255,128,128);
 					
 					
 					if(liqcell_getclassname(self))

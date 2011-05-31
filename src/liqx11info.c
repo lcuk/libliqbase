@@ -1,6 +1,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
+#include <math.h>
 
 #include "liqbase.h"
 #include "liqapp_prefs.h"
@@ -32,6 +33,10 @@ extern "C" {
 int liqx11_modifierprev=0;
 int liqx11_modifier=0;
 
+static int liqx11_mousesingleonly = 1;
+static int liqx11_mouseinuse = 0;
+static int liqx11_mousex = 0;
+static int liqx11_mousey = 0;
 
 XImage *cover_image = NULL;
 XImage *liqimage_convert_to_ximage(liqimage *self, Display *dis, int screen);
@@ -148,6 +153,18 @@ int liqx11info_regrab_focus(liqx11info *myx11info)
 
 
 	
+int liqx11info_get_default_screen_dimensions(int *pixelwidth,int *pixelheight)
+{
+	Display *		mydisplay;
+	int 			myscreen;
+
+	mydisplay     = XOpenDisplay("");
+	myscreen      = DefaultScreen(mydisplay);
+	*pixelwidth = DisplayWidth(mydisplay,myscreen);
+    *pixelheight = DisplayHeight(mydisplay,myscreen);
+	XCloseDisplay(mydisplay);
+	return 0;
+}
 
 //############################################################# 
 
@@ -1282,8 +1299,10 @@ const int x11_seeevent=0;
 							
 						#else // USE_XSP
 						
+
+
 						
-							if(xev.type==ButtonPress)
+							if(xev.type==ButtonPress && ((liqx11_mouseinuse==0)) )
 							{
 						//#ifndef USE_MAEMO	
 						//		if(!myx11info->myinnotifyflag) goto foo;
@@ -1305,8 +1324,18 @@ const int x11_seeevent=0;
 								ev->mouse.x = ((xev.xmotion.x));
 								ev->mouse.y = ((xev.xmotion.y));
 								ev->mouse.pressure = 100;
+
+								liqx11_mouseinuse = 1;
+								//if(liqx11_mouseinuse)
+								{
+									liqx11_mousex = ev->mouse.x;
+									liqx11_mousey = ev->mouse.y;
+								}
 								break;
 							}
+
+
+							
 							else if(xev.type==MotionNotify)
 							{
 								if(!myx11info->myispressedflag)goto foo;
@@ -1330,6 +1359,22 @@ const int x11_seeevent=0;
 								ev->mouse.x = ((xev.xmotion.x));// *800)/canvas.pixelwidth;
 								ev->mouse.y = ((xev.xmotion.y));// *480)/canvas.pixelheight;
 								ev->mouse.pressure = 200;
+
+
+								if(liqx11_mouseinuse && liqx11_mousesingleonly)
+								{
+									int dx = liqx11_mousex - ev->mouse.x;
+									int dy = liqx11_mousey - ev->mouse.y;
+									//liqapp_log("mouse move dxy %3d,%3d, %3.3f",dx,dy,sqrt(dx*dx + dy*dy));
+									if(sqrt(dx*dx + dy*dy) > 100)
+									{
+										ev->mouse.x = liqx11_mousex;
+										ev->mouse.y = liqx11_mousey;
+									}
+								}
+								liqx11_mousex = ev->mouse.x;
+								liqx11_mousey = ev->mouse.y;
+								
 								break;
 							}
 							else if(xev.type==ButtonRelease)
@@ -1353,6 +1398,23 @@ const int x11_seeevent=0;
 								ev->mouse.x = ((xev.xmotion.x));
 								ev->mouse.y = ((xev.xmotion.y));
 								ev->mouse.pressure = 0;
+
+								if(liqx11_mouseinuse && liqx11_mousesingleonly)
+								{
+									int dx = liqx11_mousex - ev->mouse.x;
+									int dy = liqx11_mousey - ev->mouse.y;
+									//liqapp_log("mouse up   dxy %3d,%3d, %3.3f",dx,dy,sqrt(dx*dx + dy*dy));
+									if(sqrt(dx*dx + dy*dy) > 100)
+									{
+										ev->mouse.x = liqx11_mousex;
+										ev->mouse.y = liqx11_mousey;
+									}
+								}
+								liqx11_mousex = ev->mouse.x;
+								liqx11_mousey = ev->mouse.y;
+								liqx11_mouseinuse = 0;
+								
+								
 								break;
 							}
 							

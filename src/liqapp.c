@@ -44,6 +44,7 @@
 #include "liqapp.h"
 
 #include "liqcell.h"
+#include "liqtag.h"
 
 #include "liqapp_prefs.h"
 #include "liqapp_hildon.h"
@@ -750,6 +751,9 @@ int 		liqapp_init(int argc, char* argv[], const char *title, const char *version
 	
 	liqcell_showfps =        1 == atoi(liqapp_pref_getvalue_def("showfps","0"));
 	liqcell_showdebugboxes = 1 == atoi(liqapp_pref_getvalue_def("showdebugboxes","0"));
+
+	liqtagcloud_systemstart();
+
 	
 	return 0;
 	
@@ -990,14 +994,218 @@ else
 }
 
 
-char * liqapp_format_strftime(char *buffer,int buffersize,char *strftime_fmt)		// "%H:%M:%S"
+
+char * liqapp_format_strftime_human(char *buffer,int buffersize,struct tm *ts)
+{
+	char dat[128] = "";
+	switch(ts->tm_min)
+	{
+		case 0:
+			strcpy(dat,"it is twelve o'clock.");
+			break;
+		case 1:
+		case 2:
+			strcpy(dat,"it is just after twelve o'clock.");
+			break;
+		case 3:
+		case 4:
+			strcpy(dat,"it is just before five past twelve.");
+			break;
+		case 5:
+			strcpy(dat,"it is five past twelve.");
+			break;
+		case 6:
+		case 7:
+			strcpy(dat,"it is just after five past twelve.");
+			break;
+		case 8:
+		case 9:
+			strcpy(dat,"it is just before ten past twelve.");
+			break;
+		case 10:
+			strcpy(dat,"it is ten past twelve.");
+			break;
+			
+		case 11:
+		case 12:
+			strcpy(dat,"it is just after ten past twelve.");
+			break;
+		case 13:
+		case 14:
+			strcpy(dat,"it is just before quarter past twelve.");
+			break;
+		case 15:
+			strcpy(dat,"it is quarter past twelve.");
+			break;
+		case 16:
+		case 17:
+			strcpy(dat,"it is just after quarter past twelve.");
+			break;
+		case 18:
+		case 19:
+			strcpy(dat,"it is just before twenty past twelve.");
+			break;
+		case 20:
+			strcpy(dat,"it is twenty past twelve.");
+			break;
+						
+		case 21:
+		case 22:
+			strcpy(dat,"it is just after twenty past twelve.");
+			break;	
+		case 23:
+		case 24:
+			strcpy(dat,"it is just before twenty five past twelve.");
+			break;
+		case 25:
+			strcpy(dat,"it is twenty five past twelve.");
+			break;
+		case 26:
+		case 27:
+			strcpy(dat,"i'ts just after twenty five past twelve.");
+			break;
+		case 28:
+		case 29:
+			strcpy(dat,"it is just before half past twelve.");
+			break;
+		case 30:
+			strcpy(dat,"it is half past twelve.");
+			break;	
+			
+		case 31:
+		case 32:
+			strcpy(dat,"it is just after half past twelve.");
+			break;	
+		case 33:
+		case 34:
+			strcpy(dat,"it is just before twenty five to one.");
+			break;
+		case 35:
+			strcpy(dat,"it is twenty five to one.");
+			break;
+		case 36:
+		case 37:
+			strcpy(dat,"it is just after twenty five to one.");
+			break;
+		case 38:
+		case 39:
+			strcpy(dat,"it is just before twenty to one.");
+			break;
+		case 40:
+			strcpy(dat,"it is twenty to one.");
+			break;	
+
+		case 41:
+		case 42:
+			strcpy(dat,"it is just after twenty to one.");
+			break;
+		case 43:
+		case 44:
+			strcpy(dat,"it is just before quarter to one.");
+			break;
+		case 45:
+			strcpy(dat,"it is quarter to one.");
+			break;
+		case 46:
+		case 47:
+			strcpy(dat,"it is just after quarter to one.");
+			break;
+		case 48:
+		case 49:
+			strcpy(dat,"it is just before ten to one.");
+			break;
+		case 50:
+			strcpy(dat,"it is ten to one.");
+			break;	
+			
+		case 51:
+		case 52:
+			strcpy(dat,"it is just after ten to one.");
+			break;	
+		case 53:
+		case 54:
+			strcpy(dat,"it is just before five to one.");
+			break;
+		case 55:
+			strcpy(dat,"it is five to one.");
+			break;
+		case 56:
+		case 57:
+			strcpy(dat,"it is just after five to one.");
+			break;
+		case 58:
+		case 59:
+			strcpy(dat,"it is just before one o'clock.");
+			break;
+		case 60:
+		case 61:
+			strcpy(dat,"it is one o'clock.");
+			break;		
+	}
+
+	
+	char *hourstrings[13] = {"twelve","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve"};
+
+	char *hournow = hourstrings[ (ts->tm_hour  ) % 12       ];
+	char *hournxt = hourstrings[ (ts->tm_hour+1) % 12 	];
+
+	char *ts12 = strstr(dat,"twelve");
+	char *ts13 = strstr(dat,"one");
+
+	//liqapp_log("human dat    ='%s'",dat);
+	//liqapp_log("human hournow='%s'",hournow);
+	//liqapp_log("human hournxt='%s'",hournxt);
+	//liqapp_log("human ts12=   '%s'",(ts12)?ts12:"nots");
+	//liqapp_log("human ts13=   '%s'",(ts13)?ts13:"nots");
+
+	if(ts12)
+	{
+
+		char *te12 = ts12+6;
+		*ts12 = 0;
+		//liqapp_log("human OUT dat=   '%s'",dat);
+		//liqapp_log("human OUT hon=   '%s'",hournow);
+		//liqapp_log("human OUT te12=  '%s'",te12);
+		snprintf(buffer, buffersize,"%s%s%s", dat,hournow,te12);
+	}
+	else
+	if(ts13)
+	{
+
+		char *te13 = ts13+3;
+		*ts13 = 0;
+		//liqapp_log("human OUT dat=   '%s'",dat);
+		//liqapp_log("human OUT hon=   '%s'",hournxt);
+		//liqapp_log("human OUT te13=  '%s'",te13);
+		snprintf(buffer, buffersize,"%s%s%s", dat,hournxt,te13);
+	}
+	else
+		*buffer=0;
+
+	//liqapp_log("human buffer=   '%s'",buffer);
+
+	return buffer;
+}
+
+
+
+char * liqapp_format_strftime(char *buffer,int buffersize,char *strftime_fmt)		// "%H:%M:%S" etc | "human"
 {
 	time_t     now;
 	struct tm  *ts;
 	time(&now);
 	ts = localtime(&now);
-	strftime(buffer, buffersize, strftime_fmt, ts);
-	return buffer;
+
+	if(strcmp(strftime_fmt,"human") ==0)
+	{
+		liqapp_format_strftime_human(buffer,buffersize, ts);
+		return buffer;
+	}
+	else
+	{
+		strftime(buffer, buffersize, strftime_fmt, ts);
+		return buffer;
+	}
 }
 
 

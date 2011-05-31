@@ -377,9 +377,9 @@ static void savethumb(liqcell *cell)
 				liqimage_pagesavepng(img,buf);
                 
                 
-                void post_to_liqbase_net(const char *filename, const char *datakey);
+               // void post_to_liqbase_net(const char *filename, const char *datakey);
                 
-                post_to_liqbase_net(buf,"screenshot");
+               // post_to_liqbase_net(buf,"screenshot");
 
 
 //01:49:32 png writing png
@@ -1942,8 +1942,32 @@ moar:
 			dirty=1;
 			
 		}
+
+
 		
 		
+
+			// find out if orientation flipped.
+			if(liqcell_handlerfind(self,"layout"))
+			{
+				if( canvas.pixelwidth != liqcell_getw(self) )
+				{
+					// something changed, a glitch in the matrix.
+					liqcell_handlerrun(self,"layout",NULL);	
+
+					// #############################################	
+
+					targetcr = easyrun_realtime_reshape(self, graph);
+				
+					refreshinprogress=0;
+					wantwait=0;
+					dirty=1;
+
+				}
+			}
+
+
+					
 		
 		if(((dirty==1) && (refreshinprogress==0)))
 		{
@@ -2066,15 +2090,6 @@ moar:
 			}
 
 
-		// find out if orientation flipped.
-		if(liqcell_handlerfind(self,"layout"))
-		{
-			if( canvas.pixelwidth != liqcell_getw(self) )
-			{
-				// something changed, a glitch in the matrix.
-				liqcell_handlerrun(self,"layout",NULL);		
-			}
-		}
 
 
 #ifdef LIQBASE_WALLMOUNT

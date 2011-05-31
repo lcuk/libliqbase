@@ -26,13 +26,16 @@
 //#####################################################################
 
 
-#include <curl/curl.h>
-
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+
+/*
+
+
+#include <curl/curl.h>
 
 
 struct curl_memorybuffer
@@ -160,7 +163,7 @@ int post_to_liqbase_net(const char *filename, const char *datakey,int replyid)
 }
 
  
-
+*/
 
 
 
@@ -347,23 +350,24 @@ int post_to_liqbase_net(const char *filename, const char *datakey,int replyid)
 
 	static int liqsketchedit_del_click(liqcell *self, liqcellclickeventargs *args, void *context)
 	{
-		
+		liqapp_log("sketch del start");
 		liqcell *editor = liqcell_getlinkparent(self);
 
 		liqsketch *sketch = liqcell_getsketch(editor);
 		if(!sketch)
 		{
-			
+			liqapp_log("sketch del no sketch");
 			return 0;
 		}
 		
-		
+		liqapp_log("sketch del clearing");		
 
 		liqsketch_clear(sketch);
 
 		char *fn=liqcell_propgets(editor,"sketcheditfilename",NULL);      // fixed name bug would not delete, thanks javispedro
 		if(fn)
 		{
+			liqapp_log("sketch del special sketch '%s'",fn);
 			// 20090422_000423 lcuk : delete the actual file now
 			if(liqapp_fileexists(fn))
 			{
@@ -376,33 +380,43 @@ int post_to_liqbase_net(const char *filename, const char *datakey,int replyid)
 				liqapp_log("sketch delete cmd: %s",s);
 			}
 		}
+
+		liqapp_log("sketch del tidying up");
 		
 		liqcell_setsketch(editor,NULL);
 		
 		liqcell_settag(editor, (void*)1);
 
+		liqapp_log("sketch del tidying up, raising cleared event (hmm)");
 
 		liqcell_handlerrun(editor,"cleared",NULL);
+
+		liqapp_log("sketch del completed");
 		
 		return 1;
 	}
 
 	static int liqsketchedit_clear_click(liqcell *self, liqcellclickeventargs *args, void *context)
 	{
+		liqapp_log("clear start");
 		liqcell *editor = liqcell_getlinkparent(self);
 
 		liqsketch *sketch = liqcell_getsketch(editor);
 		if(!sketch)
 		{
+			liqapp_log("clear no sketch");
 			return 0;
 		}
 
 		if(sketch->strokecount==0)
 		{
+			liqapp_log("clear deleting instead");
 			// delete instead
 			liqsketchedit_del_click(self,args,context);
 			return 1;
 		}
+
+		liqapp_log("clear clearing");
 
 		liqsketch_clear(sketch);
 
@@ -410,15 +424,24 @@ int post_to_liqbase_net(const char *filename, const char *datakey,int replyid)
 		char *fn=liqcell_propgets(editor,"sketcheditfilename",NULL);        // fixed name bug would not reload, thanks javispedro
 		if(fn)
 		{
-			// 20090421_233231 lcuk : save it now with the special assigned name
-			liqsketch_fileload(sketch, fn );
+			// liqapp_log("clear reloading special sketch: '%s'",fn);
+			// // 20090421_233231 lcuk : save it now with the special assigned name
+			// liqsketch_fileload(sketch, fn );
+			liqapp_log("clear special deleting instead '%s'",fn);
+			// delete instead
+			liqsketchedit_del_click(self,args,context);
+			
 
 			return 1;
 		}
+
+		liqapp_log("clear tidying up, raising cleared event");
 		
 		liqcell_handlerrun(editor,"cleared",NULL);
 		
 		liqcell_settag(editor,0);
+
+		liqapp_log("clear completed");
 
 		return 1;
 	}
@@ -584,8 +607,69 @@ static int liqsketchedit_resize(liqcell *self, liqcelleventargs *args, void *con
 	return 0;
 }
 
+	static int liqsketchedit_layout(liqcell *self, liqcelleventargs *args,liqcell *liqsketchedit)
+	{
+
+		// ##################################################
+		liqcell *topself = liqcell_easyrunstack_topself();
+		if(self == topself)
+		{
+			// ##################################################
+			liqapp_log("sk.paint: this sketcheditor is top of the world");
+			//if(self->w != liqcanvas_getwidth() || self->h != liqcanvas_getheight())
+			{
+				// rescaling
+				liqapp_log("sk.paint: rescale");
+				liqcell_setsize( self, liqcanvas_getwidth(), liqcanvas_getheight() );
+				//liqcell_setdirty(self,1);
+				//return -1;
+			}
+
+			// ##################################################
+			liqapp_log("sk.paint: now see about rescaling the content");
+
+			liqsketch *sk = liqcell_getsketch(self);
+			if(sk)
+			{
+				liqapp_log("sk.paint: we have content sketch");
+
+
+				int cn_orient =  (liqcanvas_getwidth() > liqcanvas_getheight());
+				int sk_orient =  (sk->pixelwidth       > sk->pixelheight);
+
+				liqapp_log("sk.paint: cn wh(%d,%d) :: %d",liqcanvas_getwidth(), liqcanvas_getheight(),  cn_orient);
+				liqapp_log("sk.paint: sk wh(%d,%d) :: %d",sk->pixelwidth, sk->pixelheight,              sk_orient);
+
+
+				if(cn_orient != sk_orient)
+				{
+					liqapp_log("sk.paint: we have orientation difference");
+					int uw = sk->boundingbox.xr - sk->boundingbox.xl;
+					int uh = sk->boundingbox.yb - sk->boundingbox.yt;
+					liqapp_log("sk.paint: u wh(%d,%d)",uw,uh);
+					liqapp_log("sk.paint: does the sketch fit by just adjusting its border?");
+
+
+					int t = sk->pixelwidth;  sk->pixelwidth = sk->pixelheight; sk->pixelheight = t;
+
+					if(cn_orient)
+					{
+					}
+					else
+					{
+					}
+				}
+			}
+		}
+
+
+		return 0;
+	}
+
 	static int liqsketchedit_paint(liqcell *self, liqcellpainteventargs *args,liqcell *liqsketchedit)
 	{
+	
+	
 		liqcell *notes = liqcell_child_lookup(liqsketchedit,"notes");
 		char *cap=liqcell_getcaption(notes);
 		if(cap && *cap)
@@ -643,7 +727,7 @@ liqcell *liqsketchedit_create()
 		liqcell_child_insert( self, b );
 
 		b = liqcell_quickcreatevis("undo","button",  800-180,20,   160,160 );
-		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
+		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (32), 0) );
 		liqcell_handleradd(b,    "click",   (void*)liqsketchedit_undo_click);
 		liqcell_propsets(  b,    "backcolor", "xrgb(100,0,100)" );
 		liqcell_handleradd(b,    "mouse",   (void*)liqsketchedit__cmdnull_mouse);
@@ -651,7 +735,7 @@ liqcell *liqsketchedit_create()
 
 
 		b = liqcell_quickcreatevis("clear","button",  800-180,20,   160,160 );
-		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
+		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (32), 0) );
 		liqcell_handleradd(b,    "click",   (void*)liqsketchedit_clear_click);
 		liqcell_propsets(  b,    "backcolor", "xrgb(0,0,100)" );
 		liqcell_handleradd(b,    "mouse",   (void*)liqsketchedit__cmdnull_mouse);
@@ -659,7 +743,7 @@ liqcell *liqsketchedit_create()
 	
 
 		b = liqcell_quickcreatevis("save","button",  800-180,200,   160,160 );
-		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
+		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (32), 0) );
 		liqcell_handleradd(b,    "click",   (void*)liqsketchedit_save_click);
 		liqcell_propsets(  b,    "backcolor", "xrgb(0,100,0)" );
 		liqcell_handleradd(b,    "mouse",   (void*)liqsketchedit__cmdnull_mouse);
@@ -667,7 +751,7 @@ liqcell *liqsketchedit_create()
 
 
 		b = liqcell_quickcreatevis("del","button",  800-180,200,   160,160 );
-		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (24), 0) );
+		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (32), 0) );
 		liqcell_handleradd(b,    "click",   (void*)liqsketchedit_del_click);
 		liqcell_propsets(  b,    "backcolor", "xrgb(100,0,0)" );
 		liqcell_handleradd(b,    "mouse",   (void*)liqsketchedit__cmdnull_mouse);
@@ -697,7 +781,9 @@ liqcell *liqsketchedit_create()
 		liqcell_handleradd_withcontext(self,    "mouse",   (void*)liqsketchedit_mouse,   self);
 		liqcell_handleradd_withcontext(self,    "resize",   (void*)liqsketchedit_resize,   self);
 		liqcell_handleradd_withcontext(self,    "paint",   (void*)liqsketchedit_paint,   self);
+		liqcell_handleradd_withcontext(self,    "layout",   (void*)liqsketchedit_layout,   self);
 		
+			
 		
 	}
 	return self;

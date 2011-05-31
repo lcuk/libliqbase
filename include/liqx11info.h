@@ -69,6 +69,9 @@ int liqx11info_get_next_liqevent(liqx11info *myx11info,LIQEVENT *ev,int *dirtyfl
 
 int liqx11info_minimize(liqx11info *myx11info);
 
+
+int liqx11info_get_default_screen_dimensions(int *pixelwidth,int *pixelheight);
+
 #ifdef __cplusplus
 }
 #endif

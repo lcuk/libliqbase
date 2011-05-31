@@ -112,8 +112,8 @@ int 		liqapp_formatnow(char *buffer,int buffersize, const char *format);
 int liqapp_datestamp_to_date(char *datestamp,struct tm *timebuf);		// convert a liqbase datestamp "yyyymmdd_hhmmss" into a tm struct
 
 
-char * 		liqapp_format_strftime(char *buffer,int buffersize,char *strftime_fmt);
-
+char * 		liqapp_format_strftime(char *buffer,int buffersize,char *strftime_fmt);			// use format specifiers to display time
+char * 		liqapp_format_strftime_human(char *buffer,int buffersize,struct tm *ts);		// print a human readable (english only) string of time
 
 int 		liqapp_folderexists(const char *pathname);
 int   		liqapp_pathexists(const char *pathname);

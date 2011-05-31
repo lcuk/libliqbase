@@ -1124,7 +1124,7 @@ static int decl()
 
 static int comment()
 {
-	spanpoint realstart=upto(""); see(" "); spanpoint start=upto("commend");
+	spanpoint realstart=upto(""); see(" "); spanpoint start=upto("comment");
 	if(seecommentline())
 	{
 		while(seecommentline())
