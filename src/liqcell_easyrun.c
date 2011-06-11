@@ -23,8 +23,7 @@
  */
 
 // if liqbase is run in wallmount mode, make sure this is set
-//#define LIQBASE_WALLMOUNT
-
+#define LIQBASE_WALLMOUNT 1
 
 // 20090728_001621 lcuk : set this to have a 25fps limit to framerate, otherwise runs at fastest possible
 //#define LIMIT_FRAMERATE 1
@@ -2095,7 +2094,7 @@ moar:
 			{
 				//liqapp_log("************************************************************************************** use");
 				if(liqcell_easyrun_depth==1)
-					liqcliprect_drawimagecolor(targetcr, infoclose, 0,liqcliprect_getw(targetcr)-48,48,48, 1);
+					liqcliprect_drawimagecolor(targetcr, infoclose, 0,liqcliprect_geth(targetcr)-48,48,48, 1);
 				else
 				
 					liqcliprect_drawimagecolor(targetcr, infoback , 0,liqcliprect_geth(targetcr)-48,48,48, 1);

@@ -110,6 +110,7 @@ void 		liqcliprect_drawboxfillblendcolor(	liqcliprect *self,int x,int y,int w,in
 void 		liqcliprect_drawboxwashcolor(		liqcliprect *self,int x,int y,int w,int h,unsigned char u,unsigned char v);
 
 void 		liqcliprect_drawcolorcube(liqcliprect *self,int x,int y,int w,int h,unsigned char grey);
+void        liqcliprect_drawgreyrow(liqcliprect *self,int x,int y,int w,int h);
 void        liqcliprect_drawgreycol(liqcliprect *self,int x,int y,int w,int h);
 void 		liqcliprect_drawboxfadeoutcolor(liqcliprect *self,int x,int y,int w,int h,unsigned char grey,unsigned char u,unsigned char v,unsigned char spread);
 

@@ -872,35 +872,64 @@ __tz_one("paintdone");
 			//liqapp_log("textcolor :: '%s'",t);
 			if(decodecolor(t, &bcy, &bcu, &bcv, &bca, &bcc ))
 			{
-                // play...
-                if( (!self->image) && (self->classname) && (bca==255) && (bcc==0) )
-                {
-                    if(!easypaint_backgrain_image)
-                    {
-						// try allowing with alpha..
-                         easypaint_backgrain_image=liqimage_newfromfile("/usr/share/liqbase/libliqbase/media/backgrain.png",0,0,0);
-                    }
-                    if(easypaint_backgrain_image)
-                    {
-                        //if(bca==255)
-                            liqcliprect_drawimagecolor(cr,easypaint_backgrain_image,x,y,w,h,0);
-                        //else
-                        //    liqcliprect_drawimageblendcolor(cr,easypaint_backgrain_image,x,y,w,h,bca,0);
-                        liqcliprect_drawboxwashcolor(     cr,x,y,w,h, bcu,bcv);
-                    }
-                }
-                
-                else
-                
-                {
-                    //bca=255;
-                    //if(bca==255)      // such a minute difference wont hurt too much
-                    if(bca>=254)
-                        liqcliprect_drawboxfillcolor(     cr,x,y,w,h,bcy,bcu,bcv);
-                    else
-                        liqcliprect_drawboxfillblendcolor(cr,x,y,w,h,bcy,bcu,bcv,bca);
-                }
+				// play...
+				if( (!self->image) && (self->classname) && (bca==255) && (bcc==0) )
+				{
+				    if(!easypaint_backgrain_image)
+				    {
+								// try allowing with alpha..
+				         easypaint_backgrain_image=liqimage_newfromfile("/usr/share/liqbase/libliqbase/media/backgrain.png",0,0,0);
+				    }
+				    if(easypaint_backgrain_image)
+				    {
+				        //if(bca==255)
+				            liqcliprect_drawimagecolor(cr,easypaint_backgrain_image,x,y,w,h,0);
+				        //else
+				        //    liqcliprect_drawimageblendcolor(cr,easypaint_backgrain_image,x,y,w,h,bca,0);
+				        liqcliprect_drawboxwashcolor(     cr,x,y,w,h, bcu,bcv);
+				    }
+				}
+				
+				else
+				
+				{
+				    //bca=255;
+				    //if(bca==255)      // such a minute difference wont hurt too much
+				    if(bca>=254)
+				        liqcliprect_drawboxfillcolor(     cr,x,y,w,h,bcy,bcu,bcv);
+				    else
+				        liqcliprect_drawboxfillblendcolor(cr,x,y,w,h,bcy,bcu,bcv,bca);
+				}
 			}
+			else
+			{
+				if(strncmp(t,"cube(",5) == 0 )
+				{
+					const char *tin=t+5;
+					int val=0;
+					while(*tin>='0' && *tin<='9')tin++;
+					if((tin) > (t+5))
+						val=atoi(t+5);
+					else
+						val=128;
+					if(val<0)val=0;
+					if(val>255)val=255;
+					// draw a colour cube :)
+				        liqcliprect_drawcolorcube(     cr,x,y,w,h,val);
+				}
+				else
+				if(strncmp(t,"greyrow",7) == 0 )
+				{
+					// draw a grey col :)
+				        liqcliprect_drawgreyrow(     cr,x,y,w,h);
+				}
+				else
+				if(strncmp(t,"greycol",7) == 0 )
+				{
+					// draw a grey col :)
+				        liqcliprect_drawgreycol(     cr,x,y,w,h);
+				}			}
+				
 		}
 	}
 __tz_one("backdone");
@@ -1666,18 +1695,55 @@ __tz_one("borderdone");
 				if(p->w < self->w)
 				{
 					// show a position indicator bar..
+					// show a position indicator bar..
 					
+					float sx = self->x;
+		//			float sy = self->y;
+					float ww = w;
+					float sw = self->w;
+					float pw = p->w;
+		//			float hh = h;
+		//			float sh = self->h;
+		//			float ph = p->h;		
+					// ph = 480
+					// sh = 2000
+					// sy = -200
+					// get the relative size of the knob as a fraction of total height             == (0.25)
+					float f  = pw    / sw;
+					// get the relative offset of the knob as a fraction of total height           == (0.10)
+					float fx = (-sx) / sw;
+					// transform the knob size (0.25) into the context of the parent height (480/2000)  == (0.06)
+					float f2 = f * (pw / sw);						
+					// transform the knob offset (0.1) into the context of the parent height 0.1 + (480/2000) == (0.124) and starting from the parent offset
+					float fx2 = fx + (fx * (pw / sw));					
+
+
+					// adjust now the w element so that knob is onscreen correctly
+
+
+
+
+					// find the position for the knobble in relation to the window
+					float sy = self->y;			//-200
+					float sh = self->h;			// 2000
+					float ph = p->h	;			// 1000
+					float bb = ph + (-sy);
+					float hh = h;				// 800
+					float dd = ((float)bb) * ( ((float)h) / sh );
+
+					liqcliprect_drawboxwashcolor(cr,x+(fx2*ww),  y+dd-4, (f2*ww),4,0,255);				
 					
 				}
+				
+				
+				
+				
+				
 				if(p->h < self->h)
 				{
 					// show a position indicator bar..
 					
-					//float sx = self->x;
 					float sy = self->y;
-					//float ww = w;
-					//float sw = self->w;
-					//float pw = p->w;
 					float hh = h;
 					float sh = self->h;
 					float ph = p->h;		
@@ -1691,14 +1757,26 @@ __tz_one("borderdone");
 					// transform the knob size (0.25) into the context of the parent height (480/2000)  == (0.06)
 					float f2 = f * (ph / sh);						
 					// transform the knob offset (0.1) into the context of the parent height 0.1 + (480/2000) == (0.124) and starting from the parent offset
-					float fy2 = fy + (fy * (ph / sh));					
-					liqcliprect_drawboxwashcolor(cr,x+w-4,y+(fy2*hh) ,12,(f2*hh),0,255);
+					float fy2 = fy + (fy * (ph / sh));	
+					
+					// adjust now the w element so that knob is onscreen correctly
+
+					
+					// find the position for the knobble in relation to the window
+					float sx = self->x;			//-200
+					float sw = self->w;			// 2000
+					float pw = p->w	;			// 1000
+					float bb = pw + (-sx);
+					float ww = w;				// 800
+					float dd = ((float)bb) * ( ((float)w) / sw );
+
+					liqcliprect_drawboxwashcolor(cr,x+dd-4,y+(fy2*hh) ,4,(f2*hh),0,255);
 					
 				}
 			}
 	}
 
- 
+
 __tz_one("scrolldone");
 
 
@@ -1761,10 +1839,17 @@ __tz_one("selecteddone");
 		if(liqcell_handlerfind(self,"click") || liqcell_handlerfind(self,"mouse"))
 		{
 
+			t = liqcell_propgets(self,"backcolor",NULL);
+			if(t && !(decodecolor(t, &bcy, &bcu, &bcv , &bca,&bcc)))
+			{
+				// cube() greycol greyrow etc
+			}
+			else
+
 
 			//liqapp_log("textcolor :: '%s'",t);
 			//if(decodecolor(t, &bcy, &bcu, &bcv , &bca))
-        	if(h<240)  // shock!   was w<400 && h<240
+	        	if(h<240)  // shock!   was w<400 && h<240
 			{
 	
 				t = "rgb(160,206,232)";

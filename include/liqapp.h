@@ -53,7 +53,7 @@ typedef struct
 	
 	char    *startpath;			// startin path  cwd
 	char    *homepath;			// ~
-	char    *userdatapath;		// ~/.liqbase
+	char    *userdatapath;			// ~/.liqbase
 	char    *codepath;			// /usr/share/liqbase		// where code files live (should contain media and widgets subfolders)
 
 	char    *username;			// lcuk or whatever is in ~/.liqbase/liqbase.prefs

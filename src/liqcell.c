@@ -1888,7 +1888,13 @@ liqcell*  liqcell_quickcreatevis(const char *name, const char *classname,int x,i
 	
 	
 	liqcell_setname(self,name);
-	if((w>0) || (h>0))	liqcell_setrect(self,x,y,w,h);     // 20090422_184637 lcuk : only set the dimensions when we have valid ones
+	if((w>0) || (h>0))	
+	{
+		liqcell_setrect(self,x,y,w,h);     // 20090422_184637 lcuk : only set the dimensions when we have valid ones
+		liqcell_setinnersize_from_outer(self);		// this ensures that widgets have an initial scale
+	}
+	self->startx = x; self->starty = y;
+
 
 	return self;
 }

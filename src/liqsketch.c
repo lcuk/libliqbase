@@ -597,6 +597,8 @@ char *          liqstroke_quadchainbuild(liqstroke *self)
 		
 	quadchain[quadused++] = 0;
 	self->quadchain = strdup(quadchain);
+
+	//liqapp_log("quadchain calc:: '%s'",self->quadchain);
 	return self->quadchain;
 }
 
@@ -1153,9 +1155,9 @@ int liqsketch_fileload_memstream(liqsketch *self,char *filename,char *srcdata, i
 				// 20090504_180359 lcuk : since I am starting a new stroke, I can assume if I already have one I would like
 				// 20090504_180402 lcuk : to run liqstroke_quadchainbuild on it
 				
-				if(stroke)
+				//if(stroke)
 				{
-					liqstroke_quadchainbuild(stroke);
+				//	liqstroke_quadchainbuild(stroke);
 				}
 				
 				
@@ -1206,12 +1208,11 @@ int liqsketch_fileload_memstream(liqsketch *self,char *filename,char *srcdata, i
 
 				// 20090504_180439 lcuk : again, if i have a stroke and i reach the end of file then calc it
 				// 20090504_180454 lcuk : this is entirely to see how much speedup/slowdown i have
-				
 				// 20090720_191331 lcuk : test remove it to see how quick we can make this :)
 				//if(stroke)
-				//{
+				{
 				//	liqstroke_quadchainbuild(stroke);
-				//}	
+				}	
 	
 
 	//pagefilename_test(filename);

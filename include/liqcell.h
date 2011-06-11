@@ -79,6 +79,8 @@ struct liqcell
 	int innerw;							// these are our total required dimensions according to our contents
 	int innerh;							// all children are expected to exist within this area
 
+
+
 	// another
 	struct liqcell *content;				// contained cell :)
 
@@ -94,7 +96,10 @@ struct liqcell
 
 	int angle;							// gonna have to be used eventually..
 	
-	unsigned int unused[6];
+	int startx;							// initial position specified in constructor
+	int starty;							// along with innerw/h these are the values to use
+	
+	unsigned int unused[4];
 
 }	liqcell;
 

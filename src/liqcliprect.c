@@ -536,7 +536,10 @@ int b=(y+h)-1;
 		int xx=x;
 		for(u=1;u<255;u+=16)
 		{
-			xsurface_drawrect_yuv(self->surface,xx,y,tw+1,th+1,grey,u,v);
+
+			//void liqcliprect_drawboxfillcolor(liqcliprect *self,int x,int y,int w,int h,unsigned char grey,unsigned char u,unsigned char v);
+			liqcliprect_drawboxfillcolor(self,xx,y,tw+1,th+1,grey,u,v);
+			//xsurface_drawrect_yuv(self->surface,xx,y,tw+1,th+1,grey,u,v);
 			xx+=tw;
 		}
 		y+=th;
@@ -549,8 +552,8 @@ void liqcliprect_drawgreycol(liqcliprect *self,int x,int y,int w,int h)
 	//if(h<=0)return;
 	if(w<0){ x+=w;w=-w;}
 	if(h<0){ y+=h;h=-h;}
-int r=(x+w)-1;
-int b=(y+h)-1;
+	int r=(x+w)-1;
+	int b=(y+h)-1;
 
 	if(x<self->sx)x=self->sx;
 	if(y<self->sy)y=self->sy;
@@ -558,44 +561,74 @@ int b=(y+h)-1;
 	if(b>self->ey)b=self->ey;
 	if(r&1)r++;
 	if(b&1)b++;
-    
-    
-    
-    
-    
 
 	int tw=(r-x)/16;
 	int th=(b-y)/16;
-    while((tw*16)<w)tw++;
-    while((th*16)<h)th++;
+    	while((tw*16)<w)tw++;
+    	while((th*16)<h)th++;
     
-    int gg;
+    	int gg;
     
 	//xsurface_drawrect_yuv(self->surface,x,y,(r-x)+1,(b-y)+1,grey,u,v);
-    for(gg=0;gg<=255;gg+=16)
-	//for(v=1;v<255;v+=16)
+	for(gg=0;gg<=255;gg+=16)
 	{
-        xsurface_drawrect_yuv(self->surface,x,y,w,th+1,gg,128,128);
-        
-		//int xx=x;
-		//for(u=1;u<255;u+=16)
-		//{
-		//	xsurface_drawrect_yuv(self->surface,xx,y,tw+1,th+1,grey,u,v);
-		//	xx+=tw;
-		//}
+	        //xsurface_drawrect_yuv(self->surface,x,y,w,th+1,gg,128,128);
+	        liqcliprect_drawboxfillcolor(self,x,y,w,th+1,gg,128,128);
 		y+=th;
 	}
+}
 
+
+void liqcliprect_drawgreyrow(liqcliprect *self,int x,int y,int w,int h)
+{
+	//if(w<=0)return;
+	//if(h<=0)return;
+	if(w<0){ x+=w;w=-w;}
+	if(h<0){ y+=h;h=-h;}
+	int r=(x+w)-1;
+	int b=(y+h)-1;
+
+	if(x<self->sx)x=self->sx;
+	if(y<self->sy)y=self->sy;
+	if(r>self->ex)r=self->ex;
+	if(b>self->ey)b=self->ey;
+	if(r&1)r++;
+	if(b&1)b++;
+
+	int tw=(r-x)/16;
+	int th=(b-y)/16;
+    	while((tw*16)<w)tw++;
+    	while((th*16)<h)th++;
+    
+    	int gg;
+    
+	//xsurface_drawrect_yuv(self->surface,x,y,(r-x)+1,(b-y)+1,grey,u,v);
+	for(gg=0;gg<=255;gg+=16)
+	{
+	        //xsurface_drawrect_yuv(self->surface,x,y,tw+1,h,gg,128,128);
+	        liqcliprect_drawboxfillcolor(self,x,y,tw+1,h,255-gg,128,128);
+		x+=tw;
+		//y+=th;
+
+	}
 }
 
 
 
-
-
 //##################################################################
 //##################################################################
 //##################################################################
 
+static void liqcliprect_drawtestframe(liqcliprect *self,int x,int y,int gw,int gh)
+{
+						xsurface_drawline_yuv(self->surface,x,y,x+gw,y+gh,128,40,128);		// test
+						xsurface_drawline_yuv(self->surface,x+gw,y,x,y+gh,128,40,128);	// test
+						xsurface_drawline_yuv(self->surface,x,y,x+gw,y,128,40,128);		// test top
+						xsurface_drawline_yuv(self->surface,x,y+gh,x+gw,y+gh,128,40,128);	// test bottom
+
+						xsurface_drawline_yuv(self->surface,x,y,   x,y+gh,128,40,128);		// test left
+						xsurface_drawline_yuv(self->surface,x+gw,y,x+gw,y+gh,128,40,128);	// test right
+}
 
 
 void liqcliprect_drawglyph_grey(liqcliprect *self,liqfont *font,int x,int y,unsigned char glyph)
@@ -619,6 +652,10 @@ liqfontglyph *g = liqfont_getglyph(font,glyph);
 								s=s->linknext;
 							}
 						}
+
+						//liqcliprect_drawtestframe(self, x,y,gw,gh);
+
+						
 						liqcliprect_drawsketch(self,g->sketchlink, x,y,gw,gh,2); return;  }
 
 
@@ -675,6 +712,10 @@ liqfontglyph *g = liqfont_getglyph(font,glyph);
 
 
 	//xsurface_drawstrip_colortest1(gh,gw,gdata,pdata,gskip,pskip,      self->surface, 100,y % 255,x % 255,      x,y);
+
+
+
+	
 
 }
 
