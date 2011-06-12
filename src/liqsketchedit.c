@@ -598,7 +598,7 @@ static int liqsketchedit_resize(liqcell *self, liqcelleventargs *args, void *con
 */
 	// rotation patch test
 	liqcell_setrect(cover,  0,  0,            ww*1.0,hh*1.0);
-	liqcell_setrect(undo,  ww*0.000,  hh*0.9,   ww*0.333,hh*0.1);
+	liqcell_setrect(undo,  ww*0.050,  hh*0.9,   ww*0.333-ww*0.05,hh*0.1);
 	liqcell_setrect(clear, ww*0.333,  hh*0.9,   ww*0.333,hh*0.1);
 	liqcell_setrect(save , ww*0.666,  hh*0.9,   ww*0.333,hh*0.1);
 	//liqcell_setrect(del ,  ww*0.9,  hh*0.9,   ww*0.1,hh*0.1);
