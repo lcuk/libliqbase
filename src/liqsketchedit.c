@@ -730,6 +730,7 @@ liqcell *liqsketchedit_create()
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (32), 0) );
 		liqcell_handleradd(b,    "click",   (void*)liqsketchedit_undo_click);
 		liqcell_propsets(  b,    "backcolor", "xrgb(100,0,100)" );
+		liqcell_propseti( b, "textaligny", 2 );
 		liqcell_handleradd(b,    "mouse",   (void*)liqsketchedit__cmdnull_mouse);
 		liqcell_child_insert( self, b );
 
@@ -738,6 +739,7 @@ liqcell *liqsketchedit_create()
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (32), 0) );
 		liqcell_handleradd(b,    "click",   (void*)liqsketchedit_clear_click);
 		liqcell_propsets(  b,    "backcolor", "xrgb(0,0,100)" );
+		liqcell_propseti( b, "textaligny", 2 );
 		liqcell_handleradd(b,    "mouse",   (void*)liqsketchedit__cmdnull_mouse);
 		liqcell_child_insert( self, b );
 	
@@ -746,6 +748,7 @@ liqcell *liqsketchedit_create()
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (32), 0) );
 		liqcell_handleradd(b,    "click",   (void*)liqsketchedit_save_click);
 		liqcell_propsets(  b,    "backcolor", "xrgb(0,100,0)" );
+		liqcell_propseti( b, "textaligny", 2 );
 		liqcell_handleradd(b,    "mouse",   (void*)liqsketchedit__cmdnull_mouse);
 		liqcell_child_insert( self, b );
 
@@ -754,6 +757,7 @@ liqcell *liqsketchedit_create()
 		liqcell_setfont(   b, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (32), 0) );
 		liqcell_handleradd(b,    "click",   (void*)liqsketchedit_del_click);
 		liqcell_propsets(  b,    "backcolor", "xrgb(100,0,0)" );
+		liqcell_propseti( b, "textaligny", 2 );
 		liqcell_handleradd(b,    "mouse",   (void*)liqsketchedit__cmdnull_mouse);
 		liqcell_child_insert( self, b );
 		liqcell_setvisible(b,0);
