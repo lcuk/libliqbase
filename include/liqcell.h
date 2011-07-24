@@ -152,6 +152,8 @@ liqcell*  liqcell_quickcreatenameclass(const char *name, const char *classname);
 
 liqcell*  liqcell_child_append(liqcell *self,liqcell *child);
 liqcell*  liqcell_child_insert(liqcell *self,liqcell *child);
+liqcell*  liqcell_child_insertbefore(liqcell *self,liqcell *child, liqcell*placeholder);
+liqcell*  liqcell_child_insertafter(liqcell *self,liqcell *child, liqcell*placeholder);
 liqcell*  liqcell_child_insertsorted(liqcell *self, liqcell * ch);
 liqcell*  liqcell_child_insertsortedbyname(liqcell *self, liqcell * ch,int sortpositive);
 int liqcell_child_remove(liqcell *self,liqcell *child);
@@ -264,7 +266,7 @@ int 	liqcell_getenabled(liqcell *self);
 
 void 	liqcell_setselected(liqcell *self,int arg);				// set the selected indicator
 int 	liqcell_getselected(liqcell *self);
-
+liqcell * liqcell_child_getfirstselected(liqcell *self);
 
 void    liqcell_child_selectall(liqcell *self);                 // allow bulk selection
 void    liqcell_child_selectnone(liqcell *self);

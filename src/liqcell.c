@@ -248,7 +248,9 @@ void liqcell_setpos(liqcell *self,int x,int y)
 	if(self->x==x && self->y==y)return;
 	self->x=x;
 	self->y=y;
+//liqapp_log("move start '%s'",self->name);
 	liqcell_handlerrun(self,"move",NULL);
+//liqapp_log("move fin   '%s'",self->name);
 }
 
 /**
@@ -786,7 +788,7 @@ void liqcell_setshown(liqcell *self,int arg)
 	}
 	else
 	{
-		self->kind &= !cellkind_shown;
+		self->kind &= ~cellkind_shown;
 	}
 }
 
@@ -885,7 +887,6 @@ liqcell *liqcell_getlinkchild_visual(liqcell *self)
 	}
 	return NULL;
 }
-
 
 
 
@@ -1290,6 +1291,47 @@ liqcell*  liqcell_child_insert(liqcell *self,liqcell *child)
 	return child;
 }
 
+
+
+liqcell*  liqcell_child_insertbefore(liqcell *self,liqcell *child, liqcell*placeholder)
+{
+	// insert the child into the tree
+	if(!child)return NULL;
+	if(!placeholder) return NULL;
+	if(!placeholder->linkprev) return liqcell_child_insert(self,child);
+	
+	//liqcell_hold(child);
+	child->linkparent=(self);
+	child->linkprev=placeholder->linkprev; // we are at the start
+	child->linknext=placeholder;
+
+	child->linkprev->linknext = child;
+	placeholder->linkprev = child;
+	//self->childcount++;
+	liqcell_setdirty(self,1);
+	return child;
+}
+
+liqcell*  liqcell_child_insertafter(liqcell *self,liqcell *child, liqcell*placeholder)
+{
+	// insert the child into the tree
+	if(!child)return NULL;
+	if(!placeholder) return NULL;
+	if(!placeholder->linknext) return liqcell_child_append(self,child);
+	
+	//liqcell_hold(child);
+	child->linkparent=(self);
+	child->linkprev=placeholder;
+	child->linknext=placeholder->linknext; // we are at the start
+
+
+	child->linknext->linkprev = child;
+	placeholder->linknext = child;
+	//self->childcount++;
+	liqcell_setdirty(self,1);
+	return child;
+}
+
 /**
  * Count the number of visible children
  * @param self The liqcell to count the children of
@@ -1334,6 +1376,18 @@ int liqcell_child_countselected(liqcell *self)
 		c=liqcell_getlinknext(c);
 	}
 	return answercount;
+}
+
+liqcell * liqcell_child_getfirstselected(liqcell *self)
+{
+	liqcell *c;
+	c=liqcell_getlinkchild_visual(self);
+	while(c)
+	{
+		if( liqcell_getselected(c) ) return c;
+		c=liqcell_getlinknext_visual(c);
+	}
+	return NULL;
 }
 /**
  * Create a chain in an already linked list of liqcells. If a list doesn't exist for the parent
@@ -2240,10 +2294,10 @@ static int lowest(int a,int b)
 {
 	if(abs(a)<abs(b))
 	{
-		liqapp_log("lowest %i :: %i = a %i",a,b,a);
+	//	liqapp_log("lowest %i :: %i = a %i",a,b,a);
 		return a;
 	}
-	liqapp_log("lowest %i :: %i = b %i",a,b,b);
+	//liqapp_log("lowest %i :: %i = b %i",a,b,b);
 	return b;
 }
 
@@ -2255,7 +2309,7 @@ static int dimension_ensurevisible( int rs,int re,    int ps,int pe, int ss,int 
 	// to slide the rule along so s is visible :)
 	//ss += ps;	// start by adjusting 
 	//se += pe;
-	liqapp_log("dim ol: r(%i,%i)   p(%i,%i)    s(%i,%i)",   rs,re,     ps,pe,     ss,se);
+	//liqapp_log("dim ol: r(%i,%i)   p(%i,%i)    s(%i,%i)",   rs,re,     ps,pe,     ss,se);
 	if(re<=ss)
 	{
 		// S is way below, lets adjust
@@ -2284,7 +2338,7 @@ static int dimension_ensurevisible( int rs,int re,    int ps,int pe, int ss,int 
  */
 int liqcell_ensurevisible(liqcell *self)
 {
-	liqapp_log("ensure: %s",self->name);
+	//liqapp_log("ensure: %s",self->name);
 	int xs=self->x;
 	int xe=self->x+self->w;
 	int ys=self->y;
@@ -2297,7 +2351,7 @@ int liqcell_ensurevisible(liqcell *self)
 		liqcell *r=liqcell_getlinkparent(p);
 		if(r)
 		{
-			liqapp_log("trying in : %s",p->name);
+			//liqapp_log("trying in : %s",p->name);
 			xs+=p->x;
 			xe+=p->x;
 			ys+=p->y;
@@ -2308,7 +2362,7 @@ int liqcell_ensurevisible(liqcell *self)
 			int ay = -dimension_ensurevisible(0,r->h,   p->y,p->y+p->h,   ys,ye);
 
 
-			liqapp_log("gave me : a(%i,%i)",  ax,ay);
+			//liqapp_log("gave me : a(%i,%i)",  ax,ay);
 
 			liqcell_adjustpos(p,ax,ay);
 			xs-=ax;
@@ -2329,7 +2383,7 @@ int liqcell_ensurevisible(liqcell *self)
  */
 int liqcell_ensurevisible_centred(liqcell *self)
 {
-	liqapp_log("ensure: %s",self->name);
+	//liqapp_log("ensure: %s",self->name);
 	int xs=self->x;
 	int xe=self->x+self->w;
 	int ys=self->y;
@@ -2342,7 +2396,7 @@ int liqcell_ensurevisible_centred(liqcell *self)
 		liqcell *r=liqcell_getlinkparent(p);
 		if(r)
 		{
-			liqapp_log("trying in : %s",p->name);
+			//liqapp_log("trying in : %s",p->name);
 			xs+=p->x;
 			xe+=p->x;
 			ys+=p->y;
@@ -2353,7 +2407,7 @@ int liqcell_ensurevisible_centred(liqcell *self)
 			int ay = -dimension_ensurevisible(r->h*0.5,r->h*0.5,   p->y,p->y+p->h,   ys,ye);
 
 
-			liqapp_log("gave me : a(%i,%i)",  ax,ay);
+			//liqapp_log("gave me : a(%i,%i)",  ax,ay);
 
 			liqcell_adjustpos(p,ax,ay);
 			xs-=ax;

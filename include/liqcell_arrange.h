@@ -41,13 +41,14 @@ int     liqcell_child_countselected(liqcell *self);
 void liqcell_forceinboundparent(liqcell *self);
 
 int liqcell_child_arrange_autoflow(liqcell *self);			// flowing document text;
+int liqcell_child_arrange_autoflow_wordwrap(liqcell *self);			// flowing document text special version which expects "char" class items with ->name being a single character
 int liqcell_child_arrange_nooverlap(liqcell *self,liqcell *currentselection);
 int liqcell_child_arrange_makegrid(liqcell *self,int viscolcount,int visrowcount);
 int liqcell_child_arrange_makegrid_fly(liqcell *self,int viscolcount,int visrowcount);	// special flyto mode
 int liqcell_child_arrange_easytile(liqcell *self);
 int liqcell_child_arrange_easyrow(liqcell *self);
 int liqcell_child_arrange_easycol(liqcell *self);
-
+void liqcell_child_arrange_right_row(liqcell *self);		// arrange in a row from the right (for footerbar use)
 #ifdef __cplusplus
 }
 #endif

@@ -66,7 +66,7 @@ liqsketchfont * liqsketchfont_cache_find(const char *ident)
 
 
 	snprintf(cachekey,256,"%s",ident);
-	liqapp_log( "sketchfont cache seeking %s", cachekey );
+	//liqapp_log( "sketchfont cache seeking %s", cachekey );
 	if(cacheused>=cachemax)
 	{
 			// all font slots actively in use
@@ -80,7 +80,7 @@ liqsketchfont * liqsketchfont_cache_find(const char *ident)
 		if(strcmp(cachestack[f].key,cachekey)==0)
 		{
 			// no differences..
-			liqapp_log( "sketchfont cache matched %s %i", cachekey ,cachestack[f].data->usagecount);
+			//liqapp_log( "sketchfont cache matched %s %i", cachekey ,cachestack[f].data->usagecount);
 			self = cachestack[f].data;
 			//self->usagecount++;
 			liqsketchfont_hold(self);
@@ -90,7 +90,7 @@ liqsketchfont * liqsketchfont_cache_find(const char *ident)
 	}
 		//liqapp_log("not found %s", cachekey );
 	// not yet in the cache
-	liqapp_log( "sketchfont cache creating %s", cachekey );
+	//liqapp_log( "sketchfont cache creating %s", cachekey );
 
 
 
@@ -129,13 +129,13 @@ liqsketchfont * liqsketchfont_cache_find(const char *ident)
 	
 	//self->usagecount=1;
 
-	liqapp_log( "sketchfont cache inserting %s", cachekey );
+	//liqapp_log( "sketchfont cache inserting %s", cachekey );
 
 	f=cacheused;
 	cachestack[f].key  = strdup(cachekey);
 	cachestack[f].data = self;
 	cacheused++;
-	liqapp_log( "sketchfont cache completed %s", cachekey );
+	//liqapp_log( "sketchfont cache completed %s", cachekey );
 	return self;
 }
 
@@ -407,6 +407,13 @@ int liqsketchfont_fileload(liqsketchfont *self,char *filename)
 			else
 			if((strcmp(xcmd,"pt")==0) && xcolcount==3)
 			{
+				//### Fixup for bug where strokes extend the boundary
+				// fixed here rather than all the data
+				int yy = atoi( xcols[1] )+1;
+				if(yy>pg->pixelheight) pg->pixelheight = yy;
+				if(yy>self->maxh) self->maxh = yy;
+
+				
 				if(st->pointcount==0)
 				{
 					liqstroke_start(st,
@@ -438,6 +445,18 @@ int liqsketchfont_fileload(liqsketchfont *self,char *filename)
 		linenum++;
 	}
 	doc_close(&doc);
+
+	//### Fixup: ensure all the pages have the same height now (after the fixup)
+	int idx;
+	for(idx=0;idx<256;idx++)
+	{
+		if(self->glyphs[idx])
+		{
+			liqsketch *pg=self->glyphs[idx];
+			pg->pixelheight=self->maxh;
+		}
+	}
+
 	
 	return 0;
 }

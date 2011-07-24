@@ -572,6 +572,10 @@ static int liqcell_kineticboiloff(liqcell *self)
 
 		//liqapp_log("kinetic pre motion... k=%2i,%2i  d=%i,%i    p=%i,%i s=%i,%i", self->kineticx , self->kineticy,   dx,dy,    px,py , self->x,self->y );
 
+		if(-px<0)px=0;
+		if(-py<0)py=0;
+		if(-px>self->w-par->w)px=-(self->w-par->w);
+		if(-py>self->h-par->h)py=-(self->h-par->h);
 
 		liqcell_setpos(self,px,py);
 
@@ -728,6 +732,11 @@ __tz_one("start");
 
 
 	//liqapp_log("easypaint 0");
+
+
+
+int triedlayout = 0;
+	layoutrestart:
 	
 __tz_one("sizeok");
 
@@ -750,6 +759,10 @@ __tz_one("clipgot");
 		return;
 	}
 __tz_one("clipok");
+
+
+
+
 
 	// onscreen, so save the frame number away
 	self->paintlastframenumber = canvas.framecount;
@@ -1122,6 +1135,24 @@ __tz_one("imagedone");
 	liqcell *content = liqcell_getcontent(self);
 	if(content)
 	{
+
+
+			// THIS WILL SLOW DOWN RENDERING
+			// find out if orientation flipped.
+			if((triedlayout==0) && (liqcell_handlerfind(content,"layout")))
+			{
+				if( canvas.pixelwidth != liqcell_getw(content) )
+				{
+					//liqapp_log("liqcell_easypaint LAYOUT 1 can.w(%d) != self.w(%d) %s",canvas.pixelwidth,liqcell_getw(self),self->name);
+					// something changed, a glitch in the matrix.
+					liqcell_handlerrun(content,"layout",NULL);	
+					//liqapp_log("liqcell_easypaint LAYOUT 2 can.w(%d) ?= self.w(%d) %s",canvas.pixelwidth,liqcell_getw(self),self->name);
+					//triedlayout = 1;
+					//goto layoutrestart;
+
+
+				}
+			}
 		//liqapp_log("content1 = %s  xy(%d,%d) wh(%d,%d)",content->name,x,y,w,h);
 		// 20090414_012212 lcuk : allow for content which is not visible to be added but make sure we dont render it
 		if(liqcell_getvisible(content))

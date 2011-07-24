@@ -112,9 +112,213 @@ static struct liqcell_easyrunstack
 	int hity;
 	int hitw;
 	int hith;
+	liqcell *OpenSwipeList;
 }
 	       liqcell_easyrunstack[liqcell_easyrunstack_total];
 static int liqcell_easyrunstack_used=-1;
+
+
+
+		static int worldmouse(liqcell *self, liqcellmouseeventargs *args, liqcell *world)
+		{
+			liqapp_log("RunOpenSwipe mouse 1 mex(%d)", args->mex);
+			int direction = liqcell_propgeti(self,"direction",0);
+			liqcell_propseti(self,"position",args->mex);
+			liqcell_handlerrun(self,"layout2",NULL);
+			if(args->mcnt==0)
+			{
+				// starting
+				liqapp_log("RunOpenSwipe mouse 2");
+			}
+			else
+			{
+				if(args->mez>0)
+				{
+					// in progress
+					liqapp_log("RunOpenSwipe mouse 3");
+				}
+				else
+				{
+					// finishing
+					liqapp_log("RunOpenSwipe mouse 4");
+
+					//liqcell_setvisible(world,0);
+					liqcell_propseti(self,"inmotion",0);
+					
+				}
+			}
+			liqapp_log("RunOpenSwipe mouse 5");
+			return 0;
+		}
+		static int worldpaint(liqcell *self, liqcelleventargs *args, liqcell *world)
+		{
+			int inmotion = liqcell_propgeti(self,"inmotion",0);
+			if(inmotion==0)
+			{
+				liqapp_log("RunOpenSwipe paint 1");
+				int direction = liqcell_propgeti(self,"direction",0);
+				int position = liqcell_propgeti(self,"position",0);
+				int width = liqcell_getw(self);
+
+				if(position > (width/2))
+				{
+					liqapp_log("RunOpenSwipe paint 2");
+					if((width-position) < (12)){ 
+						liqcell_setvisible(world,0); liqcell_propseti(world,"dialog_running",0); 
+						liqapp_log("RunOpenSwipe paint 3");
+					}
+					position =position + ( (width-position) / 3 );
+					liqapp_log("RunOpenSwipe paint 4");
+
+
+				}
+				else
+				{
+					liqapp_log("RunOpenSwipe paint 5");
+					if((position) < (12)){ 
+						liqcell_setvisible(world,0); liqcell_propseti(world,"dialog_running",0); 
+						liqapp_log("RunOpenSwipe paint 6");
+					}
+					position = position - (position / 3);
+					liqapp_log("RunOpenSwipe paint 7");
+
+				}
+				liqapp_log("RunOpenSwipe paint 8");
+				liqcell_propseti(self,"position",position);
+				liqcell_handlerrun(self,"layout2",NULL);
+				liqapp_log("RunOpenSwipe paint 9");
+			}
+			liqcell_setdirty(self,1);
+			return 0;
+		
+		}
+		static int worldlayout(liqcell *self, liqcelleventargs *args, liqcell *world)
+		{
+			liqapp_log("RunOpenSwipe layout 1");
+			int direction = liqcell_propgeti(self,"direction",0);
+			int position = liqcell_propgeti(self,"position",0);
+			int width = liqcell_getw(self);
+			int hh = liqcell_geth(self);
+			liqapp_log("RunOpenSwipe layout 2 dir(%d) pos(%d) wid(%d)",direction,position,width);
+			
+			float fracfrom = (float)position / (float)width;
+			float fracto = (float)(width-position) / (float)width;
+			liqcell *left = liqcell_child_lookup(self,"left");
+			liqcell *middle = liqcell_child_lookup(self,"middle");
+			liqcell *right = liqcell_child_lookup(self,"right");
+
+			liqapp_log("RunOpenSwipe layout 3  from(%3.3f) to(%3.3f)",fracfrom,fracto);
+			if(direction<0)
+			{
+				liqcell_setrect(left, 0,0, width * fracfrom,hh);
+				liqcell_setrect(middle, width * fracfrom,0, width,hh);
+				liqcell_setrect(right, 0,0, 00,00);
+			}
+			else
+			{
+				liqcell_setrect(left, 0,0, 00,00);
+				liqcell_setrect(middle, (width * fracfrom) - width,0, width,hh);
+				liqcell_setrect(right, width * fracfrom,0, width * fracto,hh);
+			}
+			liqapp_log("RunOpenSwipe layout 4");
+			
+			return 0;
+		}
+
+liqcell *RunOpenSwipeMode(liqcell *self, int direction, int position, liqcell *OpenSwipeList)
+{
+	// this will return a new "self"
+	// 
+	liqapp_log("RunOpenSwipeMode 1");
+
+	liqcell *prev = NULL;
+	liqcell *next = NULL;
+
+	liqcell *lastcc=NULL;
+	liqcell *firstcc=NULL;
+
+		liqcell *c = liqcell_getlinkchild_visible(OpenSwipeList);
+		while(c)
+		{
+			liqcell *cc = liqcell_getcontent(c);
+			if(!firstcc)firstcc=cc;
+
+			if(cc == self)
+			{
+				prev=lastcc;
+				liqcell *d=liqcell_getlinknext_visible(c);
+				if(d)
+				{
+					liqcell *dd=liqcell_getcontent(d);
+					if(dd)
+					{
+						next=dd;
+					}
+				}
+				//break;
+			}
+			lastcc=cc;
+			c=liqcell_getlinknext_visible(c);
+		}
+		if(!next)next=firstcc;
+		if(!prev)prev=lastcc;
+		
+	liqapp_log("RunOpenSwipeMode 2");	
+
+	
+
+		liqcell *b;
+		
+		int ww = self->w;
+		int hh = self->h;
+		liqcell *world = liqcell_quickcreatevis("world","stage",  0,0,ww,hh);
+			liqcell *left = liqcell_quickcreatevis("left","hand",  0,0,ww/3,hh);
+			//liqcell_propsets(  left, "backcolor", "rgb(60,0,0)" );
+			liqcell_propseti(left,"lockaspect",1);
+			liqcell_setcontent(left,  prev  );
+			liqcell_child_append( world, left );
+
+			liqcell *middle = liqcell_quickcreatevis("middle","focus",  ww/3,0,ww/3,hh);
+			//liqcell_propsets(  middle, "backcolor", "rgb(0,60,0)" );
+			liqcell_setcontent(middle, self   );
+			liqcell_child_append( world, middle );
+			liqcell *right = liqcell_quickcreatevis("right","hand",  (ww/3)*2,0,ww/3,hh);
+			//liqcell_propsets(  right, "backcolor", "rgb(0,0,60)" );
+			liqcell_propseti(right,"lockaspect",1);
+			liqcell_setcontent(right,  next   );
+			liqcell_child_append( world, right );
+			liqcell_handleradd_withcontext(world,    "mouse",   (void *)worldmouse, world);
+			liqcell_handleradd_withcontext(world,    "layout2",   (void *)worldlayout, world);
+			liqcell_handleradd_withcontext(world,    "paint",   (void *)worldpaint, world);
+			liqcell_propseti(world, "direction", direction);
+			liqcell_propseti(world,"position",position);
+			liqcell_propseti(world,"inmotion",1);
+			liqcell_propseti(world,"dialog_zoomed",1);
+			liqcell_handlerrun(world,"layout2",NULL);
+	liqapp_log("RunOpenSwipeMode 3");
+		liqcell_easyrun(world);
+
+	liqcell *retval = self;
+		int newposition = liqcell_propgeti(world,"position",position);
+		if(direction<0)
+		{
+			if(newposition > self->w/2)
+			{
+				retval = prev;
+			}
+		}
+		else
+		{
+			if(newposition < self->w/2)
+			{
+				retval = next;
+			}
+		}
+	liqapp_log("RunOpenSwipeMode 4");
+
+	//liqcell_release(world);
+	return retval;
+}
 	
 //########################################################################
 //########################################################################
@@ -841,9 +1045,25 @@ int idle_lazyrun_wanted = liqcell_propgeti(self,"idle_lazyrun_wanted",0);
 	liqcell_easyrunstack[liqcell_easyrunstack_used].keyargs = NULL;
 	liqcell_easyrunstack[liqcell_easyrunstack_used].clickargs = NULL;
 	
+	liqcell_easyrunstack[liqcell_easyrunstack_used].OpenSwipeList = NULL;
 	
 
 
+
+
+	if(strcmp(self->name,"liqbase-playground")==0)
+	{
+		liqapp_log("RunOpenSwipeMode config 1");
+		    liqcell *body = liqcell_child_lookup(self,"body");
+		    if(body)
+		    {
+			liqapp_log("RunOpenSwipeMode config 2");
+		    	liqcell_easyrunstack[liqcell_easyrunstack_used].OpenSwipeList = body;
+		    }
+
+		   liqapp_log("RunOpenSwipeMode config 3");
+    
+	}
 
 	
 
@@ -1260,7 +1480,7 @@ waitevent:
 			else if(ev.type == LIQEVENT_TYPE_MOUSE && (zoom_in_progress==0)  && (fademode==0)  )// && ev.mouse.pressure==0)
 			{
 				// mouse moving! w00t
-				
+
 				// lets just make sure we let this variable know
 				liqcell_easyrun_fingerpressed = (ev.mouse.pressure>0);
 
@@ -1285,10 +1505,11 @@ waitevent:
 				hoty=0;
 
 
-
-
 			if(mouseargs.mcnt==0)
 			{
+
+				
+			
 				hot = liqcell_easyhittest(self, wx,wy, &hotx,&hoty);
 				//hot = hit;//liqcell_easyhittest(self, wx,wy, &hotx,&hoty);
 				//liqcell *sel = hot;
@@ -1324,6 +1545,8 @@ waitevent:
 						mouseargs.hit = hot;
 						
 						liqcell_easyrun_activecontrol = hot;
+						
+						//liqapp_log("clck:stt %s",hot->name);
 
 
 
@@ -1345,6 +1568,11 @@ waitevent:
 						// in progress
 						liqcellmouseeventargs_stroke_extend(&mouseargs,wx,wy,ev.mouse.pressure);
 
+
+						
+						//liqapp_log("clck:mid %s",hot->name);
+
+
 						omex=mx;
 						omey=my;
 
@@ -1355,6 +1583,10 @@ waitevent:
 						// completed
 						liqcellmouseeventargs_stroke_extend(&mouseargs,wx,wy,ev.mouse.pressure);
 
+
+						
+						//liqapp_log("clck:fin %s",hot->name);
+						
 						omex=mx;
 						omey=my;
 
@@ -1397,6 +1629,63 @@ waitevent:
 							}
 #endif						
 
+
+
+
+				// OpenSwipe, if we have a swipe list, if the cursor is starting on the swipe zone we run the swipe transition instead.
+				if( liqcell_easyrunstack[liqcell_easyrunstack_used-1].OpenSwipeList  && (ABS(mouseargs.mdx) > (ABS(mouseargs.mdy) * 2))  && (ABS(mouseargs.mdx)>4) )
+				{
+
+					int gx = self->w/15;
+					int gy = self->h/10;
+						liqapp_log("OpenSwipe Start1 %3d,%3d,%3d",mouseargs.msy,gy,canvas.pixelheight-gy);
+					if(mouseargs.msy>gy && mouseargs.msy<canvas.pixelheight-gy)
+					{
+						liqapp_log("OpenSwipe Start2 %3d,%3d,%3d",mouseargs.msx,gx,canvas.pixelwidth-gx);
+						if(mouseargs.msx < gx)
+						{
+							// enter swipe mode for giggles
+							liqcell *retval = RunOpenSwipeMode(self, -1 ,mx, liqcell_easyrunstack[liqcell_easyrunstack_used-1].OpenSwipeList );
+							mouseargs.mcnt=0;
+							liqcell_easyrun_fingerpressed=0;
+							if(retval && (retval!=self))
+							{
+								//liqcell *retval = 
+								liqcell_easyrunstack[liqcell_easyrunstack_used].runself = retval;
+								self = retval;
+								targetcr = easyrun_realtime_reshape(self, graph);
+							}
+							liqcell_setdirty(self,1);
+							dirty=1;
+							hadmouse=1;
+							wantwait=0;
+							refreshinprogress=0;
+							liqapp_log("OpenSwipe fin1");
+							goto quickfin;
+						}
+						if( mouseargs.msx > (canvas.pixelwidth-gx))
+						{
+							// enter swipe mode for giggles
+							liqcell *retval = RunOpenSwipeMode(self, 1 ,mx, liqcell_easyrunstack[liqcell_easyrunstack_used-1].OpenSwipeList );
+							mouseargs.mcnt=0;
+							liqcell_easyrun_fingerpressed=0;
+							if(retval && (retval!=self))
+							{
+								//liqcell *retval = 
+								liqcell_easyrunstack[liqcell_easyrunstack_used].runself = retval;
+								self = retval;
+								targetcr = easyrun_realtime_reshape(self, graph);
+							}
+							liqcell_setdirty(self,1);
+							dirty=1;
+							hadmouse=1;
+							wantwait=0;
+							refreshinprogress=0;
+							liqapp_log("OpenSwipe fin2");
+							goto quickfin;
+						}
+					}
+				}
 
 
 
@@ -1949,7 +2238,9 @@ moar:
 				if( canvas.pixelwidth != liqcell_getw(self) )
 				{
 					// something changed, a glitch in the matrix.
+					//liqapp_log("liqcell_easyrun   LAYOUT 1 can.w(%d) != self.w(%d) %s",canvas.pixelwidth,liqcell_getw(self),self->name);
 					liqcell_handlerrun(self,"layout",NULL);	
+					//liqapp_log("liqcell_easyrun   LAYOUT 2 can.w(%d) ?= self.w(%d) %s",canvas.pixelwidth,liqcell_getw(self),self->name);
 
 					// #############################################	
 

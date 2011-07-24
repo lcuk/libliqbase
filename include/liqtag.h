@@ -121,8 +121,8 @@ void    		liqtagnode_free(liqtagnode *self);
 
 
 int liqtagnode_clear(liqtagnode *self);										// Clear the node
-liqtagleaf *liqtagnode_findleaf(liqtagnode *self,char *itemkey);						// check if itemkey is used in this node
-liqtagleaf *liqtagnode_findorcreateleaf(liqtagnode *self,char *leafkey, char *leafdata);			// insert items into the node
+liqtagleaf *liqtagnode_findleaf(liqtagnode *self,const char *itemkey);						// check if itemkey is used in this node
+liqtagleaf *liqtagnode_findorcreateleaf(liqtagnode *self,const char *leafkey, const char *leafdata);			// insert items into the node
 
 //################################################################################
 //################################################################################
@@ -156,12 +156,17 @@ void    		liqtagcloud_free(liqtagcloud *self);
 //################################################################################
 
 
-liqtagnode *liqtagcloud_findnode(liqtagcloud *self,char *nodekey);							// check if itemkey is used in this cloud
-int liqtagcloud_containsleaf(liqtagcloud *self,char *leafkey);								// check if itemkey is used in this cloud
-liqtagnode *liqtagcloud_findorcreatenode(liqtagcloud *self,char *tagname);						// insert items into the node
+liqtagnode *liqtagcloud_findnode(liqtagcloud *self,const char *nodekey);							// check if itemkey is used in this cloud
+int liqtagcloud_containsleaf(liqtagcloud *self,const char *leafkey);								// check if itemkey is used in this cloud
+liqtagnode *liqtagcloud_findorcreatenode(liqtagcloud *self,const char *tagname);						// insert items into the node
 int liqtagcloud_systemstart();
 
 extern liqtagcloud *system_tagcloud;
+
+
+
+void liqtag_quicksaveas( const char *tagname, const char *data_filename );					// helper routine for sketcheditor to save a new file as a specific tag
+int tagnode_save(liqtagnode *self);
 
 
 #ifdef __cplusplus

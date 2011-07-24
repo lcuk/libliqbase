@@ -165,6 +165,21 @@ void liqcell_forceinboundparent(liqcell *self)
 
 
 
+void liqcell_child_arrange_right_row(liqcell *self)
+{
+	liqcell *c;
+	c=liqcell_getlinkchild_visual(self);
+	int mw = self->w;
+	while(c)
+	{
+		int w = c->w;
+		liqcell_setrect(c, mw-w,0,w,self->h);
+		mw-=w;		
+		c=liqcell_getlinknext_visual(c);
+	}
+}
+
+
 
 int liqcell_child_arrange_autoflow(liqcell *self)			// flowing document text
 {
@@ -217,6 +232,80 @@ int liqcell_child_arrange_autoflow(liqcell *self)			// flowing document text
 
 }
 
+int liqcell_child_arrange_autoflow_wordwrap(liqcell *self)			// flowing document text
+{	// special version which expects "char" class items with ->name being a single character
+	liqcell *c;
+
+	int availw=liqcell_getw(self);
+	//int availh=liqcell_geth(self);
+
+
+	int x=0;
+	int y=0;
+
+	int allmaxw=0;
+	int rowmaxh=0;
+	
+	liqcell *lastspc = NULL;
+
+	//################################################
+	//int answercount=0;
+
+	//################################################
+	//liqapp_log("liqcell_child_arrange_nooverlap preparing");
+	c=liqcell_getlinkchild(self);
+	while(c)
+	{
+		if(liqcell_getvisible(c))
+		{
+
+
+			switch( c->name[0] )
+			{
+				case ' ':
+				case '\t':
+				case '\n':
+				case '\r':
+					lastspc = c;
+					break;
+				default:
+					break;
+			}
+			int w=liqcell_getw(c);
+			int h=liqcell_geth(c);
+
+			if(x+w>availw && x>0 && (lastspc != c))
+			{
+				// we ignore any space characters also in the fit equation
+				// cannot fit (we ignore the first so we get at least 1 on the flow)
+				x=0;
+				y+=rowmaxh;
+				rowmaxh=0;
+				// we must reverse to the last space, then move next
+				c = lastspc;
+				c=liqcell_getlinknext_visible(c);
+				
+				w=liqcell_getw(c);
+				h=liqcell_geth(c);
+				
+			}
+
+					
+
+			if(x+w>allmaxw) allmaxw = x+w;		// make sure we store the widest total width
+			if(h>rowmaxh) rowmaxh = h;			//
+
+			liqcell_setpos(c, x,y);
+			x+=w;
+		}
+		c=liqcell_getlinknext(c);
+	}
+
+	liqcell_setsize(self, allmaxw, y+rowmaxh);
+
+	return 0;
+
+}
 
 
 int liqcell_child_arrange_nooverlap(liqcell *self,liqcell *currentselection)
@@ -224,6 +313,13 @@ int liqcell_child_arrange_nooverlap(liqcell *self,liqcell *currentselection)
 
 	// oo way o.O :)
 	liqcell *c;
+
+
+	int tilew =  liqcell_propgeti(self,"liqcell_child_arrange_nooverlap_minimumw",0);
+	int tileh =  liqcell_propgeti(self,"liqcell_child_arrange_nooverlap_minimumh",0);
+
+	int ignorebound = liqcell_propgeti(self,"liqcell_child_arrange_nooverlap_ignorebound",0);
+
 
 	//################################################
 	int answercount=0;
@@ -309,17 +405,19 @@ int liqcell_child_arrange_nooverlap(liqcell *self,liqcell *currentselection)
 				d = liqcell_getlinknext(d);
 			}
 			// parent boundary adjustment
-			if(c->x<0)c->overlapx-=c->x;
-			if(c->y<0)c->overlapy-=c->y;
-			if(c->x>=self->w)c->overlapx-=c->x-self->w;
-			if(c->y>=self->h)c->overlapy-=c->y-self->h;
+			if(ignorebound==0)
+			{
+				if(c->x<0)c->overlapx-=c->x;
+				if(c->y<0)c->overlapy-=c->y;
+				if(c->x>=self->w)c->overlapx-=c->x-self->w;
+				if(c->y>=self->h)c->overlapy-=c->y-self->h;
+			}
 		}
 		c=liqcell_getlinknext(c);
 	}
 
 
-	int tilew =  liqcell_propgeti(self,"liqcell_child_arrange_nooverlap_minimumw",0);
-	int tileh =  liqcell_propgeti(self,"liqcell_child_arrange_nooverlap_minimumh",0);
+
 
 	//liqapp_log("tile %i,%i",tilew,tileh);
 
@@ -337,7 +435,8 @@ int liqcell_child_arrange_nooverlap(liqcell *self,liqcell *currentselection)
 					liqcell_setdirty(c,1); 
 				}
 
-				liqcell_forceinboundparent(c);
+				if( (ignorebound==0) )
+					liqcell_forceinboundparent(c);
 
 			}
 
@@ -350,7 +449,7 @@ int liqcell_child_arrange_nooverlap(liqcell *self,liqcell *currentselection)
 						// are free to make it a bit bigger
 						if( c->w < (self->w/2) ) {c->x-=2; c->w += 4;  liqcell_setdirty(c,1); }
 						if( c->h < (self->h/2) ) {c->y-=2; c->h += 4;  liqcell_setdirty(c,1); }
-						if( (c->selected==0) && (c!=currentselection) )
+						if( (c->selected==0) && (c!=currentselection) && (ignorebound==0))
 						{
 							liqcell_forceinboundparent(c);
 						}
@@ -375,7 +474,7 @@ int liqcell_child_arrange_nooverlap(liqcell *self,liqcell *currentselection)
 					}
 						
 						
-						if( (c->selected==0) && (c!=currentselection) )
+						if( (c->selected==0) && (c!=currentselection)  && (ignorebound==0))
 						{
 							liqcell_forceinboundparent(c);
 						}

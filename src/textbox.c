@@ -510,7 +510,7 @@ liqcell *textbox_create()
 		liqcell_handleradd(self,    "resize",   (void*)textbox_resize);
 	
 		// portrait mode, make the textbox click go here as well
-		liqcell_handleradd_withcontext(self, "click", (void*)keyboard_show_button_click, self);
+	//	liqcell_handleradd_withcontext(self, "click", (void*)keyboard_show_button_click, self);
 		// this is potentially wrong, but its worth to see
 
 		

@@ -583,22 +583,22 @@ unsigned long *tt = (unsigned long *)buf;
 				register unsigned long o2 = *(unsigned long *)&original->data[ origoffset + (origwidth*(  x+2  ) + (origwidthsub1suby)) ];
 				register unsigned long o3 = *(unsigned long *)&original->data[ origoffset + (origwidth*(  x+3  ) + (origwidthsub1suby)) ];
 					
-				*sdata3++ = (o0 & maskd)        |
+				*sdata3++ = 		(o0 & maskd)        |
 							(o1 & maskd) << 8   |
 							(o2 & maskd) << 16  |
 							(o3 & maskd) << 24  ;
 
-				*sdata2++ = (o0 & maskc) >> 8   |
+				*sdata2++ = 		(o0 & maskc) >> 8   |
 							(o1 & maskc)        |
 							(o2 & maskc) << 8   |
 							(o3 & maskc) << 16  ;						 
 						 
-				*sdata1++ = (o0 & maskb) >> 16  |
+				*sdata1++ = 		(o0 & maskb) >> 16  |
 							(o1 & maskb) >> 8   |
 							(o2 & maskb)        |
 							(o3 & maskb) << 8   ;						 
 
-				*sdata0++ = (o0 & maska) >> 24  |
+				*sdata0++ = 		(o0 & maska) >> 24  |
 							(o1 & maska) >> 16  |
 							(o2 & maska) >> 8   |
 							(o3 & maska)        ;

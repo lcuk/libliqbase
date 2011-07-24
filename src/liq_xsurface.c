@@ -1205,6 +1205,7 @@ void xsurface_drawzoomblendimage(
 							  );
 	//return;
 	// move onto the color portion
+
 	smw>>=1;
 	smh>>=1;
 	six>>=1;
@@ -1212,12 +1213,13 @@ void xsurface_drawzoomblendimage(
 	siw>>=1;
 	sih>>=1;
 
-	dmw>>=1;
-	dmh>>=1;
-	dix>>=1;
-	diy>>=1;
-	diw>>=1;
-	dih>>=1;
+	dmw=(dmw+0)>>1;
+	dmh=(dmh+0)>>1;
+	dix=((dix-2)>>1);
+	diy=((diy-2)>>1);
+	diw=(diw+4)>>1;
+	dih=(dih+4)>>1;
+
 
 	if(!siw || !sih) return;
 	if(!diw || !dih) return;

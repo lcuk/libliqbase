@@ -8,6 +8,7 @@
 #include "liqcell_prop.h"
 #include "liqcell_easyrun.h"
 #include "liqcell_easypaint.h"
+#include "liqtag.h"
 
 
 // 20100628_0325 lcuk : removing the cover so that liqpostcard works - liqsketch will end up in its own project soon
@@ -233,6 +234,14 @@ int post_to_liqbase_net(const char *filename, const char *datakey,int replyid)
 		liqsketch_filesave(liqcell_getsketch(self), filenamebuffer );
 
 
+		char *monitortag = liqcell_propgets(self,"monitortag",NULL);
+		if(monitortag && *monitortag)
+		{
+			//
+			liqtag_quicksaveas( monitortag, filenamebuffer );
+		}
+
+
 		liqcell_propsets(self,"sketchfilenamelast",filenamebuffer);
 		
 		// removing, the sync module will do this better.
@@ -248,6 +257,22 @@ int post_to_liqbase_net(const char *filename, const char *datakey,int replyid)
 
 	static int liqsketchedit_shown(liqcell *self, liqcelleventargs *args, void *context)
 	{
+		char *monitortag = liqcell_propgets(self,"monitortag",NULL);
+		if(monitortag && *monitortag)
+		{
+
+			//############################# title:label
+			liqcell *title = liqcell_quickcreatevis("title", "label", 0,0, self->w, 56);
+			liqcell_setfont(	title, liqfont_cache_getttf("/usr/share/fonts/nokia/nosnb.ttf", (40), 0) );
+			liqcell_setcaption_printf(title, "Draw a '%s'",monitortag );
+			liqcell_propsets(  title, "textcolor", "rgb(255,255,255)" );
+			liqcell_propsets(  title, "backcolor", "xrgb(0,0,60)" );
+			liqcell_propseti(  title, "textalign", 0 );
+			liqcell_child_append(  self, title);
+		}
+
+
+	
         // shown for the first time :)
         liqcell *cover = liqcell_child_lookup(self,"cover");
         if(liqcell_getlinkparent( self) == NULL )
@@ -451,22 +476,22 @@ int post_to_liqbase_net(const char *filename, const char *datakey,int replyid)
 	static int liqsketchedit_save_click(liqcell *self, liqcellclickeventargs *args, void *context)
 	{
 		liqcell *editor = liqcell_getlinkparent(self);
-
+liqapp_log("liqsketchedit_save_click 1");
 		liqsketch *sketch = liqcell_getsketch(editor);
 		if(!sketch)
 		{
 			liqapp_log("liqsketchedit_save_click nothing to save");
 			return 0;
 		}
-
+liqapp_log("liqsketchedit_save_click 2");
 		liqsketchedit_save(editor);
-
+liqapp_log("liqsketchedit_save_click 3");
 		liqsketch_clear(sketch);
-		
+liqapp_log("liqsketchedit_save_click 4");
 		liqcell_handlerrun(editor,"cleared",NULL);
-		
+liqapp_log("liqsketchedit_save_click 5");
 		liqcell_settag(editor,0);
-
+liqapp_log("liqsketchedit_save_click 6");
 
 		return 1;
 	}
@@ -612,7 +637,7 @@ static int liqsketchedit_resize(liqcell *self, liqcelleventargs *args, void *con
 
 		// ##################################################
 		liqcell *topself = liqcell_easyrunstack_topself();
-		if(self == topself)
+		//if(self == topself)
 		{
 			// ##################################################
 			liqapp_log("sk.paint: this sketcheditor is top of the world");
@@ -648,9 +673,55 @@ static int liqsketchedit_resize(liqcell *self, liqcelleventargs *args, void *con
 					int uh = sk->boundingbox.yb - sk->boundingbox.yt;
 					liqapp_log("sk.paint: u wh(%d,%d)",uw,uh);
 					liqapp_log("sk.paint: does the sketch fit by just adjusting its border?");
+					liqapp_log("sk.paint: size wh(%d,%d)",sk->pixelwidth,sk->pixelheight);
+
+					sk->pixelwidth = liqcanvas_getwidth();
+					sk->pixelheight = liqcanvas_getheight();
 
 
-					int t = sk->pixelwidth;  sk->pixelwidth = sk->pixelheight; sk->pixelheight = t;
+					//int t = sk->pixelwidth;  sk->pixelwidth = sk->pixelheight; sk->pixelheight = t;
+
+					int first=1;
+					int offx = sk->pixelwidth  * 0.1;
+					int offy = sk->pixelheight * 0.1;
+					int adjx = sk->boundingbox.xl ;
+					int adjy = sk->boundingbox.yt ;
+					float factorx = (float)(sk->pixelwidth * 0.8)  / (float)(sk->boundingbox.xr - sk->boundingbox.xl);
+					float factory = (float)(sk->pixelheight* 0.8) / (float)(sk->boundingbox.yb - sk->boundingbox.yt);
+					if(factorx<factory)
+						factory=factorx;
+					else
+						factorx=factory;
+					if( sk->boundingbox.xr > (sk->pixelwidth * 0.8) || sk->boundingbox.yb > (sk->pixelheight * 0.8) )
+					{
+					
+						// 
+						liqapp_log("sk.paint: bb x(%d,%d),y(%d,%d)", sk->boundingbox.xl,sk->boundingbox.xr,sk->boundingbox.yt,sk->boundingbox.yb );
+						liqapp_log("sk.paint: adjusting : adj(%d,%d) fac(%3.3f,%3.3f)",adjx,adjy,factorx,factory);
+						liqstroke *st = sk->strokefirst;
+						while(st)
+						{
+							//liqapp_log("sk.paint: stroke");
+							liqpoint *p = st->pointfirst;
+							while(p)
+							{
+								//liqapp_log("sk.paint: stroke.point");
+								p->x =offx+ (float)(p->x-adjx) * factorx;
+								p->y =offy+ (float)(p->y-adjy) * factory;
+								p=p->linknext;
+							}
+							st->boundingbox.xl =offx+ (float)(st->boundingbox.xl-adjx) * factorx;
+							st->boundingbox.xr =offx+ (float)(st->boundingbox.xr-adjx) * factorx;
+							st->boundingbox.yt =offy+ (float)(st->boundingbox.yt-adjy) * factory;
+							st->boundingbox.yb =offy+ ((float)st->boundingbox.yb-adjy) * factory;
+							st=st->linknext;
+						}
+						sk->boundingbox.xl =offx+ (float)(sk->boundingbox.xl-adjx) * factorx;
+						sk->boundingbox.xr =offx+ (float)(sk->boundingbox.xr-adjx) * factorx;
+						sk->boundingbox.yt =offy+ (float)(sk->boundingbox.yt-adjy) * factory;
+						sk->boundingbox.yb =offy+ (float)(sk->boundingbox.yb-adjy) * factory;
+					}
+					liqapp_log("sk.paint: done");
 
 					if(cn_orient)
 					{

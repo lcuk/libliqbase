@@ -162,19 +162,23 @@ extern "C" {
 			liqcell_adjustpos(body,mdx,mdy);
 			if(body->w>par->w || body->x!=0)
 			{
-				if(body->x>0) body->x=0;
+				//if(body->x>0) body->x=0;
+				if(body->x>0) liqcell_setpos(body,0,body->y);
 				int bb=body->x+body->w;
 
-				if(body->w>par->w && bb < par->w) body->x=par->w-body->w;
+				//if(body->w>par->w && bb < par->w) body->x=par->w-body->w;
+				if(body->w>par->w && bb < par->w) liqcell_setpos(body,par->w-body->w,body->y);
 
 			}
 			
 			if(body->h>par->h || body->y!=0)
 			{
-				if(body->y>0) body->y=0;
+				//if(body->y>0) body->y=0;
+				if(body->y>0) liqcell_setpos( body, body->x,0);
 				int bb=body->y+body->h;
 
-				if(body->h>par->h && bb < par->h) body->y=par->h-body->h;
+				//if(body->h>par->h && bb < par->h) body->y=par->h-body->h;
+				if(body->h>par->h && bb < par->h) liqcell_setpos(body,body->x,par->h-body->h);
 			}
 
 			//liqapp_log("kinetic mouse d %i,%i    ez=%i    %i,%i",args->mdx,args->mdy,args->mez    ,args->stroke->pointlast->x,args->stroke->pointlast->y  );

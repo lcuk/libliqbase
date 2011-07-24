@@ -1,3 +1,9 @@
+libliqbase (0.3.68) unstable; urgency=low
+
+  * lots of tweaks and portrait mode fixes.
+  
+ -- Gary Birkett <liquid@gmail.com>  Sun, 24 Jul 2011 00:09:10 +0000
+
 libliqbase (0.3.67) unstable; urgency=low
 
   * more sketchfont testing.

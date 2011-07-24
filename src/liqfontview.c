@@ -298,7 +298,7 @@ liqfontview * liqfontview_newfromscale(liqfont *font,float scalew,float scaleh)
 		liqsketchfont *sketchfont = self->font->sketchfont;
 
 		
-		self->pixelheight = self->font->size * scaleh * 1.2;
+		self->pixelheight = self->font->size * scaleh * 1.6;
 
 		return self;
 	}

@@ -358,7 +358,7 @@ liqimage *liqimage_newfromfile(const char *filename,int maxw,int maxh,int allowa
 	
 	
 	
-	
+/*	
 	if(
 		strcasecmp(ext,"jpg")==0  ||
 		strcasecmp(ext,"jpeg")==0
@@ -388,7 +388,7 @@ liqimage *liqimage_newfromfile(const char *filename,int maxw,int maxh,int allowa
 		return self;
 	}
 	
-	
+*/	
 
 	
 	// try and sniff?
@@ -400,6 +400,8 @@ liqimage *liqimage_newfromfile(const char *filename,int maxw,int maxh,int allowa
 		memset(buffer,0,sizeof(buffer));
 		
 		int result = fread(buffer,1,sizeof(buffer),fp);
+
+		buffer[11] = 0;
 		
 		fclose(fp);
 		if (result != sizeof(buffer))
@@ -407,7 +409,7 @@ liqimage *liqimage_newfromfile(const char *filename,int maxw,int maxh,int allowa
 			liqapp_log("Reading error",stderr);
 		}
 		
-		if(strncmp(&buffer[6],"JFIF",4)==0)
+		if(strncmp(&buffer[6],"JFIF",4)==0 || strncmp(&buffer[6],"Exif",4)==0)
 		{
 			// its a jpeg
 			if(liqimage_pageloadjpeg(self,filename,maxw,maxh)!=0)
@@ -429,7 +431,12 @@ liqimage *liqimage_newfromfile(const char *filename,int maxw,int maxh,int allowa
 			}
 			return self;
 		}		
-
+	
+	
+		liqapp_log("liqimage_newfromfile invalid filedata '%s' : '%s'",filename, buffer);
+		liqimage_free(self);
+		return NULL;
+	
 	
 	}
 	

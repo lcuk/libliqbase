@@ -21,6 +21,32 @@ liqtagcloud *system_tagcloud = NULL;
 
 
 
+
+
+void liqtag_quicksaveas( const char *tagname, const char *data_filename )
+{
+liqtagnode *node = liqtagnode_new();
+	    node->key = strdup(tagname);
+	    liqtagnode_findorcreateleaf( node, liqapp_filename_walkoverpath( data_filename ), data_filename );
+
+	    tagnode_save( node );
+	
+	    liqtagleaf_release( node->leaffirst );
+	    liqtagnode_release( node );
+
+		// now, lets also update the system tagcloud..
+
+
+
+	{
+		node = liqtagcloud_findorcreatenode(system_tagcloud,tagname);
+		liqtagnode_findorcreateleaf( node, liqapp_filename_walkoverpath( data_filename ), data_filename );
+	}
+
+	    
+}
+
+
 //#########################################################################
 //#########################################################################
 //######################################################################### liqtagleaf
@@ -56,6 +82,8 @@ void liqtagleaf_release(liqtagleaf *self)
 
 void liqtagleaf_free(liqtagleaf *self)
 {
+	if(self->key){ free(self->key); self->key=NULL; }
+	if(self->filename){ free(self->filename); self->filename=NULL; }
 	free(self);
 }
 
@@ -96,6 +124,7 @@ void liqtagnode_release(liqtagnode *self)
 
 void liqtagnode_free(liqtagnode *self)
 {
+	if(self->key){ free(self->key); self->key=NULL; }
 	free(self);
 }
 
@@ -112,7 +141,7 @@ int liqtagnode_clear(liqtagnode *self)										// Clear the node
 	return 0;
 }
 
-liqtagleaf *liqtagnode_findleaf(liqtagnode *self,char *itemkey)						// check if itemkey is used in this node
+liqtagleaf *liqtagnode_findleaf(liqtagnode *self,const char *itemkey)						// check if itemkey is used in this node
 {
 	liqtagleaf *leaf = self->leaffirst;
 	while(leaf)
@@ -127,7 +156,7 @@ liqtagleaf *liqtagnode_findleaf(liqtagnode *self,char *itemkey)						// check if
 }
 
 
-liqtagleaf *liqtagnode_findorcreateleaf(liqtagnode *self,char *leafkey, char *leafdata)						// insert items into the node
+liqtagleaf *liqtagnode_findorcreateleaf(liqtagnode *self,const char *leafkey, const char *leafdata)						// insert items into the node
 {
 	liqtagleaf *leaf = liqtagnode_findleaf(self,leafkey);
 	if(!leaf)
@@ -146,6 +175,9 @@ liqtagleaf *liqtagnode_findorcreateleaf(liqtagnode *self,char *leafkey, char *le
 	}
 	return leaf;
 }
+
+
+
 
 
 //#########################################################################
@@ -189,7 +221,7 @@ void liqtagcloud_free(liqtagcloud *self)
 //#########################################################################
 //#########################################################################
 
-liqtagnode *liqtagcloud_findnode(liqtagcloud *self,char *nodekey)							// check if itemkey is used in this cloud
+liqtagnode *liqtagcloud_findnode(liqtagcloud *self,const char *nodekey)							// check if itemkey is used in this cloud
 {
 	liqtagnode *node = self->nodefirst;
 	while(node)
@@ -205,7 +237,7 @@ liqtagnode *liqtagcloud_findnode(liqtagcloud *self,char *nodekey)							// check
 }
 
 
-int liqtagcloud_containsleaf(liqtagcloud *self,char *leafkey)							// check if itemkey is used in this cloud
+int liqtagcloud_containsleaf(liqtagcloud *self,const char *leafkey)							// check if itemkey is used in this cloud
 {
 	//
 	liqtagnode *node = self->nodefirst;
@@ -220,7 +252,7 @@ int liqtagcloud_containsleaf(liqtagcloud *self,char *leafkey)							// check if 
 	}
 	return 0;
 }
-liqtagnode *liqtagcloud_findorcreatenode(liqtagcloud *self,char *tagname)						// insert items into the node
+liqtagnode *liqtagcloud_findorcreatenode(liqtagcloud *self,const char *tagname)						// insert items into the node
 {
 	liqtagnode *node = liqtagcloud_findnode(self,tagname);
 	if(!node)
@@ -253,7 +285,7 @@ liqtagnode *liqtagcloud_findorcreatenode(liqtagcloud *self,char *tagname)						/
 
 
 
-static int tagnode_save(liqtagnode *self)
+int tagnode_save(liqtagnode *self)
 {
 	// only persist nodes at a time.
 
@@ -307,7 +339,7 @@ static int tagnode_save(liqtagnode *self)
 
 
 
-int liqtagnode_fileload_memstream(liqtagnode *self,char *filename,char *srcdata, int srcsize)
+int liqtagnode_fileload_memstream(liqtagnode *self,const char *filename,const char *srcdata, int srcsize)
 {
 
 
@@ -351,9 +383,9 @@ int liqtagnode_fileload_memstream(liqtagnode *self,char *filename,char *srcdata,
 		}
 		else
 		{
-			char *ss = &srcdata[srcpos];
-			char *pp = strchr(ss,'\n');
-			char *tt = pp;
+			const char *ss = &srcdata[srcpos];
+			const char *pp = strchr(ss,'\n');
+			const char *tt = pp;
 			if(!tt)tt=&srcdata[srcsize-1];
 			int cnt=(tt-ss);
 			if(cnt>512) cnt=512;
@@ -472,9 +504,9 @@ int liqtagnode_fileload(liqtagnode *self,char *filename)
 
 
 
-	static int liqtagcloud_scan(liqtagcloud *self,char *path)
+	static int liqtagcloud_scan(liqtagcloud *self,const char *path)
 	{
-		char *widgetpath = path;
+		const char *widgetpath = path;
 		DIR           *	dir_p;
 		struct dirent *	dir_entry_p;
 		char 			fn[FILENAME_MAX+1];
