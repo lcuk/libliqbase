@@ -333,9 +333,10 @@ FT_Error    fterr;
 	//liqapp_log("TTF Font opening face %s, %i:",name,size);
 	char *fn = self->font->filename;
 	
-	if(!liqapp_fileexists(fn)) fn="/usr/share/fonts/droid/DroidSans.ttf";
+	if(!liqapp_fileexists(fn)) fn="/usr/share/fonts/nokia/Nokia Pure/NokiaPureMg.ttf";
 	if(!liqapp_fileexists(fn)) fn="/usr/share/fonts/nokia/nosnb.ttf";
-
+	if(!liqapp_fileexists(fn)) fn="/usr/share/fonts/droid/DroidSans.ttf";
+	
     fterr = FT_New_Face( ftlib, fn, 0, (FT_Face*)&self->ftface );
 
     if ( fterr == FT_Err_Cannot_Open_Stream )

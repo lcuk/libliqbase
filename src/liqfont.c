@@ -391,7 +391,19 @@ liqfont * liqfont_newfromfilettf(const char *name,int size,int rotation)
 
 	//rotation=90;
 	//rotation=0;
-	//liqapp_log("TTF Font opening File %s, %i:",name,size);
+
+
+        if(strcasecmp(name,"/usr/share/fonts/nokia/nosnb.ttf")==0)
+        {
+
+        	                             name="/usr/share/fonts/nokia/Nokia Pure/NokiaPureMg.ttf";
+        	if(!liqapp_fileexists(name)) name="/usr/share/fonts/truetype/ttf-nokiapure/NokiaPure.ttf";
+		if(!liqapp_fileexists(name)) name="/usr/share/fonts/nokia/nosnr.ttf";
+		if(!liqapp_fileexists(name)) name="/usr/share/fonts/droid/DroidSans.ttf";
+		if(!liqapp_fileexists(name)) name="/usr/share/fonts/nokia/nosnb.ttf";
+        }
+	
+	liqapp_log("TTF Font opening File %s, %i:",name,size);
 	
 	liqfont *self = liqfont_new();
 	if(self==NULL) {  liqapp_warnandcontinue(-1, "liqfont_newfromfilettf creation failed" ); return NULL; }

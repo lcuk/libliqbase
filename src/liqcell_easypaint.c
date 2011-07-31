@@ -1100,6 +1100,7 @@ __tz_one("imageprep");
 					liqcliprect_drawimagecolor(cr,self->image,xx,yy,rw,rh,1);
 				else
 					liqcliprect_drawimagecolor(cr,self->image,xx,yy,rw,rh,0);
+
 					
 				//liqapp_log("imagefloat: making dirty");
 					
@@ -1124,6 +1125,24 @@ __tz_one("imageprep");
 
 			//	liqapp_log("imagestde: '%s' draw  %4i,%4i - %4i,%4i    ",self->name,x,y,w,h );
 		}
+
+
+		unsigned char wcy=255;
+		unsigned char wcu=128;
+		unsigned char wcv=128;
+		unsigned char wca=255;	// 20090816_101834 lcuk : new..
+		unsigned char wcc=0;    // Sun Aug 30 23:21:52 2009 lcuk : new class 0==std 1=xrgb(). mmm date format has been lost
+
+		t = liqcell_propgets(self,"washcolor",NULL);
+		if(t)
+		{
+			//liqapp_log("washcolor :: '%s'",t);
+			if(decodecolor(t, &wcy, &wcu, &wcv, &wca, &wcc ))
+			{
+				liqcliprect_drawboxwashcolor(     cr,x,y,w,h, wcu,wcv);			
+			}
+		}
+
 		
 	}
 
