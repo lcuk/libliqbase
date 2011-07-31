@@ -291,6 +291,9 @@ int liqcanvas_init(int pixelwidth,int pixelheight,int fullscreen)
 		pixelwidth = dw;
 		pixelheight = dh;
 	}
+	// workaround for harmattan, not a code fix
+	//pixelwidth=800;
+	//pixelheight=480;
 	liqapp_log("liqcanvas_init start wh %d,%d",pixelwidth,pixelheight);
 	
 	if(liqcanvas_init_inner(pixelwidth,pixelheight,fullscreen)!=0)

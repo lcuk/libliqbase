@@ -12,6 +12,7 @@ USE_GST = 1
 UNAMEISARM := $(shell uname -m | grep arm)
 
 ifeq ($(UNAMEISARM),arm)
+# comment out next line for harmattan, no osso is used there.
 	USE_OSSO = 1
 endif
 

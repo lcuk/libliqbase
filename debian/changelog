@@ -1,3 +1,21 @@
+libliqbase (0.3.72) unstable; urgency=low
+
+  * adding PolyFill! Sketch tool 5 :)
+  
+ -- Gary Birkett <liquid@gmail.com>  Sun, 31 Jul 2011 00:10:10 +0000
+
+ libliqbase (0.3.71) unstable; urgency=low
+
+  * highlighting harmattan tweaks.
+  
+ -- Gary Birkett <liquid@gmail.com>  Thu, 28 Jul 2011 00:10:10 +0000
+
+libliqbase (0.3.70) unstable; urgency=low
+
+  * few more tweaks.
+  
+ -- Gary Birkett <liquid@gmail.com>  Thu, 28 Jul 2011 00:09:10 +0000
+
 libliqbase (0.3.68) unstable; urgency=low
 
   * lots of tweaks and portrait mode fixes.
