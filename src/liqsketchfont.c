@@ -99,11 +99,17 @@ liqsketchfont * liqsketchfont_cache_find(const char *ident)
 
 	if( ! liqapp_fileexists(filename))
 	{
-		
-		if(liqapp_fileexists("/home/user/.liqbase/generalfont.liqsketchfont"))
-			snprintf(filename,128,"/home/user/.liqbase/generalfont.liqsketchfont");
-		else
-			snprintf(filename,128,"/usr/share/liqbase/liqbook/media/liquid@gmail.com.liqsketchfont");
+
+	// as a test, only looking for specific sketchfonts in specific location
+	// ie "liquid@gmail.com" as a font identifier should be ok
+	// but generic nokia sans bold should come up as that.
+			
+	//	if(liqapp_fileexists("/home/user/.liqbase/generalfont.liqsketchfont"))
+	//		snprintf(filename,128,"/home/user/.liqbase/generalfont.liqsketchfont");
+	//	else
+	//		snprintf(filename,128,"/usr/share/liqbase/liqbook/media/liquid@gmail.com.liqsketchfont");
+
+
 
 	}
 	if( ! liqapp_fileexists(filename))

@@ -971,8 +971,212 @@ void liqcliprect_drawtextinside_color(liqcliprect *self,liqfont *font,int x,int 
 
 
 
+//############################################################################
+//############################################################################
+//############################################################################ polyfill routines
+//############################################################################
+//############################################################################
+
+
+inline static int polyfill_scanline_intersection(int x1,int y1, int x2,int y2   , 
+                                 int x3,int y3, int x4,int y4 ) 
+{
+	// scanline intersection
+	// scanline x is always >=0
+	// y1 always == y2
+	// (x1,y1)..(x2,y2) always parallel scanline
+	// (x3,y3)..(x4,y4) any line
+	//
+	//
+	//    (x3,y3) o ..........
+	//         .   \         .
+	//         .    \        .
+	// (x1,y1) o-----X-------o (x2,y2)
+	//         .      \      .
+	//         .       \     . 
+	//         ........ o (x4,y4)
+	//
+	// return the X intersection point or -ve number based on bailout
+	//
+	// early boundary check
+
+
+	
+	if(y3<y1 && y4<y1) return -1;
+	if(y3>y1 && y4>y1) return -2;
+
+	if(y1==y3 && y3==y4)
+	{
+		int mid = x3 + (x4-x3)/2;
+		if(mid>x1 && mid<x2)
+			return mid;
+		return -10;
+	}
+	
+	int d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+	// not intersected if d==0
+	if (d == 0) return -3;
+	int mula = (x1*y2 - y1*x2);
+	int mulb = (x3*y4 - y3*x4);
+	int x = ( mula * (x3 - x4) - (x1 - x2) * mulb ) / d;
+	// late boundary check!
+	if(x<x1 && x<x2) return -4;
+	if(x>x1 && x>x2) return -5;
+	// x is valid and within the scanline, return it.
+	return x;
+}
+
+
+
+int liqcliprect_polyfillstroke(liqcliprect *self, liqstroke *s)
+{
+
+	unsigned char cy=s->pen_y;
+	unsigned char cu=s->pen_u;
+	unsigned char cv=s->pen_v;
+	//cy=60;
+	//cu=128;
+	//cv=128;
+
+			
+	int psy = s->boundingbox.yt;
+	int pey = s->boundingbox.yb;
+
+	int yy;
+	int xx;
+	typedef struct intersect_data
+	{
+		int       xx;		// position of intersection along the scanline
+		liqpoint *ps;		// start point
+		liqpoint *pe;		// finish point
+		int       special;	// special case notification
+	} intersect_data;
+
+	#define INTERSECT_LIM 128
+	intersect_data  intersects[INTERSECT_LIM];
+	intersect_data *intersectlinks[INTERSECT_LIM];
+	int intersectused=0;
+	
+	for(yy=psy;yy<pey;yy++)
+	{
+		intersectused = 0;
+		liqpoint *pf = s->pointfirst;
+		liqpoint *p0 = pf;
+		//############################### recurse the vectors, identify intersections
+		while(p0)
+		{
+			liqpoint *p1 = p0->linknext;
+			liqpoint *pe = p1;
+			if(!pe) pe = pf;
+
+			//if(yy==39 && p0->x==241 && p0->y==39) liqapp_log("...");
+			
+			// make sure we have spare intersection
+			if(intersectused < INTERSECT_LIM)
+			// make sure point being tested is not horizontal in line with scanline
+			if( yy!=p0->y || yy!=pe->y )
+			// make sure it is a unique point
+			if( (p0->x != pe->x) ||  (p0->y != pe->y) )
+			{
+				xx = polyfill_scanline_intersection( 0,yy,canvas.pixelwidth,yy,  p0->x,p0->y, pe->x,pe->y);
+				if(xx>=0)
+				{
+					// intersected!
+					intersects[ intersectused ].xx = xx;
+					intersects[ intersectused ].ps = p0;
+					intersects[ intersectused ].pe = pe;
+					if(pe->y == yy )
+					{
+						// intersection special case 1, edge finishes on this scanline
+						//                              Find out if it is bouncing back, 
+						//				or if it is passing through.
+						intersects[ intersectused ].special = 1;
+						liqpoint *pp = pe->linknext;
+						if(!pp)pp=s->pointfirst;
+						// trick to walk along all matching "equal" edges until we reach the decider
+						while(pp->y==yy)
+						{
+							pp=pp->linknext;
+							if(!pp)pp=s->pointfirst;
+						}
+						if(pp)
+						{
+							if(p0->y < yy)
+							{
+								if(pp->y < yy)
+								{
+									// "bouncing back", we need a pair of intersect edges here
+								}
+								else
+								{
+									// "Passing through", to make it act like "simple" we completely ignore this edge
+									goto skip;
+								}
+							}
+							else
+							{
+								if(pp->y > yy)
+								{
+									// bouncing back, we need a pair of intersect edges here
+								}
+								else
+								{
+									// Passing through, to make it act like "simple" we completely ignore this edge
+									goto skip;
+								}
+							}			
+						}
+					}
+					else
+					if( p0->y == yy )
+					{
+						// intersection special case 2, start point is on the scanline, because of the handling of "bouncing back" this is a simple calculation
+						intersects[ intersectused ].special = 2;
+					}
+					else
+						// simple crossing, 
+						intersects[ intersectused ].special = 0;
+
+
+					// insert the intersection into the links array
+					intersectlinks[intersectused] = &intersects[ intersectused ];
+					// bubble this link[used] to the correct place
+					int n,m;
+					for(n=0;n<intersectused;n++)
+					{
+						if(intersectlinks[n]->xx > xx)
+						{
+							// bubble everything n..intersectused
+							for(m=intersectused;m>n;m--)
+								intersectlinks[m] = intersectlinks[m-1];
+							intersectlinks[n] = &intersects[ intersectused ];
+							break;
+						}
+					}
+					intersectused++;
+					skip: {}
+				}
+			}
+			p0=p1;
+		}
+		int n,m;
+		//############################### walk the intersectionlink pairs :)
+		for(n=0;n<intersectused-1;n+=2)
+		{
+			intersect_data *id = intersectlinks[n];
+			intersect_data *ie = intersectlinks[n+1];
+			int xs;
+			int xe;
+			xs = id->xx;
+			xe = ie->xx;
+			liqcliprect_drawlinecolor(self, xs,yy, xe,yy,   cy,cu,cv);
+		}
+	}
+}	
+
+
 //########################################################################
-//######################################################################## draw page as fast as possible onto xv surface :)
+//######################################################################## draw sketch as fast as possible onto xv surface :)
 //########################################################################
 
 
@@ -1316,11 +1520,25 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 			int isselected=stroke->selected;
 
 
+			liqstroke *deststroke = NULL;
+
+			if(stroke->strokekind==5)
+			{
+				//liqapp_log("ttt %d,%d %d",l,t,stroke->strokekind);
+
+				deststroke = liqstroke_new();
+				deststroke->pen_y=y;
+				deststroke->pen_u=u;
+				deststroke->pen_v=v;
+			}
+			
+			
+
 
 
 
 			//######################################## normal stroke
-			if(stroke->strokekind==0)
+			if(stroke->strokekind==0 || stroke->strokekind==5)
 			{
 
 				if(1) // drawmode!=1)   //  =2 || drawmode==0)
@@ -1422,9 +1640,18 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 				//	ley=lsy+2;
 				
 				
-				if((lsx==lex) && (lsy==ley))
+				if(deststroke)
 				{
-					
+					if(deststroke->pointcount==0)
+					{
+						liqstroke_start(deststroke,lsx,lsy,0,200);
+					}
+					else
+					{
+						liqstroke_extend(deststroke,lex,ley,0,100);					
+					}
+					//liqcliprect_drawlinecolor(self,lsx,lsy,lex,ley,  60,128,128);
+
 				}
 				else
 				{
@@ -1432,7 +1659,8 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 					liqcliprect_drawlinecolor(self,lsx,lsy,lex,ley,  sy,su,sv);
 					if(isselected) liqcliprect_drawlinecolor(self,lsx+1,lsy+1,lex+1,ley+1,    sy,su,sv);
 				}
-		
+
+
 					
 					//liqcliprect_drawpsetcolor(			liqcliprect *self,int x, int y, unsigned char grey,unsigned char u,unsigned char v)
 					//liqcliprect_drawpsetcolor(self,lsx,lsy, 128,40,200);
@@ -1471,6 +1699,13 @@ void liqcliprect_drawsketch(liqcliprect *self,liqsketch *page,int l,int t,int w,
 						// i could do this by a factor of anything and reduce resolution as difference increases
 					}
 				}
+				if(deststroke)
+				{
+					liqcliprect_polyfillstroke(self, deststroke);
+					liqstroke_release(deststroke);
+					deststroke = NULL;
+				}
+
 			}
 			//######################################## crows nest line
 			else if(stroke->strokekind==1)

@@ -295,6 +295,7 @@ liqfontview * liqfontview_newfromscale(liqfont *font,float scalew,float scaleh)
 	liqsketch * sketchlink = NULL;
 	if(self->font->sketchfont)
 	{
+	liqapp_log("TTF Using sketchfont instead of %s, %i:",font->name,font->size);
 		liqsketchfont *sketchfont = self->font->sketchfont;
 
 		
@@ -332,20 +333,21 @@ FT_Error    fterr;
 	//liqapp_log("TTF Font opening face %s, %i:",name,size);
 	char *fn = self->font->filename;
 	
+	if(!liqapp_fileexists(fn)) fn="/usr/share/fonts/droid/DroidSans.ttf";
 	if(!liqapp_fileexists(fn)) fn="/usr/share/fonts/nokia/nosnb.ttf";
 
     fterr = FT_New_Face( ftlib, fn, 0, (FT_Face*)&self->ftface );
 
     if ( fterr == FT_Err_Cannot_Open_Stream )
 	{
-        liqapp_warnandcontinue(-1, "TTF Could not find/open font" );
+        liqapp_log( "TTF Could not find/open font '%s' %i",fn,fterr );
 		liqfontview_release(self);
 		return NULL;
 	}
 	
     if ( fterr )
 	{
-        liqapp_warnandcontinue(-1, "TTF Error while opening font" );
+        liqapp_log( "TTF Error while opening font '%s' %i",fn, fterr );
 		liqfontview_release(self);
 		return NULL;
 	}

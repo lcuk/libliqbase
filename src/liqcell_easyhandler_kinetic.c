@@ -46,7 +46,10 @@ extern "C" {
 
 		liqcell *par = liqcell_getlinkparent(self);
 		liqcell *body = self;
-		liqapp_log("# liqcell kinetic mous xy(%i,%i) wh(%i,%i)   ",args->mex,args->mey,args->mex-args->msx,args->mey-args->msy);
+		//liqapp_log("# liqcell kinetic mous xy(%i,%i) wh(%i,%i)   ",args->mex,args->mey,args->mex-args->msx,args->mey-args->msy);
+
+
+		
 		//liqapp_log("# liqcell kinetic body xy(%i,%i) wh(%i,%i) :: %s   ",body->x,body->y,  body->w,body->h,  body->name);
 		//liqapp_log("# liqcell kinetic par  xy(%i,%i) wh(%i,%i) :: %s   ",par->x,par->y,  par->w,par->h,  par->name);
 		if(body && par && par->h)

@@ -59,7 +59,7 @@ int 					docline_init(struct docline *self,char *linedata,int linelength)
 	{
     	{ return liqapp_warnandcontinue(-1,"docline_init malloc line data failed"); }		
 	}
-	char *memres=(char *)memcpy(self->linedata,linedata,linelength);
+	char *memres=(char*)memcpy(self->linedata,linedata,linelength);
 	if(memres==NULL)
 	{
     	{ return liqapp_warnandcontinue(-1,"docline_init memcpy failed"); }		
@@ -157,6 +157,8 @@ int 					doc_split_std(struct doc *self,char *data,int datalength)
 				ch++;
 				// hit a newline, ls..ch is the line
 				doc_appendline(self,ls,ll-1);	// take one off to remove the \n
+				// skip /r if we have one here
+				if(*ch==13){ ll++; ch++; }
 				ls=ch;
 				ll=0;
 				break;
@@ -205,10 +207,10 @@ int 					doc_split_render(struct doc *self,char *data,int datalength)
 			{
 				{
 					// we stepped over the mark.  newline now.
-					if( isspace(*ch) ) //|| ispunct(*ch)) )
+					if( isspace(*ch) || (*ch==10) || (*ch==13) ) //|| ispunct(*ch)) )
 					{
 						// advance it anyway, we have stepped over, but it wont really effect flow...
-						while( isspace(*ch) )
+						while( isspace(*ch) || (*ch==10) || (*ch==13) )
 						{
 							ch++;
 							pos++;		// inc cos we are
@@ -267,6 +269,7 @@ int 					doc_split_render(struct doc *self,char *data,int datalength)
 			switch(*ch)
 			{
 				case 10:
+				case 13:
 					// hit a newline, ls..ch is the line
 					doc_appendline(self,ls,ll);
 					self->linelast->formatw=x;
@@ -276,6 +279,12 @@ int 					doc_split_render(struct doc *self,char *data,int datalength)
 					ll++;
 					ch++;
 					pos++;
+					if(  (ch[-1]==10 && *ch==13) || (ch[-1]==13 && *ch==10)    )
+					{
+						ll++;
+						ch++;
+						pos++;
+					}
 
 					x=0;
 					y+=liqfont_textheight(self->renderfont);

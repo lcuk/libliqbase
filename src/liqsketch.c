@@ -360,6 +360,7 @@ void liqstroke_extend(liqstroke *self,int px,int py, int pz,unsigned long pt)
 	switch(self->strokekind)
 	{
 		case 0:	// normal stroke
+		case 5:	// filled polygon
 			{
 				liqpoint *p = liqpoint_new();	
 				p->x=px; p->y=py;  p->z=pz;	 p->t=pt;
@@ -1148,7 +1149,7 @@ int liqsketch_fileload_memstream(liqsketch *self,char *filename,char *srcdata, i
 			int  penv=0;
 			int  strokekind=0;
 			int  res = sscanf(indat,"stroke: %i, %i, %i, %i",&peny,&penu,&penv,&strokekind);
-			if(res==3){ strokekind=0; res=4; }	// todo: make all this import cleaner, this is a fudge
+			if(res==3){ strokekind=2; res=4; }	// todo: make all this import cleaner, this is a fudge
 			if(res==4)
 			{
 				
@@ -1161,7 +1162,7 @@ int liqsketch_fileload_memstream(liqsketch *self,char *filename,char *srcdata, i
 				}
 				
 				
-				//liqapp_log("%4i ++stroke++ %i '%s' == %i,%i,%i kind=%i",linenum,res,indat,peny,penu,penv,strokekind);
+				liqapp_log("%4i ++stroke++ %i '%s' == %i,%i,%i kind=%i",linenum,res,indat,peny,penu,penv,strokekind);
 
 				//if(stroke==NULL) 
 				//	{ return liqapp_warnandcontinue(-1,"liqsketch_fileload point without stroke"); }
